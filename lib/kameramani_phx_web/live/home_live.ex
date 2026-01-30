@@ -38,7 +38,11 @@ defmodule KameramaniPhxWeb.HomeLive do
            <.sidebar_item name ={"Slwan"} game={"Snowboard Sim"} viewer_count={3000} src="https://ui-avatars.com/api/?background=random"/>
            <.sidebar_item name ={"Jmrqui"} game={"Virtual Insanity"} viewer_count={2013} src="https://ui-avatars.com/api/?background=random"/>
         </div>
-        <div class = "flex flex-grow flex-col h-screen bg-gray-900"></div>
+        <div class = "flex flex-grow items-center justify-center">
+          <div class ="flex h-full bg-black w-full max-w-6xl rounded-xl shadow-2xl overflow-hidden items-center justify-center">
+            <text class ="text-gray-500">Waiting for Signal....</text>
+          </div>
+        </div>
         <div class = "flex flex-col w-80 min-h-0 overflow-hidden bg-gray-800">
           <div class="flex flex-1 flex-col overflow-y-auto break-words ">
             <div :for={msg <-@messages}>
