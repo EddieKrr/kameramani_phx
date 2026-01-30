@@ -33,14 +33,14 @@ defmodule KameramaniPhxWeb.HomeLive do
     <div class = "flex flex-col h-screen overflow-hidden bg-gray-800">
       <div class = "h-16 w-screen flex-none"></div>
       <div class = "flex flex-row h-screen w-screen overflow-hidden">
-        <div class = "flex flex-col w-64 h-screen overflow-y-auto bg-gray-800 p-3 gap-2">
+        <div class = "flex flex-col w-64 h-screen overflow-y-auto bg-gray-800 p-3 gap-2 ">
            <.sidebar_item name ={"Jleel"} game={"Sims 4"} viewer_count={5000} src="https://ui-avatars.com/api/?background=random"/>
            <.sidebar_item name ={"Slwan"} game={"Snowboard Sim"} viewer_count={3000} src="https://ui-avatars.com/api/?background=random"/>
            <.sidebar_item name ={"Jmrqui"} game={"Virtual Insanity"} viewer_count={2013} src="https://ui-avatars.com/api/?background=random"/>
         </div>
         <div class = "flex flex-grow flex-col h-screen bg-gray-900"></div>
-        <div class = "flex flex-col w-80 overflow-hidden bg-gray-800">
-          <div class="flex flex-1 flex-col overflow-y-auto break-words">
+        <div class = "flex flex-col w-80 min-h-0 overflow-hidden bg-gray-800">
+          <div class="flex flex-1 flex-col overflow-y-auto break-words ">
             <div :for={msg <-@messages}>
               <.chat_message dt={msg.dt} name={msg.name} text={msg.text} color={msg.color}/>
             </div>

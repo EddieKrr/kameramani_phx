@@ -10,7 +10,7 @@ defmodule KameramaniPhxWeb.SidebarComponents do
 
   def sidebar_item(assigns) do
     ~H"""
-    <div class="flex flex-row items-center gap-3">
+    <div class="flex flex-row items-center gap-3 hover:bg-green-400 rounded-full px-2">
       <img src={@src} class="rounded-full h-12 w-12 object-contain">
       <div class="flex-col flex-1">
         <div class="flex-col">
