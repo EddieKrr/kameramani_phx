@@ -50,14 +50,14 @@ defmodule KameramaniPhxWeb.HomeLive do
             for={@form}
             phx-change="validate"
             phx-submit="send_message"
-            class="flex w-full items-center gap-3"
+            class="flex w-full items-center gap-3 "
             >
             <.input
                 field={@form[:ch_message]}
                 placeholder="Enter Message Here"
-                class="flex-1 bg-gray-900 text-white rounded-full px-4 border-none focus:outline-none h-10"
+                class="w-full bg-gray-900 text-white rounded-full px-4 border-none focus:outline-none h-10 justify-end"
               />
-              <button type="submit" class="bg-green-700 text-white hover: bg-green-500 rounded-full flex-1">Send</button>
+              <button type="submit" class="pb-3 "><.icon name="hero-paper-airplane-solid" class="h-5 w-5 text-blue-500" /></button>
           </.form>
           </div>
         </div>
