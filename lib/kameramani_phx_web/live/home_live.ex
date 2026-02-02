@@ -31,7 +31,16 @@ defmodule KameramaniPhxWeb.HomeLive do
   def render(assigns) do
     ~H"""
     <div class = "flex flex-col h-screen overflow-hidden bg-gray-800">
-      <div class = "h-16 w-screen flex-none"></div>
+      <div class = "flex flex-row h-16 w-screen flex-none justify-between border-b border-gray-600 items-center static">
+        <div><.icon name="hero-cube-transparent-mini"/></div>
+        <div class="border-2 border-blue-500 w-1/3 rounded-lg justify-center items-center relative">
+          <div class="">
+            
+            <.icon name="hero-magnifying-glass-solid" class="absolute inset-y-0 right-0"/>
+          </div>
+        </div>
+        <div></div>
+      </div>
       <div class = "flex flex-row h-screen w-screen overflow-hidden">
         <div class = "flex flex-col w-64 h-screen overflow-y-auto bg-gray-800 p-3 gap-2 ">
            <.sidebar_item name ={"Jleel"} game={"Sims 4"} viewer_count={5000} src="https://ui-avatars.com/api/?background=random"/>
