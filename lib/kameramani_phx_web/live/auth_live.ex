@@ -2,12 +2,19 @@ defmodule KameramaniPhxWeb.AuthLive do
   use KameramaniPhxWeb, :live_view
 
   def mount(_params, _session, socket) do
+    
     {:ok, socket}
   end
 
   def render(assigns) do
     ~H"""
     <div class="container group mx-auto my-18 relative w-[768px] max-w-full min-h-[480px] bg-indigo-200 rounded-[30px] shadow-2xl overflow-hidden">
+      <div class="form-login">
+
+      </div>
+      <div class ="form-register">
+
+      </div>
     <div class="toggle-box absolute top-0 left-1/2 w-full h-full z-10 overflow-hidden transition-all duration-[600ms] ease-in-out group-[.active]:-translate-x-full rounded-l-[150px] group-[.active]:rounded-l-none group-[.active]:rounded-r-[150px]">
         <div class="absolute h-full w-[300%] left-[-100%] bg-gradient-to-r from-sky-500 via-indigo-950 to-slate-950 text-white transition-transform duration-[600ms] ease-in-out group-[.active]:translate-x-1/2">
         </div>
