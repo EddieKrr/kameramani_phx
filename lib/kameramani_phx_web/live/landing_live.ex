@@ -18,7 +18,14 @@ defmodule KameramaniPhxWeb.LandingLive do
           <div class="lv-ind absolute top-4 left-4 z-10 bg-red-950 h-4 w-4 rounded-full"></div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2x;:grid-cols-5 gap-4 m-2">
-          <.card :for={_ <- 1..8} />
+          <.card
+            :for={_ <- 1..8}
+            game="Elden Ring"
+            streamer="Kai Cenat"
+            genre="RPG"
+            category="Action"
+            viewer_count={45_000}
+          />
         </div>
       </div>
     </div>
