@@ -17,8 +17,9 @@ defmodule KameramaniPhxWeb.Router do
   scope "/", KameramaniPhxWeb do
     pipe_through :browser
 
-    live "/", HomeLive
+    live "/", LandingLive
     live "/register", AuthLive
+    live "/chat", HomeLive
   end
 
   # Other scopes may use custom stacks.
