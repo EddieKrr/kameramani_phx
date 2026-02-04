@@ -7,7 +7,7 @@ defmodule RegComponents do
 
   def mesage(assigns) do
     ~H"""
-      <input type="text" id={@field.id} name={@field.name} {@rest} class="border-2 border-indigo-700 rounded-3xl focus:outline-none justify-center items-center"/>
+      <input type="text" id={@field.id} name={@field.name} {@rest} class="border-2 border-indigo-700 rounded-3xl focus:outline-none text-center"/>
       <div :for={msg <- @field.errors} class="text-red-500"><%=msg%></div>
     """
   end
@@ -22,7 +22,7 @@ defmodule LogComponents do
 
   def log(assigns) do
     ~H"""
-    <input type="text" id={@field.id} username={@field.name} {@rest} class="rounded-full border-2 border-sky-500 focus:outline-none text-slate-800"/>
+    <input type="text" id={@field.id} username={@field.name} {@rest} class="rounded-full border-2 border-sky-500 focus:outline-none text-slate-800 text-center"/>
     <div :for={msg <- @field.errors} class="text-red-500"><%=msg%></div>
     """
   end

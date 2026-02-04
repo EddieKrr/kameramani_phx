@@ -72,13 +72,14 @@ defmodule KameramaniPhxWeb.AuthLive do
 
   def render(assigns) do
     ~H"""
+    <div class="h-screen w-full bg-gradient-to-r from-gray-900 via-slate-800 to-indigo-950 flex items-center justify-center">
     <div class="flex flex-row container group mx-auto my-18 relative w-[768px] max-w-full min-h-[480px] bg-indigo-200 rounded-[30px] shadow-2xl overflow-hidden">
-      <div class ="form-register flex w-1/2">
+      <div class ="form-register flex w-1/2 ">
         <.form
           for={@reg_form}
           phx-change="validate_entry"
           phx-submit="register"
-          class ="flex flex-col justify-right m-auto text-black gap-3"
+          class ="flex flex-col justify-right m-auto text-black gap-3 p-2 rounded-2xl"
         >
         <.mesage field={@reg_form[:name]} placeholder="Name"/>
         <.mesage field={@reg_form[:username]} placeholder="Username" />
@@ -86,7 +87,7 @@ defmodule KameramaniPhxWeb.AuthLive do
         <.mesage field={@reg_form[:age]} placeholder="Age" />
         <.mesage field={@reg_form[:password]} placeholder="Password"/>
 
-        <button type="submit" class="rounded-full bg-indigo-700 p-2">Register</button>
+        <button type="submit" class="rounded-full bg-indigo-700 text-white p-2">Register</button>
         </.form>
 
       </div>
@@ -97,8 +98,8 @@ defmodule KameramaniPhxWeb.AuthLive do
           phx-submit="login"
           class="flex flex-col m-auto gap-2"
         >
-        <.log field={@log_form[:name]} placeholder=" Username"/>
-        <.log field={@log_form[:password]} placeholder=" Password"/>
+        <.log field={@log_form[:name]} placeholder="Username"/>
+        <.log field={@log_form[:password]} placeholder="Password"/>
 
         <button type="submit" class="rounded-full bg-sky-500 p-2">Login</button>
         </.form>
@@ -117,6 +118,7 @@ defmodule KameramaniPhxWeb.AuthLive do
             <button phx-click={JS.remove_class("active", to: ".container")} class="reg-btn w-40 h-11 bg-transparent rounded-full border-2 border-white shadow-none">Sign Up</button>
         </div>
       </div>
+    </div>
     </div>
     """
   end
