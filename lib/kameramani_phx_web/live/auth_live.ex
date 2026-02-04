@@ -23,50 +23,76 @@ defmodule KameramaniPhxWeb.AuthLive do
 
   end
 
-  def handle_event("validate_entry", %{"reg"=>form_msg}, socket) do
+  def handle_event("validate_entry", %{"reg"=>reg_msg}, socket) do
     errors = []
 
     errors =
-    if form_msg["name"] == "" do
+    if reg_msg["name"] == "" do
       Keyword.put(errors, :name, "Can't be blank")
     else
       errors
     end
 
     errors =
-    if form_msg["username"] == "" do
+    if reg_msg["username"] == "" do
       Keyword.put(errors, :username, "Can't be blank")
     else
       errors
     end
 
     errors =
-    if form_msg["email"] == "" do
+    if reg_msg["email"] == "" do
       Keyword.put(errors, :email, "Can't be blank")
     else
       errors
     end
 
     errors =
-    if form_msg["age"] == "" do
+    if reg_msg["age"] == "" do
       Keyword.put(errors, :age, "Can't be blank")
     else
       errors
     end
 
     errors =
-    if form_msg["password"] == "" do
+    if reg_msg["password"] == "" do
       Keyword.put(errors, :password, "Can't be blank")
     else
       errors
     end
 
-    reg_form = to_form(form_msg, as: :reg, errors: errors)
+    reg_form = to_form(reg_msg, as: :reg, errors: errors)
     {:noreply, assign(socket, reg_form: reg_form)}
   end
 
-  def handle_event("register", %{"reg"=>form_msg}, socket) do
-    IO.inspect({"Form submitted!!!"}, form_msg)
+  def handle_event("register", %{"reg"=>reg_msg}, socket) do
+    IO.inspect(reg_msg, label: "User Registered")
+    {:noreply, socket}
+  end
+
+  def handle_event("validate_log", %{"log"=>log_msg}, socket) do
+    errors = []
+
+    errors =
+      if log_msg["username"] == "" do
+        Keyword.put(errors, :username, "Can't be blank")
+      else
+        errors
+      end
+
+      errors =
+        if log_msg["password"] == "" do
+          Keyword.put(errors, :password, "Can't be blank")
+        else
+          errors
+        end
+
+      log_form = to_form(log_msg, as: :log, errors: errors)
+      {:noreply, assign(socket, log_form: log_form)}
+  end
+
+  def handle_event("login", %{"log" => log_msg}, socket) do
+    IO.inspect(log_msg, label: "User login successful!!")
     {:noreply, socket}
   end
 
@@ -98,7 +124,7 @@ defmodule KameramaniPhxWeb.AuthLive do
           phx-submit="login"
           class="flex flex-col m-auto gap-2"
         >
-        <.log field={@log_form[:name]} placeholder="Username"/>
+        <.log field={@log_form[:username]} placeholder="Username"/>
         <.log field={@log_form[:password]} placeholder="Password"/>
 
         <button type="submit" class="rounded-full bg-sky-500 p-2">Login</button>
