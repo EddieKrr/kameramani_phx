@@ -1,9 +1,66 @@
 defmodule KameramaniPhxWeb.AuthLive do
   use KameramaniPhxWeb, :live_view
+  import RegComponents
+
+  @empty_reg%{
+    "name" => "",
+    "username" => "",
+    "email" => "",
+    "age" => "",
+    "password" => ""
+  }
+
 
   def mount(_params, _session, socket) do
-    
-    {:ok, socket}
+    reg_form=to_form(@empty_reg, as: :reg)
+    {:ok, assign(socket, reg_form: reg_form)}
+  end
+
+  def handle_event("validate_entry", %{"reg"=>form_msg}, socket) do
+    errors = []
+
+    errors =
+    if form_msg["name"] == "" do
+      Keyword.put(errors, :name, "Can't be blank")
+    else
+      errors
+    end
+
+    errors =
+    if form_msg["username"] == "" do
+      Keyword.put(errors, :username, "Can't be blank")
+    else
+      errors
+    end
+
+    errors =
+    if form_msg["email"] == "" do
+      Keyword.put(errors, :email, "Can't be blank")
+    else
+      errors
+    end
+
+    errors =
+    if form_msg["age"] == "" do
+      Keyword.put(errors, :age, "Can't be blank")
+    else
+      errors
+    end
+
+    errors =
+    if form_msg["password"] == "" do
+      Keyword.put(errors, :password, "Can't be blank")
+    else
+      errors
+    end
+
+    reg_form = to_form(form_msg, as: :reg, errors: errors)
+    {:noreply, assign(socket, reg_form: reg_form)}
+  end
+
+  def handle_event("register", %{"reg"=>form_msg}, socket) do
+    IO.inspect({"Form submitted!!!"}, form_msg)
+    {:noreply, socket}
   end
 
   def render(assigns) do
@@ -12,7 +69,21 @@ defmodule KameramaniPhxWeb.AuthLive do
       <div class="form-login">
 
       </div>
-      <div class ="form-register">
+      <div class ="form-register flex w-1/2 pt-22">
+        <.form
+          for={@reg_form}
+          phx-change="validate_entry"
+          phx-submit="register"
+          class ="flex flex-col justify-right m-auto text-black gap-3"
+        >
+        <.mesage field={@reg_form[:name]} placeholder="Name"/>
+        <.mesage field={@reg_form[:username]} placeholder="Username" />
+        <.mesage field={@reg_form[:email]} placeholder="Email"/>
+        <.mesage field={@reg_form[:age]} placeholder="Age" />
+        <.mesage field={@reg_form[:password]} placeholder="Password"/>
+
+        <button type="submit" class="rounded-full bg-indigo-700 p-2">Register</button>
+        </.form>
 
       </div>
     <div class="toggle-box absolute top-0 left-1/2 w-full h-full z-10 overflow-hidden transition-all duration-[600ms] ease-in-out group-[.active]:-translate-x-full rounded-l-[150px] group-[.active]:rounded-l-none group-[.active]:rounded-r-[150px]">
@@ -24,8 +95,8 @@ defmodule KameramaniPhxWeb.AuthLive do
             <button phx-click={JS.add_class("active", to: ".container")} class="log-btn w-40 h-11 bg-transparent rounded-full border-2 border-white shadow-none">Sign Up</button>
         </div>
         <div class="toggle-panel register absolute w-1/2 h-full flex flex-col justify-center items-center px-8 text-center top-0 transition-all duration-600 ease-in-out -right-1/2 group-[.active]:right-0 group-[.active]:delay-300">
-            <h1 class="text-xl font-bold">You're better than them?</h1>
-            <p>Go ahead and login</p>
+            <h1 class="text-xl font-bold">Hii Uso ni Familiar</h1>
+            <p class="mb-5">Go ahead and login</p>
             <button phx-click={JS.remove_class("active", to: ".container")} class="reg-btn w-40 h-11 bg-transparent rounded-full border-2 border-white shadow-none">Sign Up</button>
         </div>
       </div>
