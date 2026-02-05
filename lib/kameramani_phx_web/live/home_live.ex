@@ -1,5 +1,7 @@
 defmodule KameramaniPhxWeb.HomeLive do
   use KameramaniPhxWeb, :live_view
+  import KameramaniPhxWeb.NavComponents
+  import KameramaniPhxWeb.SidebarComponents
 
 
     @initial_state%{
@@ -12,7 +14,7 @@ defmodule KameramaniPhxWeb.HomeLive do
     username = Enum.random(name_list)
     user_color = RandomColour.generate()
     form=to_form(@initial_state, as: :chat)
-    {:ok, assign(socket, form: form, messages: [], username: username, user_color: user_color,  stream_id: stream_id)}
+    {:ok, assign(socket, form: form, messages: [], username: username, user_color: user_color,  stream_id: stream_id, current_user: nil, show_sidebar: false, show_chat: false)}
   end
 
   def handle_event("send_message",%{"chat" => %{ "ch_message" => message}}, socket) do
@@ -31,18 +33,9 @@ defmodule KameramaniPhxWeb.HomeLive do
   def render(assigns) do
     ~H"""
     <div class = "flex flex-col h-screen overflow-hidden bg-gray-800">
-      <div class = "flex flex-row h-16 w-screen flex-none justify-between border-b border-gray-600 items-center static">
-        <div><.icon name="hero-cube-transparent-mini"/></div>
-        <div class="border-2 border-blue-500 w-1/3 rounded-lg justify-center items-center relative">
-          <div class="">
-
-            <.icon name="hero-magnifying-glass-solid" class="absolute inset-y-0 right-0"/>
-          </div>
-        </div>
-        <div></div>
-      </div>
-      <div class = "grid grid-cols-[256px_1fr_340px] w-full h-[calc(100vh-4rem)]">
-        <div class = "p-2 bg-gray-800 border-r border-gray-700 overflow-y-auto">
+      <.navbar current_user={@current_user} layout={:fixed}/>
+      <div class = "grid sm:grid-cols-1 lg:grid-cols-[256px_1fr_340px] w-full h-[calc(100vh-4rem)]">
+        <div class = "p-2 bg-gray-800 border-r border-gray-700 overflow-y-auto hidden lg:block">
            <.sidebar_item name ={"Jleel"} game={"Sims 4"} viewer_count={5000} src="https://ui-avatars.com/api/?background=random"/>
            <.sidebar_item name ={"Slwan"} game={"Snowboard Sim"} viewer_count={3000} src="https://ui-avatars.com/api/?background=random"/>
            <.sidebar_item name ={"Jmrqui"} game={"Virtual Insanity"} viewer_count={2013} src="https://ui-avatars.com/api/?background=random"/>
@@ -50,7 +43,7 @@ defmodule KameramaniPhxWeb.HomeLive do
         <div class = "relative flex items-center justify-center w-full h-full bg-black">
             <span class ="text-gray-500">Waiting for Signal....</span>
         </div>
-        <div class = "flex flex-col min-h-0 overflow-hidden bg-gray-800 border-l border-gray-700">
+        <div class = " hidden lg:flex flex-col min-h-0 overflow-hidden bg-gray-800 border-l border-gray-700">
           <div class="flex flex-1 flex-col overflow-y-auto break-words p-4 gap-2">
             <div :for={msg <-@messages}>
               <.chat_message dt={msg.dt} name={msg.name} text={msg.text} color={msg.color}/>

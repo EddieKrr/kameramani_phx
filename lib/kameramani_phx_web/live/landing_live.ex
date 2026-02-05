@@ -2,6 +2,7 @@ defmodule KameramaniPhxWeb.LandingLive do
   use KameramaniPhxWeb, :live_view
   import KameramaniPhxWeb.SidebarComponents
   import KameramaniPhxWeb.CardComponents
+  import KameramaniPhxWeb.NavComponents
 
   def mount(_params, _session, socket) do
     stream = [
@@ -15,7 +16,8 @@ defmodule KameramaniPhxWeb.LandingLive do
       %{stream_id: 8, game: "Cyberpunk: 2077", streamer: "M0istCr1tikal", category: "Speedrunning", genre: "RPG", viewer_count: 6767, avatar: ""}
   ]
 
-    {:ok, assign(socket, stream: stream)}
+
+    {:ok, assign(socket, stream: stream, current_user: nil)}
   end
 
   def render(assigns) do
@@ -23,7 +25,7 @@ defmodule KameramaniPhxWeb.LandingLive do
     <div class = "grid grid-cols-[256px_1fr] h-screen w-full overflow-hidden">
       <div class="bg-slate-800 border-r-2 border-r-slate-700"></div>
       <div class="bg-slate-900 overflow-y-auto">
-        <div class="flex items-center justify-between px-6 sticky top-0 z-50 w-3/4 h-12 rounded-full bg-gray-700/50 mx-auto backdrop-blur"></div>
+        <.navbar layout={:floating} current_user={@current_user} />
         <div class="relative w-full aspect-video max-h-[600px] bg-black shadow-2xl">
           <div class="absolute bottom-0 w-full h-1/3 bg-gradient-to-b from-transparent to-black pointer-events-none">
             <div class="flex absolute bottom-4 left-4">
@@ -33,7 +35,7 @@ defmodule KameramaniPhxWeb.LandingLive do
           <div class="lv-ind absolute top-4 left-4 z-10 bg-red-950 h-4 w-4 rounded-full"></div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 m-2">
-          <.card :for={card <- @stream}id={card.stream_id} game={card.game} streamer={card.streamer } category={card.category} genre={card.genre} viewer_count={card.viewer_count}></.card>
+          <.card :for={card <- @stream} id={card.stream_id} game={card.game} streamer={card.streamer } category={card.category} genre={card.genre} viewer_count={card.viewer_count}></.card>
         </div>
       </div>
     </div>

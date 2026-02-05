@@ -1,7 +1,5 @@
 defmodule KameramaniPhxWeb.SidebarComponents do
   use Phoenix.Component
-  use Gettext, backend: KameramaniPhxWeb.Gettext
-
 
   attr :name, :string, required: true
   attr :game, :string
