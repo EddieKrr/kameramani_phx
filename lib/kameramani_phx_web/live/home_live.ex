@@ -7,12 +7,12 @@ defmodule KameramaniPhxWeb.HomeLive do
     }
 
 
-  def mount(_params, _session, socket) do
+  def mount(%{"stream_id" => stream_id}, _session, socket) do
     name_list= ["BIG C", "you canna", "bis", "mafrr"]
     username = Enum.random(name_list)
     user_color = RandomColour.generate()
     form=to_form(@initial_state, as: :chat)
-    {:ok, assign(socket, form: form, messages: [], username: username, user_color: user_color)}
+    {:ok, assign(socket, form: form, messages: [], username: username, user_color: user_color,  stream_id: stream_id)}
   end
 
   def handle_event("send_message",%{"chat" => %{ "ch_message" => message}}, socket) do
@@ -35,7 +35,7 @@ defmodule KameramaniPhxWeb.HomeLive do
         <div><.icon name="hero-cube-transparent-mini"/></div>
         <div class="border-2 border-blue-500 w-1/3 rounded-lg justify-center items-center relative">
           <div class="">
-            
+
             <.icon name="hero-magnifying-glass-solid" class="absolute inset-y-0 right-0"/>
           </div>
         </div>
