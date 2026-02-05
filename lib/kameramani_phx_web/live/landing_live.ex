@@ -5,14 +5,14 @@ defmodule KameramaniPhxWeb.LandingLive do
 
   def mount(_params, _session, socket) do
     stream = [
-      %{id: 1, game: "Elden Ring", streamer: "iShowSpeed", category: "Action", genre: "RPG", viewer_count: 20_000 , avatar: ""},
-      %{id: 2, game: "God of War", streamer: "FaZe Adapt", category: "Rage", genre: "Action", viewer_count: 12_000, avatar: ""},
-      %{id: 3, game: "Shadow of Mordor", streamer: "XQC", category: "Just Chatting", genre: "MMORPG", viewer_count: 34_000, avatar: ""},
-      %{id: 4, game: "Ninja Storm: 4", streamer: "DBangz", category: "Weabo", genre: "Turn-Based", viewer_count: 11_400, avatar: ""},
-      %{id: 5, game: "Chess: Multiverse of Madness", streamer: "Berleezy", category: "Role-Playing", genre: "Strategy", viewer_count: 19_800, avatar: ""},
-      %{id: 6, game: "Forza 5", streamer: "Corpse Husband", category: "Talking", genre: "Racing", viewer_count: 27_000, avatar: ""},
-      %{id: 7, game: "GTA VI", streamer: "Pokimane", category: "G-Bait", genre: "Action", viewer_count: 1738, avatar: ""},
-      %{id: 8, game: "Cyberpunk: 2077", streamer: "M0istCr1tikal", category: "Speedrunning", genre: "RPG", viewer_count: 6767, avatar: ""}
+      %{stream_id: 1, game: "Elden Ring", streamer: "iShowSpeed", category: "Action", genre: "RPG", viewer_count: 20_000 , avatar: ""},
+      %{stream_id: 2, game: "God of War", streamer: "FaZe Adapt", category: "Rage", genre: "Action", viewer_count: 12_000, avatar: ""},
+      %{stream_id: 3, game: "Shadow of Mordor", streamer: "XQC", category: "Just Chatting", genre: "MMORPG", viewer_count: 34_000, avatar: ""},
+      %{stream_id: 4, game: "Ninja Storm: 4", streamer: "DBangz", category: "Weabo", genre: "Turn-Based", viewer_count: 11_400, avatar: ""},
+      %{stream_id: 5, game: "Chess: Multiverse of Madness", streamer: "Berleezy", category: "Role-Playing", genre: "Strategy", viewer_count: 19_800, avatar: ""},
+      %{stream_id: 6, game: "Forza 5", streamer: "Corpse Husband", category: "Talking", genre: "Racing", viewer_count: 27_000, avatar: ""},
+      %{stream_id: 7, game: "GTA VI", streamer: "Pokimane", category: "G-Bait", genre: "Action", viewer_count: 1738, avatar: ""},
+      %{stream_id: 8, game: "Cyberpunk: 2077", streamer: "M0istCr1tikal", category: "Speedrunning", genre: "RPG", viewer_count: 6767, avatar: ""}
   ]
 
     {:ok, assign(socket, stream: stream)}
@@ -33,7 +33,7 @@ defmodule KameramaniPhxWeb.LandingLive do
           <div class="lv-ind absolute top-4 left-4 z-10 bg-red-950 h-4 w-4 rounded-full"></div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 m-2">
-          <.card :for={card <- @stream} game={card.game} streamer={card.streamer } category={card.category} genre={card.genre} viewer_count={card.viewer_count} avatar={card.avatar}></.card>
+          <.card :for={card <- @stream} game={card.game} streamer={card.streamer } category={card.category} genre={card.genre} viewer_count={card.viewer_count}></.card>
         </div>
       </div>
     </div>
