@@ -41,24 +41,23 @@ defmodule KameramaniPhxWeb.HomeLive do
         </div>
         <div></div>
       </div>
-      <div class = "flex flex-row h-screen w-screen overflow-hidden">
-        <div class = "flex flex-col w-64 h-screen overflow-y-auto bg-gray-800 p-3 gap-2 ">
+      <div class = "grid grid-cols-[256px_1fr_340px] w-full h-[calc(100vh-4rem)]">
+        <div class = "p-2 bg-gray-800 border-r border-gray-700 overflow-y-auto">
            <.sidebar_item name ={"Jleel"} game={"Sims 4"} viewer_count={5000} src="https://ui-avatars.com/api/?background=random"/>
            <.sidebar_item name ={"Slwan"} game={"Snowboard Sim"} viewer_count={3000} src="https://ui-avatars.com/api/?background=random"/>
            <.sidebar_item name ={"Jmrqui"} game={"Virtual Insanity"} viewer_count={2013} src="https://ui-avatars.com/api/?background=random"/>
         </div>
-        <div class = "flex flex-grow items-center justify-center">
-          <div class ="flex h-full bg-black w-full max-w-6xl rounded-xl shadow-2xl overflow-hidden items-center justify-center">
-            <text class ="text-gray-500">Waiting for Signal....</text>
-          </div>
+        <div class = "relative flex items-center justify-center w-full h-full bg-black">
+            <span class ="text-gray-500">Waiting for Signal....</span>
         </div>
-        <div class = "flex flex-col w-80 min-h-0 overflow-hidden bg-gray-800">
-          <div class="flex flex-1 flex-col overflow-y-auto break-words ">
+        <div class = "flex flex-col min-h-0 overflow-hidden bg-gray-800 border-l border-gray-700">
+          <div class="flex flex-1 flex-col overflow-y-auto break-words p-4 gap-2">
             <div :for={msg <-@messages}>
               <.chat_message dt={msg.dt} name={msg.name} text={msg.text} color={msg.color}/>
             </div>
           </div>
-          <div class="h-24 flex flex-row items-center px-4">
+
+          <div class="h-24 flex flex-none items-center px-4 border-t border-gray-700">
           <.form
             for={@form}
             phx-change="validate"
@@ -68,9 +67,9 @@ defmodule KameramaniPhxWeb.HomeLive do
             <.input
                 field={@form[:ch_message]}
                 placeholder="Enter Message Here"
-                class="w-full bg-gray-900 text-white rounded-full px-4 border-none focus:outline-none h-10 justify-end"
+                class="w-full bg-gray-900 text-white rounded-full px-4 border-none focus:ring-1 focus:ring-blue-500 h-10"
               />
-              <button type="submit" class="pb-3 "><.icon name="hero-paper-airplane-solid" class="h-5 w-5 text-blue-500" /></button>
+              <button type="submit" class="p-2 hover:bg-gray-700 rounded-full transition-colors"><.icon name="hero-paper-airplane-solid" class="h-5 w-5 text-blue-500" /></button>
           </.form>
           </div>
         </div>

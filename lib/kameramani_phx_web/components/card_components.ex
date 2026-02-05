@@ -9,7 +9,7 @@ defmodule KameramaniPhxWeb.CardComponents do
   attr :avatar, :string, default: "https://ui-avatars.com/api/?background=random"
   def card(assigns) do
     ~H"""
-    <.link patch={~p"/watch/:stream_id"}>
+    <.link patch={~p"/watch/#{@id}"}>
     <article>
       <div class="relative aspect-video w-full bg-gradient-to-tl from-black to-slate-700">
         <div class="absolute top-1 left-1 bg-red-500 rounded-full px-1 text-xs">LIVE</div>

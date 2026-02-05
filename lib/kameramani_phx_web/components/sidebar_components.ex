@@ -12,7 +12,7 @@ defmodule KameramaniPhxWeb.SidebarComponents do
     ~H"""
     <div class="flex flex-row items-center gap-3 hover:bg-green-400 hover:rounded-full hover:p-2">
       <img src={@src} class="rounded-full h-12 w-12 object-contain">
-      <div class="flex-col flex-1">
+      <div class="flex-col flex-1 p-1">
         <div class="flex-col">
           <div class="text-base font-bold text-white">{@name}</div>
           <div class="text-sm text-gray-500 truncate">{@game}</div>
