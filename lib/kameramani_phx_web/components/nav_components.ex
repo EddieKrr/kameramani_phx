@@ -24,6 +24,6 @@ end
     "flex items-center justify-between px-6 sticky top-0 z-50 w-3/4 h-12 rounded-full bg-gray-700/50 mx-auto shadow-2xl backdrop-blur"
   end
   defp nav_classes(:fixed) do
-    "flex flex-row items-center justify-between z-50 w-full h-12 bg-gray-700 p``-2"
+    "flex flex-row items-center justify-between z-50 w-full h-12 bg-gray-700 p-2"
   end
 end

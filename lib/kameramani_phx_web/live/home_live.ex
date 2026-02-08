@@ -3,6 +3,13 @@ defmodule KameramaniPhxWeb.HomeLive do
   import KameramaniPhxWeb.NavComponents
   import KameramaniPhxWeb.SidebarComponents
 
+  defp subscribe() do
+    Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "messages")
+  end
+
+  defp broadcast(value) do
+    Phoenix.PubSub.broadcast(KameramaniPhx.PubSub, "messages", value)
+  end
 
     @initial_state%{
       "ch_message" => ""
@@ -10,6 +17,9 @@ defmodule KameramaniPhxWeb.HomeLive do
 
 
   def mount(%{"stream_id" => stream_id}, _session, socket) do
+    if connected?(socket) do
+      subscribe()
+    end
     name_list= ["BIG C", "you canna", "bis", "mafrr"]
     username = Enum.random(name_list)
     user_color = RandomColour.generate()
@@ -19,15 +29,22 @@ defmodule KameramaniPhxWeb.HomeLive do
 
   def handle_event("send_message",%{"chat" => %{ "ch_message" => message}}, socket) do
     new_message = %{name: socket.assigns.username,  text: message, dt: Calendar.strftime(Time.utc_now(), "%I:%M:%S %p"), color: socket.assigns.user_color}
+    nu_msg = socket.assigns.messages++ [new_message]
+    broadcast({:messages, nu_msg})
+
     IO.inspect(message, label: "IT ARRIVED")
     empty_form=to_form(@initial_state, as: :chat)
-    {:noreply, assign(socket, messages: socket.assigns.messages++ [new_message],
-    form: empty_form)}
+    {:noreply, assign(socket, form: empty_form, messages: nu_msg)}
   end
 
   def handle_event("validate", params, socket) do
-    blank_form=to_form(params, as: :chat)
-    {:noreply, assign(socket, form: blank_form)}
+    updated_form=to_form(params, as: :chat)
+    {:noreply, assign(socket, form: updated_form)}
+  end
+
+  def handle_info({:messages, nu_msg}, socket) do
+
+    {:noreply, assign(socket, messages: nu_msg)}
   end
 
   def render(assigns) do
