@@ -15,7 +15,7 @@ defmodule KameramaniPhxWeb.ChatComponents do
     <div class="flex flex-row items-center gap-2">
       <div class="">{@dt}</div>
       <div style={"color:#{@color}"}>{@name}:</div>
-      <div class="font-normal break-words">{@text}</div>
+      <div class="font-normal break-all">{@text}</div>
     </div>
     """
   end

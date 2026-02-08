@@ -70,5 +70,19 @@ defmodule KameramaniPhxWeb.HomeLive do
     </div>
     """
   end
+  defp sidebar_classes(show?) do
+    base = "bg-gray-800 border-r border-gray-700 overflow-y-auto transition-all duration 300"
+    desktop = "lg:block lg:static lg:w-auto lg:h-auto"
+    mobile = if show?, do: "absolute top-0 left-0 h-full w-64 z-40 block shadow-2xl", else: "hidden"
 
+    "#{base} #{desktop} #{mobile}"
+  end
+
+  defp chat_classes(show?) do
+    base = "flex flex-col overflow-hidden bg-gray-800 border-l border-gray-700 transition-all duration"
+    desktop = "lg:flex lg:static lg:w-auto lg:h-auto"
+    mobile = if show?, do: "absolute top-0 right-0 h-full w-80 z-40 flex shadow-2xl", else: "hidden"
+
+    "#{base} #{desktop} #{mobile}"
+  end
 end
