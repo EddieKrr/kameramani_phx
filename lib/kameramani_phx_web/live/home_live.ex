@@ -28,7 +28,9 @@ defmodule KameramaniPhxWeb.HomeLive do
   end
 
   def handle_event("send_message",%{"chat" => %{ "ch_message" => message}}, socket) do
-    new_message = %{name: socket.assigns.username,  text: message, dt: Calendar.strftime(Time.utc_now(), "%I:%M:%S %p"), color: socket.assigns.user_color}
+    nai_time = DateTime.now!("Africa/Nairobi")
+    nu_time = KameramaniPhxWeb.Cldr.Time.to_string!(nai_time, format: :medium)
+    new_message = %{name: socket.assigns.username,  text: message, dt: nu_time, color: socket.assigns.user_color}
     nu_msg = socket.assigns.messages++ [new_message]
     broadcast({:messages, nu_msg})
 
