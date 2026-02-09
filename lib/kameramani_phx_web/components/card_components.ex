@@ -13,7 +13,7 @@ defmodule KameramaniPhxWeb.CardComponents do
     <article>
       <div class="relative aspect-video w-full bg-gradient-to-tl from-black to-slate-700">
         <div class="absolute top-1 left-1 bg-red-500 rounded-full px-1 text-xs">LIVE</div>
-        <div class="absolute bottom-1 right-1 bg-black/60 rounded-full text-xs px-1">{@viewer_count}</div>
+        <div class="absolute bottom-1 right-1 bg-black/60 rounded-full text-xs px-1"><.icon class="h-4 w-4 text-white mb-[0.3rem]" name="hero-eye" />{@viewer_count}</div>
       </div>
       <div class="flex flex-row gap-3">
         <img class="h-10 w-10 rounded-full" alt ={@streamer} src={@avatar}>

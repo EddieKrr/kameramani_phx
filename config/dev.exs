@@ -63,7 +63,7 @@ config :kameramani_phx, KameramaniPhxWeb.Endpoint,
       ~r"priv/gettext/.*\.po$"E,
       # Router, Controllers, LiveViews and LiveComponents
       ~r"lib/kameramani_phx_web/router\.ex$"E,
-      ~r"lib/kameramani_phx_web/(controllers|live|components)/.*\.(ex|heex)$"E
+      ~r"lib/kameramani_phx_web/(controllers|live|components)/.*\.(ex|heex)$"
     ]
   ]
 

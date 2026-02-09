@@ -79,7 +79,7 @@ defmodule KameramaniPhxWeb.HomeLive do
                 placeholder="Enter Message Here"
                 class="w-full bg-gray-900 text-white rounded-full px-4 border-none focus:ring-1 focus:ring-blue-500 h-10"
               />
-              <button type="submit" class="p-2 hover:bg-gray-700 rounded-full transition-colors"><.icon name="hero-paper-airplane-solid" class="h-5 w-5 text-blue-500" /></button>
+              <button type="submit" class="p-2 hover:bg-gray-700 rounded-full transition-colors"><.icon name="hero-paper-airplane" class="h-5 w-5 text-blue-500 mb-2" /></button>
           </.form>
           </div>
         </div>
