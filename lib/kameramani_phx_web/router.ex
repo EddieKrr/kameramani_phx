@@ -20,6 +20,7 @@ defmodule KameramaniPhxWeb.Router do
     live "/", LandingLive, :index
     live "/register", AuthLive
     live "/watch/:stream_id", HomeLive, :show
+    live "/studio", StudioLive
   end
 
   # Other scopes may use custom stacks.
