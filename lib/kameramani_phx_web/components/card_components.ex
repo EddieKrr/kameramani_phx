@@ -11,7 +11,7 @@ defmodule KameramaniPhxWeb.CardComponents do
     ~H"""
     <.link patch={~p"/watch/#{@id}"}>
     <article>
-      <div class="relative aspect-video w-full bg-gradient-to-tl from-black to-slate-700">
+      <div class="relative aspect-video w-full bg-gradient-to-tl from-black to-slate-700 hover:backdrop-blur hover:scale-110 hover:z-50 hover:shadow-2xl hover:from-black/60 hover:to-slate-700/60 transition-all duration-300 ease-in-out">
         <div class="absolute top-1 left-1 bg-red-500 rounded-full px-1 text-xs">LIVE</div>
         <div class="absolute bottom-1 right-1 bg-black/60 rounded-full text-xs px-1"><.icon class="h-4 w-4 text-white mb-[0.3rem]" name="hero-eye" />{@viewer_count}</div>
       </div>
