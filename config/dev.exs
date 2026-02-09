@@ -2,8 +2,8 @@ import Config
 
 # Configure your database
 config :kameramani_phx, KameramaniPhx.Repo,
-  username: "dtech",
-  password: "dtechpsql",
+  username: "postgres",
+  password: "Eddie@254",
   hostname: "localhost",
   database: "kameramani_phx_dev",
   stacktrace: true,

@@ -1,6 +1,7 @@
 defmodule KameramaniPhx.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  import Pbkdf2
 
   schema "users" do
     field :name, :string
@@ -63,7 +64,7 @@ defmodule KameramaniPhx.Accounts.User do
 
     if password && changeset.valid? do
       changeset
-      |> put_change(:hashed_password, Bcrypt.hash_pwd_salt(password))
+      |> put_change(:hashed_password, Pbkdf2.hash_pwd_salt(password))
       |> delete_change(:password)
     else
       changeset
@@ -75,11 +76,11 @@ defmodule KameramaniPhx.Accounts.User do
   """
   def valid_password?(%KameramaniPhx.Accounts.User{hashed_password: hashed_password}, password)
       when is_binary(hashed_password) and byte_size(password) > 0 do
-    Bcrypt.verify_pass(password, hashed_password)
+    Pbkdf2.verify_pass(password, hashed_password)
   end
 
   def valid_password?(_, _) do
-    Bcrypt.no_user_verify()
+    Pbkdf2.no_user_verify()
     false
   end
 
