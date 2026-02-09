@@ -7,6 +7,7 @@ defmodule KameramaniPhxWeb.CardComponents do
   attr :genre, :string, required: true
   attr :viewer_count, :integer, required: true
   attr :avatar, :string, default: "https://ui-avatars.com/api/?background=random"
+  attr :id, :any, required: true
   def card(assigns) do
     ~H"""
     <.link patch={~p"/watch/#{@id}"}>

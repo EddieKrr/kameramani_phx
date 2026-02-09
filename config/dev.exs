@@ -2,8 +2,8 @@ import Config
 
 # Configure your database
 config :kameramani_phx, KameramaniPhx.Repo,
-  username: "postgres",
-  password: "Eddie@254",
+  username: "dtech",
+  password: "dtechpsql",
   hostname: "localhost",
   database: "kameramani_phx_dev",
   stacktrace: true,
@@ -58,12 +58,12 @@ config :kameramani_phx, KameramaniPhxWeb.Endpoint,
     web_console_logger: true,
     patterns: [
       # Static assets, except user uploads
-      ~r"priv/static/(?!uploads/).*\.(js|css|png|jpeg|jpg|gif|svg)$"E,
+      ~r"priv/static/(?!uploads/).*\.(js|css|png|jpeg|jpg|gif|svg)$",
       # Gettext translations
-      ~r"priv/gettext/.*\.po$"E,
+      ~r"priv/gettext/.*\.po$",
       # Router, Controllers, LiveViews and LiveComponents
-      ~r"lib/kameramani_phx_web/router\.ex$"E,
-      ~r"lib/kameramani_phx_web/(controllers|live|components)/.*\.(ex|heex)$"E
+      ~r"lib/kameramani_phx_web/router\.ex$",
+      ~r"lib/kameramani_phx_web/(controllers|live|components)/.*\.(ex|heex)$"
     ]
   ]
 

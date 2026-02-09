@@ -32,6 +32,13 @@ const liveSocket = new LiveSocket("/live", Socket, {
   hooks: {...colocatedHooks},
 })
 
+//my hooks
+let Hooks = {}
+Hooks.ChatScroll = {
+  updated() {
+    this.el.scrollTop = this.el.scrollHeight;
+  }
+}
 // Show progress bar on live navigation and form submits
 topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
 window.addEventListener("phx:page-loading-start", _info => topbar.show(300))
