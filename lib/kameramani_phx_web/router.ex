@@ -29,6 +29,7 @@ defmodule KameramaniPhxWeb.Router do
   scope "/", KameramaniPhxWeb do
     pipe_through :browser
 
+
         live "/", LandingLive, :index
 
         live "/watch/:stream_id", HomeLive, :show
@@ -38,6 +39,12 @@ defmodule KameramaniPhxWeb.Router do
     pipe_through :auth
 
         live "/auth", NewAuthLive
+
+    live "/", LandingLive, :index
+    live "/register", AuthLive
+    live "/watch/:stream_id", HomeLive, :show
+    live "/studio", StudioLive
+
   end
 
   # Other scopes may use custom stacks.

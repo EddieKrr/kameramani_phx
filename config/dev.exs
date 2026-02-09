@@ -62,7 +62,9 @@ config :kameramani_phx, KameramaniPhxWeb.Endpoint,
       # Gettext translations
       ~r"priv/gettext/.*\.po$",
       # Router, Controllers, LiveViews and LiveComponents
+
       ~r"lib/kameramani_phx_web/router\.ex$",
+
       ~r"lib/kameramani_phx_web/(controllers|live|components)/.*\.(ex|heex)$"
     ]
   ]

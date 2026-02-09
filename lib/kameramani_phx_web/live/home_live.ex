@@ -2,11 +2,24 @@ defmodule KameramaniPhxWeb.HomeLive do
   use KameramaniPhxWeb, :live_view
   import KameramaniPhxWeb.SidebarComponents
 
+  # Keep your mount scope
   on_mount {KameramaniPhxWeb.UserAuth, :mount_current_scope}
 
   @initial_state %{"ch_message" => ""}
 
+  # --- INTERN'S PUBSUB LOGIC (Integrated) ---
+  defp subscribe() do
+    Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "messages")
+  end
+
+  defp broadcast(value) do
+    Phoenix.PubSub.broadcast(KameramaniPhx.PubSub, "messages", value)
+  end
+
   def mount(%{"stream_id" => stream_id}, _session, socket) do
+    # Subscribe if connected so we receive live messages
+    if connected?(socket), do: subscribe()
+
     username = Enum.random(["BIG C", "Canna", "Bis", "Mafrr"])
     user_color = "#" <> (for _ <- 1..3, into: "", do: Integer.to_string(Enum.random(100..255), 16))
 
@@ -19,7 +32,6 @@ defmodule KameramaniPhxWeb.HomeLive do
        stream_id: stream_id,
        game: "Sims 4"
      )
-
      |> stream(:messages, [])}
   end
 
@@ -35,16 +47,18 @@ defmodule KameramaniPhxWeb.HomeLive do
         color: socket.assigns.user_color
       }
 
-      # Insert message into stream and reset form
-      socket =
-        socket
-        |> stream_insert(:messages, new_message)
-        |> assign(form: to_form(@initial_state, as: :chat))
+      # Broadcast to everyone (including yourself)
+      broadcast({:new_message, new_message})
 
-      {:noreply, socket}
+      {:noreply, assign(socket, form: to_form(@initial_state, as: :chat))}
     else
       {:noreply, socket}
     end
+  end
+
+  # Receive the broadcasted message and put it in the Stream
+  def handle_info({:new_message, new_message}, socket) do
+    {:noreply, stream_insert(socket, :messages, new_message)}
   end
 
   def handle_event("validate", %{"chat" => %{"ch_message" => message}}, socket) do
@@ -60,14 +74,14 @@ defmodule KameramaniPhxWeb.HomeLive do
           <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shrink-0 shadow-lg shadow-indigo-500/20">
             <.icon name="hero-bolt-solid" class="h-5 w-5 text-white" />
           </div>
-          <span class="font-black text-lg tracking-tighter hidden xl:block uppercase">Kameramani</span>
+          <span class="font-black text-lg tracking-tighter hidden xl:block uppercase italic text-indigo-500">Kameramani</span>
         </div>
 
         <div class="flex-1 overflow-y-auto px-2 space-y-4 py-4">
-          <div class="hidden xl:block px-2 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Followed</div>
+          <div class="hidden xl:block px-2 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Followed Channels</div>
           <div class="space-y-2">
-            <.sidebar_item name="Jleel" game="Sims 4" viewer_count={5200} src="https://ui-avatars.com/api/?background=random"/>
-            <.sidebar_item name="Slwan" game="Snowboard" viewer_count={3000} src="https://ui-avatars.com/api/?background=random"/>
+            <.sidebar_item name="Jleel" game="Sims 4" viewer_count="5.2K" active={true}/>
+            <.sidebar_item name="Slwan" game="Snowboard" viewer_count="3.1K" active={false}/>
           </div>
         </div>
       </aside>
@@ -86,7 +100,7 @@ defmodule KameramaniPhxWeb.HomeLive do
 
           <div class="absolute top-6 left-6 flex items-center gap-2">
             <span class="bg-red-600 text-[10px] font-black px-2 py-0.5 rounded shadow-lg animate-pulse">LIVE</span>
-            <span class="bg-black/60 backdrop-blur-md text-[10px] font-bold px-2 py-0.5 rounded border border-white/10">02:14:55</span>
+            <span class="bg-black/60 backdrop-blur-md text-[10px] font-bold px-2 py-0.5 rounded border border-white/10 italic">00:00:00</span>
           </div>
         </div>
 
@@ -94,24 +108,21 @@ defmodule KameramaniPhxWeb.HomeLive do
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="flex items-center gap-4">
               <div class="w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-indigo-500 to-purple-500">
-                 <div class="w-full h-full bg-[#0e0e10] rounded-full flex items-center justify-center text-xl font-black">
-                   <%= String.at(@stream_id, 0) %>
+                 <div class="w-full h-full bg-[#0e0e10] rounded-full flex items-center justify-center text-xl font-black italic">
+                   <%= String.at(@stream_id, 0) |> String.upcase() %>
                  </div>
               </div>
               <div>
-                <h1 class="text-xl font-bold tracking-tight"><%= @stream_id %> Stream Session</h1>
+                <h1 class="text-xl font-bold tracking-tight uppercase tracking-widest"><%= @stream_id %></h1>
                 <div class="flex items-center gap-3 text-xs font-medium text-gray-400 mt-1">
-                  <span class="text-indigo-400">#</span>
+                  <span class="text-indigo-400 font-bold">#Elixir</span>
                   <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
                   <span>English</span>
                 </div>
               </div>
             </div>
             <div class="flex items-center gap-2">
-              <button class="bg-indigo-600 hover:bg-indigo-500 px-6 py-2 rounded-lg font-bold text-sm transition-all active:scale-95 shadow-lg shadow-indigo-600/20">Follow</button>
-              <button class="bg-white/5 hover:bg-white/10 p-2 rounded-lg transition-colors border border-white/10">
-                <.icon name="hero-share-solid" class="h-5 w-5" />
-              </button>
+              <button class="bg-indigo-600 hover:bg-indigo-500 px-6 py-2 rounded-lg font-bold text-sm transition-all active:scale-95">Follow</button>
             </div>
           </div>
         </div>
@@ -123,68 +134,32 @@ defmodule KameramaniPhxWeb.HomeLive do
           <.icon name="hero-users-solid" class="h-4 w-4 text-gray-600" />
         </div>
 
-        <div
-          class="flex-1 overflow-y-auto p-2 space-y-0.5 custom-scrollbar"
-          id="chat-messages"
-          phx-update="stream"
-        >
-          <div :for={{dom_id, msg} <- @streams.messages} id={dom_id} class="group animate-in slide-in-from-bottom-2 duration-300">
-            <div class="px-2 py-1.5 rounded hover:bg-white/[0.03] transition-colors">
-              <div class="flex items-baseline flex-wrap text-[13px] leading-snug">
-                <span class="text-[9px] font-mono text-gray-600 mr-2 tabular-nums group-hover:text-gray-400 transition-colors">
-                  <%= msg.dt %>
-                </span>
-                <span class="font-bold hover:underline cursor-pointer tracking-tight" style={"color: #{msg.color}"}>
-                  <%= msg.name %>
-                </span>
-                <span class="text-gray-300 ml-2 break-words">
-                  <%= msg.text %>
-                </span>
-              </div>
+        <div class="flex-1 overflow-y-auto p-2 space-y-0.5 custom-scrollbar" id="chat-messages" phx-update="stream">
+          <div :for={{dom_id, msg} <- @streams.messages} id={dom_id} class="group">
+            <div class="px-2 py-1.5 rounded hover:bg-white/[0.03] transition-colors text-[13px]">
+              <span class="font-mono text-[9px] text-gray-600 mr-2"><%= msg.dt %></span>
+              <span class="font-bold tracking-tight" style={"color: #{msg.color}"}><%= msg.name %>:</span>
+              <span class="text-gray-300 ml-2 break-words"><%= msg.text %></span>
             </div>
           </div>
         </div>
 
         <div class="p-4 bg-[#18181b]/80 border-t border-white/5 backdrop-blur-xl">
-          <div class="mb-4 flex items-center justify-between">
-             <div class="flex items-center gap-2 px-2 py-1 bg-white/5 rounded-md border border-white/5">
-                <div class="w-3 h-3 rounded-sm shadow-sm" style={"background-color: #{@user_color}"}></div>
+          <div class="mb-3 flex items-center justify-between px-1">
+             <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full" style={"background-color: #{@user_color}"}></div>
                 <span class="text-[10px] font-black text-gray-400 uppercase tracking-tighter"><%= @username %></span>
              </div>
-             <span class="text-[9px] font-bold text-indigo-400/60 uppercase">Commands Active</span>
           </div>
 
-          <.form for={@form} phx-change="validate" phx-submit="send_message" class="space-y-3" id="chat-form">
+          <.form for={@form} phx-change="validate" phx-submit="send_message" class="space-y-3">
             <div class="relative group">
-              <.input
-                field={@form[:ch_message]}
-                placeholder="Type a message... (Press Enter to send)"
-                autocomplete="off"
-                class="w-full bg-[#0e0e10] border-2 border-transparent focus:border-indigo-500/40 focus:ring-0 text-white text-sm rounded-xl py-3 px-4 shadow-inner transition-all placeholder:text-gray-700"
-                phx-hook="ChatInput"
-              />
-              <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                <button type="button" class="text-gray-600 hover:text-indigo-400 transition-colors">
-                  <.icon name="hero-face-smile" class="h-5 w-5" />
-                </button>
-              </div>
+              <.input field={@form[:ch_message]} placeholder="Send a message..." autocomplete="off"
+                class="w-full bg-[#0e0e10] border-2 border-transparent focus:border-indigo-500/40 focus:ring-0 text-white text-sm rounded-xl py-2.5 px-4 transition-all" />
             </div>
-
-            <div class="flex items-center justify-between gap-3">
-              <div class="flex gap-1">
-                <button type="button" class="p-2 bg-white/5 hover:bg-white/10 rounded-lg text-gray-500 transition-colors">
-                  <.icon name="hero-gift-solid" class="h-4 w-4" />
-                </button>
-                <button type="button" class="p-2 bg-white/5 hover:bg-white/10 rounded-lg text-gray-500 transition-colors">
-                  <.icon name="hero-sparkles-solid" class="h-4 w-4" />
-                </button>
-              </div>
-              <button
-                type="submit"
-                class="flex-1 md:flex-none bg-indigo-600 hover:bg-indigo-500 disabled:opacity-20 text-white text-xs font-black uppercase tracking-widest py-2.5 px-8 rounded-xl shadow-lg shadow-indigo-500/20 transition-all active:scale-95"
-                disabled={String.trim(@form[:ch_message].value || "") == ""}
-                phx-disable-with="Sending..."
-              >
+            <div class="flex justify-end">
+              <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-black uppercase tracking-widest py-2 px-6 rounded-lg transition-all active:scale-95 shadow-lg shadow-indigo-500/20"
+                disabled={String.trim(@form[:ch_message].value || "") == ""}>
                 Chat
               </button>
             </div>
