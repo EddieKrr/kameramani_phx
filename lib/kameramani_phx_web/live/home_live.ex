@@ -80,8 +80,8 @@ defmodule KameramaniPhxWeb.HomeLive do
         <div class="flex-1 overflow-y-auto px-2 space-y-4 py-4">
           <div class="hidden xl:block px-2 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Followed Channels</div>
           <div class="space-y-2">
-            <.sidebar_item name="Jleel" game="Sims 4" viewer_count="5.2K" active={true}/>
-            <.sidebar_item name="Slwan" game="Snowboard" viewer_count="3.1K" active={false}/>
+            <.sidebar_item name="Jleel" game="Sims 4" viewer_count="5.2K" active={true} src="https://ui-avatars.com/api/?background=random"/>
+            <.sidebar_item name="Slwan" game="Snowboard" viewer_count="3.1K" active={false} src="https://ui-avatars.com/api/?background=random"/>
           </div>
         </div>
       </aside>

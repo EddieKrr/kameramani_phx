@@ -37,8 +37,8 @@ defmodule KameramaniPhxWeb.Layouts do
     ~H"""
     <header class="navbar bg-slate-800 border-b border-slate-700 px-4 sm:px-6 lg:px-8">
       <div class="flex-1">
-        <.link href="/" class="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors">
-          <span class="text-lg font-bold">Kameramani</span>
+        <.link href="/" class="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors max-w-fit">
+          <span class="text-lg font-bold whitespace-nowrap">Kameramani</span>
         </.link>
       </div>
 
