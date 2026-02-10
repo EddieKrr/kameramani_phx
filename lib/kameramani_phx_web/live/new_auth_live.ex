@@ -78,7 +78,7 @@ defmodule KameramaniPhxWeb.NewAuthLive do
           <.mesage field={@reg_form[:age]} placeholder="Age" />
           <.mesage field={@reg_form[:password]} placeholder="Password" type={if @show_password, do: "text", else: "password"} />
           <button type="button" phx-click="toggle_password" class="rounded-full bg-indigo-500 text-white p-1 mt-1">
-            <%= if @show_password, do: "Hide", else: "Show" %> Password
+            <%= if @pass_visible, do: "Hide", else: "Show" %> Password
           </button>
 
           <button type="submit" class="rounded-full bg-indigo-700 text-white p-2">
@@ -95,7 +95,7 @@ defmodule KameramaniPhxWeb.NewAuthLive do
           <input type="hidden" name="_csrf_token" value={Plug.CSRFProtection.get_csrf_token()} />
           <.log field={@log_form[:email]} placeholder="Email" name="user[email]" />
           <.log field={@log_form[:password]} placeholder="Password" name="user[password]" type={if @show_password, do: "text", else: "password"} />
-          <button type="button" phx-click="toggle_password" class="rounded-full bg-sky-500 text-white p-1 mt-1">
+          <button type="button" phx-click="toggle_key" class="rounded-full bg-sky-500 text-white p-1 mt-1">
             <%= if @show_password, do: "Hide", else: "Show" %> Password
           </button>
 
