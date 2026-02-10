@@ -23,12 +23,9 @@ defmodule KameramaniPhxWeb.UserLive.Settings do
           label="Email"
           autocomplete="username"
           required
-        />
-        <.button variant="primary" phx-disable-with="Changing...">Change Email</.button>
+        /> <.button variant="primary" phx-disable-with="Changing...">Change Email</.button>
       </.form>
-
       <div class="divider" />
-
       <.form
         for={@password_form}
         id="password_form"
@@ -57,10 +54,7 @@ defmodule KameramaniPhxWeb.UserLive.Settings do
           type="password"
           label="Confirm new password"
           autocomplete="new-password"
-        />
-        <.button variant="primary" phx-disable-with="Saving...">
-          Save Password
-        </.button>
+        /> <.button variant="primary" phx-disable-with="Saving...">Save Password</.button>
       </.form>
     </Layouts.app>
     """

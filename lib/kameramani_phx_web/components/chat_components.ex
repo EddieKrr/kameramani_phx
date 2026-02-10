@@ -8,13 +8,15 @@ defmodule KameramaniPhxWeb.ChatComponents do
   attr :dt, :any
 
   def chat_message(assigns) do
-  #   dt = DateTime.utc_now() |> DateTime.to_time |> Time.truncate(:second)
-  #   assigns = assign(assigns, dt: dt)
+    #   dt = DateTime.utc_now() |> DateTime.to_time |> Time.truncate(:second)
+    #   assigns = assign(assigns, dt: dt)
 
     ~H"""
     <div class="flex flex-row items-center gap-2">
       <div class="">{@dt}</div>
+
       <div style={"color:#{@color}"}>{@name}:</div>
+
       <div class="font-normal break-all">{@text}</div>
     </div>
     """

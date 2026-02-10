@@ -45,14 +45,6 @@ defmodule KameramaniPhx.Accounts do
 
   def sudo_mode?(_user, _minutes), do: false
 
-
-
-
-
-
-
-
-
   ## Session
 
   def generate_user_session_token(user) do
@@ -81,13 +73,16 @@ defmodule KameramaniPhx.Accounts do
     case Repo.one(query) do
       {%User{confirmed_at: nil, hashed_password: hash}, _token} when not is_nil(hash) ->
         raise "magic link log in not allowed for unconfirmed users with a password set!"
+
       {%User{confirmed_at: nil} = user, _token} ->
         user
         |> User.confirm_changeset()
         |> update_user_and_delete_all_tokens()
+
       {user, token} ->
         Repo.delete!(token)
         {:ok, {user, []}}
+
       nil ->
         {:error, :not_found}
     end

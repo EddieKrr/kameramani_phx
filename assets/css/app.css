@@ -103,3 +103,16 @@
 [data-phx-session], [data-phx-teleported-src] { display: contents }
 
 /* This file is for your main application CSS */
+.font-lexend {
+  font-family: "Lexend", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply font-lexend text-sm;
+  }
+
+  .btn {
+
+  }
+}

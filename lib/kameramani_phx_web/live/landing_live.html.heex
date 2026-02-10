@@ -1,0 +1,34 @@
+<div class="flex h-screen w-full pt-[64px] overflow-hidden">
+  <div class="w-64 bg-slate-800 border-r-2 border-r-slate-700 flex-shrink-0"></div>
+
+  <div class="flex-1 bg-slate-900 overflow-y-auto">
+    <div class="relative w-full aspect-video max-h-[500px] bg-black shadow-xl mb-6">
+      <div class="absolute bottom-0 w-full h-1/3 bg-gradient-to-b from-transparent to-black pointer-events-none">
+        <div class="flex absolute bottom-4 left-4">
+          <.sidebar_item
+            name="Jleel"
+            game="Sims 4"
+            viewer_count={5000}
+            src="https://ui-avatars.com/api/?background=random"
+          />
+        </div>
+      </div>
+
+      <div class="lv-ind absolute top-4 left-4 z-10 bg-red-950 h-4 w-4 rounded-full"></div>
+    </div>
+
+    <div class="px-6 pb-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+        <.card
+          :for={card <- @stream}
+          id={card.stream_id}
+          game={card.game}
+          streamer={card.streamer}
+          category={card.category}
+          genre={card.genre}
+          viewer_count={card.viewer_count}
+        />
+      </div>
+    </div>
+  </div>
+</div>

@@ -11,6 +11,6 @@ defmodule KameramaniPhx.Users do
   end
 
   def changeset(struct, params) do
-    struct |> cast(params, [:name, :username, :email, :age]) |> validate_required([:name, :age, ])
+    struct |> cast(params, [:name, :username, :email, :age]) |> validate_required([:name, :age])
   end
 end

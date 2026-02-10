@@ -35,9 +35,12 @@ defmodule KameramaniPhxWeb.Layouts do
 
   def app(assigns) do
     ~H"""
-    <header class="navbar fixed top-0 left-0 right-0 z-50 w-3/4 mx-auto rounded-2xl flex flex-row items-center justify-between bg-slate-800/60 backdrop-blur border-2 mt-2 border-slate-700 px-4 sm:px-6 lg:px-8">
+    <header class="navbar fixed top-0 left-0 right-0 z-50 max-w-1440 mx-auto rounded-2xl flex flex-row items-center justify-between bg-slate-800/60 backdrop-blur border-2 mt-2 border-slate-700 px-4 sm:px-6 lg:px-8">
       <div class="flex">
-        <.link href="/" class="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors">
+        <.link
+          href="/"
+          class="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors"
+        >
           <span class="text-lg font-bold tracking-tighter text-lg uppercase italic">Kameramani</span>
         </.link>
       </div>
@@ -53,33 +56,33 @@ defmodule KameramaniPhxWeb.Layouts do
       <%= if @current_scope && @current_scope.user do %>
         <div class="flex items-center gap-3">
           <span class="text-white">
-            Welcome, <span class="font-semibold text-blue-400"><%= @current_scope.user.username %></span>
+            Welcome, <span class="font-semibold text-blue-400">{@current_scope.user.username}</span>
           </span>
           <div class="relative group">
             <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
-              <%= String.first(@current_scope.user.username || "U") |> String.upcase() %>
+              {String.first(@current_scope.user.username || "U") |> String.upcase()}
             </div>
+
             <div class="absolute right-0 top-full mt-2 w-48 bg-slate-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <div class="py-2">
                 <.link
                   navigate={~p"/users/settings"}
                   class="block px-4 py-2 text-white hover:bg-slate-600 transition-colors"
                 >
-                  <.icon name="hero-cog-6-tooth" class="h-5 w-5"/> Settings
+                  <.icon name="hero-cog-6-tooth" class="h-5 w-5" /> Settings
                 </.link>
-
                 <.link
                   navigate={~p"/studio"}
                   class="block px-4 py-2 text-white hover:bg-slate-600 transition-colors gap-1"
-                  ><.icon name="hero-video-camera" class="mb-1 h-5 w-5"/> Studio
+                >
+                  <.icon name="hero-video-camera" class="mb-1 h-5 w-5" /> Studio
                 </.link>
-
                 <.link
                   href={~p"/users/log-out"}
                   method="delete"
                   class="block px-4 py-2 text-white hover:bg-slate-600 transition-colors"
                 >
-                  <.icon name="hero-arrow-left-start-on-rectangle" class="h-5 w-5"/> Log Out
+                  <.icon name="hero-arrow-left-start-on-rectangle" class="h-5 w-5" /> Log Out
                 </.link>
               </div>
             </div>
@@ -93,15 +96,11 @@ defmodule KameramaniPhxWeb.Layouts do
           Sign In / Register
         </.link>
       <% end %>
-
     </header>
 
     <main class="">
-      <div class="">
-        {render_slot(@inner_block)}
-      </div>
+      <div class="">{render_slot(@inner_block)}</div>
     </main>
-
     <.flash_group flash={@flash} />
     """
   end
@@ -121,10 +120,7 @@ defmodule KameramaniPhxWeb.Layouts do
 
   def auth(assigns) do
     ~H"""
-    <main class="h-screen w-full">
-      {@inner_content}
-    </main>
-
+    <main class="h-screen w-full">{@inner_content}</main>
     <.flash_group flash={@flash} />
     """
   end
@@ -142,9 +138,7 @@ defmodule KameramaniPhxWeb.Layouts do
   def flash_group(assigns) do
     ~H"""
     <div id={@id} aria-live="polite">
-      <.flash kind={:info} flash={@flash} />
-      <.flash kind={:error} flash={@flash} />
-
+      <.flash kind={:info} flash={@flash} /> <.flash kind={:error} flash={@flash} />
       <.flash
         id="client-error"
         kind={:error}
@@ -181,7 +175,6 @@ defmodule KameramaniPhxWeb.Layouts do
     ~H"""
     <div class="card relative flex flex-row items-center border-2 border-base-300 bg-base-300 rounded-full">
       <div class="absolute w-1/3 h-full rounded-full border-1 border-base-200 bg-base-100 brightness-200 left-0 [[data-theme=light]_&]:left-1/3 [[data-theme=dark]_&]:left-2/3 transition-[left]" />
-
       <button
         class="flex p-2 cursor-pointer w-1/3"
         phx-click={JS.dispatch("phx:set-theme")}
@@ -189,7 +182,6 @@ defmodule KameramaniPhxWeb.Layouts do
       >
         <.icon name="hero-computer-desktop-micro" class="size-4 opacity-75 hover:opacity-100" />
       </button>
-
       <button
         class="flex p-2 cursor-pointer w-1/3"
         phx-click={JS.dispatch("phx:set-theme")}
@@ -197,7 +189,6 @@ defmodule KameramaniPhxWeb.Layouts do
       >
         <.icon name="hero-sun-micro" class="size-4 opacity-75 hover:opacity-100" />
       </button>
-
       <button
         class="flex p-2 cursor-pointer w-1/3"
         phx-click={JS.dispatch("phx:set-theme")}

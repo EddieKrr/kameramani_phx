@@ -76,16 +76,22 @@ defmodule KameramaniPhxWeb.NewAuthLive do
           <.mesage field={@reg_form[:username]} placeholder="Username" />
           <.mesage field={@reg_form[:email]} placeholder="Email" />
           <.mesage field={@reg_form[:age]} placeholder="Age" />
-          <.mesage field={@reg_form[:password]} placeholder="Password" type={if @show_password, do: "text", else: "password"} />
-          <button type="button" phx-click="toggle_password" class="rounded-full bg-indigo-500 text-white p-1 mt-1">
-            <%= if @pass_visible, do: "Hide", else: "Show" %> Password
+          <.mesage
+            field={@reg_form[:password]}
+            placeholder="Password"
+            type={if @show_password, do: "text", else: "password"}
+          />
+          <button
+            type="button"
+            phx-click="toggle_password"
+            class="rounded-full bg-indigo-500 text-white p-1 mt-1"
+          >
+            {if @show_password, do: "Hide", else: "Show"} Password
           </button>
-
-          <button type="submit" class="rounded-full bg-indigo-700 text-white p-2">
-            Register
-          </button>
+          <button type="submit" class="rounded-full bg-indigo-700 text-white p-2">Register</button>
         </.form>
       </div>
+
       <div class="form-login flex w-1/2">
         <form
           action={~p"/users/log-in"}
@@ -94,27 +100,51 @@ defmodule KameramaniPhxWeb.NewAuthLive do
         >
           <input type="hidden" name="_csrf_token" value={Plug.CSRFProtection.get_csrf_token()} />
           <.log field={@log_form[:email]} placeholder="Email" name="user[email]" />
-          <.log field={@log_form[:password]} placeholder="Password" name="user[password]" type={if @show_password, do: "text", else: "password"} />
-          <button type="button" phx-click="toggle_key" class="rounded-full bg-sky-500 text-white p-1 mt-1">
-            <%= if @show_password, do: "Hide", else: "Show" %> Password
+          <.log
+            field={@log_form[:password]}
+            placeholder="Password"
+            name="user[password]"
+            type={if @show_password, do: "text", else: "password"}
+          />
+          <button
+            type="button"
+            phx-click="toggle_password"
+            class="rounded-full bg-sky-500 text-white p-1 mt-1"
+          >
+            {if @show_password, do: "Hide", else: "Show"} Password
           </button>
-
-          <button type="submit" class="rounded-full bg-sky-500 p-2">
-            Login
-          </button>
+           <button type="submit" class="rounded-full bg-sky-500 p-2">Login</button>
         </form>
       </div>
+
       <div class="toggle-box absolute top-0 left-1/2 w-full h-full z-10 overflow-hidden transition-all duration-[600ms] ease-in-out group-[.active]:-translate-x-full rounded-l-[150px] group-[.active]:rounded-l-none group-[.active]:rounded-r-[150px]">
-        <div class="absolute h-full w-[300%] left-[-100%] bg-gradient-to-r from-sky-500 via-indigo-950 to-slate-950 text-white transition-transform duration-[600ms] ease-in-out group-[.active]:translate-x-1/2"></div>
+        <div class="absolute h-full w-[300%] left-[-100%] bg-gradient-to-r from-sky-500 via-indigo-950 to-slate-950 text-white transition-transform duration-[600ms] ease-in-out group-[.active]:translate-x-1/2">
+        </div>
+
         <div class="toggle-panel login absolute w-1/2 h-full flex flex-col justify-center items-center px-8 text-center top-0 transition-all duration-600 ease-in-out left-0 group-[.active]:-left-1/2 delay-300">
           <h1 class="text-xl font-bold">Hii Uso ni Familiar</h1>
+
           <p class="mb-5">Go ahead and login</p>
-          <button phx-click="set_panel_login" class="log-btn w-40 h-11 bg-transparent rounded-full border-2 border-white shadow-none">Log In</button>
+
+          <button
+            phx-click="set_panel_login"
+            class="log-btn w-40 h-11 bg-transparent rounded-full border-2 border-white shadow-none"
+          >
+            Log In
+          </button>
         </div>
+
         <div class="toggle-panel register absolute w-1/2 h-full flex flex-col justify-center items-center px-8 text-center top-0 transition-all duration-600 ease-in-out -right-1/2 group-[.active]:right-0 group-[.active]:delay-300">
           <h1 class="text-xl font-bold">Not Part of Family?</h1>
+
           <p class="mb-5">Go ahead and register</p>
-          <button phx-click="set_panel_register" class="reg-btn w-40 h-11 bg-transparent rounded-full border-2 border-white shadow-none">Sign Up</button>
+
+          <button
+            phx-click="set_panel_register"
+            class="reg-btn w-40 h-11 bg-transparent rounded-full border-2 border-white shadow-none"
+          >
+            Sign Up
+          </button>
         </div>
       </div>
     </div>
