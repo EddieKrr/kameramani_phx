@@ -68,14 +68,9 @@ defmodule KameramaniPhxWeb.HomeLive do
 
   def render(assigns) do
     ~H"""
-    <div class="flex h-screen w-full bg-[#060606] text-gray-100 overflow-hidden font-sans">
+    <div class="flex h-screen pt-[64px] w-full bg-[#060606] text-gray-100 overflow-hidden font-sans">
       <aside class="w-[70px] xl:w-64 bg-[#0e0e10] border-r border-white/5 flex flex-col transition-all duration-300">
-        <div class="p-4 flex items-center gap-3">
-          <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shrink-0 shadow-lg shadow-indigo-500/20">
-            <.icon name="hero-bolt-solid" class="h-5 w-5 text-white" />
-          </div>
-          <span class="font-black text-lg tracking-tighter hidden xl:block uppercase italic text-indigo-500">Kameramani</span>
-        </div>
+        
 
         <div class="flex-1 overflow-y-auto px-2 space-y-4 py-4">
           <div class="hidden xl:block px-2 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Followed Channels</div>

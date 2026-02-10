@@ -78,6 +78,8 @@ defmodule KameramaniPhxWeb.Router do
       on_mount: [{KameramaniPhxWeb.UserAuth, :require_authenticated}] do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
+      live "/studio", StudioLive
+      
     end
 
     post "/users/update-password", UserSessionController, :update_password

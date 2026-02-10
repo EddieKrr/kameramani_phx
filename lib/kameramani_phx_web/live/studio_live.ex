@@ -37,22 +37,19 @@ defmodule KameramaniPhxWeb.StudioLive do
 
   def render(assigns) do
     ~H"""
-    <div class="min-h-screen bg-[#0e0e10] text-gray-100 font-sans">
-      <.navbar current_user={@current_user} layout={:fixed} />
+    <div class="h-[100%] bg-[#0e0e10] text-gray-100 font-sans pt-[64px]">
 
       <main class="max-w-7xl mx-auto p-6">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
           <div class="lg:col-span-2 space-y-6">
 
-            <div class="aspect-video bg-black rounded-xl overflow-hidden relative border border-white/10 shadow-xl flex items-center justify-center group">
+            <div class="aspect-video bg-black rounded-xl relative border border-white/10 shadow-xl flex items-center justify-center group">
               <div class="text-center">
                 <.icon name="hero-video-camera-slash" class="h-16 w-16 text-gray-700 mb-2 mx-auto"/>
                 <span class="text-gray-500 font-medium">Offline</span>
               </div>
-              <div class="absolute top-4 left-4 bg-black/60 backdrop-blur px-2 py-1 rounded text-xs font-mono border border-white/10">
-                PREVIEW
-              </div>
+              <div class="absolute top-4 left-4 bg-black/60 backdrop-blur px-2 py-1 rounded text-xs font-mono border border-white/10"> PREVIEW</div>
             </div>
 
             <div class="bg-[#18181b] p-6 rounded-xl border border-white/5">
@@ -77,7 +74,7 @@ defmodule KameramaniPhxWeb.StudioLive do
                 </div>
 
                 <div class="flex justify-end pt-2">
-                  <.button class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold border-none">
+                  <.button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold border-none rounded-lg p-2">
                     Update Info
                   </.button>
                 </div>

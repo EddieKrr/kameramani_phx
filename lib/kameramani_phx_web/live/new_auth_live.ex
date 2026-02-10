@@ -1,5 +1,8 @@
 defmodule KameramaniPhxWeb.NewAuthLive do
   use KameramaniPhxWeb, :live_view
+
+  on_mount {KameramaniPhxWeb.UserAuth, :mount_current_scope}
+
   import Phoenix.LiveView
 
   import Phoenix.LiveView
