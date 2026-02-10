@@ -35,3 +35,5 @@ kameramani_phx-*.tar
 npm-debug.log
 /assets/node_modules/
 
+#storing personal credentials for development
+/config/*.local.exs
