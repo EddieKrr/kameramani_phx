@@ -88,7 +88,7 @@ defmodule KameramaniPhxWeb.Layouts do
       <% else %>
         <.link
           navigate={~p"/auth"}
-          class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full transition-colors"
+          class="hover:bg-blue-400 bg-transparent border-2 border-blue-500/60 text-white px-4 py-2 rounded-full transition-colors duration-300 ease-in-out"
         >
           Sign In / Register
         </.link>
