@@ -39,11 +39,13 @@ defmodule KameramaniPhxWeb.ChatLive do
     message = String.trim(message)
 
     if message != "" do
+      nai_time = DateTime.now!("Africa/Nairobi")
+      nu_time = KameramaniPhxWeb.Cldr.Time.to_string!(nai_time, format: :medium)
       new_message = %{
         id: System.unique_integer([:positive]),
         name: socket.assigns.username,
         text: message,
-        dt: DateTime.utc_now() |> Calendar.strftime("%H:%M"),
+        dt: nu_time,  
         color: socket.assigns.user_color
       }
 
