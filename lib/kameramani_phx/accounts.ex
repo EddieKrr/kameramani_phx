@@ -56,6 +56,7 @@ defmodule KameramaniPhx.Accounts do
   def sudo_mode?(_user, _minutes), do: false
 
 
+
 #user following feature
 def follow_user(follower_id, followed_id) do
 
@@ -72,6 +73,8 @@ end
 def unfollow_user(follower_id, followed_id) do
   Repo.delete_all(from(f in "follows", where: [follower_id: ^follower_id, followed_id: ^followed_id]))
 end
+
+
 
 
 
@@ -123,9 +126,7 @@ end
     end
   end
 
-  def update_user_password(%User{} = user, new_password) do
-    User.update_user_password(user, new_password)
-  end
+
 
   def change_user_email(%User{} = user, attrs, opts \\ []) do
     User.email_changeset(user, attrs, opts)
@@ -137,9 +138,7 @@ end
     |> Repo.update()
   end
 
-  def change_user_password(%User{} = user, attrs, opts \\ []) do
-    User.password_changeset(user, attrs, opts)
-  end
+
 
   def deliver_user_update_email_instructions(%User{} = user, current_email, update_email_url_fun)
       when is_function(update_email_url_fun, 1) do
@@ -155,26 +154,22 @@ end
     UserNotifier.deliver_login_instructions(user, magic_link_url_fun.(encoded_token))
   end
 
-  def change_user_email(user, current_email, new_email) do
-    user
-    |> User.email_changeset(current_email, new_email)
-    |> Repo.update()
+
+
+  def change_user_email(user, _current_email, new_email, password) do
+    email_changes = User.email_changeset(user, %{email: new_email})
+    password_changes = User.password_changeset(user, %{password: password})
+
+    changeset = Ecto.Changeset.merge(email_changes, password_changes)
+    Repo.update(changeset)
   end
 
-  def change_user_email(user, current_email, new_email, password) do
-    user
-    |> User.email_changeset(current_email, new_email)
-    |> User.password_changeset(password)
-    |> Ecto.Changeset.merge()
-    |> Repo.update()
-  end
+  def change_user_email(user, _current_email, new_email, password, extra_attrs) do
+    email_changes = User.email_changeset(user, %{email: new_email})
+    password_changes = User.password_changeset(user, %{password: password})
 
-  def change_user_email(user, current_email, new_email, password, extra_attrs) do
     changeset =
-      user
-      |> User.email_changeset(current_email, new_email)
-      |> User.password_changeset(password)
-      |> Ecto.Changeset.merge()
+      Ecto.Changeset.merge(email_changes, password_changes)
       |> Ecto.Changeset.cast(extra_attrs, :map, [])
 
     Repo.update(changeset)
@@ -194,6 +189,7 @@ end
       end
     end)
   end
+
 
   defp user_registration_changeset(attrs) do
     %User{}
@@ -223,4 +219,6 @@ end
     |> Ecto.Changeset.change(:confirmed_at)
     |> Ecto.Changeset.put_change(:confirmed_at, DateTime.utc_now())
   end
+
+
 end

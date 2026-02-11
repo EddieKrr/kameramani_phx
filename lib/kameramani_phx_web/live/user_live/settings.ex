@@ -15,6 +15,7 @@ defmodule KameramaniPhxWeb.UserLive.Settings do
       </.header>
     </div>
 
+
     <.form for={@email_form} id="email_form" phx-submit="update_email" phx-change="validate_email">
       <.input
         field={@email_form[:email]}
@@ -61,6 +62,9 @@ defmodule KameramaniPhxWeb.UserLive.Settings do
         Save Password
       </.button>
     </.form>
+
+
+
     """
   end
 

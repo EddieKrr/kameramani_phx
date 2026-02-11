@@ -9,15 +9,18 @@ defmodule KameramaniPhx.Accounts.User do
     field :age, :integer
     field :email, :string
     field :password, :string, virtual: true, redact: true
+
     field :password_confirmation, :string, virtual: true, redact: true
-    field :hashed_password, :string, redact: true
-    field :profile_picture, :string
+
     field :bio, :string
+    field :profile_picture, :string
+
+    field :hashed_password, :string, redact: true
     field :confirmed_at, :utc_datetime
     field :authenticated_at, :utc_datetime, virtual: true
 
     # People THIS user is following
-    many_to_many :following, Kameramani.Accounts.User,
+    many_to_many :following, KameramaniPhx.Accounts.User,
       join_through: "follows",
       join_keys: [follower_id: :id, followed_id: :id]
 
@@ -40,23 +43,9 @@ defmodule KameramaniPhx.Accounts.User do
     |> validate_password(opts)
   end
 
-  @doc """
-  A user changeset for changing the email.
-  """
-  def email_changeset(user, attrs, opts \\ []) do
-    user
-    |> cast(attrs, [:email])
-    |> validate_email(opts)
-  end
 
-  @doc """
-  A user changeset for changing the password.
-  """
-  def password_changeset(user, attrs, opts \\ []) do
-    user
-    |> cast(attrs, [:password])
-    |> validate_password(opts)
-  end
+
+
 
   defp validate_email(changeset, opts) do
     changeset =
@@ -182,4 +171,10 @@ defmodule KameramaniPhx.Accounts.User do
         updated_at: DateTime.utc_now()
       ]])
   end
+
+  #unfollow a user
+  def unfollow_user(follower, follower) do
+
+  end
+
 end
