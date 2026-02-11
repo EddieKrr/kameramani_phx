@@ -133,5 +133,9 @@ defmodule KameramaniPhx.Accounts.User do
       ]])
   end
 
-  
+  #unfollow a user
+  def unfollow_user(follower, follower) do
+
+  end
+
 end
