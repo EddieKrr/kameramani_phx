@@ -20,12 +20,25 @@ defmodule KameramaniPhxWeb.Router do
   scope "/", KameramaniPhxWeb do
     pipe_through :browser
 
-    # Grouped in a live_session to allow seamless navigation
-    live_session :public, on_mount: [{KameramaniPhxWeb.UserAuth, :mount_current_scope}] do
-      live "/", LandingLive, :index
-      live "/auth", NewAuthLive
-      live "/watch/:stream_id", ChatLive, :index
-    end
+    live "/", LandingLive, :index
+    live "/watch/:stream_id", HomeLive, :show
+    live "/auth", NewAuthLive
+    live "/register", AuthLive
+    # live "/studio", StudioLive
+    post "/users/log-in", UserSessionController, :create
+    delete "/users/log-out", UserSessionController, :delete
+  end
+
+  scope "/", KameramaniPhxWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    live "/watch/:stream_id", ChatLive, :show
+  end
+
+  scope "/", KameramaniPhxWeb do
+    pipe_through :auth
+
+    live "/auth", NewAuthLive
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
@@ -40,20 +53,31 @@ defmodule KameramaniPhxWeb.Router do
     end
   end
 
-  ## Authentication routes
+    # Authentication routes
 
-  scope "/", KameramaniPhxWeb do
-    pipe_through [:browser, :require_authenticated_user]
+    scope "/", KameramaniPhxWeb do
 
-    live_session :require_authenticated_user,
-      on_mount: [{KameramaniPhxWeb.UserAuth, :require_authenticated}] do
-      live "/users/settings", UserLive.Settings, :edit
-      live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
-      live "/studio", StudioLive
+      pipe_through [:browser, :require_authenticated_user]
+
+
+
+      live_session :require_authenticated_user,
+
+        on_mount: [{KameramaniPhxWeb.UserAuth, :require_authenticated}] do
+
+        live "/users/settings", UserLive.Settings, :edit
+
+        live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
+
+        live "/studio", StudioLive
+
+      end
+
+
+
+      post "/users/update-password", UserSessionController, :update_password
+
     end
-
-    post "/users/update-password", UserSessionController, :update_password
-  end
 
   scope "/", KameramaniPhxWeb do
     pipe_through [:browser]

@@ -9,11 +9,25 @@ defmodule KameramaniPhx.Accounts.User do
     field :age, :integer
     field :email, :string
     field :password, :string, virtual: true, redact: true
+
+    field :password_confirmation, :string, virtual: true, redact: true
+
     field :bio, :string
     field :profile_picture, :string
+
     field :hashed_password, :string, redact: true
     field :confirmed_at, :utc_datetime
     field :authenticated_at, :utc_datetime, virtual: true
+
+    # People THIS user is following
+    many_to_many :following, KameramaniPhx.Accounts.User,
+      join_through: "follows",
+      join_keys: [follower_id: :id, followed_id: :id]
+
+    # People FOLLOWING this user
+    many_to_many :followers, Kameramani.Accounts.User,
+      join_through: "follows",
+      join_keys: [followed_id: :id, follower_id: :id]
 
     timestamps(type: :utc_datetime)
   end
@@ -29,23 +43,9 @@ defmodule KameramaniPhx.Accounts.User do
     |> validate_password(opts)
   end
 
-  @doc """
-  A user changeset for changing the email.
-  """
-  def email_changeset(user, attrs, opts \\ []) do
-    user
-    |> cast(attrs, [:email])
-    |> validate_email(opts)
-  end
 
-  @doc """
-  A user changeset for changing the password.
-  """
-  def password_changeset(user, attrs, opts \\ []) do
-    user
-    |> cast(attrs, [:password])
-    |> validate_password(opts)
-  end
+
+
 
   defp validate_email(changeset, opts) do
     changeset =
@@ -64,6 +64,45 @@ defmodule KameramaniPhx.Accounts.User do
       changeset
     end
   end
+
+  def email_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:email])
+    |> validate_email(opts)
+    |> case do
+      %{changes: %{email: _}} = changeset -> changeset
+      %{} = changeset -> add_error(changeset, :email, "did not change")
+    end
+  end
+
+  def password_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:password, :password_confirmation])
+    |> validate_required([:password])
+    |> validate_length(:password, min: 12, max: 72)
+    |> validate_confirmation(:password, message: "does not match password")
+    |> case do
+      %{changes: %{password: _}} = changeset ->
+        if Keyword.get(opts, :hash_password, true) do
+          maybe_hash_password(changeset)
+        else
+          changeset
+        end
+      %{} = changeset -> changeset
+    end
+  end
+
+
+
+  defp maybe_validate_unique_email(changeset, opts) do
+    if Keyword.get(opts, :validate_unique, true) do
+      unsafe_validate_unique(changeset, :email, KameramaniPhx.Repo)
+      |> unique_constraint(:email)
+    else
+      changeset
+    end
+  end
+
 
   defp validate_password(changeset, opts) do
     changeset =
