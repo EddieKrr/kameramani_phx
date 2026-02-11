@@ -29,21 +29,18 @@ defmodule KameramaniPhxWeb.Router do
   scope "/", KameramaniPhxWeb do
     pipe_through :browser
 
+    live "/", LandingLive, :index
 
-        live "/", LandingLive, :index
-
-        live "/watch/:stream_id", HomeLive, :show
+    live "/watch/:stream_id", ChatLive, :show
   end
 
   scope "/", KameramaniPhxWeb do
     pipe_through :auth
 
-        live "/auth", NewAuthLive
+    live "/auth", NewAuthLive
 
-    live "/", LandingLive, :index
-    live "/register", AuthLive
-    live "/watch/:stream_id", HomeLive, :show
-    live "/studio", StudioLive
+    
+
 
   end
 
@@ -78,6 +75,7 @@ defmodule KameramaniPhxWeb.Router do
       on_mount: [{KameramaniPhxWeb.UserAuth, :require_authenticated}] do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
+      live "/studio", StudioLive
     end
 
     post "/users/update-password", UserSessionController, :update_password
@@ -85,7 +83,6 @@ defmodule KameramaniPhxWeb.Router do
 
   scope "/", KameramaniPhxWeb do
     pipe_through [:browser]
-
 
     post "/users/log-in", UserSessionController, :create
     delete "/users/log-out", UserSessionController, :delete
