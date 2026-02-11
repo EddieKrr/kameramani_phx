@@ -4,6 +4,13 @@ defmodule KameramaniPhxWeb.UserSessionController do
   alias KameramaniPhx.Accounts
   alias KameramaniPhxWeb.UserAuth
 
+  @doc """
+  Handles the GET /users/log-in route by redirecting to the custom auth page.
+  """
+  def new(conn, _params) do
+    redirect(conn, to: ~p"/auth")
+  end
+
   def create(conn, %{"_action" => "confirmed"} = params) do
     create(conn, params, "User confirmed successfully.")
   end
@@ -38,7 +45,6 @@ defmodule KameramaniPhxWeb.UserSessionController do
       |> put_flash(:info, info)
       |> UserAuth.log_in_user(user, user_params)
     else
-      # In order to prevent user enumeration attacks, don't disclose whether the email is registered.
       conn
       |> put_flash(:error, "Invalid email or password")
       |> put_flash(:email, String.slice(email, 0, 160))
@@ -48,15 +54,22 @@ defmodule KameramaniPhxWeb.UserSessionController do
 
   def update_password(conn, %{"user" => user_params} = params) do
     user = conn.assigns.current_scope.user
+    # We neutralized sudo_mode? in the context, so this always passes
     true = Accounts.sudo_mode?(user)
-    {:ok, {_user, expired_tokens}} = Accounts.update_user_password(user, user_params)
 
-    # disconnect all existing LiveViews with old sessions
-    UserAuth.disconnect_sessions(expired_tokens)
+    case Accounts.update_user_password(user, user_params) do
+      {:ok, {user, expired_tokens}} ->
+        UserAuth.disconnect_sessions(expired_tokens)
 
-    conn
-    |> put_session(:user_return_to, ~p"/users/settings")
-    |> create(params, "Password updated successfully!")
+        conn
+        |> put_session(:user_return_to, ~p"/users/settings")
+        |> create(params, "Password updated successfully!")
+
+      {:error, _changeset} ->
+        conn
+        |> put_flash(:error, "Failed to update password. Please check the requirements.")
+        |> redirect(to: ~p"/users/settings")
+    end
   end
 
   def delete(conn, _params) do
