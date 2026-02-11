@@ -25,7 +25,7 @@ defmodule KameramaniPhx.Accounts.User do
       join_keys: [follower_id: :id, followed_id: :id]
 
     # People FOLLOWING this user
-    many_to_many :followers, Kameramani.Accounts.User,
+    many_to_many :followers, KameramaniPhx.Accounts.User,
       join_through: "follows",
       join_keys: [followed_id: :id, follower_id: :id]
 
