@@ -88,6 +88,24 @@ defmodule KameramaniPhx.Accounts do
     end
   end
 
+  def update_user_password(%User{} = user, new_password) do
+    User.update_user_password(user, new_password)
+  end
+
+  def change_user_email(%User{} = user, attrs, opts \\ []) do
+    User.email_changeset(user, attrs, opts)
+  end
+
+  def update_user_email(%User{} = user, attrs) do
+    user
+    |> User.email_changeset(attrs)
+    |> Repo.update()
+  end
+
+  def change_user_password(%User{} = user, attrs, opts \\ []) do
+    User.password_changeset(user, attrs, opts)
+  end
+
   def deliver_user_update_email_instructions(%User{} = user, current_email, update_email_url_fun)
       when is_function(update_email_url_fun, 1) do
     {encoded_token, user_token} = UserToken.build_email_token(user, "change:" <> current_email)

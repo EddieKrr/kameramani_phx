@@ -1,6 +1,7 @@
 defmodule KameramaniPhx.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  alias KameramaniPhx.Repo
 
   schema "users" do
     field :name, :string
@@ -8,6 +9,8 @@ defmodule KameramaniPhx.Accounts.User do
     field :age, :integer
     field :email, :string
     field :password, :string, virtual: true, redact: true
+    field :bio, :string
+    field :profile_picture, :string
     field :hashed_password, :string, redact: true
     field :confirmed_at, :utc_datetime
     field :authenticated_at, :utc_datetime, virtual: true
@@ -20,9 +23,27 @@ defmodule KameramaniPhx.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:name, :username, :email, :age, :password])
-    |> validate_required([:name, :username, :email, :age, :password])
+    |> cast(attrs, [:name, :username, :email, :age, :password, :bio, :profile_picture])
+    |> validate_required([:name, :username, :email, :age, :password, :bio, :profile_picture])
     |> validate_email(opts)
+    |> validate_password(opts)
+  end
+
+  @doc """
+  A user changeset for changing the email.
+  """
+  def email_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:email])
+    |> validate_email(opts)
+  end
+
+  @doc """
+  A user changeset for changing the password.
+  """
+  def password_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:password])
     |> validate_password(opts)
   end
 
@@ -70,6 +91,16 @@ defmodule KameramaniPhx.Accounts.User do
     end
   end
 
+  def update_user_password(user, new_password) do
+    changeset = change(user, password: new_password)
+    |> validate_password([])
+    case Repo.update(changeset) do
+      {:ok, updated_user} ->
+        {:noreply, updated_user}
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
   @doc """
   Verifies the password.
   """

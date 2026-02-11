@@ -23,10 +23,6 @@ defmodule KameramaniPhxWeb.NavComponents do
         <div class="bg-indigo-300 hover:bg-indigo-500 p-1 rounded-xl">
           <.link navigate={~p"/auth"}>Sign In/Register</.link>
         </div>
-
-        <div class="border-2 border-indigo-300 hover:bg-indigo-300 hover:text-black p-1 rounded-xl">
-          <.link navigate={~p"/register"}>Sign In/Register</.link>
-        </div>
       <% end %>
     </div>
     """

@@ -56,11 +56,6 @@ defmodule KameramaniPhxWeb.ChatLive do
     end
   end
 
-  # Receive the broadcasted message and put it in the Stream
-  def handle_info({:new_message, new_message}, socket) do
-    {:noreply, stream_insert(socket, :messages, new_message)}
-  end
-
   def handle_event("validate", %{"chat" => %{"ch_message" => message}}, socket) do
     form = to_form(%{"ch_message" => message}, as: :chat)
     {:noreply, assign(socket, form: form)}
