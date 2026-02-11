@@ -18,7 +18,7 @@ defmodule KameramaniPhxWeb.NavComponents do
           class="rounded-full h-12 w-12 object-contain"
         />
       <% else %>
-        <div class="text-blue-500"><.link navigate={~p"/"}>Kameramani</.link></div>
+        <div class="text-blue-500 w-fitcontnt"><.link navigate={~p"/"}>Kameramani</.link></div>
         <input class="border-2 border-gray-600 focus:outline-none rounded-xl" placeholder="Search" />
         <div class="bg-indigo-300 hover:bg-indigo-500 p-1 rounded-xl">
           <.link navigate={~p"/auth"}>Sign In/Register</.link>

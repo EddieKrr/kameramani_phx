@@ -10,7 +10,7 @@ defmodule KameramaniPhx.Accounts.UserToken do
   # since someone with access to the email may take over the account.
   @magic_link_validity_in_minutes 15
   @change_email_validity_in_days 7
-  @session_validity_in_days 14
+  @session_validity_in_days 20
 
   schema "users_tokens" do
     field :token, :binary
