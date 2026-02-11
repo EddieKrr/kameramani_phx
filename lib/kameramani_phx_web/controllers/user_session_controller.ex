@@ -58,7 +58,7 @@ defmodule KameramaniPhxWeb.UserSessionController do
     true = Accounts.sudo_mode?(user)
 
     case Accounts.update_user_password(user, user_params) do
-      {:ok, {user, expired_tokens}} ->
+      {:ok, {_user, expired_tokens}} ->
         UserAuth.disconnect_sessions(expired_tokens)
 
         conn

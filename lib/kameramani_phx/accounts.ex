@@ -10,6 +10,10 @@ defmodule KameramaniPhx.Accounts do
 
   ## Database getters
 
+
+  def get_all_users do
+    Repo.all(User)
+  end
   def get_user_by_email(email) when is_binary(email) do
     Repo.get_by(User, email: email)
   end
@@ -104,6 +108,41 @@ defmodule KameramaniPhx.Accounts do
 
   def change_user_password(%User{} = user, attrs, opts \\ []) do
     User.password_changeset(user, attrs, opts)
+  end
+
+
+  def change_user_profile(%User{} = user, attrs) do
+    User.profile_changeset(user, attrs)
+  end
+
+  def update_user_profile(%User{} = user, attrs) do
+    user
+    |> User.profile_changeset(attrs)
+    |> Repo.update()
+  end
+
+
+
+    #lets make the user followable by adding a followers and following association
+  def follow_user(follower, following_id) do
+        follower_id = if is_map(follower), do: follower.id, else: follower
+      f_id = cond do
+        is_map(following_id) -> following_id.id
+        is_binary(following_id) ->String.to_integer(following_id)
+        true -> following_id
+      end
+      
+      Repo.insert_all("follows", [[
+        follower_id: follower_id,
+        followed_id: f_id,
+        inserted_at: DateTime.utc_now(),
+        updated_at: DateTime.utc_now()
+      ]])
+  end
+
+  #unfollow a user
+  def unfollow_user(follower, follower) do
+
   end
 
   def deliver_user_update_email_instructions(%User{} = user, current_email, update_email_url_fun)
