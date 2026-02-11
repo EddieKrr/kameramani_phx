@@ -132,4 +132,6 @@ defmodule KameramaniPhx.Accounts.User do
         updated_at: DateTime.utc_now()
       ]])
   end
+
+  
 end

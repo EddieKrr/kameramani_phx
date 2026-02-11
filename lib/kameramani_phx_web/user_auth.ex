@@ -37,6 +37,7 @@ defmodule KameramaniPhxWeb.UserAuth do
 
     conn
     |> create_or_extend_session(user, params)
+    |> tap(fn conn -> IO.inspect(get_session(conn, :user_token), label: "Token put into session in log_in_user") end)
     |> redirect(to: user_return_to || signed_in_path(conn))
   end
 
@@ -67,6 +68,7 @@ defmodule KameramaniPhxWeb.UserAuth do
   def fetch_current_scope_for_user(conn, _opts) do
     with {token, conn} <- ensure_user_token(conn),
          {user, token_inserted_at} <- Accounts.get_user_by_session_token(token) do
+      IO.inspect({user, token_inserted_at}, label: "User and token_inserted_at from session token")
       conn
       |> assign(:current_scope, Scope.for_user(user))
       |> maybe_reissue_user_session_token(user, token_inserted_at)
@@ -77,11 +79,13 @@ defmodule KameramaniPhxWeb.UserAuth do
 
   defp ensure_user_token(conn) do
     if token = get_session(conn, :user_token) do
+      IO.inspect(token, label: "Token from session in ensure_user_token")
       {token, conn}
     else
       conn = fetch_cookies(conn, signed: [@remember_me_cookie])
 
       if token = conn.cookies[@remember_me_cookie] do
+        IO.inspect(token, label: "Token from remember_me cookie in ensure_user_token")
         {token, conn |> put_token_in_session(token) |> put_session(:user_remember_me, true)}
       else
         nil
