@@ -121,4 +121,15 @@ defmodule KameramaniPhx.Accounts.User do
     now = DateTime.utc_now(:second)
     change(user, confirmed_at: now)
   end
+
+
+  #lets make the user followable by adding a followers and following association
+  def follow_user(follower, following_id) do
+      Repo.insert_all("follows", [[
+        follower_id: follower.id,
+        following_id: String.to_integer(following_id),
+        inserted_at: DateTime.utc_now(),
+        updated_at: DateTime.utc_now()
+      ]])
+  end
 end
