@@ -9,10 +9,6 @@ defmodule KameramaniPhxWeb.Cldr do
     providers: [
       Cldr.Number,
       Cldr.Calendar,
-      Cldr.DateTime,
-      Cldr.List,
-      Cldr.Unit,
-      Cldr.Territory,
-      Cldr.Language
+      Cldr.DateTime
     ]
 end

@@ -10,7 +10,7 @@ defmodule KameramaniPhxWeb.NavComponents do
       <%= if @current_user do %>
         <div class="text-blue-500"><.link navigate={~p"/"}>Kameramani</.link></div>
 
-        <div class="border-2 border-gray-700 text-gray-700">Search</div>
+        <div class="border-2 border-gray-700 text-gray-700 focus:outline-none">Search</div>
 
         <img
           alt={@current_user.username}
