@@ -154,26 +154,22 @@ end
     UserNotifier.deliver_login_instructions(user, magic_link_url_fun.(encoded_token))
   end
 
-  def change_user_email(user, current_email, new_email) do
-    user
-    |> User.email_changeset(current_email, new_email)
-    |> Repo.update()
+
+
+  def change_user_email(user, _current_email, new_email, password) do
+    email_changes = User.email_changeset(user, %{email: new_email})
+    password_changes = User.password_changeset(user, %{password: password})
+
+    changeset = Ecto.Changeset.merge(email_changes, password_changes)
+    Repo.update(changeset)
   end
 
-  def change_user_email(user, current_email, new_email, password) do
-    user
-    |> User.email_changeset(current_email, new_email)
-    |> User.password_changeset(password)
-    |> Ecto.Changeset.merge()
-    |> Repo.update()
-  end
+  def change_user_email(user, _current_email, new_email, password, extra_attrs) do
+    email_changes = User.email_changeset(user, %{email: new_email})
+    password_changes = User.password_changeset(user, %{password: password})
 
-  def change_user_email(user, current_email, new_email, password, extra_attrs) do
     changeset =
-      user
-      |> User.email_changeset(current_email, new_email)
-      |> User.password_changeset(password)
-      |> Ecto.Changeset.merge()
+      Ecto.Changeset.merge(email_changes, password_changes)
       |> Ecto.Changeset.cast(extra_attrs, :map, [])
 
     Repo.update(changeset)

@@ -20,7 +20,7 @@ defmodule KameramaniPhx.Accounts.User do
     field :authenticated_at, :utc_datetime, virtual: true
 
     # People THIS user is following
-    many_to_many :following, Kameramani.Accounts.User,
+    many_to_many :following, KameramaniPhx.Accounts.User,
       join_through: "follows",
       join_keys: [follower_id: :id, followed_id: :id]
 
