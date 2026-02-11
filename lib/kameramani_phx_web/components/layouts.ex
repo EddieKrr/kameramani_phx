@@ -35,7 +35,7 @@ defmodule KameramaniPhxWeb.Layouts do
 
   def app(assigns) do
     ~H"""
-    <header class="navbar fixed top-0 left-0 right-0 z-50 max-w-1440 mx-auto rounded-2xl flex flex-row items-center justify-between bg-slate-800/60 backdrop-blur border-2 mt-2 border-slate-700 px-4 sm:px-6 lg:px-8">
+    <header class="navbar fixed top-0 left-0 right-0 z-50 max-w-1440 mx-auto rounded-2xl flex flex-row items-center justify-between bg-slate-800/60 backdrop-blur border-2 mt-3 border-slate-700 px-4 sm:px-6 lg:px-8">
       <div class="flex">
         <.link
           href="/"
@@ -98,7 +98,7 @@ defmodule KameramaniPhxWeb.Layouts do
       <% end %>
     </header>
 
-    <main class="">
+    <main class="pt-24 bg-[#0e0e10]">
       <div class="">{render_slot(@inner_block)}</div>
     </main>
     <.flash_group flash={@flash} />
