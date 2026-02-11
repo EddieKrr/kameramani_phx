@@ -31,7 +31,7 @@ defmodule KameramaniPhxWeb.Router do
 
     live "/", LandingLive, :index
 
-    live "/watch/:stream_id", HomeLive, :show
+    live "/watch/:stream_id", ChatLive, :show
   end
 
   scope "/", KameramaniPhxWeb do
@@ -41,7 +41,7 @@ defmodule KameramaniPhxWeb.Router do
 
     live "/", LandingLive, :index
     live "/register", AuthLive
-    live "/watch/:stream_id", HomeLive, :show
+    live "/watch/:stream_id", ChatLive, :show
     live "/studio", StudioLive
   end
 
