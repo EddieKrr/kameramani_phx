@@ -29,22 +29,21 @@ defmodule KameramaniPhxWeb.Router do
   scope "/", KameramaniPhxWeb do
     pipe_through :browser
 
-
-        live "/", LandingLive, :index
-
-        live "/watch/:stream_id", HomeLive, :show
+    live "/", LandingLive, :index
+    live "/watch/:stream_id", HomeLive, :show
+    live "/auth", NewAuthLive
+    live "/register", AuthLive
+    # live "/studio", StudioLive
+    post "/users/log-in", UserSessionController, :create
+    delete "/users/log-out", UserSessionController, :delete
   end
 
   scope "/", KameramaniPhxWeb do
-    pipe_through :auth
+    pipe_through [:browser, :require_authenticated_user]
 
-        live "/auth", NewAuthLive
-
-    live "/", LandingLive, :index
-    live "/register", AuthLive
-    live "/watch/:stream_id", HomeLive, :show
-    live "/studio", StudioLive
-
+    live "/users/settings", UserLive.Settings, :edit
+    live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
+    post "/users/update-password", UserSessionController, :update_password
   end
 
   # Other scopes may use custom stacks.
@@ -69,25 +68,13 @@ defmodule KameramaniPhxWeb.Router do
     end
   end
 
-  ## Authentication routes
+  # Authentication routes
 
-  scope "/", KameramaniPhxWeb do
-    pipe_through [:browser, :require_authenticated_user]
+  # scope "/", KameramaniPhxWeb do
+  #   pipe_through [:browser, :require_authenticated_user]
 
-    live_session :require_authenticated_user,
-      on_mount: [{KameramaniPhxWeb.UserAuth, :require_authenticated}] do
-      live "/users/settings", UserLive.Settings, :edit
-      live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
-    end
-
-    post "/users/update-password", UserSessionController, :update_password
-  end
-
-  scope "/", KameramaniPhxWeb do
-    pipe_through [:browser]
-
-
-    post "/users/log-in", UserSessionController, :create
-    delete "/users/log-out", UserSessionController, :delete
-  end
+  #   live "/users/settings", UserLive.Settings, :edit
+  #   live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
+  #   post "/users/update-password", UserSessionController, :update_password
+  # end
 end

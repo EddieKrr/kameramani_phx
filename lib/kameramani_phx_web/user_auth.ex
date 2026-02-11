@@ -224,8 +224,7 @@ defmodule KameramaniPhxWeb.UserAuth do
       socket =
         socket
         |> Phoenix.LiveView.put_flash(:error, "You must log in to access this page.")
-        |> Phoenix.LiveView.redirect(to: ~p"/users/log-in")
-
+                  |> Phoenix.LiveView.redirect(to: ~p"/auth")
       {:halt, socket}
     end
   end
@@ -239,8 +238,7 @@ defmodule KameramaniPhxWeb.UserAuth do
       socket =
         socket
         |> Phoenix.LiveView.put_flash(:error, "You must re-authenticate to access this page.")
-        |> Phoenix.LiveView.redirect(to: ~p"/users/log-in")
-
+                  |> Phoenix.LiveView.redirect(to: ~p"/auth")
       {:halt, socket}
     end
   end
@@ -264,13 +262,13 @@ defmodule KameramaniPhxWeb.UserAuth do
   Plug for routes that require the user to be authenticated.
   """
   def require_authenticated_user(conn, _opts) do
-    if conn.assigns.current_scope && conn.assigns.current_scope.user do
+    if conn.assigns.current_scope.user do
       conn
     else
       conn
       |> put_flash(:error, "You must log in to access this page.")
       |> maybe_store_return_to()
-      |> redirect(to: ~p"/users/log-in")
+      |> redirect(to: ~p"/auth")
       |> halt()
     end
   end

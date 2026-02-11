@@ -37,6 +37,16 @@ defmodule KameramaniPhx.Accounts do
 
   ## Settings
 
+  def change_user_password(user, attrs \\ %{}, opts \\ []) do
+    User.password_changeset(user, attrs, opts)
+  end
+
+  def update_user_password(user, attrs) do
+    user
+    |> User.password_changeset(attrs)
+    |> update_user_and_delete_all_tokens()
+  end
+
   def sudo_mode?(user, minutes \\ -20)
 
   def sudo_mode?(%User{authenticated_at: ts}, minutes) when is_struct(ts, DateTime) do
@@ -45,6 +55,23 @@ defmodule KameramaniPhx.Accounts do
 
   def sudo_mode?(_user, _minutes), do: false
 
+
+#user following feature
+def follow_user(follower_id, followed_id) do
+
+  Repo.insert_all("follows", [[
+    follower_id: follower_id,
+    followed_id: followed_id,
+    inserted_at: DateTime.utc_now(),
+    updated_at: DateTime.utc_now()
+  ]])
+end
+
+#unfollow a user
+
+def unfollow_user(follower_id, followed_id) do
+  Repo.delete_all(from(f in "follows", where: [follower_id: ^follower_id, followed_id: ^followed_id]))
+end
 
 
 
@@ -107,6 +134,31 @@ defmodule KameramaniPhx.Accounts do
     UserNotifier.deliver_login_instructions(user, magic_link_url_fun.(encoded_token))
   end
 
+  def change_user_email(user, current_email, new_email) do
+    user
+    |> User.email_changeset(current_email, new_email)
+    |> Repo.update()
+  end
+
+  def change_user_email(user, current_email, new_email, password) do
+    user
+    |> User.email_changeset(current_email, new_email)
+    |> User.password_changeset(password)
+    |> Ecto.Changeset.merge()
+    |> Repo.update()
+  end
+
+  def change_user_email(user, current_email, new_email, password, extra_attrs) do
+    changeset =
+      user
+      |> User.email_changeset(current_email, new_email)
+      |> User.password_changeset(password)
+      |> Ecto.Changeset.merge()
+      |> Ecto.Changeset.cast(extra_attrs, :map, [])
+
+    Repo.update(changeset)
+  end
+
   def delete_user_session_token(token) do
     Repo.delete_all(from(UserToken, where: [token: ^token, context: "session"]))
     :ok
@@ -120,5 +172,34 @@ defmodule KameramaniPhx.Accounts do
         {:ok, {user, tokens_to_expire}}
       end
     end)
+  end
+
+  defp user_registration_changeset(attrs) do
+    %User{}
+    |> User.registration_changeset(attrs)
+  end
+
+  defp user_email_changeset(user, current_email, new_email) do
+    user
+    |> Ecto.Changeset.change(:email, current_email)
+    |> Ecto.Changeset.put_change(:email, new_email)
+    |> Ecto.Changeset.validate_required(:email)
+    |> Ecto.Changeset.validate_format(:email)
+    |> Ecto.Changeset.validate_length(:email, 3, 160)
+    |> Ecto.Changeset.validate_format(:email, ~r/@/)
+  end
+
+  defp user_password_changeset(password) do
+    Ecto.Changeset.change(%User{}, :password)
+    |> Ecto.Changeset.validate_required(:password)
+    |> Ecto.Changeset.validate_length(:password, 12, 80)
+    |> Ecto.Changeset.validate_format(:password, ~r/^(?=.*[a-z]+?=.*[0-9])|(?=.*[a-z]+.*$)/)
+    |> Ecto.Changeset.put_change(:hashed_password, Pbkdf2.Base.hash_password(password, "some_salt"))
+  end
+
+  defp user_confirm_changeset(user) do
+    user
+    |> Ecto.Changeset.change(:confirmed_at)
+    |> Ecto.Changeset.put_change(:confirmed_at, DateTime.utc_now())
   end
 end

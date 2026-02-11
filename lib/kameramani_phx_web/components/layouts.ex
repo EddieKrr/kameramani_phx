@@ -33,74 +33,76 @@ defmodule KameramaniPhxWeb.Layouts do
 
   slot :inner_block, required: true
 
-  def app(assigns) do
-    ~H"""
-    <header class="navbar bg-slate-800 border-b border-slate-700 px-4 sm:px-6 lg:px-8">
-      <div class="flex-1">
-        <.link href="/" class="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors max-w-fit">
-          <span class="text-lg font-bold whitespace-nowrap">Kameramani</span>
-        </.link>
+def app(assigns) do
+  ~H"""
+  <header class="navbar bg-[#0e0e10] border-b border-white/5 px-4 h-16 flex items-center justify-between sticky top-0 z-50">
+    <div class="flex items-center gap-4">
+      <.link href="/" class="flex items-center gap-2 text-indigo-500 hover:text-indigo-400 transition-colors">
+        <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/20">
+          <.icon name="hero-bolt-solid" class="h-5 w-5 text-white" />
+        </div>
+        <span class="text-xl font-black tracking-tighter italic">Kameramani</span>
+      </.link>
+    </div>
+
+    <div class="hidden md:flex flex-1 justify-center max-w-md px-4">
+      <div class="relative w-full group">
+        <input
+          type="text"
+          placeholder="Search streams..."
+          class="w-full bg-[#18181b] border border-transparent focus:border-indigo-500/50 text-white pl-10 pr-4 py-1.5 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500/50 placeholder-gray-500 transition-all"
+        />
+        <.icon name="hero-magnifying-glass" class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 group-focus-within:text-indigo-400" />
       </div>
+    </div>
 
-      <div class="flex-none">
-        <div class="flex items-center gap-4">
-          <div class="relative">
-            <input
-              type="text"
-              placeholder="Search streams..."
-              class="bg-slate-700 text-white px-4 py-2 rounded-full w-64 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-slate-400"
-            />
-          </div>
+    <div class="flex items-center gap-2 sm:gap-4">
+      <button class="md:hidden p-2 text-gray-400 hover:text-white">
+        <.icon name="hero-magnifying-glass" class="h-6 w-6" />
+      </button>
 
-          <%= if @current_scope && @current_scope.user do %>
-            <div class="flex items-center gap-3">
-              <span class="text-white">
-                Welcome, <span class="font-semibold text-blue-400"><%= @current_scope.user.username %></span>
-              </span>
-              <div class="relative group">
-                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
-                  <%= String.first(@current_scope.user.username || "U") |> String.upcase() %>
-                </div>
-                <div class="absolute right-0 top-full mt-2 w-48 bg-slate-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                  <div class="py-2">
-                    <.link
-                      navigate={~p"/users/settings"}
-                      class="block px-4 py-2 text-white hover:bg-slate-600 transition-colors"
-                    >
-                      Settings
-                    </.link>
-                    <.link
-                      href={~p"/users/log-out"}
-                      method="delete"
-                      class="block px-4 py-2 text-white hover:bg-slate-600 transition-colors"
-                    >
-                      Log Out
-                    </.link>
-                  </div>
-                </div>
+      <%= if @current_scope && @current_scope.user do %>
+        <div class="flex items-center gap-3">
+          <span class="hidden sm:block text-xs font-bold text-gray-400 uppercase tracking-widest">
+            <span class="text-indigo-500"><%= @current_scope.user.username %></span>
+          </span>
+
+          <div class="relative group">
+            <button class="w-9 h-9 md:w-10 md:h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white font-black border-2 border-transparent group-hover:border-indigo-500 transition-all">
+              <%= String.first(@current_scope.user.username || "U") |> String.upcase() %>
+            </button>
+
+            <div class="absolute right-0 top-full mt-2 w-48 bg-[#18181b] border border-white/10 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden">
+              <div class="py-1">
+                <.link navigate={~p"/users/settings"} class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                  <.icon name="hero-user" class="w-4 h-4" /> Settings
+                </.link>
+                <div class="border-t border-white/5 my-1"></div>
+                <.link href={~p"/users/log-out"} method="delete" class="flex items-center gap-2 px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 transition-colors">
+                  <.icon name="hero-arrow-right-on-rectangle" class="w-4 h-4" /> Log Out
+                </.link>
               </div>
             </div>
-          <% else %>
-            <.link
-              navigate={~p"/auth"}
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full transition-colors"
-            >
-              Sign In / Register
-            </.link>
-          <% end %>
+          </div>
         </div>
-      </div>
-    </header>
+      <% else %>
+        <.link
+          navigate={~p"/auth"}
+          class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg text-xs md:text-sm font-bold transition-all active:scale-95"
+        >
+          Sign In
+        </.link>
+      <% end %>
+    </div>
+  </header>
 
-    <main class="px-4 py-6 sm:px-6 lg:px-8">
-      <div class="mx-auto max-w-7xl">
-        {render_slot(@inner_block)}
-      </div>
-    </main>
+  <main class="w-full">
+    {render_slot(@inner_block)}
+  </main>
 
-    <.flash_group flash={@flash} />
-    """
-  end
+  <.flash_group flash={@flash} />
+  """
+end
 
   @doc """
   Renders auth layout without navbar for login/register pages.
