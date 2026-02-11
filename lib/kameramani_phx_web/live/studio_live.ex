@@ -35,6 +35,12 @@ defmodule KameramaniPhxWeb.StudioLive do
     {:noreply, assign(socket, stream_key_visible: !socket.assigns.stream_key_visible)}
   end
 
+  def handle_params(_params, _url, socket) do
+    {:noreply,
+      socket
+      |> assign(page_title: "Creator Studio")}
+  end
+
   def render(assigns) do
     ~H"""
     <div class="h-[100%] bg-[#0e0e10] text-gray-100 font-sans pt-[64px]">

@@ -66,9 +66,9 @@ defmodule KameramaniPhxWeb.ChatLive do
     {:noreply, assign(socket, form: form)}
   end
 
-  def render(assigns) do
-    ~H"""
-    
-    """
+  def handle_params(_params, _url, socket) do
+    {:noreply,
+      socket
+      |> assign(page_title: "Chat")}
   end
 end

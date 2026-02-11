@@ -62,6 +62,12 @@ defmodule KameramaniPhxWeb.NewAuthLive do
     end
   end
 
+  def handle_params(_params, _url, socket) do
+    {:noreply,
+      socket
+      |> assign(page_title: "Authentication")}
+  end
+
   def render(assigns) do
     ~H"""
     <div class={"flex flex-row container group mx-auto my-18 relative w-[768px] max-w-full min-h-[480px] bg-indigo-200 rounded-[30px] shadow-2xl overflow-hidden #{if @active_panel == :login, do: "active", else: ""}"}>
