@@ -1,6 +1,7 @@
 defmodule KameramaniPhx.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  alias KameramaniPhx.Repo
 
   schema "users" do
     field :name, :string
@@ -8,10 +9,13 @@ defmodule KameramaniPhx.Accounts.User do
     field :age, :integer
     field :email, :string
     field :password, :string, virtual: true, redact: true
+
     field :password_confirmation, :string, virtual: true, redact: true
-    field :hashed_password, :string, redact: true
-    field :profile_picture, :string
+
     field :bio, :string
+    field :profile_picture, :string
+
+    field :hashed_password, :string, redact: true
     field :confirmed_at, :utc_datetime
     field :authenticated_at, :utc_datetime, virtual: true
 
@@ -33,11 +37,15 @@ defmodule KameramaniPhx.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:name, :username, :email, :age, :password])
-    |> validate_required([:name, :username, :email, :age, :password])
+    |> cast(attrs, [:name, :username, :email, :age, :password, :bio, :profile_picture])
+    |> validate_required([:name, :username, :email, :age, :password, :bio, :profile_picture])
     |> validate_email(opts)
     |> validate_password(opts)
   end
+
+
+
+
 
   defp validate_email(changeset, opts) do
     changeset =
@@ -84,7 +92,7 @@ defmodule KameramaniPhx.Accounts.User do
     end
   end
 
-  
+
 
   defp maybe_validate_unique_email(changeset, opts) do
     if Keyword.get(opts, :validate_unique, true) do
@@ -122,6 +130,16 @@ defmodule KameramaniPhx.Accounts.User do
     end
   end
 
+  def update_user_password(user, new_password) do
+    changeset = change(user, password: new_password)
+    |> validate_password([])
+    case Repo.update(changeset) do
+      {:ok, updated_user} ->
+        {:noreply, updated_user}
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
   @doc """
   Verifies the password.
   """
@@ -142,4 +160,21 @@ defmodule KameramaniPhx.Accounts.User do
     now = DateTime.utc_now(:second)
     change(user, confirmed_at: now)
   end
+
+
+  #lets make the user followable by adding a followers and following association
+  def follow_user(follower, following_id) do
+      Repo.insert_all("follows", [[
+        follower_id: follower.id,
+        following_id: String.to_integer(following_id),
+        inserted_at: DateTime.utc_now(),
+        updated_at: DateTime.utc_now()
+      ]])
+  end
+
+  #unfollow a user
+  def unfollow_user(follower, follower) do
+
+  end
+
 end

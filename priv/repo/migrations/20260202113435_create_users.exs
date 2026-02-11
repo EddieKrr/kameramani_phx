@@ -4,4 +4,3 @@ defmodule KameramaniPhx.Repo.Migrations.CreateUsers do
   def change do
   end
 end
-

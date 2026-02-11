@@ -72,9 +72,6 @@ defmodule KameramaniPhx.MixProject do
       {:ex_cldr_numbers, "~> 2.38.0"},
       {:ex_cldr_calendars, "~> 2.4"},
       {:ex_cldr_dates_times, "~> 2.25.4"},
-      {:ex_cldr_units, "~> 3.20.1"},
-      {:ex_cldr_territories, "~> 2.11.0"},
-      {:ex_cldr_languages, "~> 0.3.0"},
       {:certifi, "~> 2.0"},
       {:tzdata, "~> 1.1"},
       {:bandit, "~> 1.5"}
