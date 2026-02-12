@@ -47,52 +47,69 @@
             </div>
     </section>
         
-        
-        <.form for={@email_form} id="email_form" phx-submit="update_email" phx-change="validate_email">
+    <section class="bg-slate-800/40 border-2 border-slate-700 rounded-3xl p-8 backdrop-blur-md">
+        <h2 class="text-xl font-bold text-blue-400 mb-6 flex items-center gap-2"><.icon name="hero-envelope" class="h-6 w-6 text-blue-500"/>Email Address</h2>
+        <.form for={@email_form} id="email_form" phx-submit="update_email" phx-change="validate_email" class="flex flex-row align-items justify-between">
+        <.input
+            field={@email_form[:email]}
+            label="Current Email"
+            class = "bg-slate-900/50 border-2 border-slate-700 rounded-2xl focus:outline-none"
+            disabled
+        />
         <.input
             field={@email_form[:email]}
             type="email"
-            label="Email"
+            label="New Email"
             autocomplete="username"
             required
+            class="bg-slate-900/50 border-2 border-slate-700 focus:outline-none rounded-2xl"
         />
-        <.button variant="primary" phx-disable-with="Changing...">Change Email</.button>
+        <div class="flex justify-end">
+         <.button phx-disable-with="Changing..." class="rounded-xl px-8 shadow-lg shadow-blue-500/20 cursor-pointer">Update Email</.button>
+        </div>
         </.form>
+    </section>
         
-    <div class="border-2 border-indigo-400 rounded-lg bg-[#0e0e10]/50">
+    <section class="border-2 border-slate-700 rounded-lg bg-slate-800/40 p-8 mb-6 backdrop-blur">
+        <h2 class="font-bold text-blue-400 text-xl mb-6 flex items-center gap-2"><.icon name="hero-key" class="h-6 w-6"/>Update Password</h2>
         <.form
-        for={@password_form}
-        id="password_form"
-        action={~p"/users/update-password"}
-        method="post"
-        phx-change="validate_password"
-        phx-submit="update_password"
-        phx-trigger-action={@trigger_submit}
-        >
-        <input
-            name={@password_form[:email].name}
-            type="hidden"
-            id="hidden_user_email"
-            autocomplete="username"
-            value={@current_email}
-        />
-        <.input
-            field={@password_form[:password]}
-            type="password"
-            label="New password"
-            autocomplete="new-password"
-            required
-        />
-        <.input
-            field={@password_form[:password_confirmation]}
-            type="password"
-            label="Confirm new password"
-            autocomplete="new-password"
-        />
-        <.button variant="primary" phx-disable-with="Saving...">
-            Save Password
-        </.button>
-        </.form>
-    </div>
+            for={@password_form}
+            id="password_form"
+            action={~p"/users/update-password"}
+            method="post"
+            phx-change="validate_password"
+            phx-submit="update_password"
+            phx-trigger-action={@trigger_submit}
+            class="flex flex-row align-items justify-between"
+            >
+            <input
+                name={@password_form[:email].name}
+                type="hidden"
+                id="hidden_user_email"
+                autocomplete="username"
+                value={@current_email}
+            />
+            <.input
+                field={@password_form[:password]}
+                type="password"
+                label="New password"
+                autocomplete="new-password"
+                required
+                class="bg-slate-900/50 border-2 border-slate-700 rounded-2xl"
+            />
+            <.input
+                field={@password_form[:password_confirmation]}
+                type="password"
+                label="Confirm new password"
+                autocomplete="new-password"
+                class="bg-slate-900/50 border-2 border-slate-700 rounded-2xl focus:outline-none"
+            />
+            <div class="flex justify-end">
+                <.button phx-disable-with="Saving..." class="rounded-lg px-8 shadow-lg shadow-blue-500/20 cursor-pointer">
+                    Save Password
+                </.button>
+            </div>
+            </.form>
+    </section>
 </div>
 </div>
