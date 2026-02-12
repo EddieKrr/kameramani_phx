@@ -13,6 +13,7 @@ defmodule KameramaniPhx.Repo.Migrations.CreateUsersAuthTables do
       add :confirmed_at, :utc_datetime
       add :bio, :string
       add :profile_picture, :string
+
       timestamps(type: :utc_datetime)
     end
 

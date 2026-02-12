@@ -1,0 +1,115 @@
+<div class="max-w-4xl mx-auto">
+    <div class="text-center mb-12">
+        <.header>
+            <h1 class="uppercase font-extrabold tracking-tight italic text-2xl">Account Settings</h1>
+            <p class="mt-2 text-slate-400">Manage your account email address and password settings</p>
+        </.header>
+        </div>
+
+    <div class="grid grid-cols-1 gap-8">
+       <section class="bg-slate-800/40 backdrop-blur-md border-2 border-slate-700 rounded-3xl p-8 shadow-2xl">
+            <h2 class="text-xl text-blue-400 font-bold mb-8 flex items-center gap-2">
+                <.icon name="hero-user-circle" class="h-6 w-6"/>Profile Information
+            </h2>
+            <div class="flex flex-col md:flex-row gap-10 items-center md:items-start">
+               <div class="flex flex-col items-center gap-4">
+                <div class="relative group">
+                    <div class="h-32 w-32 bg-slate-900 border-4 border-slate-700 rounded-full flex items-center justify-center group-hover:border-blue-500 transition-all">
+                        <span class="text-4xl font-bold text-slate-600">
+                        {String.first(@current_email) |> String.upcase()}
+                        </span>
+                    </div>
+                    <div class="absolute inset-0 flex items-center justify-center opacity-0 bg-black/60 rounded-full group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">
+                        <.icon name="hero-camera" class="h-8 w-8 text-white"/>
+                    </div>
+                </div>
+                <span class="text-slate-500 uppercase font-bold text-xs tracking-widest">
+                    Change Avatar</span>
+            </div>
+            <div class="flex-1 w-full space-y-6">
+                    <div class="fieldset">
+                        <label class="label">
+                            <span class="label-text text-slate-300 font-bold">
+                                Biography
+                            </span>
+                        </label>
+                        <textarea 
+                            placeholder="Let your fans know who you are..." 
+                            class="textarea w-full bg-slate-900/50 border-2 border-slate-700 text-white rounded-2xl min-h-[120px] focus:border-blue-500 focus:outline-none" >
+                        </textarea>
+                    </div>
+                    <div class="flex justify-end">
+                        <button class="btn btn-primary rounded-xl px-8 shadow-lg shadow-blue-500/20" disabled>
+                            Update Profile
+                        </button>
+                    </div>
+                </div>
+            </div>
+    </section>
+        
+    <section class="bg-slate-800/40 border-2 border-slate-700 rounded-3xl p-8 backdrop-blur-md">
+        <h2 class="text-xl font-bold text-blue-400 mb-6 flex items-center gap-2"><.icon name="hero-envelope" class="h-6 w-6 text-blue-500"/>Email Address</h2>
+        <.form for={@email_form} id="email_form" phx-submit="update_email" phx-change="validate_email" class="flex flex-row align-items justify-between">
+        <.input
+            field={@email_form[:email]}
+            label="Current Email"
+            class = "bg-slate-900/50 border-2 border-slate-700 rounded-2xl focus:outline-none"
+            disabled
+        />
+        <.input
+            field={@email_form[:email]}
+            type="email"
+            label="New Email"
+            autocomplete="username"
+            required
+            class="bg-slate-900/50 border-2 border-slate-700 focus:outline-none rounded-2xl"
+        />
+        <div class="flex justify-end">
+         <.button phx-disable-with="Changing..." class="rounded-xl px-8 shadow-lg shadow-blue-500/20 cursor-pointer">Update Email</.button>
+        </div>
+        </.form>
+    </section>
+        
+    <section class="border-2 border-slate-700 rounded-lg bg-slate-800/40 p-8 mb-6 backdrop-blur">
+        <h2 class="font-bold text-blue-400 text-xl mb-6 flex items-center gap-2"><.icon name="hero-key" class="h-6 w-6"/>Update Password</h2>
+        <.form
+            for={@password_form}
+            id="password_form"
+            action={~p"/users/update-password"}
+            method="post"
+            phx-change="validate_password"
+            phx-submit="update_password"
+            phx-trigger-action={@trigger_submit}
+            class="flex flex-row align-items justify-between"
+            >
+            <input
+                name={@password_form[:email].name}
+                type="hidden"
+                id="hidden_user_email"
+                autocomplete="username"
+                value={@current_email}
+            />
+            <.input
+                field={@password_form[:password]}
+                type="password"
+                label="New password"
+                autocomplete="new-password"
+                required
+                class="bg-slate-900/50 border-2 border-slate-700 rounded-2xl"
+            />
+            <.input
+                field={@password_form[:password_confirmation]}
+                type="password"
+                label="Confirm new password"
+                autocomplete="new-password"
+                class="bg-slate-900/50 border-2 border-slate-700 rounded-2xl focus:outline-none"
+            />
+            <div class="flex justify-end">
+                <.button phx-disable-with="Saving..." class="rounded-lg px-8 shadow-lg shadow-blue-500/20 cursor-pointer">
+                    Save Password
+                </.button>
+            </div>
+            </.form>
+    </section>
+</div>
+</div>
