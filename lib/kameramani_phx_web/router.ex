@@ -51,7 +51,6 @@ defmodule KameramaniPhxWeb.Router do
     # 3. LIVE SESSION FOR AUTH USERS
     live_session :require_authenticated_user,
       on_mount: [{KameramaniPhxWeb.UserAuth, :require_authenticated}] do
-
       # I moved ChatLive here assuming you want chatting to be private.
       # If you want it public, move it back to the top scope!
       live "/watch/:stream_id", ChatLive, :show

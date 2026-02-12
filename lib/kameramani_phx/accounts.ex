@@ -10,10 +10,10 @@ defmodule KameramaniPhx.Accounts do
 
   ## Database getters
 
-
   def get_all_users do
     Repo.all(User)
   end
+
   def get_user_by_email(email) when is_binary(email) do
     Repo.get_by(User, email: email)
   end
@@ -59,33 +59,25 @@ defmodule KameramaniPhx.Accounts do
 
   def sudo_mode?(_user, _minutes), do: false
 
+  # user following feature
+  def follow_user(follower_id, followed_id) do
+    Repo.insert_all("follows", [
+      [
+        follower_id: follower_id,
+        followed_id: followed_id,
+        inserted_at: DateTime.utc_now(),
+        updated_at: DateTime.utc_now()
+      ]
+    ])
+  end
 
+  # unfollow a user
 
-#user following feature
-def follow_user(follower_id, followed_id) do
-
-  Repo.insert_all("follows", [[
-    follower_id: follower_id,
-    followed_id: followed_id,
-    inserted_at: DateTime.utc_now(),
-    updated_at: DateTime.utc_now()
-  ]])
-end
-
-#unfollow a user
-
-def unfollow_user(follower_id, followed_id) do
-  Repo.delete_all(from(f in "follows", where: [follower_id: ^follower_id, followed_id: ^followed_id]))
-end
-
-
-
-
-
-
-
-
-
+  def unfollow_user(follower_id, followed_id) do
+    Repo.delete_all(
+      from(f in "follows", where: [follower_id: ^follower_id, followed_id: ^followed_id])
+    )
+  end
 
   ## Session
 
@@ -130,8 +122,6 @@ end
     end
   end
 
-
-
   def change_user_email(%User{} = user, attrs, opts \\ []) do
     User.email_changeset(user, attrs, opts)
   end
@@ -141,9 +131,6 @@ end
     |> User.email_changeset(attrs)
     |> Repo.update()
   end
-
-
-
 
   def change_user_profile(%User{} = user, attrs) do
     User.profile_changeset(user, attrs)
@@ -155,28 +142,29 @@ end
     |> Repo.update()
   end
 
-
-
-    #lets make the user followable by adding a followers and following association
+  # lets make the user followable by adding a followers and following association
   def follow_user(follower, following_id) do
-        follower_id = if is_map(follower), do: follower.id, else: follower
-      f_id = cond do
+    follower_id = if is_map(follower), do: follower.id, else: follower
+
+    f_id =
+      cond do
         is_map(following_id) -> following_id.id
-        is_binary(following_id) ->String.to_integer(following_id)
+        is_binary(following_id) -> String.to_integer(following_id)
         true -> following_id
       end
-      
-      Repo.insert_all("follows", [[
+
+    Repo.insert_all("follows", [
+      [
         follower_id: follower_id,
         followed_id: f_id,
         inserted_at: DateTime.utc_now(),
         updated_at: DateTime.utc_now()
-      ]])
+      ]
+    ])
   end
 
-  #unfollow a user
+  # unfollow a user
   def unfollow_user(follower, follower) do
-
   end
 
   def deliver_user_update_email_instructions(%User{} = user, current_email, update_email_url_fun)
@@ -192,8 +180,6 @@ end
     Repo.insert!(user_token)
     UserNotifier.deliver_login_instructions(user, magic_link_url_fun.(encoded_token))
   end
-
-
 
   def change_user_email(user, _current_email, new_email, password) do
     email_changes = User.email_changeset(user, %{email: new_email})
@@ -229,7 +215,6 @@ end
     end)
   end
 
-
   defp user_registration_changeset(attrs) do
     %User{}
     |> User.registration_changeset(attrs)
@@ -250,7 +235,10 @@ end
     |> Ecto.Changeset.validate_required(:password)
     |> Ecto.Changeset.validate_length(:password, 12, 80)
     |> Ecto.Changeset.validate_format(:password, ~r/^(?=.*[a-z]+?=.*[0-9])|(?=.*[a-z]+.*$)/)
-    |> Ecto.Changeset.put_change(:hashed_password, Pbkdf2.Base.hash_password(password, "some_salt"))
+    |> Ecto.Changeset.put_change(
+      :hashed_password,
+      Pbkdf2.Base.hash_password(password, "some_salt")
+    )
   end
 
   defp user_confirm_changeset(user) do
@@ -258,6 +246,4 @@ end
     |> Ecto.Changeset.change(:confirmed_at)
     |> Ecto.Changeset.put_change(:confirmed_at, DateTime.utc_now())
   end
-
-
 end

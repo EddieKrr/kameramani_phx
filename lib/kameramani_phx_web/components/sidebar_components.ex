@@ -14,11 +14,11 @@ defmodule KameramaniPhxWeb.SidebarComponents do
       <div class="flex-col flex-1 p-1 mx-3">
         <div class="flex-col">
           <div class="text-base font-bold">{@name}</div>
-
+          
           <div class="text-sm  truncate">{@game}</div>
         </div>
       </div>
-
+      
       <div class="justify-end">
         <!--<.icon class="h-2 w-3" name="hero-eye"/>-->
         {@viewer_count}

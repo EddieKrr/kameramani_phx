@@ -44,7 +44,7 @@ defmodule KameramaniPhxWeb.Layouts do
           <span class="text-lg font-bold tracking-tighter text-lg uppercase italic">Kameramani</span>
         </.link>
       </div>
-
+      
       <div class="relative">
         <input
           type="text"
@@ -52,7 +52,7 @@ defmodule KameramaniPhxWeb.Layouts do
           class="bg-slate-700 text-white px-4 py-2 rounded-full w-64 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-slate-400"
         />
       </div>
-
+      
       <%= if @current_scope && @current_scope.user do %>
         <div class="flex items-center gap-3">
           <span class="text-white">
@@ -62,7 +62,7 @@ defmodule KameramaniPhxWeb.Layouts do
             <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
               {String.first(@current_scope.user.username || "U") |> String.upcase()}
             </div>
-
+            
             <div class="absolute right-0 top-full mt-2 w-48 bg-slate-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <div class="py-2">
                 <.link
@@ -101,7 +101,7 @@ defmodule KameramaniPhxWeb.Layouts do
     <main class="pt-24 bg-[#0e0e10]">
       <div class="">{render_slot(@inner_block)}</div>
     </main>
-    <.flash_group flash={@flash} />
+     <.flash_group flash={@flash} />
     """
   end
 
@@ -121,7 +121,7 @@ defmodule KameramaniPhxWeb.Layouts do
   def auth(assigns) do
     ~H"""
     <main class>{@inner_content}</main>
-    <.flash_group flash={@flash} />
+     <.flash_group flash={@flash} />
     """
   end
 
@@ -150,7 +150,7 @@ defmodule KameramaniPhxWeb.Layouts do
         {gettext("Attempting to reconnect")}
         <.icon name="hero-arrow-path" class="ml-1 size-3 motion-safe:animate-spin" />
       </.flash>
-
+      
       <.flash
         id="server-error"
         kind={:error}

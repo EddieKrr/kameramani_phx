@@ -36,7 +36,7 @@ defmodule KameramaniPhxWeb.StudioLive do
 
   def handle_params(_params, _url, socket) do
     {:noreply,
-      socket
-      |> assign(page_title: "Creator Studio")}
+     socket
+     |> assign(page_title: "Creator Studio")}
   end
 end

@@ -37,7 +37,9 @@ defmodule KameramaniPhxWeb.UserAuth do
 
     conn
     |> create_or_extend_session(user, params)
-    |> tap(fn conn -> IO.inspect(get_session(conn, :user_token), label: "Token put into session in log_in_user") end)
+    |> tap(fn conn ->
+      IO.inspect(get_session(conn, :user_token), label: "Token put into session in log_in_user")
+    end)
     |> redirect(to: user_return_to || signed_in_path(conn))
   end
 
@@ -68,7 +70,10 @@ defmodule KameramaniPhxWeb.UserAuth do
   def fetch_current_scope_for_user(conn, _opts) do
     with {token, conn} <- ensure_user_token(conn),
          {user, token_inserted_at} <- Accounts.get_user_by_session_token(token) do
-      IO.inspect({user, token_inserted_at}, label: "User and token_inserted_at from session token")
+      IO.inspect({user, token_inserted_at},
+        label: "User and token_inserted_at from session token"
+      )
+
       conn
       |> assign(:current_scope, Scope.for_user(user))
       |> maybe_reissue_user_session_token(user, token_inserted_at)
@@ -228,7 +233,8 @@ defmodule KameramaniPhxWeb.UserAuth do
       socket =
         socket
         |> Phoenix.LiveView.put_flash(:error, "You must log in to access this page.")
-                  |> Phoenix.LiveView.redirect(to: ~p"/auth")
+        |> Phoenix.LiveView.redirect(to: ~p"/auth")
+
       {:halt, socket}
     end
   end
@@ -242,7 +248,8 @@ defmodule KameramaniPhxWeb.UserAuth do
       socket =
         socket
         |> Phoenix.LiveView.put_flash(:error, "You must re-authenticate to access this page.")
-                  |> Phoenix.LiveView.redirect(to: ~p"/auth")
+        |> Phoenix.LiveView.redirect(to: ~p"/auth")
+
       {:halt, socket}
     end
   end

@@ -41,6 +41,7 @@ defmodule KameramaniPhxWeb.ChatLive do
     if message != "" do
       nai_time = DateTime.now!("Africa/Nairobi")
       nu_time = KameramaniPhxWeb.Cldr.Time.to_string!(nai_time, format: :medium)
+
       new_message = %{
         id: System.unique_integer([:positive]),
         name: socket.assigns.username,
@@ -65,7 +66,7 @@ defmodule KameramaniPhxWeb.ChatLive do
 
   def handle_params(_params, _url, socket) do
     {:noreply,
-      socket
-      |> assign(page_title: "Chat")}
+     socket
+     |> assign(page_title: "Chat")}
   end
 end
