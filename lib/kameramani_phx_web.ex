@@ -22,7 +22,8 @@ defmodule KameramaniPhxWeb do
   def router do
     quote do
       use Phoenix.Router
-      import Phoenix.Router # Add this line
+      # Add this line
+      import Phoenix.Router
 
       # Import common connection and controller functions to use in pipelines
       import Plug.Conn

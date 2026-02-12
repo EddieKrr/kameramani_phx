@@ -43,10 +43,6 @@ defmodule KameramaniPhx.Accounts.User do
     |> validate_password(opts)
   end
 
-
-
-
-
   defp validate_email(changeset, opts) do
     changeset =
       changeset
@@ -88,11 +84,11 @@ defmodule KameramaniPhx.Accounts.User do
         else
           changeset
         end
-      %{} = changeset -> changeset
+
+      %{} = changeset ->
+        changeset
     end
   end
-
-
 
   defp maybe_validate_unique_email(changeset, opts) do
     if Keyword.get(opts, :validate_unique, true) do
@@ -102,7 +98,6 @@ defmodule KameramaniPhx.Accounts.User do
       changeset
     end
   end
-
 
   defp validate_password(changeset, opts) do
     changeset =
@@ -131,27 +126,30 @@ defmodule KameramaniPhx.Accounts.User do
   end
 
   def update_user_password(user, new_password) do
-    changeset = change(user, password: new_password)
-    |> validate_password([])
+    changeset =
+      change(user, password: new_password)
+      |> validate_password([])
+
     case Repo.update(changeset) do
       {:ok, updated_user} ->
         {:noreply, updated_user}
+
       {:error, changeset} ->
         {:error, changeset}
     end
   end
 
-
-  #update user stream profile
+  # update user stream profile
   def profile_changeset(user, attr) do
     user
-    |> cast(attr, [:username,:bio, :profile_picture])
+    |> cast(attr, [:username, :bio, :profile_picture])
     |> validate_required([:username])
     |> validate_length(:username, min: 3, max: 20)
     |> validate_length(:bio, max: 160)
-    |>unsafe_validate_unique(:username, KameramaniPhx.Repo)
+    |> unsafe_validate_unique(:username, KameramaniPhx.Repo)
     |> unique_constraint(:username)
   end
+
   @doc """
   Verifies the password.
   """
@@ -172,8 +170,4 @@ defmodule KameramaniPhx.Accounts.User do
     now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
     change(user, confirmed_at: now)
   end
-
-
-
-
 end
