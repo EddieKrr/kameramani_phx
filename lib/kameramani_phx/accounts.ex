@@ -131,7 +131,7 @@ defmodule KameramaniPhx.Accounts do
         is_binary(following_id) ->String.to_integer(following_id)
         true -> following_id
       end
-      
+
       Repo.insert_all("follows", [[
         follower_id: follower_id,
         followed_id: f_id,
@@ -141,8 +141,16 @@ defmodule KameramaniPhx.Accounts do
   end
 
   #unfollow a user
-  def unfollow_user(follower, follower) do
+  def unfollow_user(follower, following_id) do
+    follower_id = if is_map(follower), do: follower.id, else: follower
+    f_id = cond do
+      is_map(following_id) -> following_id.id
+      is_binary(following_id) ->String.to_integer(following_id)
+      true -> following_id
+    end
+    query = from f in "follows", where: f.follower_id == ^follower_id and f.followed_id == ^f_id
 
+    Repo.delete_all(query)
   end
 
   def deliver_user_update_email_instructions(%User{} = user, current_email, update_email_url_fun)

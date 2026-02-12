@@ -27,9 +27,9 @@ defmodule KameramaniPhxWeb.Layouts do
   """
   attr :flash, :map, required: true, doc: "the map of flash messages"
 
-  attr :current_scope, :map,
+  attr :current_user, :map,
     default: nil,
-    doc: "the current [scope](https://hexdocs.pm/phoenix/scopes.html)"
+    doc: "the current [user](https://hexdocs.pm/phoenix/users.html)"
 
   slot :inner_block, required: true
 
@@ -53,14 +53,14 @@ defmodule KameramaniPhxWeb.Layouts do
         />
       </div>
 
-      <%= if @current_scope && @current_scope.user do %>
+      <%= if @current_user && @current_user.user do %>
         <div class="flex items-center gap-3">
           <span class="text-white">
-            Welcome, <span class="font-semibold text-blue-400">{@current_scope.user.username}</span>
+            Welcome, <span class="font-semibold text-blue-400">{@current_user.user.username}</span>
           </span>
           <div class="relative group">
             <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
-              {String.first(@current_scope.user.username || "U") |> String.upcase()}
+              {String.first(@current_user.user.username || "U") |> String.upcase()}
             </div>
 
             <div class="absolute right-0 top-full mt-2 w-48 bg-slate-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">

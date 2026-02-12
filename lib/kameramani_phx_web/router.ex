@@ -10,7 +10,7 @@ defmodule KameramaniPhxWeb.Router do
     plug :put_root_layout, html: {KameramaniPhxWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug :fetch_current_scope_for_user
+    plug :fetch_current_user_for_user
   end
 
   pipeline :api do
@@ -21,7 +21,7 @@ defmodule KameramaniPhxWeb.Router do
     pipe_through :browser
 
     # Grouped in a live_session to allow seamless navigation
-    live_session :public, on_mount: [{KameramaniPhxWeb.UserAuth, :mount_current_scope}] do
+    live_session :public, on_mount: [{KameramaniPhxWeb.UserAuth, :mount_current_user}] do
       live "/", LandingLive, :index
       live "/auth", NewAuthLive
       live "/watch/:stream_id", ChatLive, :index

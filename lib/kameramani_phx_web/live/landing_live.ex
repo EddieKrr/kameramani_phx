@@ -3,7 +3,7 @@ defmodule KameramaniPhxWeb.LandingLive do
   import KameramaniPhxWeb.SidebarComponents
   import KameramaniPhxWeb.CardComponents
 
-  on_mount {KameramaniPhxWeb.UserAuth, :mount_current_scope}
+  on_mount {KameramaniPhxWeb.UserAuth, :mount_current_user}
 
   def mount(_params, _session, socket) do
     stream = [

@@ -2,8 +2,8 @@ defmodule KameramaniPhxWeb.ChatLive do
   use KameramaniPhxWeb, :live_view
   import KameramaniPhxWeb.SidebarComponents
 
-  # Keep your mount scope
-  on_mount {KameramaniPhxWeb.UserAuth, :mount_current_scope}
+  # Keep your mount user
+  on_mount {KameramaniPhxWeb.UserAuth, :mount_current_user}
 
   @initial_state %{"ch_message" => ""}
 
@@ -45,7 +45,7 @@ defmodule KameramaniPhxWeb.ChatLive do
         id: System.unique_integer([:positive]),
         name: socket.assigns.username,
         text: message,
-        dt: nu_time,  
+        dt: nu_time,
         color: socket.assigns.user_color
       }
 

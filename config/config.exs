@@ -7,11 +7,11 @@
 # General application configuration
 import Config
 
-config :kameramani_phx, :scopes,
+config :kameramani_phx, :users,
   user: [
     default: true,
     module: KameramaniPhx.Accounts.Scope,
-    assign_key: :current_scope,
+    assign_key: :current_user,
     access_path: [:user, :id],
     schema_key: :user_id,
     schema_type: :id,

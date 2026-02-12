@@ -8,7 +8,7 @@ defmodule KameramaniPhxWeb.UserLive.Settings do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash} current_scope={@current_scope}>
+    <Layouts.app flash={@flash} current_user={@current_user}>
       <div class="text-center">
         <.header>
           Account Settings
@@ -63,7 +63,7 @@ defmodule KameramaniPhxWeb.UserLive.Settings do
   @impl true
   def mount(%{"token" => token}, _session, socket) do
     socket =
-      case Accounts.update_user_email(socket.assigns.current_scope.user, token) do
+      case Accounts.update_user_email(socket.assigns.current_user.user, token) do
         {:ok, _user} ->
           put_flash(socket, :info, "Email changed successfully.")
 
@@ -75,7 +75,7 @@ defmodule KameramaniPhxWeb.UserLive.Settings do
   end
 
   def mount(_params, _session, socket) do
-    user = socket.assigns.current_scope.user
+    user = socket.assigns.current_user.user
     email_changeset = Accounts.change_user_email(user, %{}, validate_unique: false)
     password_changeset = Accounts.change_user_password(user, %{}, hash_password: false)
     profile_changeset = Accounts.change_user_profile(user, %{})
@@ -101,7 +101,7 @@ defmodule KameramaniPhxWeb.UserLive.Settings do
     %{"user" => user_params} = params
 
     email_form =
-      socket.assigns.current_scope.user
+      socket.assigns.current_user.user
       |> Accounts.change_user_email(user_params, validate_unique: false)
       |> Map.put(:action, :validate)
       |> to_form()
@@ -111,7 +111,7 @@ defmodule KameramaniPhxWeb.UserLive.Settings do
 
   def handle_event("update_email", params, socket) do
     %{"user" => user_params} = params
-    user = socket.assigns.current_scope.user
+    user = socket.assigns.current_user.user
     true = Accounts.sudo_mode?(user)
 
     case Accounts.change_user_email(user, user_params) do
@@ -134,7 +134,7 @@ defmodule KameramaniPhxWeb.UserLive.Settings do
     %{"user" => user_params} = params
 
     password_form =
-      socket.assigns.current_scope.user
+      socket.assigns.current_user.user
       |> Accounts.change_user_password(user_params, hash_password: false)
       |> Map.put(:action, :validate)
       |> to_form()
@@ -144,7 +144,7 @@ defmodule KameramaniPhxWeb.UserLive.Settings do
 
   def handle_event("update_password", params, socket) do
     %{"user" => user_params} = params
-    user = socket.assigns.current_scope.user
+    user = socket.assigns.current_user.user
     true = Accounts.sudo_mode?(user)
 
     case Accounts.change_user_password(user, user_params) do
@@ -158,7 +158,7 @@ defmodule KameramaniPhxWeb.UserLive.Settings do
 
   # updating user profile picture and bio
 def handle_event("update_dp", %{"user" => user_params}, socket) do
-  user = socket.assigns.current_scope.user
+  user = socket.assigns.current_user.user
 
   # Ensure the upload key matches your allow_upload name (was :avatar in previous examples, now :profile_picture)
   image_upload =
