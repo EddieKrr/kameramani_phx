@@ -65,15 +65,15 @@ defmodule KameramaniPhxWeb.UserAuth do
 
   Will reissue the session token if it is older than the configured age.
   """
-  def fetch_current_scope_for_user(conn, _opts) do
+  def fetch_current_user_for_user(conn, _opts) do
     with {token, conn} <- ensure_user_token(conn),
          {user, token_inserted_at} <- Accounts.get_user_by_session_token(token) do
       IO.inspect({user, token_inserted_at}, label: "User and token_inserted_at from session token")
       conn
-      |> assign(:current_scope, Scope.for_user(user))
+      |> assign(:current_user, Scope.for_user(user))
       |> maybe_reissue_user_session_token(user, token_inserted_at)
     else
-      nil -> assign(conn, :current_scope, Scope.for_user(nil))
+      nil -> assign(conn, :current_user, Scope.for_user(nil))
     end
   end
 
@@ -124,7 +124,7 @@ defmodule KameramaniPhxWeb.UserAuth do
 
   # Do not renew session if the user is already logged in
   # to prevent CSRF errors or data being lost in tabs that are still open
-  defp renew_session(conn, user) when conn.assigns.current_scope.user.id == user.id do
+  defp renew_session(conn, user) when conn.assigns.current_user.user.id == user.id do
     conn
   end
 
@@ -184,28 +184,28 @@ defmodule KameramaniPhxWeb.UserAuth do
   defp user_session_topic(token), do: "users_sessions:#{Base.url_encode64(token)}"
 
   @doc """
-  Handles mounting and authenticating the current_scope in LiveViews.
+  Handles mounting and authenticating the current_user in LiveViews.
 
   ## `on_mount` arguments
 
-    * `:mount_current_scope` - Assigns current_scope
+    * `:mount_current_user` - Assigns current_user
       to socket assigns based on user_token, or nil if
       there's no user_token or no matching user.
 
     * `:require_authenticated` - Authenticates the user from the session,
-      and assigns the current_scope to socket assigns based
+      and assigns the current_user to socket assigns based
       on user_token.
       Redirects to login page if there's no logged user.
 
   ## Examples
 
   Use the `on_mount` lifecycle macro in LiveViews to mount or authenticate
-  the `current_scope`:
+  the `current_user`:
 
       defmodule KameramaniPhxWeb.PageLive do
         use KameramaniPhxWeb, :live_view
 
-        on_mount {KameramaniPhxWeb.UserAuth, :mount_current_scope}
+        on_mount {KameramaniPhxWeb.UserAuth, :mount_current_user}
         ...
       end
 
@@ -215,14 +215,14 @@ defmodule KameramaniPhxWeb.UserAuth do
         live "/profile", ProfileLive, :index
       end
   """
-  def on_mount(:mount_current_scope, _params, session, socket) do
-    {:cont, mount_current_scope(socket, session)}
+  def on_mount(:mount_current_user, _params, session, socket) do
+    {:cont, mount_current_user(socket, session)}
   end
 
   def on_mount(:require_authenticated, _params, session, socket) do
-    socket = mount_current_scope(socket, session)
+    socket = mount_current_user(socket, session)
 
-    if socket.assigns.current_scope && socket.assigns.current_scope.user do
+    if socket.assigns.current_user && socket.assigns.current_user.user do
       {:cont, socket}
     else
       socket =
@@ -234,9 +234,9 @@ defmodule KameramaniPhxWeb.UserAuth do
   end
 
   def on_mount(:require_sudo_mode, _params, session, socket) do
-    socket = mount_current_scope(socket, session)
+    socket = mount_current_user(socket, session)
 
-    if Accounts.sudo_mode?(socket.assigns.current_scope.user, -10) do
+    if Accounts.sudo_mode?(socket.assigns.current_user.user, -10) do
       {:cont, socket}
     else
       socket =
@@ -247,8 +247,8 @@ defmodule KameramaniPhxWeb.UserAuth do
     end
   end
 
-  defp mount_current_scope(socket, session) do
-    Phoenix.Component.assign_new(socket, :current_scope, fn ->
+  defp mount_current_user(socket, session) do
+    Phoenix.Component.assign_new(socket, :current_user, fn ->
       {user, _} =
         if user_token = session["user_token"] do
           Accounts.get_user_by_session_token(user_token)

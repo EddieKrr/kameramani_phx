@@ -37,8 +37,8 @@ defmodule KameramaniPhx.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:name, :username, :email, :age, :password, :bio, :profile_picture])
-    |> validate_required([:name, :username, :email, :age, :password, :bio, :profile_picture])
+    |> cast(attrs, [:name, :username, :email, :age, :password])
+    |> validate_required([:name, :username, :email, :age, :password])
     |> validate_email(opts)
     |> validate_password(opts)
   end

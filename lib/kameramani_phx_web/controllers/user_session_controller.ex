@@ -53,7 +53,7 @@ defmodule KameramaniPhxWeb.UserSessionController do
   end
 
   def update_password(conn, %{"user" => user_params} = params) do
-    user = conn.assigns.current_scope.user
+    user = conn.assigns.current_user.user
     # We neutralized sudo_mode? in the context, so this always passes
     true = Accounts.sudo_mode?(user)
 

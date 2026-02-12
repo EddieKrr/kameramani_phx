@@ -8,9 +8,12 @@ defmodule KameramaniPhx.Users do
     field :email, :string
     field :age, :integer, default: 0
     field :password, :integer
+    field :bio, :string
+    field :profile_picture, :string
+    timestamps()
   end
 
   def changeset(struct, params) do
-    struct |> cast(params, [:name, :username, :email, :age]) |> validate_required([:name, :age])
+    struct |> cast(params, [:name, :username, :email, :age, :bio, :profile_picture ]) |> validate_required([:name, :age])
   end
 end
