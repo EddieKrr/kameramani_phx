@@ -120,7 +120,7 @@ defmodule KameramaniPhxWeb.Layouts do
 
   def auth(assigns) do
     ~H"""
-    <main class="h-screen w-full">{@inner_content}</main>
+    <main class>{@inner_content}</main>
     <.flash_group flash={@flash} />
     """
   end

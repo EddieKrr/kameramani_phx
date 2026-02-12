@@ -45,7 +45,7 @@ defmodule KameramaniPhxWeb.ChatLive do
         id: System.unique_integer([:positive]),
         name: socket.assigns.username,
         text: message,
-        dt: nu_time,  
+        dt: nu_time,
         color: socket.assigns.user_color
       }
 
