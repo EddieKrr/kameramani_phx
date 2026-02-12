@@ -20,7 +20,7 @@ defmodule KameramaniPhxWeb.UserLive.Settings do
   end
 
   def mount(_params, _session, socket) do
-    user = socket.assigns.current_scope.user
+    user = socket.assigns.current_user.user
 
     email_changeset =
       KameramaniPhx.Accounts.User.email_changeset(user, %{email: user.email},
