@@ -10,7 +10,7 @@ defmodule KameramaniPhxWeb.Router do
     plug :put_root_layout, html: {KameramaniPhxWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug :fetch_current_scope_for_user
+    plug :fetch_current_user_for_user
   end
 
   pipeline :api do

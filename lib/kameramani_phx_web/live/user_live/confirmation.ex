@@ -6,7 +6,7 @@ defmodule KameramaniPhxWeb.UserLive.Confirmation do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash} current_scope={@current_scope}>
+    <Layouts.app flash={@flash} current_user={@current_user}>
       <div class="mx-auto max-w-sm">
         <div class="text-center">
           <.header>Welcome {@user.email}</.header>
@@ -45,7 +45,7 @@ defmodule KameramaniPhxWeb.UserLive.Confirmation do
           phx-trigger-action={@trigger_submit}
         >
           <input type="hidden" name={@form[:token].name} value={@form[:token].value} />
-          <%= if @current_scope do %>
+          <%= if @current_user do %>
             <.button phx-disable-with="Logging in..." class="btn btn-primary w-full">Log in</.button>
           <% else %>
             <.button
