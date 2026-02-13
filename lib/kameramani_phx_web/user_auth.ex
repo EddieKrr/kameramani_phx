@@ -273,7 +273,7 @@ defmodule KameramaniPhxWeb.UserAuth do
   Plug for routes that require the user to be authenticated.
   """
   def require_authenticated_user(conn, _opts) do
-    if conn.assigns.current_user.user do
+    if conn.assigns.current_user && conn.assigns.current_user.user do
       conn
     else
       conn
