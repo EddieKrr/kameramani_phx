@@ -21,13 +21,14 @@
     <div class="px-6 pb-6">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
         <.card
-          :for={card <- @stream}
-          id={card.stream_id}
-          game={card.game}
+          :for={card <- @streams_data}
+          id={card.id}
+          stream_name={card.stream_name}
           streamer={card.streamer}
           category={card.category}
           genre={card.genre}
           viewer_count={card.viewer_count}
+          avatar={card.avatar}
         />
       </div>
     </div>

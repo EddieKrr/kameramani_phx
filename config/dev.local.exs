@@ -1,5 +1,5 @@
 import Config
 
 config :kameramani_phx, KameramaniPhx.Repo,
-  username: "postgres",
-  password: "Eddie@254"
+  username: "dtech",
+  password: "dtechpsql"
