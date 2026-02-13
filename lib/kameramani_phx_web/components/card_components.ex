@@ -37,4 +37,25 @@ defmodule KameramaniPhxWeb.CardComponents do
     </.link>
     """
   end
+
+  attr :name, :string, required: true
+  attr :slug, :string, required: true
+  attr :viewers, :integer, required: true
+  attr :box_art, :string, default: "https://placehold.co/400x533/4c1d95/ffffff?text=Game+Art"
+
+  def category_card(assigns) do
+    ~H"""
+    <.link navigate={~p"/directory/#{@slug}"}>
+      <div class="grid grid-cols-5">
+      <div>
+          <img src ={@box_art}/>
+          <div>{@name}</div>
+          <div>{@viewers}</div>
+          <div>{@slug}</div>
+        </div>
+      </div>
+    </.link>
+    """
+  end
+
 end
