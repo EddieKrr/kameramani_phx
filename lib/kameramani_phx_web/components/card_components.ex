@@ -24,7 +24,7 @@ defmodule KameramaniPhxWeb.CardComponents do
         <div class="flex flex-row gap-3">
           <img class="h-10 w-10 rounded-full" alt={@streamer} src={@avatar} />
           <div class="flex flex-col min-w-0">
-            <div class="font-bold text-white truncate">{@stream_name}</div>
+            <div class="font-bold text-white truncate">{@game}</div>
 
             <div class="text-gray-400 text-sm">{@streamer}</div>
 

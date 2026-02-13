@@ -101,7 +101,7 @@ defmodule KameramaniPhxWeb.Layouts do
     <main class="pt-24 bg-[#0e0e10]">
       <div class="">{render_slot(@inner_block)}</div>
     </main>
-     <.flash_group flash={@flash} />
+    <.flash_group flash={@flash} />
     """
   end
 
@@ -121,7 +121,7 @@ defmodule KameramaniPhxWeb.Layouts do
   def auth(assigns) do
     ~H"""
     <main class>{@inner_content}</main>
-     <.flash_group flash={@flash} />
+    <.flash_group flash={@flash} />
     """
   end
 
