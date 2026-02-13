@@ -30,6 +30,7 @@ defmodule KameramaniPhxWeb.Router do
     pipe_through [:browser]
 
     live "/", LandingLive, :index
+    live "/watch/:username", ChatLive, :show
     live "/auth", NewAuthLive
     live "/register", AuthLive
 
@@ -53,8 +54,7 @@ defmodule KameramaniPhxWeb.Router do
       on_mount: [{KameramaniPhxWeb.UserAuth, :require_authenticated}] do
       # I moved ChatLive here assuming you want chatting to be private.
       # If you want it public, move it back to the top scope!
-      live "/watch/:stream_id", ChatLive, :show
-
+      live "/users/profile/:username", Profile.UserProfileLive, :show
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
       live "/studio", StudioLive

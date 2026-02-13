@@ -8,6 +8,38 @@ defmodule KameramaniPhx.Chat do
 
   alias KameramaniPhx.Chat.LiveChat, as: Message
   alias KameramaniPhx.Accounts.Scope
+  alias KameramaniPhx.Chat.Stream
+
+  @doc """
+  Creates a stream.
+  """
+  def create_stream(%Scope{} = user_scope, attrs) do
+    %Stream{}
+    |> Stream.changeset(attrs, user_scope)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Gets a stream by ID.
+  """
+  def get_stream(id) do
+    Repo.get(Stream, id)
+  end
+
+  @doc """
+  Gets a stream by ID.
+  Raises `Ecto.NoResultsError` if the Stream does not exist.
+  """
+  def get_stream!(id) do
+    Repo.get!(Stream, id)
+  end
+
+  @doc """
+  Gets a stream by user ID.
+  """
+  def get_stream_by_user_id(user_id) do
+    Repo.get_by(Stream, user_id: user_id)
+  end
 
   @doc """
   Subscribes to userd notifications about any message changes.
