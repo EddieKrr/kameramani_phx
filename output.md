@@ -16,15 +16,15 @@ The remaining warnings regarding unused functions (`sidebar_classes/1` and `chat
     *   Remove the following `live_session` block:
         ```elixir
         live_session :current_user,
-          on_mount: [{KameramaniPhxWeb.UserAuth, :mount_current_scope}] do
+          on_mount: [{KameramaniPhxWeb.UserAuth, :mount_current_user}] do
           live "/users/register", UserLive.Registration, :new
           live "/users/log-in", UserLive.Login, :new
           live "/users/log-in/:token", UserLive.Confirmation, :new
         end
         ```
-    *   Add a new `live` route for the `NewAuthLive` inside the main browser scope:
+    *   Add a new `live` route for the `NewAuthLive` inside the main browser user:
         ```elixir
-        scope "/", KameramaniPhxWeb do
+        user "/", KameramaniPhxWeb do
           pipe_through :browser
 
           live "/", LandingLive, :index
@@ -45,10 +45,10 @@ The remaining warnings regarding unused functions (`sidebar_classes/1` and `chat
         plug :put_root_layout, html: {KameramaniPhxWeb.Layouts, :root}
         plug :protect_from_forgery
         plug :put_secure_browser_headers
-        plug :fetch_current_scope_for_user
+        plug :fetch_current_user_for_user
       end
 
-      scope "/", KameramaniPhxWeb do
+      user "/", KameramaniPhxWeb do
         pipe_through :browser
 
         live "/", LandingLive, :index
@@ -57,7 +57,7 @@ The remaining warnings regarding unused functions (`sidebar_classes/1` and `chat
       end
 
       ## Authentication routes
-      scope "/", KameramaniPhxWeb do
+      user "/", KameramaniPhxWeb do
         pipe_through [:browser, :require_authenticated_user]
 
         live_session :require_authenticated_user,
@@ -69,7 +69,7 @@ The remaining warnings regarding unused functions (`sidebar_classes/1` and `chat
         post "/users/update-password", UserSessionController, :update_password
       end
 
-      scope "/", KameramaniPhxWeb do
+      user "/", KameramaniPhxWeb do
         pipe_through [:browser]
 
         post "/users/log-in", UserSessionController, :create

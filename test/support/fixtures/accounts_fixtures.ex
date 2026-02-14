@@ -41,12 +41,12 @@ defmodule KameramaniPhx.AccountsFixtures do
     user
   end
 
-  def user_scope_fixture do
+  def user_user_fixture do
     user = user_fixture()
-    user_scope_fixture(user)
+    user_user_fixture(user)
   end
 
-  def user_scope_fixture(user) do
+  def user_user_fixture(user) do
     Scope.for_user(user)
   end
 

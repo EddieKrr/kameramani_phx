@@ -46,14 +46,14 @@ defmodule KameramaniPhxWeb.ConnCase do
   """
   def register_and_log_in_user(%{conn: conn} = context) do
     user = KameramaniPhx.AccountsFixtures.user_fixture()
-    scope = KameramaniPhx.Accounts.Scope.for_user(user)
+    user = KameramaniPhx.Accounts.Scope.for_user(user)
 
     opts =
       context
       |> Map.take([:token_authenticated_at])
       |> Enum.into([])
 
-    %{conn: log_in_user(conn, user, opts), user: user, scope: scope}
+    %{conn: log_in_user(conn, user, opts), user: user, user: user}
   end
 
   @doc """

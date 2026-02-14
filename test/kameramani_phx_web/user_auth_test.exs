@@ -37,7 +37,7 @@ defmodule KameramaniPhxWeb.UserAuthTest do
     test "keeps session when re-authenticating", %{conn: conn, user: user} do
       conn =
         conn
-        |> assign(:current_scope, Scope.for_user(user))
+        |> assign(:current_user, Scope.for_user(user))
         |> put_session(:to_be_removed, "value")
         |> UserAuth.log_in_user(user)
 
@@ -52,7 +52,7 @@ defmodule KameramaniPhxWeb.UserAuthTest do
 
       conn =
         conn
-        |> assign(:current_scope, Scope.for_user(other_user))
+        |> assign(:current_user, Scope.for_user(other_user))
         |> put_session(:to_be_removed, "value")
         |> UserAuth.log_in_user(user)
 
@@ -77,7 +77,7 @@ defmodule KameramaniPhxWeb.UserAuthTest do
     test "redirects to settings when user is already logged in", %{conn: conn, user: user} do
       conn =
         conn
-        |> assign(:current_scope, Scope.for_user(user))
+        |> assign(:current_user, Scope.for_user(user))
         |> UserAuth.log_in_user(user)
 
       assert redirected_to(conn) == ~p"/users/settings"
@@ -143,15 +143,15 @@ defmodule KameramaniPhxWeb.UserAuthTest do
     end
   end
 
-  describe "fetch_current_scope_for_user/2" do
+  describe "fetch_current_user_for_user/2" do
     test "authenticates user from session", %{conn: conn, user: user} do
       user_token = Accounts.generate_user_session_token(user)
 
       conn =
-        conn |> put_session(:user_token, user_token) |> UserAuth.fetch_current_scope_for_user([])
+        conn |> put_session(:user_token, user_token) |> UserAuth.fetch_current_user_for_user([])
 
-      assert conn.assigns.current_scope.user.id == user.id
-      assert conn.assigns.current_scope.user.authenticated_at == user.authenticated_at
+      assert conn.assigns.current_user.user.id == user.id
+      assert conn.assigns.current_user.user.authenticated_at == user.authenticated_at
       assert get_session(conn, :user_token) == user_token
     end
 
@@ -165,10 +165,10 @@ defmodule KameramaniPhxWeb.UserAuthTest do
       conn =
         conn
         |> put_req_cookie(@remember_me_cookie, signed_token)
-        |> UserAuth.fetch_current_scope_for_user([])
+        |> UserAuth.fetch_current_user_for_user([])
 
-      assert conn.assigns.current_scope.user.id == user.id
-      assert conn.assigns.current_scope.user.authenticated_at == user.authenticated_at
+      assert conn.assigns.current_user.user.id == user.id
+      assert conn.assigns.current_user.user.authenticated_at == user.authenticated_at
       assert get_session(conn, :user_token) == user_token
       assert get_session(conn, :user_remember_me)
 
@@ -178,9 +178,9 @@ defmodule KameramaniPhxWeb.UserAuthTest do
 
     test "does not authenticate if data is missing", %{conn: conn, user: user} do
       _ = Accounts.generate_user_session_token(user)
-      conn = UserAuth.fetch_current_scope_for_user(conn, [])
+      conn = UserAuth.fetch_current_user_for_user(conn, [])
       refute get_session(conn, :user_token)
-      refute conn.assigns.current_scope
+      refute conn.assigns.current_user
     end
 
     test "reissues a new token after a few days and refreshes cookie", %{conn: conn, user: user} do
@@ -198,10 +198,10 @@ defmodule KameramaniPhxWeb.UserAuthTest do
         |> put_session(:user_token, token)
         |> put_session(:user_remember_me, true)
         |> put_req_cookie(@remember_me_cookie, signed_token)
-        |> UserAuth.fetch_current_scope_for_user([])
+        |> UserAuth.fetch_current_user_for_user([])
 
-      assert conn.assigns.current_scope.user.id == user.id
-      assert conn.assigns.current_scope.user.authenticated_at == user.authenticated_at
+      assert conn.assigns.current_user.user.id == user.id
+      assert conn.assigns.current_user.user.authenticated_at == user.authenticated_at
       assert new_token = get_session(conn, :user_token)
       assert new_token != token
       assert %{value: new_signed_token, max_age: max_age} = conn.resp_cookies[@remember_me_cookie]
@@ -210,50 +210,50 @@ defmodule KameramaniPhxWeb.UserAuthTest do
     end
   end
 
-  describe "on_mount :mount_current_scope" do
+  describe "on_mount :mount_current_user" do
     setup %{conn: conn} do
-      %{conn: UserAuth.fetch_current_scope_for_user(conn, [])}
+      %{conn: UserAuth.fetch_current_user_for_user(conn, [])}
     end
 
-    test "assigns current_scope based on a valid user_token", %{conn: conn, user: user} do
+    test "assigns current_user based on a valid user_token", %{conn: conn, user: user} do
       user_token = Accounts.generate_user_session_token(user)
       session = conn |> put_session(:user_token, user_token) |> get_session()
 
       {:cont, updated_socket} =
-        UserAuth.on_mount(:mount_current_scope, %{}, session, %LiveView.Socket{})
+        UserAuth.on_mount(:mount_current_user, %{}, session, %LiveView.Socket{})
 
-      assert updated_socket.assigns.current_scope.user.id == user.id
+      assert updated_socket.assigns.current_user.user.id == user.id
     end
 
-    test "assigns nil to current_scope assign if there isn't a valid user_token", %{conn: conn} do
+    test "assigns nil to current_user assign if there isn't a valid user_token", %{conn: conn} do
       user_token = "invalid_token"
       session = conn |> put_session(:user_token, user_token) |> get_session()
 
       {:cont, updated_socket} =
-        UserAuth.on_mount(:mount_current_scope, %{}, session, %LiveView.Socket{})
+        UserAuth.on_mount(:mount_current_user, %{}, session, %LiveView.Socket{})
 
-      assert updated_socket.assigns.current_scope == nil
+      assert updated_socket.assigns.current_user == nil
     end
 
-    test "assigns nil to current_scope assign if there isn't a user_token", %{conn: conn} do
+    test "assigns nil to current_user assign if there isn't a user_token", %{conn: conn} do
       session = conn |> get_session()
 
       {:cont, updated_socket} =
-        UserAuth.on_mount(:mount_current_scope, %{}, session, %LiveView.Socket{})
+        UserAuth.on_mount(:mount_current_user, %{}, session, %LiveView.Socket{})
 
-      assert updated_socket.assigns.current_scope == nil
+      assert updated_socket.assigns.current_user == nil
     end
   end
 
   describe "on_mount :require_authenticated" do
-    test "authenticates current_scope based on a valid user_token", %{conn: conn, user: user} do
+    test "authenticates current_user based on a valid user_token", %{conn: conn, user: user} do
       user_token = Accounts.generate_user_session_token(user)
       session = conn |> put_session(:user_token, user_token) |> get_session()
 
       {:cont, updated_socket} =
         UserAuth.on_mount(:require_authenticated, %{}, session, %LiveView.Socket{})
 
-      assert updated_socket.assigns.current_scope.user.id == user.id
+      assert updated_socket.assigns.current_user.user.id == user.id
     end
 
     test "redirects to login page if there isn't a valid user_token", %{conn: conn} do
@@ -266,7 +266,7 @@ defmodule KameramaniPhxWeb.UserAuthTest do
       }
 
       {:halt, updated_socket} = UserAuth.on_mount(:require_authenticated, %{}, session, socket)
-      assert updated_socket.assigns.current_scope == nil
+      assert updated_socket.assigns.current_user == nil
     end
 
     test "redirects to login page if there isn't a user_token", %{conn: conn} do
@@ -278,7 +278,7 @@ defmodule KameramaniPhxWeb.UserAuthTest do
       }
 
       {:halt, updated_socket} = UserAuth.on_mount(:require_authenticated, %{}, session, socket)
-      assert updated_socket.assigns.current_scope == nil
+      assert updated_socket.assigns.current_user == nil
     end
   end
 
@@ -316,7 +316,7 @@ defmodule KameramaniPhxWeb.UserAuthTest do
 
   describe "require_authenticated_user/2" do
     setup %{conn: conn} do
-      %{conn: UserAuth.fetch_current_scope_for_user(conn, [])}
+      %{conn: UserAuth.fetch_current_user_for_user(conn, [])}
     end
 
     test "redirects if user is not authenticated", %{conn: conn} do
@@ -358,7 +358,7 @@ defmodule KameramaniPhxWeb.UserAuthTest do
     test "does not redirect if user is authenticated", %{conn: conn, user: user} do
       conn =
         conn
-        |> assign(:current_scope, Scope.for_user(user))
+        |> assign(:current_user, Scope.for_user(user))
         |> UserAuth.require_authenticated_user([])
 
       refute conn.halted

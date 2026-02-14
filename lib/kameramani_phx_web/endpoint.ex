@@ -36,6 +36,14 @@ defmodule KameramaniPhxWeb.Endpoint do
     plug Phoenix.Ecto.CheckRepoStatus, otp_app: :kameramani_phx
   end
 
+  # lib/kameramani_phx_web/endpoint.ex
+  plug Plug.Static,
+    at: "/",
+    from: :kameramani_phx,
+    gzip: false,
+    # Add "uploads" here
+    only: KameramaniPhxWeb.static_paths() ++ ["uploads"]
+
   plug Phoenix.LiveDashboard.RequestLogger,
     param_key: "request_logger",
     cookie_key: "request_logger"
