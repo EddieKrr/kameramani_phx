@@ -24,14 +24,15 @@ defmodule KameramaniPhxWeb.ChatLive do
   def mount(%{"username" => username}, session, socket) do
     # Find the streamer's data in the shared hardcoded list
     case Enum.find(DummyData.get_stream_data(), fn s -> s.streamer == username end) do
-      %{id: id, stream_name: name, streamer: streamer_name, avatar: avatar, category: category} ->
+      %{id: id, stream_name: name, streamer: streamer_name, avatar: avatar, category: category, tags: tags} ->
         # Found in hardcoded data, assign to socket
         assigns_to_socket = %{
           stream_id: id,
           streamer_name: streamer_name,
           streamer_profile_picture: avatar,
           category: category,
-          stream_name: name
+          stream_name: name,
+          tags: tags
         }
 
         # Manually mount current_user (without enforcing authentication)

@@ -4,7 +4,7 @@ defmodule KameramaniPhxWeb.CardComponents do
   attr :stream_name, :string, required: true
   attr :streamer, :string, required: true
   attr :category, :string, required: true
-  attr :genre, :string, required: true
+  attr :tags, :string, required: true
   attr :viewer_count, :integer, required: true
   attr :avatar, :string, default: "https://ui-avatars.com/api/?background=random"
   attr :id, :integer, required: true
@@ -28,7 +28,7 @@ defmodule KameramaniPhxWeb.CardComponents do
 
             <div class="text-gray-400 text-sm">{@streamer}</div>
 
-            <div class="text-gray-400 text-sm">{@genre}</div>
+            <div class="text-gray-400 text-sm">{@tags}</div>
 
             <div class="bg-gray-700 text-xs text-gray-300 rounded-full px-2 w-fit">{@category}</div>
           </div>
