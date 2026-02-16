@@ -99,7 +99,7 @@ defmodule KameramaniPhxWeb.Layouts do
     </header>
 
     <main class="pt-24 bg-[#0e0e10]">
-      <div class="">{render_slot(@inner_block)}</div>
+      <div class="">{@inner_content}</div>
     </main>
     <.flash_group flash={@flash} />
     """
@@ -116,7 +116,6 @@ defmodule KameramaniPhxWeb.Layouts do
 
   """
   attr :flash, :map, required: true, doc: "the map of flash messages"
-  slot :inner_block, required: true
 
   def auth(assigns) do
     ~H"""

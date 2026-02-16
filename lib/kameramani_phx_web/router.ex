@@ -29,13 +29,22 @@ defmodule KameramaniPhxWeb.Router do
   scope "/", KameramaniPhxWeb do
     pipe_through [:browser]
 
-    live "/", LandingLive, :index
-    live "/watch/:username", ChatLive, :show
-    live "/auth", NewAuthLive
-    live "/register", AuthLive
-    live "/categories", CategoryLive
-    live "/directory", DirectoryLive, :index
-    live "/directory/:slug", DirectoryLive, :show
+    live_session :default,
+     on_mount: [{KameramaniPhxWeb.UserAuth, :mount_current_user}],
+     layout: {KameramaniPhxWeb.Layouts, :app} do
+      live "/", LandingLive, :index
+      live "/watch/:username", ChatLive, :show
+      live "/register", AuthLive
+      live "/categories", CategoryLive
+      live "/directory", DirectoryLive, :index
+      live "/directory/:slug", DirectoryLive, :show
+    end
+
+    live_session :auth_pages,
+      layout: {KameramaniPhxWeb.Layouts, :auth},
+      on_mount: [{KameramaniPhxWeb.UserAuth, :mount_current_user}] do
+        live "/auth", NewAuthLive
+      end
 
     # Login/Logout logic
     get "/users/log-in", UserSessionController, :new
