@@ -2,17 +2,17 @@
   <div class="text-center mb-12">
     <.header>
       <h1 class="uppercase font-extrabold tracking-tight italic text-2xl">Account Settings</h1>
-      
+
       <p class="mt-2 text-slate-400">Manage your account email address and password settings</p>
     </.header>
   </div>
-  
+
   <div class="grid grid-cols-1 gap-8">
     <section class="bg-slate-800/40 backdrop-blur-md border-2 border-slate-700 rounded-3xl p-8 shadow-2xl">
       <h2 class="text-xl text-blue-400 font-bold mb-8 flex items-center gap-2">
         <.icon name="hero-user-circle" class="h-6 w-6" />Profile Information
       </h2>
-      
+
       <div class="flex flex-col md:flex-row gap-10 items-center md:items-start">
         <div class="flex flex-col items-center gap-4">
           <div class="relative group">
@@ -21,28 +21,29 @@
                 {String.first(@current_email) |> String.upcase()}
               </span>
             </div>
-            
+
             <div class="absolute inset-0 flex items-center justify-center opacity-0 bg-black/60 rounded-full group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">
               <.icon name="hero-camera" class="h-8 w-8 text-white" />
             </div>
           </div>
-          
+
           <span class="text-slate-500 uppercase font-bold text-xs tracking-widest">
             Change Avatar
           </span>
         </div>
-        
+
         <div class="flex-1 w-full space-y-6">
           <div class="fieldset">
             <label class="label">
               <span class="label-text text-slate-300 font-bold">Biography</span>
-            </label> <textarea
+            </label>
+             <textarea
               placeholder="Let your fans know who you are..."
               class="textarea w-full bg-slate-900/50 border-2 border-slate-700 text-white rounded-2xl min-h-[120px] focus:border-blue-500 focus:outline-none"
             >
                         </textarea>
           </div>
-          
+
           <div class="flex justify-end">
             <button class="btn btn-primary rounded-xl px-8 shadow-lg shadow-blue-500/20" disabled>
               Update Profile
@@ -51,12 +52,12 @@
         </div>
       </div>
     </section>
-    
+
     <section class="bg-slate-800/40 border-2 border-slate-700 rounded-3xl p-8 backdrop-blur-md">
       <h2 class="text-xl font-bold text-blue-400 mb-6 flex items-center gap-2">
         <.icon name="hero-envelope" class="h-6 w-6 text-blue-500" />Email Address
       </h2>
-      
+
       <.form
         for={@email_form}
         id="email_form"
@@ -88,12 +89,12 @@
         </div>
       </.form>
     </section>
-    
+
     <section class="border-2 border-slate-700 rounded-lg bg-slate-800/40 p-8 mb-6 backdrop-blur">
       <h2 class="font-bold text-blue-400 text-xl mb-6 flex items-center gap-2">
         <.icon name="hero-key" class="h-6 w-6" />Update Password
       </h2>
-      
+
       <.form
         for={@password_form}
         id="password_form"

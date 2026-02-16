@@ -156,7 +156,8 @@ defmodule KameramaniPhx.Accounts do
         true -> following_id
       end
 
-      Repo.insert_all("follows", [[
+    Repo.insert_all("follows", [
+      [
         follower_id: follower_id,
         followed_id: f_id,
         inserted_at: DateTime.utc_now(),
@@ -165,14 +166,17 @@ defmodule KameramaniPhx.Accounts do
     ])
   end
 
-  #unfollow a user
+  # unfollow a user
   def unfollow_user(follower, following_id) do
     follower_id = if is_map(follower), do: follower.id, else: follower
-    f_id = cond do
-      is_map(following_id) -> following_id.id
-      is_binary(following_id) ->String.to_integer(following_id)
-      true -> following_id
-    end
+
+    f_id =
+      cond do
+        is_map(following_id) -> following_id.id
+        is_binary(following_id) -> String.to_integer(following_id)
+        true -> following_id
+      end
+
     query = from f in "follows", where: f.follower_id == ^follower_id and f.followed_id == ^f_id
 
     Repo.delete_all(query)

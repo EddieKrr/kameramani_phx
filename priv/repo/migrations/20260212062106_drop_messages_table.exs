@@ -1,8 +1,6 @@
 defmodule KameramaniPhx.Repo.Migrations.DropMessagesTable do
   use Ecto.Migration
 
-
-
   def change do
     # This allows you to "undo" the drop if you change your mind
     create table(:live_chats) do

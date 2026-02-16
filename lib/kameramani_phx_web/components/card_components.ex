@@ -24,7 +24,7 @@ defmodule KameramaniPhxWeb.CardComponents do
         <div class="flex flex-row gap-3">
           <img class="h-10 w-10 rounded-full" alt={@streamer} src={@avatar} />
           <div class="flex flex-col min-w-0">
-            <div class="font-bold text-white truncate">{@stream_name}</div>
+            <div class="font-bold text-white truncate">{@game}</div>
 
             <div class="text-gray-400 text-sm">{@streamer}</div>
 
@@ -37,4 +37,25 @@ defmodule KameramaniPhxWeb.CardComponents do
     </.link>
     """
   end
+
+  attr :name, :string, required: true
+  attr :slug, :string, required: true
+  attr :viewers, :integer, required: true
+  attr :box_art, :string, default: "https://placehold.co/400x533/4c1d95/ffffff?text=Game+Art"
+
+  def category_card(assigns) do
+    ~H"""
+    <.link navigate={~p"/directory/#{@slug}"}>
+      <div class="grid grid-cols-5">
+      <div>
+          <img src ={@box_art}/>
+          <div>{@name}</div>
+          <div>{@viewers}</div>
+          <div>{@slug}</div>
+        </div>
+      </div>
+    </.link>
+    """
+  end
+
 end
