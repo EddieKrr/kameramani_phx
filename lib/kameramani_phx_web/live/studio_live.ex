@@ -16,8 +16,7 @@ defmodule KameramaniPhxWeb.StudioLive do
     {:ok,
      assign(socket,
        form: form,
-       stream_key_visible: false,
-       current_user: %{username: "Streamer", avatar: nil}
+       stream_key_visible: false
      )}
   end
 
