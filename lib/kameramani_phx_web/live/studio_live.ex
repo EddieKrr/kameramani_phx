@@ -17,6 +17,7 @@ defmodule KameramaniPhxWeb.StudioLive do
      assign(socket,
        form: form,
        stream_key_visible: false
+
      )}
   end
 

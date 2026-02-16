@@ -75,12 +75,12 @@ defmodule KameramaniPhx.MixProject do
       {:certifi, "~> 2.0"},
       {:tzdata, "~> 1.1"},
       {:bandit, "~> 1.5"},
-      # {:membrane_core, "~> 1.0"},
-      # {:membrane_rtmp_plugin, "~> 0.29.0"},
+      {:membrane_core, "~> 1.0"},
+      {:membrane_rtmp_plugin, "~> 0.29.0"},
 
-      # {:membrane_h26x_plugin, "~> 0.10.0"},
-      # {:membrane_file_plugin, "~> 0.17.0"},
-      #   {:membrane_http_adaptive_stream_plugin, "~> 0.18.4"}
+      {:membrane_h26x_plugin, "~> 0.10.0"},
+      {:membrane_file_plugin, "~> 0.17.0"},
+        {:membrane_http_adaptive_stream_plugin, "~> 0.18.4"}
 
     ]
   end
