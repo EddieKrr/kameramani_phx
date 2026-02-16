@@ -61,6 +61,7 @@ defmodule KameramaniPhxWeb.Router do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
       live "/studio", StudioLive
+      live "/stream-settings", Streaming.Settings.StreamSettings
     end
   end
 

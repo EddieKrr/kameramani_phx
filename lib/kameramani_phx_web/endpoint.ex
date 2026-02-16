@@ -44,6 +44,14 @@ defmodule KameramaniPhxWeb.Endpoint do
     # Add "uploads" here
     only: KameramaniPhxWeb.static_paths() ++ ["uploads"]
 
+    plug Plug.Static,
+  at: "/",
+  from: :kameramani_phx,
+  gzip: false,
+  # Make sure these extensions are not blocked
+  only: KameramaniPhxWeb.static_paths() ++ ~w(live)
+
+  
   plug Phoenix.LiveDashboard.RequestLogger,
     param_key: "request_logger",
     cookie_key: "request_logger"
