@@ -2,58 +2,99 @@ defmodule KameramaniPhxWeb.ChatLive do
   use KameramaniPhxWeb, :live_view
   import KameramaniPhxWeb.SidebarComponents
 
-  # Keep your mount scope
-  on_mount {KameramaniPhxWeb.UserAuth, :mount_current_scope}
+  # Alias DummyData for shared hardcoded data
+  alias KameramaniPhxWeb.DummyData
+  alias KameramaniPhx.Accounts # Correct alias for Accounts context
+  alias KameramaniPhx.Accounts.Scope # Alias Scope module directly
+
+  # Keep your mount user
+  # on_mount {KameramaniPhxWeb.UserAuth, :mount_current_user} # Removed
 
   @initial_state %{"ch_message" => ""}
 
   # --- INTERN'S PUBSUB LOGIC (Integrated) ---
-  defp subscribe() do
-    Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "messages")
+  defp subscribe(stream_id) do
+    Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "stream_chat:#{stream_id}")
   end
 
-  defp broadcast(value) do
-    Phoenix.PubSub.broadcast(KameramaniPhx.PubSub, "messages", value)
+  defp broadcast(stream_id, value) do
+    Phoenix.PubSub.broadcast(KameramaniPhx.PubSub, "stream_chat:#{stream_id}", value)
   end
 
-  def mount(%{"stream_id" => stream_id}, _session, socket) do
-    # Subscribe if connected so we receive live messages
-    if connected?(socket), do: subscribe()
+  def mount(%{"username" => username}, session, socket) do
+    # Find the streamer's data in the shared hardcoded list
+    case Enum.find(DummyData.get_stream_data(), fn s -> s.streamer == username end) do
+      %{id: id, stream_name: name, streamer: streamer_name, avatar: avatar, category: category, tags: tags} ->
+        # Found in hardcoded data, assign to socket
+        assigns_to_socket = %{
+          stream_id: id,
+          streamer_name: streamer_name,
+          streamer_profile_picture: avatar,
+          category: category,
+          stream_name: name,
+          tags: tags
+        }
 
-    username = Enum.random(["BIG C", "Canna", "Bis", "Mafrr"])
-    user_color = "#" <> for _ <- 1..3, into: "", do: Integer.to_string(Enum.random(100..255), 16)
+        # Manually mount current_user (without enforcing authentication)
+        current_user_scope =
+          if user_token = session["user_token"] do
+            {user, _} = Accounts.get_user_by_session_token(user_token) || {nil, nil}
+            Scope.for_user(user)
+          else
+            Scope.for_user(nil)
+          end
 
-    {:ok,
-     socket
-     |> assign(
-       form: to_form(@initial_state, as: :chat),
-       username: username,
-       user_color: user_color,
-       stream_id: stream_id,
-       game: "Sims 4"
-     )
-     |> stream(:messages, [])}
+        # Subscribe if connected so we receive live messages
+        if connected?(socket), do: subscribe(assigns_to_socket.stream_id)
+
+        chat_username = Enum.random(["BIG C", "Canna", "Bis", "Mafrr"])
+        chat_user_color = "#" <> for _ <- 1..3, into: "", do: Integer.to_string(Enum.random(100..255), 16)
+
+        {:ok,
+         socket
+         |> assign(
+           form: to_form(@initial_state, as: :chat),
+           username: chat_username, # This is the chat user's display name
+           user_color: chat_user_color,
+           current_user: current_user_scope # Assign current_user
+         )
+         |> assign(assigns_to_socket) # Assign all the streamer/stream related data
+         |> stream(:messages, [])}
+
+      _ -> # Not found in hardcoded data, redirect
+        {:halt, socket |> Phoenix.LiveView.redirect(to: ~p"/")}
+    end
   end
 
-  def handle_event("send_message", %{"chat" => %{"ch_message" => message}}, socket) do
-    message = String.trim(message)
+  def handle_event("send_message", %{"chat" => %{"ch_message" => message_text}}, socket) do
+    if socket.assigns.current_user.user do # Check if user is logged in
+      message = String.trim(message_text)
 
-    if message != "" do
-      nai_time = DateTime.now!("Africa/Nairobi")
-      nu_time = KameramaniPhxWeb.Cldr.Time.to_string!(nai_time, format: :medium)
-      new_message = %{
-        id: System.unique_integer([:positive]),
-        name: socket.assigns.username,
-        text: message,
-        dt: nu_time,  
-        color: socket.assigns.user_color
-      }
+      if message != "" do
+        nai_time = DateTime.now!("Africa/Nairobi")
+        nu_time = KameramaniPhxWeb.Cldr.Time.to_string!(nai_time, format: :medium)
 
-      # Broadcast to everyone (including yourself)
-      broadcast({:new_message, new_message})
+        new_message = %{
+          id: System.unique_integer([:positive]),
+          name: socket.assigns.username,
+          text: message,
+          dt: nu_time,
+          color: socket.assigns.user_color
+        }
 
-      {:noreply, assign(socket, form: to_form(@initial_state, as: :chat))}
+        # Broadcast to everyone (including yourself)
+        broadcast(socket.assigns.stream_id, {:new_message, new_message})
+
+        {:noreply, assign(socket, form: to_form(@initial_state, as: :chat))}
+      else
+        {:noreply, socket}
+      end
     else
+      # User not logged in, show flash message and don't send message
+      socket =
+        socket
+        |> Phoenix.LiveView.put_flash(:error, "You must log in to chat.")
+        |> assign(form: to_form(@initial_state, as: :chat)) # Clear form even if not logged in
       {:noreply, socket}
     end
   end
@@ -65,7 +106,12 @@ defmodule KameramaniPhxWeb.ChatLive do
 
   def handle_params(_params, _url, socket) do
     {:noreply,
-      socket
-      |> assign(page_title: "Chat")}
+     socket
+     |> assign(page_title: socket.assigns.streamer_name <> " | Chat")}
+  end
+
+  # This function will handle messages broadcasted via PubSub
+  def handle_info({:new_message, message}, socket) do
+    {:noreply, stream_insert(socket, :messages, message)}
   end
 end

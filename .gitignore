@@ -37,3 +37,5 @@ npm-debug.log
 
 #storing personal credentials for development
 /config/*.local.exs
+
+/config/dev.local.exs

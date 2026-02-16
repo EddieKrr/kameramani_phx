@@ -25,7 +25,7 @@ defmodule KameramaniPhx.Accounts.User do
       join_keys: [follower_id: :id, followed_id: :id]
 
     # People FOLLOWING this user
-    many_to_many :followers, Kameramani.Accounts.User,
+    many_to_many :followers, KameramaniPhx.Accounts.User,
       join_through: "follows",
       join_keys: [followed_id: :id, follower_id: :id]
 
@@ -37,15 +37,11 @@ defmodule KameramaniPhx.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:name, :username, :email, :age, :password, :bio, :profile_picture])
-    |> validate_required([:name, :username, :email, :age, :password, :bio, :profile_picture])
+    |> cast(attrs, [:name, :username, :email, :age, :password])
+    |> validate_required([:name, :username, :email, :age, :password])
     |> validate_email(opts)
     |> validate_password(opts)
   end
-
-
-
-
 
   defp validate_email(changeset, opts) do
     changeset =
@@ -88,11 +84,11 @@ defmodule KameramaniPhx.Accounts.User do
         else
           changeset
         end
-      %{} = changeset -> changeset
+
+      %{} = changeset ->
+        changeset
     end
   end
-
-
 
   defp maybe_validate_unique_email(changeset, opts) do
     if Keyword.get(opts, :validate_unique, true) do
@@ -102,7 +98,6 @@ defmodule KameramaniPhx.Accounts.User do
       changeset
     end
   end
-
 
   defp validate_password(changeset, opts) do
     changeset =
@@ -131,15 +126,30 @@ defmodule KameramaniPhx.Accounts.User do
   end
 
   def update_user_password(user, new_password) do
-    changeset = change(user, password: new_password)
-    |> validate_password([])
+    changeset =
+      change(user, password: new_password)
+      |> validate_password([])
+
     case Repo.update(changeset) do
       {:ok, updated_user} ->
         {:noreply, updated_user}
+
       {:error, changeset} ->
         {:error, changeset}
     end
   end
+
+  # update user stream profile
+  def profile_changeset(user, attr) do
+    user
+    |> cast(attr, [:username, :bio, :profile_picture])
+    |> validate_required([:username])
+    |> validate_length(:username, min: 3, max: 20)
+    |> validate_length(:bio, max: 160)
+    |> unsafe_validate_unique(:username, KameramaniPhx.Repo)
+    |> unique_constraint(:username)
+  end
+
   @doc """
   Verifies the password.
   """
@@ -157,24 +167,7 @@ defmodule KameramaniPhx.Accounts.User do
   Confirms the account by setting `confirmed_at`.
   """
   def confirm_changeset(user) do
-    now = DateTime.utc_now(:second)
+    now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
     change(user, confirmed_at: now)
   end
-
-
-  #lets make the user followable by adding a followers and following association
-  def follow_user(follower, following_id) do
-      Repo.insert_all("follows", [[
-        follower_id: follower.id,
-        following_id: String.to_integer(following_id),
-        inserted_at: DateTime.utc_now(),
-        updated_at: DateTime.utc_now()
-      ]])
-  end
-
-  #unfollow a user
-  def unfollow_user(follower, follower) do
-
-  end
-
 end

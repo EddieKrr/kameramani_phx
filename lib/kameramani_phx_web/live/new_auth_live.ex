@@ -1,7 +1,7 @@
 defmodule KameramaniPhxWeb.NewAuthLive do
   use KameramaniPhxWeb, :live_view
 
-  on_mount {KameramaniPhxWeb.UserAuth, :mount_current_scope}
+  on_mount {KameramaniPhxWeb.UserAuth, :mount_current_user}
 
   import Phoenix.LiveView
 
@@ -64,7 +64,7 @@ defmodule KameramaniPhxWeb.NewAuthLive do
 
   def handle_params(_params, _url, socket) do
     {:noreply,
-      socket
-      |> assign(page_title: "Authentication")}
+     socket
+     |> assign(page_title: "Authentication")}
   end
 end
