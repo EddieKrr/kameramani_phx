@@ -107,8 +107,8 @@ defmodule KameramaniPhxWeb.UserLive.Settings do
   end
 
   # updating user profile picture and bio
-def handle_event("update_dp", %{"user" => user_params}, socket) do
-  user = socket.assigns.current_user.user
+  def handle_event("update_dp", %{"user" => user_params}, socket) do
+    user = socket.assigns.current_user.user
 
     # Ensure the upload key matches your allow_upload name (was :avatar in previous examples, now :profile_picture)
     image_upload =

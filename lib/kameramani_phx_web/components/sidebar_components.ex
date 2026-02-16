@@ -4,7 +4,7 @@ defmodule KameramaniPhxWeb.SidebarComponents do
   attr :name, :string, required: true
   attr :game, :string
   attr :viewer_count, :string
-  attr :src, :string, default: "https://ui-avatars.com/api/?background=random"
+  attr :src, :string, default: "https://i.pravatar.cc/150?img=1"
   attr :active, :boolean, default: false
 
   def sidebar_item(assigns) do

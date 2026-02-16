@@ -13,7 +13,7 @@ defmodule KameramaniPhxWeb.CardComponents do
     ~H"""
     <.link patch={~p"/watch/#{@streamer}"}>
       <article>
-        <div class="relative aspect-video w-full bg-gradient-to-tl from-black to-slate-700 hover:scale-110 hover:z-50 hover:shadow-2xl transition-all duration-300 ease-in-out rounded-lg">
+        <div class="relative aspect-video w-full bg-gradient-to-tl from-black to-slate-700 hover:scale-105 hover:z-50 hover:shadow-2xl transition-all duration-300 ease-in-out rounded-lg">
           <div class="absolute top-1 left-1 px-1 text-red-600 text-xs">LIVE</div>
 
           <div class="absolute bottom-1 right-1 bg-black/60 rounded-full text-xs px-1">
@@ -37,4 +37,25 @@ defmodule KameramaniPhxWeb.CardComponents do
     </.link>
     """
   end
+
+  attr :name, :string, required: true
+  attr :slug, :string, required: true
+  attr :viewers, :integer, required: true
+  attr :box_art, :string, default: "https://placehold.co/400x533/4c1d95/ffffff?text=Game+Art"
+
+  def category_card(assigns) do
+    ~H"""
+    <.link navigate={~p"/directory/#{@slug}"}>
+      <div class="grid grid-cols-5">
+      <div>
+          <img src ={@box_art}/>
+          <div>{@name}</div>
+          <div>{@viewers}</div>
+          <div>{@slug}</div>
+        </div>
+      </div>
+    </.link>
+    """
+  end
+
 end

@@ -33,6 +33,9 @@ defmodule KameramaniPhxWeb.Router do
     live "/watch/:username", ChatLive, :show
     live "/auth", NewAuthLive
     live "/register", AuthLive
+    live "/categories", CategoryLive
+    live "/directory", DirectoryLive, :index
+    live "/directory/:slug", DirectoryLive, :show
 
     # Login/Logout logic
     get "/users/log-in", UserSessionController, :new
