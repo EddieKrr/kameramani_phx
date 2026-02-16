@@ -24,7 +24,7 @@ defmodule KameramaniPhxWeb.Endpoint do
     at: "/",
     from: :kameramani_phx,
     gzip: not code_reloading?,
-    only: KameramaniPhxWeb.static_paths(),
+    only: KameramaniPhxWeb.static_paths() ++ ["live", "uploads"],
     raise_on_missing_only: code_reloading?
 
   # Code reloading can be explicitly enabled under the
@@ -35,21 +35,6 @@ defmodule KameramaniPhxWeb.Endpoint do
     plug Phoenix.CodeReloader
     plug Phoenix.Ecto.CheckRepoStatus, otp_app: :kameramani_phx
   end
-
-  # lib/kameramani_phx_web/endpoint.ex
-  plug Plug.Static,
-    at: "/",
-    from: :kameramani_phx,
-    gzip: false,
-    # Add "uploads" here
-    only: KameramaniPhxWeb.static_paths() ++ ["uploads"]
-
-    plug Plug.Static,
-  at: "/",
-  from: :kameramani_phx,
-  gzip: false,
-  # Make sure these extensions are not blocked
-  only: KameramaniPhxWeb.static_paths() ++ ~w(live)
 
   
   plug Phoenix.LiveDashboard.RequestLogger,
