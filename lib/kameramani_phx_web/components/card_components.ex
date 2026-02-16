@@ -13,7 +13,7 @@ defmodule KameramaniPhxWeb.CardComponents do
     ~H"""
     <.link patch={~p"/watch/#{@streamer}"}>
       <article>
-        <div class="relative aspect-video w-full bg-gradient-to-tl from-black to-slate-700 hover:scale-110 hover:z-50 hover:shadow-2xl transition-all duration-300 ease-in-out rounded-lg">
+        <div class="relative aspect-video w-full bg-gradient-to-tl from-black to-slate-700 hover:scale-105 hover:z-50 hover:shadow-2xl transition-all duration-300 ease-in-out rounded-lg">
           <div class="absolute top-1 left-1 px-1 text-red-600 text-xs">LIVE</div>
 
           <div class="absolute bottom-1 right-1 bg-black/60 rounded-full text-xs px-1">
