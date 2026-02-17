@@ -13624,3 +13624,17 @@
 10:02:34.429 id=11524 [debug] handled request client -> server textDocument/codeAction in 2ms
 
 10:02:40.971 id=11525 [debug] handled request client -> server textDocument/codeAction in 2ms
+
+10:02:47.570 [debug] handled notification client -> server textDocument/didSave in 10ms
+
+10:02:47.855 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 2ms
+
+10:02:47.860 id=11527 [debug] handled request client -> server textDocument/codeAction in 2ms
+
+10:02:47.913 [debug] handled notification client -> server $/cancelRequest in 2ms
+
+10:03:12.627 id=11528 [debug] handled request client -> server textDocument/codeAction in 3ms
+
+10:03:12.882 id=11529 [debug] handled request client -> server textDocument/codeAction in 2ms
+
+10:03:12.918 id=11530 [debug] handled request client -> server textDocument/documentSymbol in 15ms
