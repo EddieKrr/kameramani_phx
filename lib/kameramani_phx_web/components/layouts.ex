@@ -66,6 +66,12 @@ defmodule KameramaniPhxWeb.Layouts do
             <div class="absolute right-0 top-full mt-2 w-48 bg-slate-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <div class="py-2">
                 <.link
+                  navigate={~p"/users/profile/#{Map.get(@current_user, :user, @current_user).username}"}
+                  class="block px-4 py-2 text-white hover:bg-slate-600 transition colors"
+                >
+                  <.icon name="hero-user" class="h-5 w-5"/> Profile
+                </.link>
+                <.link
                   navigate={~p"/users/settings"}
                   class="block px-4 py-2 text-white hover:bg-slate-600 transition-colors"
                 >
