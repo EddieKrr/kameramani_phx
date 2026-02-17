@@ -4,18 +4,21 @@ defmodule KameramaniPhx.Chat.Stream do
 
   schema "streams" do
     field :name, :string
-    belongs_to :user, KameramaniPhx.Accounts.User # Referencing bigint user.id
+    # Referencing bigint user.id
+    belongs_to :user, KameramaniPhx.Accounts.User
     # Ecto defaults to integer primary key, so no @primary_key needed here unless customizing
 
     timestamps()
   end
 
   @doc false
-  def changeset(stream, attrs, user_scope) do # User_scope added back
+  # User_scope added back
+  def changeset(stream, attrs, user_scope) do
     stream
     |> cast(attrs, [:name])
     |> validate_required([:name])
     |> unique_constraint(:name)
-    |> put_change(:user_id, user_scope.user.id) # user_id is bigint
+    # user_id is bigint
+    |> put_change(:user_id, user_scope.user.id)
   end
 end

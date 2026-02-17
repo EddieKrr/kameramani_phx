@@ -22,7 +22,8 @@
           </div>
 
           <p class="mt-4 text-gray-500 font-medium tracking-tight">
-            Waiting for signal from <span class="text-indigo-400 font-bold">@{@streamer_name}</span>
+            Waiting for signal from
+            <span class="text-indigo-400 font-bold">@{@streamer_name}</span>
           </p>
         </div>
       </div>
@@ -41,14 +42,18 @@
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div class="flex items-center gap-4">
           <div class="w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-indigo-500 to-purple-500">
-            <img class="w-full h-full rounded-full object-cover" src={@streamer_profile_picture} alt={@streamer_name}/>
+            <img
+              class="w-full h-full rounded-full object-cover"
+              src={@streamer_profile_picture}
+              alt={@streamer_name}
+            />
           </div>
 
           <div>
             <h1 class="text-xl font-bold tracking-tight uppercase tracking-widest">
               {@streamer_name}
             </h1>
-             <h1 class="text-l font-bold tracking-tight tracking-widest">
+            <h1 class="text-l font-bold tracking-tight tracking-widest">
               {@stream_name} - {@category}
             </h1>
 
@@ -73,7 +78,7 @@
       <span class="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400">
         Stream Chat
       </span>
-       <.icon name="hero-users-solid" class="h-4 w-4 text-gray-600" />
+      <.icon name="hero-users-solid" class="h-4 w-4 text-gray-600" />
     </div>
 
     <div

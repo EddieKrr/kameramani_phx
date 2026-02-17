@@ -14,12 +14,16 @@
         <.mesage
           field={@reg_form[:password]}
           placeholder="Password"
-          type = {if @show_password, do: "text", else: "password"}
+          type={if @show_password, do: "text", else: "password"}
         />
         <%= if !@show_password do %>
-            <button type="button" phx-click="toggle_password" class ="absolute right-0"><.icon name="hero-eye" class ="h-5 w-5 mr-2"/></button>
-          <%else %>
-            <button type="button" phx-click="toggle_password" class="absolute right-0"><.icon name="hero-eye-slash" class="h-5 w-5 mr-2"/></button>
+          <button type="button" phx-click="toggle_password" class="absolute right-0">
+            <.icon name="hero-eye" class="h-5 w-5 mr-2" />
+          </button>
+        <% else %>
+          <button type="button" phx-click="toggle_password" class="absolute right-0">
+            <.icon name="hero-eye-slash" class="h-5 w-5 mr-2" />
+          </button>
         <% end %>
       </div>
       <button type="submit" class="rounded-full bg-indigo-700 text-white p-2">Register</button>
@@ -40,13 +44,17 @@
           field={@log_form[:password]}
           placeholder="Password"
           name="user[password]"
-          type ={if @show_password, do: "text", else: "password"}
+          type={if @show_password, do: "text", else: "password"}
         />
-          <%= if !@show_password do %>
-            <button type="button" class="absolute right-0" phx-click="toggle_password"><.icon name="hero-eye" class="h-5 w-5 mr-2"/></button>
-          <% else %>
-            <button type="button" class="absolute right-0" phx-click="toggle_password"><.icon name="hero-eye-slash" class="h-5 w-5 mr-2"/></button>
-          <% end %>
+        <%= if !@show_password do %>
+          <button type="button" class="absolute right-0" phx-click="toggle_password">
+            <.icon name="hero-eye" class="h-5 w-5 mr-2" />
+          </button>
+        <% else %>
+          <button type="button" class="absolute right-0" phx-click="toggle_password">
+            <.icon name="hero-eye-slash" class="h-5 w-5 mr-2" />
+          </button>
+        <% end %>
       </div>
       <button type="submit" class="rounded-full bg-sky-500 p-2">Login</button>
     </form>

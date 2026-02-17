@@ -47,8 +47,8 @@ defmodule KameramaniPhxWeb.CardComponents do
     ~H"""
     <.link navigate={~p"/directory/#{@slug}"}>
       <div class="grid grid-cols-5">
-      <div>
-          <img src ={@box_art}/>
+        <div>
+          <img src={@box_art} />
           <div>{@name}</div>
           <div>{@viewers}</div>
           <div>{@slug}</div>
@@ -57,5 +57,4 @@ defmodule KameramaniPhxWeb.CardComponents do
     </.link>
     """
   end
-
 end

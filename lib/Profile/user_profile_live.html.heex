@@ -1,0 +1,33 @@
+<div class="flex flex-col">
+  <div class="mx-auto">
+    <img
+      src={@user.profile_picture}
+      alt="Profile Picture"
+      class="profile-picture border-slate-700 rounded-full"
+    />
+    <h1 class="uppercase font-extrabold italic">{@user.name}'s Profile</h1>
+  </div>
+  <div class="grid grid-cols-2 gap-4 max-w-[1280px] mx-auto w-full">
+    <div class="bg-slate-800/40 backdrop-blur-md border-2 border-slate-700 rounded-3xl p-8 shadow-2xl text-center col-start-1 col-span-4 row-start-1">
+      <p class="font-bold tracking-tight italic text-blue-400 uppercase font-lg">
+        Username: {@user.username}
+      </p>
+    </div>
+    <div class="bg-slate-800/40 backdrop-blur-md border-2 border-slate-700 rounded-3xl p-8 shadow-2xl text-center col-start-4 col-span-4 row-start-2">
+      <p class="font-bold tracking-tight italic text-blue-400 uppercase font-lg">
+        Email: {@user.email}
+      </p>
+    </div>
+
+    <div class="bg-slate-800/40 backdrop-blur-md border-2 border-slate-700 rounded-3xl p-8 shadow-2xl text-center col-start-1 col-span-4 row-start-3">
+      <p class="font-bold tracking-tight italic text-blue-400 uppercase font-lg">
+        Age: {@user.age}
+      </p>
+    </div>
+    <div class="bg-slate-800/40 backdrop-blur-md border-2 border-slate-700 rounded-3xl p-8 shadow-2xl text-center col-start-4 col-span-4 row-start-4">
+      <p class="font-bold tracking-tight italic text-blue-400 uppercase font-lg">
+        Bio: {@user.bio}
+      </p>
+    </div>
+  </div>
+</div>

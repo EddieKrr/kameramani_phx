@@ -36,7 +36,6 @@ defmodule KameramaniPhxWeb.Endpoint do
     plug Phoenix.Ecto.CheckRepoStatus, otp_app: :kameramani_phx
   end
 
-  
   plug Phoenix.LiveDashboard.RequestLogger,
     param_key: "request_logger",
     cookie_key: "request_logger"

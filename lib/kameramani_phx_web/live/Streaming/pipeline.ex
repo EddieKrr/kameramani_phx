@@ -1,7 +1,8 @@
 defmodule KameramaniPhxWeb.Streaming.Pipeline do
   use Membrane.Pipeline
   import Membrane.ChildrenSpec
-  import Membrane.Pad # New import
+  # New import
+  import Membrane.Pad
 
   # These aliases ensure the compiler knows exactly where to look
   alias Membrane.RTMP.SourceBin
@@ -49,4 +50,3 @@ defmodule KameramaniPhxWeb.Streaming.Pipeline do
     {[spec: spec], %{}}
   end
 end
-

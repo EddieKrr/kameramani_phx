@@ -35,73 +35,86 @@ defmodule KameramaniPhxWeb.Layouts do
 
   def app(assigns) do
     ~H"""
-    <header class="navbar fixed top-0 left-0 right-0 z-50 max-w-1440 mx-auto rounded-2xl flex flex-row items-center justify-between bg-slate-800/60 backdrop-blur border-2 mt-3 border-slate-700 px-4 sm:px-6 lg:px-8">
-      <div class="flex">
-        <.link
-          href="/"
-          class="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors"
-        >
-          <span class="text-lg font-bold tracking-tighter text-lg uppercase italic">Kameramani</span>
-        </.link>
-      </div>
+    <header class="mx-auto max-w-[1440px] navbar fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div class="mx-4 flex items-center gap-4 justify-between w-full px-4 sm:px-6 py-2 rounded-xl bg-slate-800/60 backdrop-blur-sm border-2 mt-3 border-slate-700">
+        <div class="flex">
+          <.link
+            href="/"
+            class="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors"
+          >
+            <span class="text-lg font-bold tracking-tighter text-lg uppercase italic">
+              Kameramani
+            </span>
+          </.link>
+        </div>
 
-      <div class="relative">
-        <input
-          type="text"
-          placeholder="Search streams..."
-          class="bg-slate-700 text-white px-4 py-2 rounded-full w-64 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-slate-400"
-        />
-      </div>
 
-      <%= if @current_user do %>
-        <div class="flex items-center gap-3">
-          <span class="text-white">
-            Welcome, <span class="font-semibold text-blue-400">{(Map.get(@current_user, :user, @current_user)).username}</span>
-          </span>
-          <div class="relative group cursor-pointer">
-            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
-              {String.first((Map.get(@current_user, :user, @current_user)).username || "U") |> String.upcase()}
-            </div>
 
-            <div class="absolute right-0 top-full mt-2 w-48 bg-slate-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-              <div class="py-2">
-                <.link
-                  navigate={~p"/users/profile/#{Map.get(@current_user, :user, @current_user).username}"}
-                  class="block px-4 py-2 text-white hover:bg-slate-600 transition colors"
-                >
-                  <.icon name="hero-user" class="h-5 w-5"/> Profile
-                </.link>
-                <.link
-                  navigate={~p"/users/settings"}
-                  class="block px-4 py-2 text-white hover:bg-slate-600 transition-colors"
-                >
-                  <.icon name="hero-cog-6-tooth" class="h-5 w-5" /> Settings
-                </.link>
-                <.link
-                  navigate={~p"/studio"}
-                  class="block px-4 py-2 text-white hover:bg-slate-600 transition-colors gap-1"
-                >
-                  <.icon name="hero-video-camera" class="mb-1 h-5 w-5" /> Studio
-                </.link>
-                <.link
-                  href={~p"/users/log-out"}
-                  method="delete"
-                  class="block px-4 py-2 text-white hover:bg-slate-600 transition-colors"
-                >
-                  <.icon name="hero-arrow-left-start-on-rectangle" class="h-5 w-5" /> Log Out
-                </.link>
+        <%= if @current_user do %>
+          <div class="flex items-center gap-6">
+          <div class="relative">
+            <input
+              type="text"
+              placeholder="Search streams..."
+              class="bg-slate-700 text-white px-4 py-2 rounded-full w-64 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-slate-400"
+            />
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-white">
+              Welcome,
+              <span class="font-semibold text-blue-400 capitalize">
+                {Map.get(@current_user, :user, @current_user).username}
+              </span>
+            </span>
+            <div class="relative group cursor-pointer">
+              <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                {String.first(Map.get(@current_user, :user, @current_user).username || "U")
+                |> String.upcase()}
+              </div>
+
+              <div class="absolute right-0 top-full mt-2 w-48 bg-slate-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div class="py-2">
+                  <.link
+                    navigate={
+                      ~p"/users/profile/#{Map.get(@current_user, :user, @current_user).username}"
+                    }
+                    class="block px-4 py-2 text-white hover:bg-slate-600 transition colors"
+                  >
+                    <.icon name="hero-user" class="h-5 w-5" /> Profile
+                  </.link>
+                  <.link
+                    navigate={~p"/users/settings"}
+                    class="block px-4 py-2 text-white hover:bg-slate-600 transition-colors"
+                  >
+                    <.icon name="hero-cog-6-tooth" class="h-5 w-5" /> Settings
+                  </.link>
+                  <.link
+                    navigate={~p"/studio"}
+                    class="block px-4 py-2 text-white hover:bg-slate-600 transition-colors gap-1"
+                  >
+                    <.icon name="hero-video-camera" class="mb-1 h-5 w-5" /> Studio
+                  </.link>
+                  <.link
+                    href={~p"/users/log-out"}
+                    method="delete"
+                    class="block px-4 py-2 text-white hover:bg-slate-600 transition-colors"
+                  >
+                    <.icon name="hero-arrow-left-start-on-rectangle" class="h-5 w-5" /> Log Out
+                  </.link>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      <% else %>
-        <.link
-          navigate={~p"/auth"}
-          class="hover:bg-blue-400 bg-transparent border-2 border-blue-500/60 text-white px-4 py-2 rounded-full transition-colors duration-300 ease-in-out"
-        >
-          Sign In / Register
-        </.link>
-      <% end %>
+          </div>
+        <% else %>
+          <.link
+            navigate={~p"/auth"}
+            class="hover:bg-blue-400 bg-transparent border-2 border-blue-500/60 text-white px-4 py-2 rounded-full transition-colors duration-300 ease-in-out"
+          >
+            Sign In / Register
+          </.link>
+        <% end %>
+      </div>
     </header>
 
     <main class="pt-24 bg-[#0e0e10]">
