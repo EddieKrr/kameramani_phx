@@ -37,6 +37,7 @@ defmodule KameramaniPhxWeb.Router do
       live "/register", AuthLive
       live "/categories", CategoryLive
       live "/users/settings", UserLive.Settings, :edit
+      live "/studio", StudioLive
       live "/directory", DirectoryLive, :index
       live "/directory/:slug", DirectoryLive, :show
     end
@@ -70,7 +71,6 @@ defmodule KameramaniPhxWeb.Router do
       live "/users/profile/:username", Profile.UserProfileLive, :show
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
-      live "/studio", StudioLive
       live "/stream-settings", Streaming.Settings.StreamSettings
     end
   end
