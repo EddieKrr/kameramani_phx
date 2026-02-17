@@ -10,18 +10,18 @@
       <.mesage field={@reg_form[:username]} placeholder="Username" />
       <.mesage field={@reg_form[:email]} placeholder="Email" />
       <.mesage field={@reg_form[:age]} placeholder="Age" />
-      <.mesage
-        field={@reg_form[:password]}
-        placeholder="Password"
-        type={if @show_password, do: "text", else: "password"}
-      />
-      <button
-        type="button"
-        phx-click="toggle_password"
-        class="rounded-full bg-indigo-500 text-white p-1 mt-1"
-      >
-        {if @show_password, do: "Hide", else: "Show"} Password
-      </button>
+      <div class="relative">
+        <.mesage
+          field={@reg_form[:password]}
+          placeholder="Password"
+          type = {if @show_password, do: "text", else: "password"}
+        />
+        <%= if !@show_password do %>
+            <button type="button" phx-click="toggle_password" class ="absolute right-0"><.icon name="hero-eye" class ="h-5 w-5 mr-2"/></button>
+          <%else %>
+            <button type="button" phx-click="toggle_password" class="absolute right-0"><.icon name="hero-eye-slash" class="h-5 w-5 mr-2"/></button>
+        <% end %>
+      </div>
       <button type="submit" class="rounded-full bg-indigo-700 text-white p-2">Register</button>
     </.form>
   </div>
@@ -31,23 +31,24 @@
       action={~p"/users/log-in"}
       method="post"
       class="flex flex-col m-auto gap-2"
+      phx-change="validate_log"
     >
       <input type="hidden" name="_csrf_token" value={Plug.CSRFProtection.get_csrf_token()} />
       <.log field={@log_form[:email]} placeholder="Email" name="user[email]" />
-      <.log
-        field={@log_form[:password]}
-        placeholder="Password"
-        name="user[password]"
-        type={if @show_password, do: "text", else: "password"}
-      />
-      <button
-        type="button"
-        phx-click="toggle_password"
-        class="rounded-full bg-sky-500 text-white p-1 mt-1"
-      >
-        {if @show_password, do: "Hide", else: "Show"} Password
-      </button>
-       <button type="submit" class="rounded-full bg-sky-500 p-2">Login</button>
+      <div class="relative text-black">
+        <.log
+          field={@log_form[:password]}
+          placeholder="Password"
+          name="user[password]"
+          type ={if @show_password, do: "text", else: "password"}
+        />
+          <%= if !@show_password do %>
+            <button type="button" class="absolute right-0" phx-click="toggle_password"><.icon name="hero-eye" class="h-5 w-5 mr-2"/></button>
+          <% else %>
+            <button type="button" class="absolute right-0" phx-click="toggle_password"><.icon name="hero-eye-slash" class="h-5 w-5 mr-2"/></button>
+          <% end %>
+      </div>
+      <button type="submit" class="rounded-full bg-sky-500 p-2">Login</button>
     </form>
   </div>
 
