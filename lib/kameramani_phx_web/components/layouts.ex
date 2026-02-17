@@ -58,7 +58,7 @@ defmodule KameramaniPhxWeb.Layouts do
           <span class="text-white">
             Welcome, <span class="font-semibold text-blue-400">{(Map.get(@current_user, :user, @current_user)).username}</span>
           </span>
-          <div class="relative group">
+          <div class="relative group cursor-pointer">
             <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
               {String.first((Map.get(@current_user, :user, @current_user)).username || "U") |> String.upcase()}
             </div>
