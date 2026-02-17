@@ -27661,3 +27661,27 @@ PATH=/home/eddie/.local/share/mise/installs/elixir/1.19.5-otp-28/bin:/home/eddie
 16:08:50.359 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 613µs
 
 16:08:53.890 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 615µs
+
+16:10:46.572 id=718 [debug] handled request client -> server textDocument/codeAction in 472µs
+
+16:10:46.839 id=719 [debug] handled request client -> server textDocument/codeAction in 556µs
+
+16:10:46.869 id=720 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+16:10:48.230 id=721 [debug] handled request client -> server textDocument/codeAction in 384µs
+
+16:11:39.125 [debug] handled notification client -> server $/cancelRequest in 314µs
+
+16:12:15.787 id=723 [debug] handled request client -> server textDocument/codeAction in 531µs
+
+16:12:16.055 id=724 [debug] handled request client -> server textDocument/codeAction in 961µs
+
+16:12:16.081 id=725 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+16:12:39.593 id=726 [debug] handled request client -> server textDocument/hover in 1001ms
+
+16:12:57.475 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+16:12:57.837 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 480µs
+
+16:13:01.317 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 846µs
