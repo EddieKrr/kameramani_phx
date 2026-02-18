@@ -1,5 +1,6 @@
 defmodule KameramaniPhx.Accounts.UserToken do
   use Ecto.Schema
+  @primary_key {:id, :binary_id, autogenerate: true}
   import Ecto.Query
   alias KameramaniPhx.Accounts.UserToken
 
@@ -17,7 +18,7 @@ defmodule KameramaniPhx.Accounts.UserToken do
     field :context, :string
     field :sent_to, :string
     field :authenticated_at, :utc_datetime
-    belongs_to :user, KameramaniPhx.Accounts.User
+    belongs_to :user, KameramaniPhx.Accounts.User, type: :binary_id
 
     timestamps(type: :utc_datetime, updated_at: false)
   end

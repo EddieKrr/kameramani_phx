@@ -1,0 +1,65 @@
+<div class="h-[100%] bg-[#0e0e10] text-gray-100 font-sans">
+  <main class="max-w-4xl mx-auto p-6">
+    <div class="bg-[#18181b] p-8 rounded-xl border border-white/5 shadow-2xl space-y-6">
+      <div class="flex items-center gap-2 border-b border-white/5 pb-4">
+        <.icon name="hero-key" class="h-6 w-6 text-indigo-500" />
+        <h2 class="font-bold text-2xl">Stream Key Management</h2>
+      </div>
+
+      <p class="text-gray-400">
+        Your stream key is essential for connecting OBS or other broadcasting software to Kameramani.
+        Keep it secret to prevent unauthorized access to your stream.
+      </p>
+
+      <div class="space-y-4">
+        <div>
+          <label class="text-[10px] uppercase text-gray-500 font-bold tracking-widest block mb-1">RTMP Ingest URL</label>
+          <code class="block bg-black/40 p-3 rounded-lg border border-white/5 text-sm font-mono text-gray-300">
+            rtmp://localhost:1936/live
+          </code>
+          <p class="text-xs text-gray-600 mt-1">Use this URL in your streaming software.</p>
+        </div>
+
+        <div>
+          <label class="text-[10px] uppercase text-gray-500 font-bold tracking-widest block mb-1">Your Stream Key</label>
+          <div class="flex items-center gap-2 bg-black/40 p-3 rounded-lg border border-white/5">
+            <code id="stream-key-display" class={"flex-1 text-sm font-mono tracking-tight #{if(@stream_key, do: "text-green-400 font-bold", else: "text-gray-500")}"}>              <%= if @stream_key_visible do %>
+                <%= @stream_key || "No stream key generated yet." %>
+              <% else %>
+                <%= if @stream_key, do: "••••••••••••••••••••••••", else: "No stream key generated yet." %>
+              <% end %>
+            </code>
+            <button
+              phx-click="toggle_key_visibility"
+              class="text-gray-400 hover:text-white transition-colors p-1 rounded"
+              aria-label={if @stream_key_visible, do: "Hide stream key", else: "Show stream key"}
+            >
+              <.icon name={if @stream_key_visible, do: "hero-eye-slash", else: "hero-eye"} class="h-5 w-5" />
+            </button>
+            <button
+              phx-click="copy_stream_key"
+              phx-value-stream-key={@stream_key}
+              class="text-gray-400 hover:text-white transition-colors p-1 rounded"
+              aria-label="Copy stream key"
+              data-clipboard-target="#stream-key-display"
+              disabled={is_nil(@stream_key)}
+            >
+              <.icon name="hero-clipboard" class="h-5 w-5" />
+            </button>
+          </div>
+          <p class="text-xs text-gray-600 mt-1">Copy this key into your streaming software (e.g., OBS).</p>
+        </div>
+      </div>
+
+      <div class="flex justify-start gap-4 pt-4">
+        <button 
+          phx-click="generate_stream_key"
+          class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold border-none rounded-lg px-6 py-3 transition-all active:scale-95 shadow-lg shadow-indigo-500/20"
+          phx-disable-with="Generating..."
+        >
+          Get Stream Key
+        </button>
+      </div>
+    </div>
+  </main>
+</div>

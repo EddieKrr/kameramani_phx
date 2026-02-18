@@ -2,6 +2,8 @@ defmodule KameramaniPhxWeb.Router do
   use KameramaniPhxWeb, :router
 
   import KameramaniPhxWeb.UserAuth
+  # alias KameramaniPhxWeb.Settings # Removed
+  # alias KameramaniPhxWeb.Profile # Removed
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -47,22 +49,23 @@ defmodule KameramaniPhxWeb.Router do
   # =========================================================
   # PROTECTED ROUTES (Must be logged in)
   # =========================================================
-  scope "/", KameramaniPhxWeb do
+  scope "/" do # Removed KameramaniPhxWeb from scope argument
     # 2. USE THE RENAMED PIPELINE HERE
     pipe_through [:browser, :require_auth]
 
-    post "/users/update-password", UserSessionController, :update_password
+    post "/users/update-password", KameramaniPhxWeb.UserSessionController, :update_password # Full module name
 
     # 3. LIVE SESSION FOR AUTH USERS
     live_session :require_authenticated_user,
       on_mount: [{KameramaniPhxWeb.UserAuth, :require_authenticated}] do
       # I moved ChatLive here assuming you want chatting to be private.
       # If you want it public, move it back to the top scope!
-      live "/users/profile/:username", Profile.UserProfileLive, :show
-      live "/users/settings", UserLive.Settings, :edit
-      live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
-      live "/studio", StudioLive
-      live "/stream-settings", Streaming.Settings.StreamSettings
+      live "/users/profile/:username", KameramaniPhxWeb.Profile.UserProfileLive, :show
+      live "/users/settings", KameramaniPhxWeb.UserLive.UserSettingsLive
+      live "/users/settings/stream-key", KameramaniPhxWeb.Streaming.Settings.StreamKeyLive
+      live "/users/settings/confirm-email/:token", KameramaniPhxWeb.UserLive.UserSettingsLive, :confirm_email
+      live "/studio", KameramaniPhxWeb.StudioLive
+      live "/stream-settings", KameramaniPhxWeb.Streaming.Settings.StreamSettingsLive
     end
   end
 

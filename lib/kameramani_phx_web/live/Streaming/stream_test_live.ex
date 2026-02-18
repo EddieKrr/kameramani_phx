@@ -16,13 +16,13 @@ defmodule KameramaniPhxWeb.Streaming.StreamTestLive do
           var video = document.getElementById('hls-video');
           var hls = new Hls();
           // Assuming your HLS manifest is served at /live/cube/index.m3u8
-          hls.loadSource('/live/cube/index.m3u8');
+          hls.loadSource('/live/cube.2/index.m3u8');
           hls.attachMedia(video);
           hls.on(Hls.Events.MANIFEST_PARSED, function() {
             video.play();
           });
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-          video.src = '/live/cube/index.m3u8';
+          video.src = '/live/cube.2/index.m3u8';
           video.addEventListener('loadedmetadata', function() {
             video.play();
           });

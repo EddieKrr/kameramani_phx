@@ -39,3 +39,5 @@ npm-debug.log
 /config/*.local.exs
 
 /config/dev.local.exs
+
+/priv/static/live/cube.2

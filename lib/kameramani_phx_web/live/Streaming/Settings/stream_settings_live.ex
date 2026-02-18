@@ -1,6 +1,5 @@
-defmodule KameramaniPhxWeb.Streaming.Settings.StreamSettings do
+defmodule KameramaniPhxWeb.Streaming.Settings.StreamSettingsLive do
   use KameramaniPhxWeb, :live_view
-  import KameramaniPhxWeb.CoreComponents
 
 
   def mount(_params, _session, socket) do

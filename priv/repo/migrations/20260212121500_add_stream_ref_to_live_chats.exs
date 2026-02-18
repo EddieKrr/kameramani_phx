@@ -3,7 +3,7 @@ defmodule KameramaniPhx.Repo.Migrations.AddStreamRefToLiveChats do
 
   def up do
     alter table(:live_chats) do
-      add :stream_id, references(:streams, type: :binary_id), null: true
+      add :stream_id, references(:streams, type: :uuid), null: true
       remove :room_id
     end
   end

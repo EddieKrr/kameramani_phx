@@ -62,25 +62,6 @@ defmodule KameramaniPhx.Accounts do
 
   def sudo_mode?(_user, _minutes), do: false
 
-  # user following feature
-  def follow_user(follower_id, followed_id) do
-    Repo.insert_all("follows", [
-      [
-        follower_id: follower_id,
-        followed_id: followed_id,
-        inserted_at: DateTime.utc_now(),
-        updated_at: DateTime.utc_now()
-      ]
-    ])
-  end
-
-  # unfollow a user
-
-  def unfollow_user(follower_id, followed_id) do
-    Repo.delete_all(
-      from(f in "follows", where: [follower_id: ^follower_id, followed_id: ^followed_id])
-    )
-  end
 
   ## Session
 
@@ -235,24 +216,23 @@ defmodule KameramaniPhx.Accounts do
     |> User.registration_changeset(attrs)
   end
 
-  defp user_email_changeset(user, current_email, new_email) do
+  defp user_email_changeset(user, _current_email, new_email) do
     user
-    |> Ecto.Changeset.change(:email, current_email)
+    |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_change(:email, new_email)
     |> Ecto.Changeset.validate_required(:email)
-    |> Ecto.Changeset.validate_format(:email)
-    |> Ecto.Changeset.validate_length(:email, 3, 160)
+    |> Ecto.Changeset.validate_length(:email, min: 3, max: 160)
     |> Ecto.Changeset.validate_format(:email, ~r/@/)
   end
 
   defp user_password_changeset(password) do
     Ecto.Changeset.change(%User{}, :password)
     |> Ecto.Changeset.validate_required(:password)
-    |> Ecto.Changeset.validate_length(:password, 12, 80)
+    |> Ecto.Changeset.validate_length(:password, min: 12, max: 80)
     |> Ecto.Changeset.validate_format(:password, ~r/^(?=.*[a-z]+?=.*[0-9])|(?=.*[a-z]+.*$)/)
     |> Ecto.Changeset.put_change(
       :hashed_password,
-      Pbkdf2.Base.hash_password(password, "some_salt")
+      Bcrypt.hash_pwd_salt(password)
     )
   end
 

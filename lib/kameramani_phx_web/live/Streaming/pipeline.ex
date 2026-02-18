@@ -1,46 +1,43 @@
 defmodule KameramaniPhxWeb.Streaming.Pipeline do
-  use Membrane.Pipeline
+  use Membrane.Bin,
+    input_pads: [
+      audio: [demand_mode: :auto],
+      video: [demand_mode: :auto]
+    ]
   import Membrane.ChildrenSpec
-  import Membrane.Pad # New import
+  # import Membrane.Bin # Removed - input/1 is implicitly handled by input_pads
 
   # These aliases ensure the compiler knows exactly where to look
-  alias Membrane.RTMP.SourceBin
   alias Membrane.H264.Parser, as: H264Parser
   alias Membrane.HTTPAdaptiveStream.SinkBin
   alias Membrane.HTTPAdaptiveStream.HLS
   alias Membrane.HTTPAdaptiveStream.Storages.FileStorage, as: FileStorage
 
-  def start() do
-    start_link(:my_pipeline, [])
-  end
-
-  def start_link(name, opts) do
-    Membrane.Pipeline.start_link(__MODULE__, name, opts)
+  def start_link(pipeline_id, hls_output_directory) do
+    GenServer.start_link(__MODULE__, [hls_output_directory: hls_output_directory], name: pipeline_id)
   end
 
   @impl true
-  def handle_init(_ctx, _opts) do
+  def handle_init(_ctx, init_args) do
+    hls_output_directory = Keyword.fetch!(init_args, :hls_output_directory)
+
     spec = [
-      # Audio path: src:audio -> sink:input(audio)
-      child(:src, %SourceBin{
-        url: "rtmp://127.0.0.1:1935/live/cube_test"
-      })
-      |> via_out(:audio)
-      |> via_in(Pad.ref(:input, :audio),
+      # Audio path: from external input pad -> sink:input(audio)
+      # Reference the declared input pad directly
+      via_in(Membrane.Pad.ref(:input, :audio),
         options: [encoding: :AAC, segment_duration: Membrane.Time.seconds(4)]
       )
       |> child(:sink, %SinkBin{
         manifest_module: HLS,
         target_window_duration: :infinity,
         persist?: false,
-        storage: %FileStorage{directory: "priv/static/live/cube"}
+        storage: %FileStorage{directory: hls_output_directory}
       }),
 
-      # Video path: src:video -> parser:input -> sink:input(video)
-      get_child(:src)
-      |> via_out(:video)
-      |> child(:parser, %H264Parser{output_alignment: :au})
-      |> via_in(Pad.ref(:input, :video),
+      # Video path: from external input pad -> parser:input -> sink:input(video)
+      # Reference the declared input pad directly
+      child(:parser, %H264Parser{output_alignment: :au})
+      |> via_in(Membrane.Pad.ref(:input, :video),
         options: [encoding: :H264, segment_duration: Membrane.Time.seconds(4)]
       )
       |> get_child(:sink)
@@ -48,5 +45,8 @@ defmodule KameramaniPhxWeb.Streaming.Pipeline do
 
     {[spec: spec], %{}}
   end
-end
 
+  def stop_stream(pipeline_id) do
+    GenServer.stop(pipeline_id)
+  end
+end

@@ -1,5 +1,6 @@
 defmodule KameramaniPhx.Accounts.User do
   use Ecto.Schema
+  @primary_key {:id, :binary_id, autogenerate: true}
   import Ecto.Changeset
   alias KameramaniPhx.Repo
 

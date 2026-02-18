@@ -1,8 +1,5 @@
 defmodule KameramaniPhxWeb.Profile.UserProfileLive do
   use Phoenix.LiveView
-  alias KameramaniPhx.Users
-  alias KameramaniPhx.Repo
-  alias KameramaniPhx.Users.User
   alias KameramaniPhx.Accounts
 
  def mount(%{"username" => username}, _session, socket) do

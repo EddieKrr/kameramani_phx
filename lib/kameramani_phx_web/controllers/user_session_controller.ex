@@ -54,21 +54,24 @@ defmodule KameramaniPhxWeb.UserSessionController do
 
   def update_password(conn, %{"user" => user_params} = params) do
     user = conn.assigns.current_user.user
-    # We neutralized sudo_mode? in the context, so this always passes
-    true = Accounts.sudo_mode?(user)
+    if Accounts.sudo_mode?(user, -20) do
+      case Accounts.update_user_password(user, user_params) do
+        {:ok, {_user, expired_tokens}} ->
+          UserAuth.disconnect_sessions(expired_tokens)
 
-    case Accounts.update_user_password(user, user_params) do
-      {:ok, {_user, expired_tokens}} ->
-        UserAuth.disconnect_sessions(expired_tokens)
+          conn
+          |> put_session(:user_return_to, ~p"/users/settings")
+          |> create(params, "Password updated successfully!")
 
-        conn
-        |> put_session(:user_return_to, ~p"/users/settings")
-        |> create(params, "Password updated successfully!")
-
-      {:error, _changeset} ->
-        conn
-        |> put_flash(:error, "Failed to update password. Please check the requirements.")
-        |> redirect(to: ~p"/users/settings")
+        {:error, _changeset} ->
+          conn
+          |> put_flash(:error, "Failed to update password. Please check the requirements.")
+          |> redirect(to: ~p"/users/settings")
+      end
+    else
+      conn
+      |> put_flash(:error, "You must re-authenticate to change your password.")
+      |> redirect(to: ~p"/users/settings")
     end
   end
 

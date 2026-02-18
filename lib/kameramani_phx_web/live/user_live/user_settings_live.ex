@@ -1,7 +1,5 @@
-defmodule KameramaniPhxWeb.UserLive.Settings do
+defmodule KameramaniPhxWeb.UserLive.UserSettingsLive do
   use KameramaniPhxWeb, :live_view
-
-  on_mount {KameramaniPhxWeb.UserAuth, :require_sudo_mode}
 
   alias KameramaniPhx.Accounts
 

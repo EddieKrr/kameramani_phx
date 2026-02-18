@@ -10,6 +10,10 @@ defmodule KameramaniPhx.Application do
     children = [
       KameramaniPhxWeb.Telemetry,
       KameramaniPhx.Repo,
+      KameramaniPhx.StreamManager,
+      KameramaniPhx.RTMPIngestServer, # Enhanced RTMP server for OBS connections
+      # KameramaniPhx.RTMPServer, # Basic RTMP server - replaced
+      # KameramaniPhx.RTMPIngestListener, # Temporarily disabled - needs proper Membrane pipeline setup
       {DNSCluster, query: Application.get_env(:kameramani_phx, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: KameramaniPhx.PubSub},
       # Start a worker by calling: KameramaniPhx.Worker.start_link(arg)
