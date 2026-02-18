@@ -84,20 +84,20 @@ defmodule KameramaniPhxWeb.Layouts do
                       navigate={~p"/users/settings"}
                       class="flex items-center gap-2 px-4 py-2 text-white hover:bg-slate-600 transition-colors"
                     >
-                      <.svg variant="gear" class="w-5 h-5"/> Settings
+                      <.svg variant="gear" class="w-5 h-5" /> Settings
                     </.link>
                     <.link
                       navigate={~p"/studio"}
                       class="flex items-center gap-2 px-4 py-2 text-white hover:bg-slate-600 transition-colors"
                     >
-                      <.svg variant="camera" class="w-5 h-5"/> Studio
+                      <.svg variant="camera" class="w-5 h-5" /> Studio
                     </.link>
                     <.link
                       href={~p"/users/log-out"}
                       method="delete"
                       class="flex items-center gap-2 px-4 py-2 text-white hover:bg-slate-600 transition-colors"
                     >
-                      <.svg variant="exit" class="w-5 h-5"/> Log Out
+                      <.svg variant="exit" class="w-5 h-5" /> Log Out
                     </.link>
                   </div>
                 </div>
@@ -190,7 +190,7 @@ defmodule KameramaniPhxWeb.Layouts do
   def theme_toggle(assigns) do
     ~H"""
     <div class="card relative flex flex-row items-center border-2 border-base-300 bg-base-300 rounded-full">
-      <div class="absolute w-1/3 h-full rounded-full border-1 border-base-200 bg-base-100 brightness-200 left-0 [[data-theme=light]_&]:left-1/3 [[data-theme=dark]_&]:left-2/3 transition-[left]" />
+      <div class="absolute w-1/3 h-full rounded-full border border-base-200 bg-base-100 brightness-200 left-0 [[data-theme=light]_&]:left-1/3 [[data-theme=dark]_&]:left-2/3 transition-[left]" />
       <button
         class="flex p-2 cursor-pointer w-1/3"
         phx-click={JS.dispatch("phx:set-theme")}
