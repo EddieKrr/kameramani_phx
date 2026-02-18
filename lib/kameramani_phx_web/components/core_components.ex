@@ -31,6 +31,8 @@ defmodule KameramaniPhxWeb.CoreComponents do
 
   alias Phoenix.LiveView.JS
 
+  embed_templates("core_components/*")
+
   @doc """
   Renders flash notices.
 
@@ -64,15 +66,15 @@ defmodule KameramaniPhxWeb.CoreComponents do
         @kind == :info && "alert-info",
         @kind == :error && "alert-error"
       ]}>
-        <.icon :if={@kind == :info} name="hero-information-circle" class="size-5 shrink-0" />
-        <.icon :if={@kind == :error} name="hero-exclamation-circle" class="size-5 shrink-0" />
+        <.svg :if={@kind == :info} variant="info" class="size-5 shrink-0" />
+        <.svg :if={@kind == :error} variant="exclamation" class="size-5 shrink-0" />
         <div>
           <p :if={@title} class="font-semibold">{@title}</p>
           <p>{msg}</p>
         </div>
         <div class="flex-1" />
         <button type="button" class="group self-start cursor-pointer" aria-label={gettext("close")}>
-          <.icon name="hero-x-mark" class="size-5 opacity-40 group-hover:opacity-70" />
+          <.svg variant="x" class="size-5 opacity-40 group-hover:opacity-70" />
         </button>
       </div>
     </div>
@@ -311,7 +313,7 @@ defmodule KameramaniPhxWeb.CoreComponents do
   defp error(assigns) do
     ~H"""
     <p class="mt-1.5 flex gap-2 items-center text-sm text-error">
-      <.icon name="hero-exclamation-circle" class="size-5" />
+      <.svg variant="exclamation" class="size-5" />
       {render_slot(@inner_block)}
     </p>
     """
@@ -480,6 +482,7 @@ defmodule KameramaniPhxWeb.CoreComponents do
     )
   end
 
+  @spec translate_error({binary(), keyword() | map()}) :: binary()
   @doc """
   Translates an error message using gettext.
   """
@@ -507,4 +510,14 @@ defmodule KameramaniPhxWeb.CoreComponents do
   def translate_errors(errors, field) when is_list(errors) do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
   end
+
+  # Custom Kameramani components
+  @doc """
+  Renders an svg icon using the variant prop; infinitely customisable
+  """
+
+  attr(:variant, :string, required: true, doc: "The variant/type of svg")
+  attr(:class, :string, default: nil)
+
+  def svg(assigns)
 end

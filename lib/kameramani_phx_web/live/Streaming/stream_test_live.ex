@@ -1,4 +1,4 @@
-defmodule KameramaniPhxWeb.Streaming.StreamTestLive do
+defmodule KameramaniPhxWeb.Streaming.Settings.StreamTestLive do
   use KameramaniPhxWeb, :live_view
 
   def render(assigns) do
@@ -10,7 +10,8 @@ defmodule KameramaniPhxWeb.Streaming.StreamTestLive do
         <video id="hls-video" controls class="w-full"></video>
       </div>
 
-      <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+      <script src="https://cdn.jsdelivr.net/npm/hls.js@latest">
+      </script>
       <script>
         if(Hls.isSupported()) {
           var video = document.getElementById('hls-video');

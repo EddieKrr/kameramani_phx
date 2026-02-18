@@ -1,0 +1,14 @@
+{
+    "name": "t_vault_assets",
+    "version": "1.0.0",
+    "description": "",
+    "main": "tailwind.config.js",
+    "scripts": {},
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "alpinejs": "^3.15.4",
+      "highcharts": "^11.4.0"
+    }
+  }
+  

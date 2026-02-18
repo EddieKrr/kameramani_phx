@@ -4,8 +4,10 @@ defmodule KameramaniPhx.Chat.LiveChat do
 
   schema "live_chats" do
     field :body, :string
-    belongs_to :stream, KameramaniPhx.Chat.Stream, type: :binary_id # References UUID stream.id
-    field :user_id, :id # User ID associated with message sender (bigint)
+    # References UUID stream.id
+    belongs_to :stream, KameramaniPhx.Chat.Stream, type: :binary_id
+    # User ID associated with message sender (bigint)
+    field :user_id, :id
 
     timestamps(type: :utc_datetime)
   end
@@ -13,8 +15,10 @@ defmodule KameramaniPhx.Chat.LiveChat do
   @doc false
   def changeset(message, attrs, user_user) do
     message
-    |> cast(attrs, [:body, :stream_id]) # stream_id is UUID
+    # stream_id is UUID
+    |> cast(attrs, [:body, :stream_id])
     |> validate_required([:body, :stream_id])
-    |> put_change(:user_id, user_user.user.id) # user_id is bigint
+    # user_id is bigint
+    |> put_change(:user_id, user_user.user.id)
   end
 end
