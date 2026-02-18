@@ -10,7 +10,8 @@ defmodule KameramaniPhx.Repo.Migrations.AddStreamRefToLiveChats do
 
   def down do
     alter table(:live_chats) do
-      add :room_id, :string, null: true # Add back as nullable since original was likely nullable
+      # Add back as nullable since original was likely nullable
+      add :room_id, :string, null: true
       remove :stream_id
     end
   end

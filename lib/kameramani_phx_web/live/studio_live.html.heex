@@ -4,7 +4,7 @@
       <div class="lg:col-span-2 space-y-6">
         <div class="aspect-video bg-black rounded-xl relative border border-white/10 shadow-xl flex items-center justify-center group">
           <div class="text-center">
-            <.icon name="hero-video-camera-slash" class="h-16 w-16 text-gray-700 mb-2 mx-auto" />
+            <.svg variant="camera-slash" class="h-16 w-16 text-gray-700 mb-2 mx-auto" />
             <span class="text-gray-500 font-medium">Offline</span>
           </div>
 
@@ -15,7 +15,7 @@
 
         <div class="bg-[#18181b] p-6 rounded-xl border border-white/5">
           <div class="flex items-center gap-2 mb-6 border-b border-white/5 pb-4">
-            <.icon name="hero-pencil-square" class="h-5 w-5 text-indigo-500" />
+            <.svg variant="edit" class="h-5 w-5 text-indigo-500" />
             <h2 class="font-bold text-lg">Stream Info</h2>
           </div>
 
@@ -71,9 +71,9 @@
               class="text-gray-400 hover:text-white transition-colors"
             >
               <%= if @stream_key_visible do %>
-                <.icon name="hero-eye-slash" class="h-5 w-5" />
+                <.svg variant="eye-slash" class="h-5 w-5" />
               <% else %>
-                <.icon name="hero-eye" class="h-5 w-5" />
+                <.svg variant="eye" class="h-5 w-5" />
               <% end %>
             </button>
           </div>

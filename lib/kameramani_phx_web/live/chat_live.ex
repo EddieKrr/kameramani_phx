@@ -4,8 +4,10 @@ defmodule KameramaniPhxWeb.ChatLive do
 
   # Alias DummyData for shared hardcoded data
   alias KameramaniPhxWeb.DummyData
-  alias KameramaniPhx.Accounts # Correct alias for Accounts context
-  alias KameramaniPhx.Accounts.Scope # Alias Scope module directly
+  # Correct alias for Accounts context
+  alias KameramaniPhx.Accounts
+  # Alias Scope module directly
+  alias KameramaniPhx.Accounts.Scope
 
   # Keep your mount user
   # on_mount {KameramaniPhxWeb.UserAuth, :mount_current_user} # Removed
@@ -24,7 +26,14 @@ defmodule KameramaniPhxWeb.ChatLive do
   def mount(%{"username" => username}, session, socket) do
     # Find the streamer's data in the shared hardcoded list
     case Enum.find(DummyData.get_stream_data(), fn s -> s.streamer == username end) do
-      %{id: id, stream_name: name, streamer: streamer_name, avatar: avatar, category: category, tags: tags} ->
+      %{
+        id: id,
+        stream_name: name,
+        streamer: streamer_name,
+        avatar: avatar,
+        category: category,
+        tags: tags
+      } ->
         # Found in hardcoded data, assign to socket
         assigns_to_socket = %{
           stream_id: id,
@@ -48,26 +57,33 @@ defmodule KameramaniPhxWeb.ChatLive do
         if connected?(socket), do: subscribe(assigns_to_socket.stream_id)
 
         chat_username = Enum.random(["BIG C", "Canna", "Bis", "Mafrr"])
-        chat_user_color = "#" <> for _ <- 1..3, into: "", do: Integer.to_string(Enum.random(100..255), 16)
+
+        chat_user_color =
+          "#" <> for _ <- 1..3, into: "", do: Integer.to_string(Enum.random(100..255), 16)
 
         {:ok,
          socket
          |> assign(
            form: to_form(@initial_state, as: :chat),
-           username: chat_username, # This is the chat user's display name
+           # This is the chat user's display name
+           username: chat_username,
            user_color: chat_user_color,
-           current_user: current_user_scope # Assign current_user
+           # Assign current_user
+           current_user: current_user_scope
          )
-         |> assign(assigns_to_socket) # Assign all the streamer/stream related data
+         # Assign all the streamer/stream related data
+         |> assign(assigns_to_socket)
          |> stream(:messages, [])}
 
-      _ -> # Not found in hardcoded data, redirect
+      # Not found in hardcoded data, redirect
+      _ ->
         {:halt, socket |> Phoenix.LiveView.redirect(to: ~p"/")}
     end
   end
 
   def handle_event("send_message", %{"chat" => %{"ch_message" => message_text}}, socket) do
-    if socket.assigns.current_user.user do # Check if user is logged in
+    # Check if user is logged in
+    if socket.assigns.current_user.user do
       message = String.trim(message_text)
 
       if message != "" do
@@ -94,7 +110,9 @@ defmodule KameramaniPhxWeb.ChatLive do
       socket =
         socket
         |> Phoenix.LiveView.put_flash(:error, "You must log in to chat.")
-        |> assign(form: to_form(@initial_state, as: :chat)) # Clear form even if not logged in
+        # Clear form even if not logged in
+        |> assign(form: to_form(@initial_state, as: :chat))
+
       {:noreply, socket}
     end
   end

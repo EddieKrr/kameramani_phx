@@ -11,7 +11,8 @@ defmodule KameramaniPhxWeb.DummyData do
   def get_stream_data do
     [
       %{
-        id: 1, # Using integer ID
+        # Using integer ID
+        id: 1,
         stream_name: "Elden Ring Stream",
         streamer: "iShowSpeed",
         category: "Action",

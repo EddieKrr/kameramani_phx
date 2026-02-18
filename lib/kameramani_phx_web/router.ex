@@ -29,14 +29,24 @@ defmodule KameramaniPhxWeb.Router do
   scope "/", KameramaniPhxWeb do
     pipe_through [:browser]
 
-    live "/", LandingLive, :index
-    live "/watch/:username", ChatLive, :show
-    live "/auth", NewAuthLive
-    live "/register", AuthLive
-    live "/categories", CategoryLive
-    live "/directory", DirectoryLive, :index
-    live "/directory/:slug", DirectoryLive, :show
-    live "/stream_test", Streaming.StreamTestLive, :index
+    live_session :default,
+      on_mount: [{KameramaniPhxWeb.UserAuth, :mount_current_user}],
+      layout: {KameramaniPhxWeb.Layouts, :app} do
+      live "/", LandingLive, :index
+      live "/watch/:username", ChatLive, :show
+      live "/register", AuthLive
+      live "/categories", CategoryLive
+      live "/users/settings", UserLive.Settings, :edit
+      live "/studio", StudioLive
+      live "/directory", DirectoryLive, :index
+      live "/directory/:slug", DirectoryLive, :show
+    end
+
+    live_session :auth_pages,
+      layout: {KameramaniPhxWeb.Layouts, :auth},
+      on_mount: [{KameramaniPhxWeb.UserAuth, :mount_current_user}] do
+      live "/auth", NewAuthLive
+    end
 
     # Login/Logout logic
     get "/users/log-in", UserSessionController, :new
@@ -55,14 +65,14 @@ defmodule KameramaniPhxWeb.Router do
 
     # 3. LIVE SESSION FOR AUTH USERS
     live_session :require_authenticated_user,
-      on_mount: [{KameramaniPhxWeb.UserAuth, :require_authenticated}] do
+      on_mount: [{KameramaniPhxWeb.UserAuth, :require_authenticated}],
+      layout: {KameramaniPhxWeb.Layouts, :app} do
       # I moved ChatLive here assuming you want chatting to be private.
       # If you want it public, move it back to the top scope!
       live "/users/profile/:username", Profile.UserProfileLive, :show
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
-      live "/studio", StudioLive
-      live "/stream-settings", Streaming.Settings.StreamSettings
+      live "/stream-settings", Streaming.Settings.StreamTestLive
     end
   end
 

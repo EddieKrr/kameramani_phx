@@ -49,6 +49,11 @@ defmodule KameramaniPhxWeb.NewAuthLive do
     {:noreply, assign(socket, reg_form: to_form(changeset, as: "reg"))}
   end
 
+  def handle_event("validate_log", %{"user" => params}, socket) do
+    form = to_form(params, as: "user")
+    {:noreply, assign(socket, log_form: form)}
+  end
+
   def handle_event("register", %{"reg" => user_params}, socket) do
     case Accounts.register_user(user_params) do
       {:ok, _user} ->
