@@ -48,63 +48,61 @@ defmodule KameramaniPhxWeb.Layouts do
           </.link>
         </div>
 
-
-
         <%= if @current_user do %>
           <div class="flex items-center gap-6">
-          <div class="relative">
-            <input
-              type="text"
-              placeholder="Search streams..."
-              class="bg-slate-700 text-white px-4 py-2 rounded-full w-64 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-slate-400"
-            />
-          </div>
-          <div class="flex items-center gap-3">
-            <span class="text-white">
-              Welcome,
-              <span class="font-semibold text-blue-400 capitalize">
-                {Map.get(@current_user, :user, @current_user).username}
+            <div class="relative">
+              <input
+                type="text"
+                placeholder="Search streams..."
+                class="bg-slate-700 text-white px-4 py-2 rounded-full w-64 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-slate-400"
+              />
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-white">
+                Welcome,
+                <span class="font-semibold text-blue-400 capitalize">
+                  {Map.get(@current_user, :user, @current_user).username}
+                </span>
               </span>
-            </span>
-            <div class="relative group cursor-pointer">
-              <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                {String.first(Map.get(@current_user, :user, @current_user).username || "U")
-                |> String.upcase()}
-              </div>
+              <div class="relative group cursor-pointer">
+                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                  {String.first(Map.get(@current_user, :user, @current_user).username || "U")
+                  |> String.upcase()}
+                </div>
 
-              <div class="absolute right-0 top-full mt-2 w-48 bg-slate-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                <div class="py-2">
-                  <.link
-                    navigate={
-                      ~p"/users/profile/#{Map.get(@current_user, :user, @current_user).username}"
-                    }
-                    class="block px-4 py-2 text-white hover:bg-slate-600 transition colors"
-                  >
-                    <.icon name="hero-user" class="h-5 w-5" /> Profile
-                  </.link>
-                  <.link
-                    navigate={~p"/users/settings"}
-                    class="block px-4 py-2 text-white hover:bg-slate-600 transition-colors"
-                  >
-                    <.icon name="hero-cog-6-tooth" class="h-5 w-5" /> Settings
-                  </.link>
-                  <.link
-                    navigate={~p"/studio"}
-                    class="block px-4 py-2 text-white hover:bg-slate-600 transition-colors gap-1"
-                  >
-                    <.icon name="hero-video-camera" class="mb-1 h-5 w-5" /> Studio
-                  </.link>
-                  <.link
-                    href={~p"/users/log-out"}
-                    method="delete"
-                    class="block px-4 py-2 text-white hover:bg-slate-600 transition-colors"
-                  >
-                    <.icon name="hero-arrow-left-start-on-rectangle" class="h-5 w-5" /> Log Out
-                  </.link>
+                <div class="absolute right-0 top-full mt-2 w-48 bg-slate-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                  <div class="py-2">
+                    <.link
+                      navigate={
+                        ~p"/users/profile/#{Map.get(@current_user, :user, @current_user).username}"
+                      }
+                      class="flex items-center gap-2 px-4 py-2 text-white hover:bg-slate-600 transition colors"
+                    >
+                      <.svg variant="user-icon" class="w-5 h-5" /> Profile
+                    </.link>
+                    <.link
+                      navigate={~p"/users/settings"}
+                      class="flex items-center gap-2 px-4 py-2 text-white hover:bg-slate-600 transition-colors"
+                    >
+                      <.svg variant="gear" class="w-5 h-5"/> Settings
+                    </.link>
+                    <.link
+                      navigate={~p"/studio"}
+                      class="flex items-center gap-2 px-4 py-2 text-white hover:bg-slate-600 transition-colors"
+                    >
+                      <.svg variant="camera" class="w-5 h-5"/> Studio
+                    </.link>
+                    <.link
+                      href={~p"/users/log-out"}
+                      method="delete"
+                      class="flex items-center gap-2 px-4 py-2 text-white hover:bg-slate-600 transition-colors"
+                    >
+                      <.svg variant="exit" class="w-5 h-5"/> Log Out
+                    </.link>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           </div>
         <% else %>
           <.link

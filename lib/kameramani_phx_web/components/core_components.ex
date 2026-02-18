@@ -31,6 +31,8 @@ defmodule KameramaniPhxWeb.CoreComponents do
 
   alias Phoenix.LiveView.JS
 
+  embed_templates("core_components/*")
+
   @doc """
   Renders flash notices.
 
@@ -468,6 +470,7 @@ defmodule KameramaniPhxWeb.CoreComponents do
     )
   end
 
+  @spec translate_error({binary(), keyword() | map()}) :: binary()
   @doc """
   Translates an error message using gettext.
   """
@@ -495,4 +498,14 @@ defmodule KameramaniPhxWeb.CoreComponents do
   def translate_errors(errors, field) when is_list(errors) do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
   end
+
+  # Custom Kameramani components
+  @doc """
+  Renders an svg icon using the variant prop; infinitely customisable
+  """
+
+  attr(:variant, :string, required: true, doc: "The variant/type of svg")
+  attr(:class, :string, default: nil)
+
+  def svg(assigns)
 end
