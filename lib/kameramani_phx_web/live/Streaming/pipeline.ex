@@ -4,6 +4,7 @@ defmodule KameramaniPhxWeb.Streaming.Pipeline do
       audio: [demand_mode: :auto],
       video: [demand_mode: :auto]
     ]
+
   import Membrane.ChildrenSpec
   # import Membrane.Bin # Removed - input/1 is implicitly handled by input_pads
 
@@ -14,7 +15,9 @@ defmodule KameramaniPhxWeb.Streaming.Pipeline do
   alias Membrane.HTTPAdaptiveStream.Storages.FileStorage, as: FileStorage
 
   def start_link(pipeline_id, hls_output_directory) do
-    GenServer.start_link(__MODULE__, [hls_output_directory: hls_output_directory], name: pipeline_id)
+    GenServer.start_link(__MODULE__, [hls_output_directory: hls_output_directory],
+      name: pipeline_id
+    )
   end
 
   @impl true

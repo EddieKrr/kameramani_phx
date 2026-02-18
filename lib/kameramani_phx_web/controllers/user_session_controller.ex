@@ -54,6 +54,7 @@ defmodule KameramaniPhxWeb.UserSessionController do
 
   def update_password(conn, %{"user" => user_params} = params) do
     user = conn.assigns.current_user.user
+
     if Accounts.sudo_mode?(user, -20) do
       case Accounts.update_user_password(user, user_params) do
         {:ok, {_user, expired_tokens}} ->

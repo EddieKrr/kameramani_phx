@@ -13,13 +13,18 @@ defmodule KameramaniPhx.RTMPIngestListener do
   @impl true
   def init(:ok) do
     Logger.info("Starting RTMP Ingest Listener (Supervisor)...")
+
     children = [
       %{
         id: :rtmp_ingest_source_bin,
-        start: {SourceBin, :start_link, [
-          [url: "rtmp://127.0.0.1:1935/live",
-           client_handler: KameramaniPhx.RTMPIngestListener.ClientHandler]
-        ]},
+        start:
+          {SourceBin, :start_link,
+           [
+             [
+               url: "rtmp://127.0.0.1:1935/live",
+               client_handler: KameramaniPhx.RTMPIngestListener.ClientHandler
+             ]
+           ]},
         type: :worker,
         restart: :permanent,
         shutdown: 5000

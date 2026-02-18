@@ -10,7 +10,6 @@ defmodule KameramaniPhx.Chat do
   alias KameramaniPhx.Accounts.Scope
   # Removed Stream alias and related functions to separate concerns.
 
-
   @doc """
   Subscribes to userd notifications about any message changes.
 

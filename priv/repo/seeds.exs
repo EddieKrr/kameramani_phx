@@ -3,9 +3,6 @@ alias KameramaniPhx.Content.Category
 alias KameramaniPhx.Accounts.User
 import Ecto.UUID
 
-
-
-
 categories = [
   %{name: "Just Chatting", slug: "just-chatting", thumbnail_url: "https://shorturl.at/cU8up"},
   %{name: "Software Development", slug: "software-dev", thumbnail_url: "https://bit.ly/40czhEW"},
@@ -19,27 +16,69 @@ categories = [
   %{name: "Retro", slug: "retro", thumbnail_url: "https://bit.ly/4qGAoHS"}
 ]
 
-IO.puts "Inserting categories into the database..."
+IO.puts("Inserting categories into the database...")
 
 Enum.each(categories, fn cat ->
   # upsert (insert or do nothing if it exists)
   case Repo.get_by(Category, slug: cat.slug) do
     nil ->
-      Repo.insert!(%Category{id: Ecto.UUID.generate(), name: cat.name, slug: cat.slug, thumbnail_url: cat.thumbnail_url})
-      IO.puts "Created category: #{cat.name}"
+      Repo.insert!(%Category{
+        id: Ecto.UUID.generate(),
+        name: cat.name,
+        slug: cat.slug,
+        thumbnail_url: cat.thumbnail_url
+      })
+
+      IO.puts("Created category: #{cat.name}")
+
     _ ->
-      IO.puts "Category already exists: #{cat.name}"
+      IO.puts("Category already exists: #{cat.name}")
   end
 end)
 
-IO.puts "Inserting users into the database..."
+IO.puts("Inserting users into the database...")
 
 users = [
-  %{name: "Cubey", username: "cubey", email: "cubey@test.com", password: "cubey123", age: 25, confirmed_at: DateTime.utc_now()},
-  %{name: "Tester", username: "tester", email: "tester@test.com", password: "tester123", age: 30, confirmed_at: DateTime.utc_now()},
-  %{name: "Max", username: "max", email: "max@test.com", password: "max123", age: 22, confirmed_at: DateTime.utc_now()},
-  %{name: "Gwen", username: "gwen", email: "gwen@test.com", password: "gwen123", age: 28, confirmed_at: DateTime.utc_now()},
-  %{name: "Ben", username: "ben", email: "ben@test.com", password: "ben123", age: 35, confirmed_at: DateTime.utc_now()}
+  %{
+    name: "Cubey",
+    username: "cubey",
+    email: "cubey@test.com",
+    password: "cubey123",
+    age: 25,
+    confirmed_at: DateTime.utc_now()
+  },
+  %{
+    name: "Tester",
+    username: "tester",
+    email: "tester@test.com",
+    password: "tester123",
+    age: 30,
+    confirmed_at: DateTime.utc_now()
+  },
+  %{
+    name: "Max",
+    username: "max",
+    email: "max@test.com",
+    password: "max123",
+    age: 22,
+    confirmed_at: DateTime.utc_now()
+  },
+  %{
+    name: "Gwen",
+    username: "gwen",
+    email: "gwen@test.com",
+    password: "gwen123",
+    age: 28,
+    confirmed_at: DateTime.utc_now()
+  },
+  %{
+    name: "Ben",
+    username: "ben",
+    email: "ben@test.com",
+    password: "ben123",
+    age: 35,
+    confirmed_at: DateTime.utc_now()
+  }
 ]
 
 Enum.each(users, fn user_attrs ->
@@ -50,10 +89,11 @@ Enum.each(users, fn user_attrs ->
 
   case KameramaniPhx.Accounts.register_user(user_attrs) do
     {:ok, user} ->
-      IO.puts "Created user: #{user.username}"
+      IO.puts("Created user: #{user.username}")
+
     {:error, %Ecto.Changeset{} = changeset} ->
-      IO.puts "Failed to create user #{user_attrs.username}: #{inspect changeset.errors}"
+      IO.puts("Failed to create user #{user_attrs.username}: #{inspect(changeset.errors)}")
   end
 end)
 
-IO.puts "Done!"
+IO.puts("Done!")

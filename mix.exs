@@ -79,7 +79,7 @@ defmodule KameramaniPhx.MixProject do
       {:membrane_rtmp_plugin, "~> 0.29.0"},
       {:membrane_h26x_plugin, "~> 0.10.0"},
       {:membrane_file_plugin, "~> 0.17.0"},
-      {:membrane_http_adaptive_stream_plugin, "~> 0.18.4"},
+      {:membrane_http_adaptive_stream_plugin, "~> 0.18.4"}
       # {:membrane_s3_plugin, "~> 0.18.0"}
     ]
   end

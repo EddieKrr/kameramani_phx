@@ -76,7 +76,11 @@ defmodule KameramaniPhxWeb.StudioLive do
           socket
           |> put_flash(:info, "Stream setup complete! Get your stream key to start broadcasting.")
           |> assign(:current_stream, stream)
-          |> assign(:stream_form, to_form(Streaming.change_stream(%Streaming.Stream{}, %{user_id: user.id}))) # Reset form
+          # Reset form
+          |> assign(
+            :stream_form,
+            to_form(Streaming.change_stream(%Streaming.Stream{}, %{user_id: user.id}))
+          )
           |> push_navigate(to: "/users/settings/stream-key")
 
         {:noreply, socket}

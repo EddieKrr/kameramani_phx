@@ -13,13 +13,14 @@ defmodule KameramaniPhx.RTMPServer do
     Logger.info("Starting RTMP Server on port #{@port}")
 
     case :gen_tcp.listen(@port, [
-      :binary,
-      {:packet, 0},
-      {:active, true},
-      {:reuseaddr, true}
-    ]) do
+           :binary,
+           {:packet, 0},
+           {:active, true},
+           {:reuseaddr, true}
+         ]) do
       {:ok, listen_socket} ->
         {:ok, %{listen_socket: listen_socket}, {:continue, :accept_connections}}
+
       {:error, reason} ->
         Logger.error("Failed to start RTMP server: #{reason}")
         {:stop, reason}
@@ -38,6 +39,7 @@ defmodule KameramaniPhx.RTMPServer do
         Logger.info("New RTMP connection from #{inspect(socket)}")
         spawn_link(fn -> handle_client(socket) end)
         accept_loop(listen_socket)
+
       {:error, reason} ->
         Logger.error("Error accepting connection: #{reason}")
     end
@@ -51,8 +53,10 @@ defmodule KameramaniPhx.RTMPServer do
         response = <<0x03, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>>
         :gen_tcp.send(socket, response)
         handle_client(socket)
+
       {:error, :closed} ->
         Logger.info("Client disconnected")
+
       {:error, reason} ->
         Logger.error("Error handling client: #{reason}")
     end

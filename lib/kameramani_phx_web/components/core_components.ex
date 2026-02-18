@@ -86,12 +86,11 @@ defmodule KameramaniPhxWeb.CoreComponents do
   """
   attr :flash, :map, required: true
 
-  def flash_group(assigns) do
-    ~H"""
-    <.flash kind={:info} flash={@flash} title="Success" />
-    <.flash kind={:error} flash={@flash} title="Error" />
-    """
-  end
+  # def flash_group(assigns) do
+  #   ~H"""
+
+  #   """
+  # end
 
   @doc """
   Renders a button with navigation support.

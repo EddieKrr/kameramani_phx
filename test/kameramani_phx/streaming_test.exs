@@ -21,7 +21,12 @@ defmodule KameramaniPhx.StreamingTest do
     end
 
     test "create_stream/1 with valid data creates a stream" do
-      valid_attrs = %{title: "some title", stream_key: "some stream_key", is_live: true, tags: ["option1", "option2"]}
+      valid_attrs = %{
+        title: "some title",
+        stream_key: "some stream_key",
+        is_live: true,
+        tags: ["option1", "option2"]
+      }
 
       assert {:ok, %Stream{} = stream} = Streaming.create_stream(valid_attrs)
       assert stream.title == "some title"
@@ -36,7 +41,13 @@ defmodule KameramaniPhx.StreamingTest do
 
     test "update_stream/2 with valid data updates the stream" do
       stream = stream_fixture()
-      update_attrs = %{title: "some updated title", stream_key: "some updated stream_key", is_live: false, tags: ["option1"]}
+
+      update_attrs = %{
+        title: "some updated title",
+        stream_key: "some updated stream_key",
+        is_live: false,
+        tags: ["option1"]
+      }
 
       assert {:ok, %Stream{} = stream} = Streaming.update_stream(stream, update_attrs)
       assert stream.title == "some updated title"

@@ -63,7 +63,6 @@ defmodule KameramaniPhx.Accounts do
 
   def sudo_mode?(_user, _minutes), do: false
 
-
   ## Session
 
   def generate_user_session_token(user) do

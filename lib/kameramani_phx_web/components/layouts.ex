@@ -115,7 +115,7 @@ defmodule KameramaniPhxWeb.Layouts do
       </div>
     </header>
 
-    <main class="pt-24 bg-[#0e0e10]">
+    <main class="pt-24 bg-[#0e0e10] text-white">
       <div class="">{@inner_content}</div>
     </main>
     <.flash_group flash={@flash} />
@@ -178,6 +178,8 @@ defmodule KameramaniPhxWeb.Layouts do
         {gettext("Attempting to reconnect")}
         <.svg variant="spinning-arrow" class="ml-1 size-3 motion-safe:animate-spin" />
       </.flash>
+      <.flash kind={:info} flash={@flash} title="Success" />
+      <.flash kind={:error} flash={@flash} title="Error" />
     </div>
     """
   end

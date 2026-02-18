@@ -37,7 +37,7 @@ defmodule KameramaniPhx.Content do
   """
   def get_category!(id), do: Repo.get!(Category, id)
 
-  #get category by the name
+  # get category by the name
   def get_category_by_name(name) when is_binary(name) do
     Repo.get_by(Category, name: name)
   end

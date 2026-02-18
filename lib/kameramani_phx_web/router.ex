@@ -38,7 +38,7 @@ defmodule KameramaniPhxWeb.Router do
       live "/watch/:username", ChatLive, :show
       live "/register", AuthLive
       live "/categories", CategoryLive
-      live "/users/settings", UserLive.Settings, :edit
+      live "/users/settings", UserLive.UserSettingsLive, :edit
       live "/studio", StudioLive
       live "/directory", DirectoryLive, :index
       live "/directory/:slug", DirectoryLive, :show
@@ -59,11 +59,13 @@ defmodule KameramaniPhxWeb.Router do
   # =========================================================
   # PROTECTED ROUTES (Must be logged in)
   # =========================================================
-  scope "/" do # Removed KameramaniPhxWeb from scope argument
+  # Removed KameramaniPhxWeb from scope argument
+  scope "/" do
     # 2. USE THE RENAMED PIPELINE HERE
     pipe_through [:browser, :require_auth]
 
-    post "/users/update-password", KameramaniPhxWeb.UserSessionController, :update_password # Full module name
+    # Full module name
+    post "/users/update-password", KameramaniPhxWeb.UserSessionController, :update_password
 
     # 3. LIVE SESSION FOR AUTH USERS
     live_session :require_authenticated_user,
@@ -74,7 +76,11 @@ defmodule KameramaniPhxWeb.Router do
       live "/users/profile/:username", KameramaniPhxWeb.Profile.UserProfileLive, :show
       live "/users/settings", KameramaniPhxWeb.UserLive.UserSettingsLive
       live "/users/settings/stream-key", KameramaniPhxWeb.Streaming.Settings.StreamKeyLive
-      live "/users/settings/confirm-email/:token", KameramaniPhxWeb.UserLive.UserSettingsLive, :confirm_email
+
+      live "/users/settings/confirm-email/:token",
+           KameramaniPhxWeb.UserLive.UserSettingsLive,
+           :confirm_email
+
       live "/studio", KameramaniPhxWeb.StudioLive
       live "/stream-settings", KameramaniPhxWeb.Streaming.Settings.StreamSettingsLive
     end

@@ -48,8 +48,7 @@ defmodule KameramaniPhx.Streaming do
   """
   def get_stream!(id), do: Repo.get!(Stream, id)
 
-  #get the stream_key for a given stream id
-
+  # get the stream_key for a given stream id
 
   @doc """
   Creates a stream.
@@ -63,7 +62,7 @@ defmodule KameramaniPhx.Streaming do
       {:error, %Ecto.Changeset{}}
 
   """
-def create_stream(attrs \\ %{}) do
+  def create_stream(attrs \\ %{}) do
     # Extract the user_id (UUID) from the attributes
     user_id = attrs[:user_id] || attrs["user_id"]
 
@@ -80,7 +79,7 @@ def create_stream(attrs \\ %{}) do
     |> Repo.insert()
   end
 
-  #get the stream_key for a given stream id
+  # get the stream_key for a given stream id
   def get_stream_key(stream_id) do
     case get_stream!(stream_id) do
       %Stream{stream_key: stream_key} -> stream_key
@@ -89,7 +88,7 @@ def create_stream(attrs \\ %{}) do
   end
 
   def generate_stream_key(user_id) when is_binary(user_id) do
-    secret =  generate_random_secret(16)
+    secret = generate_random_secret(16)
     "live_km_#{user_id}_#{secret}"
   end
 
@@ -99,9 +98,9 @@ def create_stream(attrs \\ %{}) do
     |> binary_part(0, length)
   end
 
-  #now gotta verify the stream key
+  # now gotta verify the stream key
 
-  def verify_key("live_km_" <> rest ) do
+  def verify_key("live_km_" <> rest) do
     uuid = String.slice(rest, 0, 36)
     secret = String.slice(rest, 37..-1//1)
     full_key = "live_km_#{uuid}_#{secret}"
@@ -111,8 +110,10 @@ def create_stream(attrs \\ %{}) do
       nil -> {:error, :invalid_key}
     end
   end
-  #malformed keys Fakes
+
+  # malformed keys Fakes
   def verify_key(_), do: {:error, :malformed_key}
+
   @doc """
   Updates a stream.
 
