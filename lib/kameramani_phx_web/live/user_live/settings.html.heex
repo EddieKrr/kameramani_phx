@@ -41,7 +41,7 @@
               placeholder="Let your fans know who you are..."
               class="textarea w-full bg-slate-900/50 border-2 border-slate-700 text-white rounded-2xl min-h-[120px] focus:border-blue-500 focus:outline-none"
             >
-                        </textarea>
+            </textarea>
           </div>
 
           <div class="flex justify-end">
@@ -66,20 +66,19 @@
         id="email_form"
         phx-submit="update_email"
         phx-change="validate_email"
-        class="flex flex-row align-items justify-between"
       >
-        <.input
-          field={@email_form[:email]}
-          label="Current Email"
-          class="bg-slate-900/50 border-2 border-slate-700 rounded-2xl focus:outline-none"
-          disabled
-        />
         <.input
           field={@email_form[:email]}
           type="email"
           label="New Email"
           autocomplete="username"
           required
+          class="bg-slate-900/50 border-2 border-slate-700 focus:outline-none rounded-2xl"
+        />
+        <.input
+          field={@email_form[:current_password]}
+          type="password"
+          label="Current Password"
           class="bg-slate-900/50 border-2 border-slate-700 focus:outline-none rounded-2xl"
         />
         <div class="flex justify-end">
@@ -90,6 +89,7 @@
             Update Email
           </.button>
         </div>
+        
       </.form>
     </section>
 
@@ -106,7 +106,6 @@
         phx-change="validate_password"
         phx-submit="update_password"
         phx-trigger-action={@trigger_submit}
-        class="flex flex-row align-items justify-between"
       >
         <input
           name={@password_form[:email].name}
@@ -115,11 +114,20 @@
           autocomplete="username"
           value={@current_email}
         />
+        <.input 
+          field={@password_form[:current_password]}
+          type="password"
+          label="Current Password"
+          value={@password_form[:current_password].value}
+          class="bg-slate-900/50 border-2 border-slate-700 rounded-2xl"
+          required
+        />
         <.input
           field={@password_form[:password]}
           type="password"
           label="New password"
           autocomplete="new-password"
+          value={@password_form[:password].value}
           required
           class="bg-slate-900/50 border-2 border-slate-700 rounded-2xl"
         />
@@ -128,6 +136,7 @@
           type="password"
           label="Confirm new password"
           autocomplete="new-password"
+          value={@password_form[:password_confirmation].value}
           class="bg-slate-900/50 border-2 border-slate-700 rounded-2xl focus:outline-none"
         />
         <div class="flex justify-end">
