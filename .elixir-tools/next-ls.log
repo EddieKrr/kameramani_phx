@@ -36903,3 +36903,13 @@ PATH=/home/eddie/.local/share/mise/installs/elixir/1.19.5-otp-28/bin:/home/eddie
 10:25:14.668 id=1722 [debug] handled request client -> server textDocument/codeAction in 668µs
 
 10:25:14.871 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 898µs
+
+10:26:11.807 id=1723 [debug] handled request client -> server textDocument/codeAction in 673µs
+
+10:26:11.993 id=1724 [debug] handled request client -> server textDocument/codeAction in 1ms
+
+10:26:11.993 [debug] handled notification client -> server $/cancelRequest in 1ms
+
+10:26:11.994 id=1725 [debug] handled request client -> server textDocument/codeAction in 760µs
+
+10:26:12.286 id=1726 [debug] handled request client -> server textDocument/documentSymbol in 2ms
