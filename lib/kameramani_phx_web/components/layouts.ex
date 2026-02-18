@@ -42,7 +42,7 @@ defmodule KameramaniPhxWeb.Layouts do
             href="/"
             class="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors"
           >
-            <span class="text-lg font-bold tracking-tighter text-lg uppercase italic">
+            <span class="text-2xl font-title font-bold tracking-tighter uppercase italic">
               Kameramani
             </span>
           </.link>
@@ -164,7 +164,7 @@ defmodule KameramaniPhxWeb.Layouts do
         hidden
       >
         {gettext("Attempting to reconnect")}
-        <.icon name="hero-arrow-path" class="ml-1 size-3 motion-safe:animate-spin" />
+        <.svg variant="arrow-circle" class="ml-1 size-3 motion-safe:animate-spin" />
       </.flash>
 
       <.flash
@@ -176,7 +176,7 @@ defmodule KameramaniPhxWeb.Layouts do
         hidden
       >
         {gettext("Attempting to reconnect")}
-        <.icon name="hero-arrow-path" class="ml-1 size-3 motion-safe:animate-spin" />
+        <.svg variant="spinning-arrow" class="ml-1 size-3 motion-safe:animate-spin" />
       </.flash>
     </div>
     """
@@ -196,21 +196,21 @@ defmodule KameramaniPhxWeb.Layouts do
         phx-click={JS.dispatch("phx:set-theme")}
         data-phx-theme="system"
       >
-        <.icon name="hero-computer-desktop-micro" class="size-4 opacity-75 hover:opacity-100" />
+        <.svg variant="desktop" class="size-4 opacity-75 hover:opacity-100" />
       </button>
       <button
         class="flex p-2 cursor-pointer w-1/3"
         phx-click={JS.dispatch("phx:set-theme")}
         data-phx-theme="light"
       >
-        <.icon name="hero-sun-micro" class="size-4 opacity-75 hover:opacity-100" />
+        <.svg variant="sun" class="size-4 opacity-75 hover:opacity-100" />
       </button>
       <button
         class="flex p-2 cursor-pointer w-1/3"
         phx-click={JS.dispatch("phx:set-theme")}
         data-phx-theme="dark"
       >
-        <.icon name="hero-moon-micro" class="size-4 opacity-75 hover:opacity-100" />
+        <.svg variant="moon" class="size-4 opacity-75 hover:opacity-100" />
       </button>
     </div>
     """

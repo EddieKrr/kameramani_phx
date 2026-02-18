@@ -16,8 +16,8 @@ defmodule KameramaniPhxWeb.CardComponents do
         <div class="relative aspect-video w-full bg-gradient-to-tl from-black to-slate-700 hover:scale-105 hover:z-50 hover:shadow-2xl transition-all duration-300 ease-in-out rounded-lg">
           <div class="absolute top-1 left-1 px-1 text-red-600 text-xs">LIVE</div>
 
-          <div class="absolute bottom-1 right-1 bg-black/60 rounded-full text-xs px-1">
-            <.icon class="h-4 w-4 text-white mb-[0.3rem] mx-1" name="hero-eye" />{@viewer_count}
+          <div class="absolute flex bottom-1 right-1 bg-black/60 rounded-full text-xs px-1 text-white">
+            <.svg variant="eye" class="h-4 w-4 text-white mb-[0.3rem] mx-1" />{@viewer_count}
           </div>
         </div>
 

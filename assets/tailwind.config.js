@@ -14,9 +14,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Lexend", "sans-serif"],
+        sans: ["Raleway", "sans-serif"],
         heading: ["Space Grotesk", "sans-serif"],
-        title: ["Bangers", "system-ui"],
+        title: ["Bitcount Grid Double", "system-ui"],
         title2: ["Bebas Neue", "system-ui"],
       },
      

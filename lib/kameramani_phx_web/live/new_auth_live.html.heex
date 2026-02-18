@@ -18,11 +18,11 @@
         />
         <%= if !@show_password do %>
           <button type="button" phx-click="toggle_password" class="absolute right-0">
-            <.icon name="hero-eye" class="h-5 w-5 mr-2" />
+            <.svg variant="eye" class="h-5 w-5 mt-3 mr-2" />
           </button>
         <% else %>
           <button type="button" phx-click="toggle_password" class="absolute right-0">
-            <.icon name="hero-eye-slash" class="h-5 w-5 mr-2" />
+            <.svg variant="eye-slash" class="h-5 w-5 mt-3 mr-2" />
           </button>
         <% end %>
       </div>
@@ -48,11 +48,11 @@
         />
         <%= if !@show_password do %>
           <button type="button" class="absolute right-0" phx-click="toggle_password">
-            <.icon name="hero-eye" class="h-5 w-5 mr-2" />
+            <.svg variant="eye" class="h-5 w-5 mt-3 mr-2" />
           </button>
         <% else %>
           <button type="button" class="absolute right-0" phx-click="toggle_password">
-            <.icon name="hero-eye-slash" class="h-5 w-5 mr-2" />
+            <.svg variant="eye-slash" class="h-5 w-5 mt-3 mr-2" />
           </button>
         <% end %>
       </div>
