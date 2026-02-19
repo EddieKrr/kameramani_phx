@@ -46,9 +46,9 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
               {:stream_status_updated, updated_stream}
             )
 
-            # Return the default client handler - it will handle keeping the connection alive
+            # Return the default client handler with empty init opts
             # The pipeline is already receiving the stream data via client_ref
-            Membrane.RTMPServer.ClientHandler
+            {Membrane.RTMPServer.ClientHandler, %{}}
 
           {:error, reason} ->
             Logger.error("❌ Failed to start RTMP ingest pipeline: #{inspect(reason)}")
