@@ -3,8 +3,6 @@ defmodule KameramaniPhx.RTMPIngestListener do
   require Logger
 
   alias Membrane.RTMP.SourceBin
-  # No need to require it if we are using SourceBin.child_spec
-  # require Membrane.RTMP.SourceBin
 
   def start_link(opts) do
     Supervisor.start_link(__MODULE__, :ok, opts)
@@ -20,10 +18,10 @@ defmodule KameramaniPhx.RTMPIngestListener do
         start:
           {SourceBin, :start_link,
            [
-             [
-               url: "rtmp://127.0.0.1:1935/live",
+             %{
+               url: "rtmp://localhost:1935/live",
                client_handler: KameramaniPhx.RTMPIngestListener.ClientHandler
-             ]
+             }
            ]},
         type: :worker,
         restart: :permanent,

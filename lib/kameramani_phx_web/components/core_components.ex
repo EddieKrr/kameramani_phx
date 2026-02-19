@@ -81,10 +81,10 @@ defmodule KameramaniPhxWeb.CoreComponents do
     """
   end
 
-  @doc """
-  Renders a group of flash messages for different kinds.
-  """
-  attr :flash, :map, required: true
+  # @doc """
+  # Renders a group of flash messages for different kinds.
+  # """
+  # attr :flash, :map, required: true
 
   # def flash_group(assigns) do
   #   ~H"""

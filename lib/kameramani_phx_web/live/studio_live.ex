@@ -1,7 +1,7 @@
 defmodule KameramaniPhxWeb.StudioLive do
   alias KameramaniPhx.Streaming
   alias KameramaniPhx.Content
-  # alias KameramaniPhx.PubSub # Removed as it's not directly used here
+  require Logger
 
   use KameramaniPhxWeb, :live_view
 
@@ -15,7 +15,10 @@ defmodule KameramaniPhxWeb.StudioLive do
     stream = Streaming.get_active_stream_for_user(user.id)
 
     # Subscribe to stream updates for this user
-    if stream, do: Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "streams:#{stream.id}")
+    if stream do
+      Logger.info("Studio Live: Subscribing to stream updates for stream_id=#{stream.id}")
+      Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "streams:#{stream.id}")
+    end
 
     {:ok,
      socket
@@ -23,12 +26,17 @@ defmodule KameramaniPhxWeb.StudioLive do
      |> assign(:stream_form, to_form(changeset))
      |> assign(:categories, categories)
      |> assign(:current_stream, stream)
+     |> assign(:stream_is_live, stream && stream.is_live)
      |> assign(selected_category_id: nil)}
   end
 
   def handle_info({:stream_status_updated, %Streaming.Stream{} = updated_stream}, socket) do
+    Logger.info("Studio Live: Stream status updated - is_live=#{updated_stream.is_live}")
     if socket.assigns.current_stream && socket.assigns.current_stream.id == updated_stream.id do
-      {:noreply, assign(socket, :current_stream, updated_stream)}
+      {:noreply,
+       socket
+       |> assign(:current_stream, updated_stream)
+       |> assign(:stream_is_live, updated_stream.is_live)}
     else
       {:noreply, socket}
     end
@@ -59,19 +67,6 @@ defmodule KameramaniPhxWeb.StudioLive do
 
     case Streaming.create_stream(attrs) do
       {:ok, stream = %Streaming.Stream{id: stream_id}} ->
-        # Start the streaming pipeline for this stream
-        pipeline_id = String.to_atom("stream_pipeline_#{stream_id}")
-        hls_output_dir = Path.join(["priv", "static", "live", stream_id])
-
-        # Ensure output directory exists
-        File.mkdir_p!(hls_output_dir)
-
-        # Start the pipeline
-        {:ok, _pid} = KameramaniPhxWeb.Streaming.Pipeline.start_link(pipeline_id, hls_output_dir)
-
-        # Register the pipeline
-        KameramaniPhx.StreamManager.add_stream(stream_id, pipeline_id)
-
         socket =
           socket
           |> put_flash(:info, "Stream setup complete! Get your stream key to start broadcasting.")

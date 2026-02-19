@@ -24,6 +24,9 @@ import { Socket } from "phoenix"
 import { LiveSocket } from "phoenix_live_view"
 import { hooks as colocatedHooks } from "phoenix-colocated/kameramani_phx"
 import topbar from "../vendor/topbar"
+// Import HLS.js for HLS stream playback
+import Hls from "hls.js"
+window.Hls = Hls
 
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 const liveSocket = new LiveSocket("/live", Socket, {

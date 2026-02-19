@@ -133,53 +133,55 @@ defmodule KameramaniPhxWeb.Layouts do
 
   """
   attr :flash, :map, required: true, doc: "the map of flash messages"
+  slot :inner_block, required: true
 
   def auth(assigns) do
     ~H"""
-    <main class>{@inner_content}</main>
+    <div class="min-h-screen bg-[#0e0e10] text-white flex flex-col items-center justify-center">
+      {@inner_content}
+    </div>
     <.flash_group flash={@flash} />
     """
   end
 
   @doc """
-  Shows the flash group with standard titles and content.
-
-  ## Examples
-
-      <.flash_group flash={@flash} />
+  Renders a group of flash messages for different kinds.
   """
-  attr :flash, :map, required: true, doc: "the map of flash messages"
-  attr :id, :string, default: "flash-group", doc: "the optional id of flash container"
+  attr :flash, :map, required: true
 
   def flash_group(assigns) do
     ~H"""
-    <div id={@id} aria-live="polite">
-      <.flash kind={:info} flash={@flash} /> <.flash kind={:error} flash={@flash} />
+    <div class="fixed top-2 right-2 w-80 sm:w-96 z-[100] space-y-2 pointer-events-none">
+      <.flash
+        kind={:info}
+        title="Success!"
+        flash={@flash}
+      />
+      <.flash
+        kind={:error}
+        title="Error!"
+        flash={@flash}
+      />
       <.flash
         id="client-error"
         kind={:error}
-        title={gettext("We can't find the internet")}
-        phx-disconnected={show(".phx-client-error #client-error") |> JS.remove_attribute("hidden")}
-        phx-connected={hide("#client-error") |> JS.set_attribute({"hidden", ""})}
-        hidden
+        title="We can't find the internet"
+        phx-disconnected={JS.show(to: "#client-error")}
+        phx-connected={JS.hide(to: "#client-error")}
+        class="hidden"
       >
-        {gettext("Attempting to reconnect")}
-        <.svg variant="arrow-circle" class="ml-1 size-3 motion-safe:animate-spin" />
+        Attempting to reconnect <.icon name="hero-arrow-path" class="ml-1 h-3 w-3 animate-spin" />
       </.flash>
-
       <.flash
         id="server-error"
         kind={:error}
-        title={gettext("Something went wrong!")}
-        phx-disconnected={show(".phx-server-error #server-error") |> JS.remove_attribute("hidden")}
-        phx-connected={hide("#server-error") |> JS.set_attribute({"hidden", ""})}
-        hidden
+        title="Something went wrong!"
+        phx-disconnected={JS.show(to: "#server-error")}
+        phx-connected={JS.hide(to: "#server-error")}
+        class="hidden"
       >
-        {gettext("Attempting to reconnect")}
-        <.svg variant="spinning-arrow" class="ml-1 size-3 motion-safe:animate-spin" />
+        Hang in there while we get back on track <.icon name="hero-arrow-path" class="ml-1 h-3 w-3 animate-spin" />
       </.flash>
-      <.flash kind={:info} flash={@flash} title="Success" />
-      <.flash kind={:error} flash={@flash} title="Error" />
     </div>
     """
   end

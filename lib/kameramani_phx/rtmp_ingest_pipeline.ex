@@ -1,7 +1,7 @@
 defmodule KameramaniPhx.RTMPIngestPipeline do
   @moduledoc """
   Membrane Pipeline for ingesting RTMP streams and outputting HLS.
-  
+
   Receives H264 video and AAC audio from the RTMP source,
   demuxes them, parses them, and outputs HLS playlist and segments.
   """
@@ -21,6 +21,7 @@ defmodule KameramaniPhx.RTMPIngestPipeline do
   @impl true
   def handle_init(_ctx, {hls_dir, client_ref}) do
     Logger.info("🎬 Initializing RTMP Ingest Pipeline in #{hls_dir}")
+    Logger.debug("RTMPIngestPipeline.handle_init/2: client_ref=#{inspect(client_ref)} hls_dir=#{hls_dir}")
 
     spec = [
       # RTMP source - receives from client_ref
@@ -36,43 +37,68 @@ defmodule KameramaniPhx.RTMPIngestPipeline do
       })
     ]
 
+    Logger.debug("RTMPIngestPipeline.handle_init/2: spec=#{inspect(spec)}")
+
     {[spec: spec], %{video_linked: false, audio_linked: false}}
   end
 
   @impl true
   def handle_child_notification(
-        {:new_stream, pad_ref, _format},
+        {:new_stream, pad_ref, format},
         :rtmp_source,
         _ctx,
         state
       ) do
     # SourceBin notifies us when new streams are available
-    Logger.info("📹 New stream from RTMP source on pad: #{inspect(pad_ref)}")
+    Logger.info("📹 New stream from RTMP source on pad: #{inspect(pad_ref)} format=#{inspect(format)}")
+    Logger.debug("RTMPIngestPipeline.handle_child_notification/4: pad_ref=#{inspect(pad_ref)} format=#{inspect(format)}")
     {[], state}
   end
 
-  def handle_child_notification(_notification, _child, _ctx, state) do
+  def handle_child_notification(notification, child, ctx, state) do
+    Logger.debug("RTMPIngestPipeline.handle_child_notification/4: notification=#{inspect(notification)} child=#{inspect(child)} ctx=#{inspect(ctx)}")
     {[], state}
   end
 
   @impl true
+  def handle_element_end_of_stream(:rtmp_source, pad, ctx, state) do
+    Logger.warn("[RTMPIngestPipeline] RTMP source pad #{inspect(pad)} ended. Context: #{inspect(ctx)}")
+    {[terminate: :normal], state}
+  end
+
+  def handle_element_end_of_stream(child, pad, ctx, state) do
+    Logger.warn("[RTMPIngestPipeline] Child #{inspect(child)} pad #{inspect(pad)} ended. Context: #{inspect(ctx)}")
+    {[], state}
+  end
+
+  @impl true
+  def handle_crash(reason, ctx, state) do
+    Logger.error("[RTMPIngestPipeline] Pipeline crashed! Reason: #{inspect(reason)}, Context: #{inspect(ctx)} State: #{inspect(state)}")
+    :ok
+  end
+
+  @impl true
   def handle_element_start_of_stream(:rtmp_source, pad, _ctx, state) do
-    Logger.info("▶️ Stream started on pad: #{inspect(pad)}")
-    
+    Logger.info("▶️ Stream started on pad: #{inspect(pad)} (RTMP source)")
+    Logger.debug("RTMPIngestPipeline.handle_element_start_of_stream/4: pad=#{inspect(pad)}")
+
     pad_name = Membrane.Pad.name_by_ref(pad)
-    new_state = 
+    Logger.debug("RTMPIngestPipeline.handle_element_start_of_stream/4: pad_name=#{inspect(pad_name)}")
+    new_state =
       case pad_name do
         :video -> %{state | video_linked: true}
         :audio -> %{state | audio_linked: true}
         _ -> state
       end
-    
+
     # Link the pad dynamically
     spec =
       get_child(:rtmp_source)
       |> via_out(pad)
       |> get_child(:hls_sink)
       |> via_in(Pad.ref(pad_name))
+
+    Logger.debug("RTMPIngestPipeline.handle_element_start_of_stream/4: linking pad #{inspect(pad)} to hls_sink as #{inspect(pad_name)}")
 
     {[spec: spec], new_state}
   end

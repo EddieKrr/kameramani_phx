@@ -6,13 +6,13 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
 
   @doc """
   Handles new RTMP client connections from Membrane.RTMPServer.
-  
+
   Called with 3 arguments: (client_ref, app, stream_key)
   Must return a client_behaviour_spec:
   - A module that implements the ClientHandler behavior
   - {module, init_opts} tuple
   """
-  
+
   # Minimal handler that just ignores all client messages
   # The actual stream handling is done by the pipeline
   defmodule Handler do
@@ -35,13 +35,15 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
     end
 
     def handle_teardown(state) do
+      Logger.warn("[ClientHandler] RTMP client teardown: #{inspect(state)}")
       {:ok, state}
     end
   end
 
   def handle_setup(client_ref, app, stream_key) do
+    Logger.debug("[ClientHandler] handle_setup/3 called with client_ref=#{inspect(client_ref)}, app=#{inspect(app)}, stream_key=#{inspect(stream_key)}")
     Logger.info("🎥 RTMP Client connected: app=#{app}, stream_key=#{stream_key}")
-    
+
     case Streaming.get_stream_by_key(stream_key) do
       nil ->
         Logger.warning("❌ Unauthorized stream key: #{stream_key}")
@@ -54,14 +56,19 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
 
         # Start the RTMP ingest pipeline
         pipeline_id = String.to_atom("rtmp_pipeline_#{stream.id}")
-        
-        # Stop any existing pipeline for this stream (in case of reconnection)
-        if existing_pid = StreamManager.get_pipeline_id(stream.id) do
-          Logger.debug("Stopping existing pipeline for stream #{stream.id}")
-          Membrane.Pipeline.terminate(existing_pid)
-          Process.sleep(100) # Give it time to shutdown
+
+        # Ensure any existing pipeline for this stream is terminated before starting a new one
+        case Process.whereis(pipeline_id) do
+          nil ->
+            Logger.debug("No existing pipeline found for stream #{stream.id}")
+
+          existing_pid ->
+            Logger.info("Terminating existing pipeline #{inspect(existing_pid)} for stream #{stream.id}")
+            Process.exit(existing_pid, :shutdown)
+            # Give it a moment to clean up
+            Process.sleep(100)
         end
-        
+
         case KameramaniPhx.RTMPIngestPipeline.start_link(
                pipeline_id,
                hls_output_directory,
