@@ -24,7 +24,8 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
       end
     end
 
-    def handle_data(_data, state) do
+    def handle_data_available(_data, state) do
+      # Ignore data events - the pipeline handles actual stream data via client_ref
       {:ok, state}
     end
 
@@ -53,6 +54,13 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
 
         # Start the RTMP ingest pipeline
         pipeline_id = String.to_atom("rtmp_pipeline_#{stream.id}")
+        
+        # Stop any existing pipeline for this stream (in case of reconnection)
+        if existing_pid = StreamManager.get_pipeline_id(stream.id) do
+          Logger.debug("Stopping existing pipeline for stream #{stream.id}")
+          Membrane.Pipeline.terminate(existing_pid)
+          Process.sleep(100) # Give it time to shutdown
+        end
         
         case KameramaniPhx.RTMPIngestPipeline.start_link(
                pipeline_id,
