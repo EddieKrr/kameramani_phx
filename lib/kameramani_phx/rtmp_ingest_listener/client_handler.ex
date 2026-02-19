@@ -35,7 +35,7 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
     case Streaming.get_stream_by_key(stream_key) do
       nil ->
         Logger.warning("❌ Unauthorized stream key: #{stream_key}")
-        {:disconnect, :unauthorized}
+        :disconnect
 
       stream ->
         Logger.info("✅ Valid stream found for key: #{stream_key}")
@@ -69,7 +69,7 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
 
           {:error, reason} ->
             Logger.error("❌ Failed to start RTMP ingest pipeline: #{inspect(reason)}")
-            {:disconnect, :pipeline_error}
+            :disconnect
         end
     end
   end
