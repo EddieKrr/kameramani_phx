@@ -38,8 +38,6 @@ defmodule KameramaniPhxWeb.Router do
       live "/watch/:username", ChatLive, :show
       live "/register", AuthLive
       live "/categories", CategoryLive
-      live "/users/settings", UserLive.UserSettingsLive, :edit
-      live "/studio", StudioLive
       live "/directory", DirectoryLive, :index
       live "/directory/:slug", DirectoryLive, :show
     end
@@ -54,6 +52,20 @@ defmodule KameramaniPhxWeb.Router do
     get "/users/log-in", UserSessionController, :new
     post "/users/log-in", UserSessionController, :create
     delete "/users/log-out", UserSessionController, :delete
+  end
+
+  # =========================================================
+  # HLS STREAMING ROUTES (Public - for video playback)
+  # =========================================================
+  scope "/" do
+    pipe_through [:browser]
+
+    # Serve HLS playlist and segments
+    forward "/live", Plug.Static,
+      at: "/live",
+      from: :kameramani_phx,
+      gzip: false,
+      only: ~w(m3u8 ts)
   end
 
   # =========================================================
