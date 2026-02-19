@@ -31,7 +31,7 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
                hls_output_directory,
                client_ref
              ) do
-          {:ok, pid} ->
+          {:ok, pid, _pid2} ->
             Logger.info("🎬 RTMP Ingest Pipeline started: #{inspect(pid)}")
             # Register stream and update status
             StreamManager.add_stream(stream.id, pid)
