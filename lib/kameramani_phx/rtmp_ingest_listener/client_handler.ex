@@ -2,7 +2,6 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
   require Logger
 
   alias KameramaniPhx.Streaming
-  alias KameramaniPhxWeb.Streaming.Pipeline
   alias KameramaniPhx.StreamManager
 
   @doc """
@@ -21,14 +20,19 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
 
       stream ->
         Logger.info("✅ Valid stream found for key: #{stream_key}")
-        # Use an atom for the pipeline name
-        pipeline_id = String.to_atom("rtmp_pipeline_#{stream.id}")
         hls_output_directory = "priv/static/live/#{stream.id}"
         File.mkdir_p!(hls_output_directory)
 
-        case Pipeline.start_link(pipeline_id, hls_output_directory) do
+        # Start the RTMP ingest pipeline
+        pipeline_id = String.to_atom("rtmp_pipeline_#{stream.id}")
+        
+        case KameramaniPhx.RTMPIngestPipeline.start_link(
+               pipeline_id,
+               hls_output_directory,
+               client_ref
+             ) do
           {:ok, pid} ->
-            Logger.info("🎬 Pipeline started: #{inspect(pid)}")
+            Logger.info("🎬 RTMP Ingest Pipeline started: #{inspect(pid)}")
             # Register stream and update status
             StreamManager.add_stream(stream.id, pid)
             {:ok, updated_stream} = Streaming.update_stream(stream, %{is_live: true})
@@ -40,11 +44,11 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
               {:stream_status_updated, updated_stream}
             )
 
-            # Return handler module and state - Membrane.RTMPServer will instantiate the handler
-            {Membrane.RTMPServer.ClientHandler, %{client_ref: client_ref, stream_id: stream.id, pipeline_pid: pid}}
+            # Return handler module and state
+            {Membrane.RTMPServer.ClientHandler, %{stream_id: stream.id, pipeline_pid: pid}}
 
           {:error, reason} ->
-            Logger.error("❌ Failed to start pipeline: #{inspect(reason)}")
+            Logger.error("❌ Failed to start RTMP ingest pipeline: #{inspect(reason)}")
             {:disconnect, :pipeline_error}
         end
     end
