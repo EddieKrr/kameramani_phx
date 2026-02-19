@@ -12,6 +12,23 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
   - A module that implements the ClientHandler behavior
   - {module, init_opts} tuple
   """
+  
+  # Minimal handler that just ignores all client messages
+  # The actual stream handling is done by the pipeline
+  defmodule Handler do
+    def handle_init(_opts) do
+      {:ok, %{}}
+    end
+
+    def handle_data(_data, state) do
+      {:ok, state}
+    end
+
+    def handle_teardown(state) do
+      {:ok, state}
+    end
+  end
+
   def handle_setup(client_ref, app, stream_key) do
     Logger.info("🎥 RTMP Client connected: app=#{app}, stream_key=#{stream_key}")
     
@@ -46,9 +63,9 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
               {:stream_status_updated, updated_stream}
             )
 
-            # Return :ok to keep the connection alive
+            # Return the minimal handler module to keep connection alive
             # The pipeline is already receiving the stream data via client_ref
-            :ok
+            {Handler, %{}}
 
           {:error, reason} ->
             Logger.error("❌ Failed to start RTMP ingest pipeline: #{inspect(reason)}")
