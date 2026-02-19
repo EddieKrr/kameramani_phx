@@ -36,20 +36,45 @@ defmodule KameramaniPhx.RTMPIngestPipeline do
       })
     ]
 
-    links = [
-      # Connect RTMP source video output to HLS sink
-      get_child(:rtmp_source)
-      |> via_out(Pad.ref(:video))
-      |> get_child(:hls_sink)
-      |> via_in(Pad.ref(:video)),
-      # Connect RTMP source audio output to HLS sink
-      get_child(:rtmp_source)
-      |> via_out(Pad.ref(:audio))
-      |> get_child(:hls_sink)
-      |> via_in(Pad.ref(:audio))
-    ]
+    {[spec: spec], %{video_linked: false, audio_linked: false}}
+  end
 
-    {[spec: spec, links: links], %{}}
+  @impl true
+  def handle_child_notification(
+        {:new_stream, pad_ref, _format},
+        :rtmp_source,
+        _ctx,
+        state
+      ) do
+    # SourceBin notifies us when new streams are available
+    Logger.info("📹 New stream from RTMP source on pad: #{inspect(pad_ref)}")
+    {[], state}
+  end
+
+  def handle_child_notification(_notification, _child, _ctx, state) do
+    {[], state}
+  end
+
+  @impl true
+  def handle_element_start_of_stream(:rtmp_source, pad, _ctx, state) do
+    Logger.info("▶️ Stream started on pad: #{inspect(pad)}")
+    
+    pad_name = Membrane.Pad.name_by_ref(pad)
+    new_state = 
+      case pad_name do
+        :video -> %{state | video_linked: true}
+        :audio -> %{state | audio_linked: true}
+        _ -> state
+      end
+    
+    # Link the pad dynamically
+    spec =
+      get_child(:rtmp_source)
+      |> via_out(pad)
+      |> get_child(:hls_sink)
+      |> via_in(Pad.ref(pad_name))
+
+    {[spec: spec], new_state}
   end
 
   @impl true
