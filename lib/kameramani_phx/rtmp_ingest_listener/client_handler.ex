@@ -16,11 +16,20 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
   # Minimal handler that just ignores all client messages
   # The actual stream handling is done by the pipeline
   defmodule Handler do
-    def handle_init(_opts) do
-      {:ok, %{}}
+    def handle_init(opts) do
+      # If we're rejecting the connection, signal it immediately
+      case opts do
+        %{error: _reason} -> {:error, :unauthorized}
+        _ -> {:ok, opts}
+      end
     end
 
     def handle_data(_data, state) do
+      {:ok, state}
+    end
+
+    def handle_info(_info, state) do
+      # Ignore all internal RTMPServer messages - the pipeline handles everything
       {:ok, state}
     end
 
@@ -35,7 +44,7 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
     case Streaming.get_stream_by_key(stream_key) do
       nil ->
         Logger.warning("❌ Unauthorized stream key: #{stream_key}")
-        :disconnect
+        {Handler, %{error: :unauthorized}}
 
       stream ->
         Logger.info("✅ Valid stream found for key: #{stream_key}")
@@ -69,7 +78,7 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
 
           {:error, reason} ->
             Logger.error("❌ Failed to start RTMP ingest pipeline: #{inspect(reason)}")
-            :disconnect
+            {Handler, %{error: :pipeline_error}}
         end
     end
   end
