@@ -8,7 +8,9 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
   Handles new RTMP client connections from Membrane.RTMPServer.
   
   Called with 3 arguments: (client_ref, app, stream_key)
-  Must return a client_behaviour_spec which is typically {ClientHandler, init_opts} or just ClientHandler.
+  Must return a client_behaviour_spec:
+  - A module that implements the ClientHandler behavior
+  - {module, init_opts} tuple
   """
   def handle_setup(client_ref, app, stream_key) do
     Logger.info("🎥 RTMP Client connected: app=#{app}, stream_key=#{stream_key}")
@@ -44,8 +46,9 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
               {:stream_status_updated, updated_stream}
             )
 
-            # Return handler module and state
-            {Membrane.RTMPServer.ClientHandler, %{stream_id: stream.id, pipeline_pid: pid}}
+            # Return the default client handler - it will handle keeping the connection alive
+            # The pipeline is already receiving the stream data via client_ref
+            Membrane.RTMPServer.ClientHandler
 
           {:error, reason} ->
             Logger.error("❌ Failed to start RTMP ingest pipeline: #{inspect(reason)}")
