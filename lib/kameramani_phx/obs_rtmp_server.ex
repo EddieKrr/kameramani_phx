@@ -23,7 +23,7 @@ defmodule KameramaniPhx.OBSRTMPServer do
         Membrane.RTMPServer,
         [
           port: @port,
-          handle_new_client: &KameramaniPhx.RTMPIngestListener.ClientHandler.handle_setup/2
+          handle_new_client: &KameramaniPhx.RTMPIngestListener.ClientHandler.handle_setup/3
         ]
       }
     ]

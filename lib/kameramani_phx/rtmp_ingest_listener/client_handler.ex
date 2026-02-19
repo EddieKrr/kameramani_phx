@@ -4,75 +4,65 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
   alias KameramaniPhx.Streaming
   alias KameramaniPhxWeb.Streaming.Pipeline
   alias KameramaniPhx.StreamManager
-  # alias Membrane.RTMP.SourceBin # Removed, not directly used here
-  # alias KameramaniPhx.PubSub # Removed, not directly used here
 
-  def handle_setup(stream_key, opts) do
-    # This is called by the SourceBin when a new client connects
-    Logger.info("RTMP Client connected for stream_key: #{stream_key}, opts: #{inspect(opts)}")
-
+  @doc """
+  Handles new RTMP client connections from Membrane.RTMPServer.
+  
+  Called with 3 arguments: (client_ref, app, stream_key)
+  Must return a client_behaviour_spec which is typically {ClientHandler, init_opts} or just ClientHandler.
+  """
+  def handle_setup(client_ref, app, stream_key) do
+    Logger.info("🎥 RTMP Client connected: app=#{app}, stream_key=#{stream_key}")
+    
     case Streaming.get_stream_by_key(stream_key) do
       nil ->
-        Logger.warning("No stream found for key: #{stream_key}. Disconnecting client.")
-        {:disconnect, :no_stream_found}
+        Logger.warning("❌ Unauthorized stream key: #{stream_key}")
+        {:disconnect, :unauthorized}
 
       stream ->
-        # Generate a unique pipeline ID for this stream session
-        pipeline_id = "rtmp_pipeline_#{stream.id}_#{System.unique_integer([:positive])}"
+        Logger.info("✅ Valid stream found for key: #{stream_key}")
+        # Use an atom for the pipeline name
+        pipeline_id = String.to_atom("rtmp_pipeline_#{stream.id}")
         hls_output_directory = "priv/static/live/#{stream.id}"
+        File.mkdir_p!(hls_output_directory)
 
-        # Start the actual streaming pipeline (without RTMP.SourceBin, as it's handled by this listener)
         case Pipeline.start_link(pipeline_id, hls_output_directory) do
           {:ok, pid} ->
+            Logger.info("🎬 Pipeline started: #{inspect(pid)}")
+            # Register stream and update status
             StreamManager.add_stream(stream.id, pid)
-            # Update stream status in DB (e.g., is_live: true)
             {:ok, updated_stream} = Streaming.update_stream(stream, %{is_live: true})
-            # Broadcast status update
+
+            # Broadcast for UI updates
             Phoenix.PubSub.broadcast(
               KameramaniPhx.PubSub,
               "streams:#{updated_stream.id}",
-              "stream_status_updated",
-              updated_stream
+              {:stream_status_updated, updated_stream}
             )
 
-            Logger.info(
-              "Pipeline #{pipeline_id} started for stream #{stream.id}. PID: #{inspect(pid)}"
-            )
-
-            # Return the PID of the spawned pipeline, which the SourceBin will send buffers to
-            {:ok, pid}
+            # Return handler module and state - Membrane.RTMPServer will instantiate the handler
+            {Membrane.RTMPServer.ClientHandler, %{client_ref: client_ref, stream_id: stream.id, pipeline_pid: pid}}
 
           {:error, reason} ->
-            Logger.error("Failed to start pipeline for stream #{stream.id}: #{inspect(reason)}")
-            {:disconnect, :pipeline_start_failed}
+            Logger.error("❌ Failed to start pipeline: #{inspect(reason)}")
+            {:disconnect, :pipeline_error}
         end
     end
   end
 
   def handle_teardown(stream_key, pid) do
-    Logger.info("RTMP Client disconnected for stream_key: #{stream_key}, PID: #{inspect(pid)}")
+    if stream = Streaming.get_stream_by_key(stream_key) do
+      {:ok, updated_stream} = Streaming.update_stream(stream, %{is_live: false})
+      StreamManager.remove_stream(stream.id)
 
-    case Streaming.get_stream_by_key(stream_key) do
-      nil ->
-        Logger.warning("No stream found for key: #{stream_key} during teardown.")
-
-      stream ->
-        # Update stream status in DB (e.g., is_live: false)
-        {:ok, updated_stream} = Streaming.update_stream(stream, %{is_live: false})
-        # Broadcast status update
-        Phoenix.PubSub.broadcast(
-          KameramaniPhx.PubSub,
-          "streams:#{updated_stream.id}",
-          "stream_status_updated",
-          updated_stream
-        )
-
-        StreamManager.remove_stream(stream.id)
+      Phoenix.PubSub.broadcast(
+        KameramaniPhx.PubSub,
+        "streams:#{updated_stream.id}",
+        {:stream_status_updated, updated_stream}
+      )
     end
 
-    # Optionally stop the pipeline if it's still running
-    # Use GenServer.stop as Pipeline is now a Bin (GenServer)
-    GenServer.stop(pid)
+    if Process.alive?(pid), do: Membrane.Pipeline.terminate(pid)
     :ok
   end
 end
