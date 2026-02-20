@@ -17,6 +17,7 @@ defmodule KameramaniPhxWeb.ChatLive do
   # --- INTERN'S PUBSUB LOGIC (Integrated) ---
   defp subscribe(stream_id) do
     Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "stream_chat:#{stream_id}")
+    Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "stream_state:#{stream_id}")
   end
 
   defp broadcast(stream_id, value) do
@@ -24,60 +25,58 @@ defmodule KameramaniPhxWeb.ChatLive do
   end
 
   def mount(%{"username" => username}, session, socket) do
-    # Find the streamer's data in the shared hardcoded list
-    case Enum.find(DummyData.get_stream_data(), fn s -> s.streamer == username end) do
-      %{
-        id: id,
-        stream_name: name,
-        streamer: streamer_name,
-        avatar: avatar,
-        category: category,
-        tags: tags
-      } ->
-        # Found in hardcoded data, assign to socket
-        assigns_to_socket = %{
-          stream_id: id,
-          streamer_name: streamer_name,
-          streamer_profile_picture: avatar,
-          category: category,
-          stream_name: name,
-          tags: tags
-        }
+    case Accounts.get_user_by_username(username) do
+      nil ->
+        {:halt, socket |> Phoenix.LiveView.put_flash(:error, "User not found") |> Phoenix.LiveView.redirect(to: ~p"/")}
 
-        # Manually mount current_user (without enforcing authentication)
-        current_user_scope =
-          if user_token = session["user_token"] do
-            {user, _} = Accounts.get_user_by_session_token(user_token) || {nil, nil}
-            Scope.for_user(user)
-          else
-            Scope.for_user(nil)
-          end
+      user ->
+        # Fetch the stream for this user
+        case KameramaniPhx.Streaming.get_active_stream_for_user(user.id) do
+          nil ->
+            {:halt, socket |> Phoenix.LiveView.put_flash(:error, "Stream not found") |> Phoenix.LiveView.redirect(to: ~p"/")}
 
-        # Subscribe if connected so we receive live messages
-        if connected?(socket), do: subscribe(assigns_to_socket.stream_id)
+          stream ->
+            # Found real data, assign to socket
+            assigns_to_socket = %{
+              stream_id: stream.id,
+              streamer_name: user.username,
+              streamer_profile_picture: user.profile_picture || "/images/default-avatar.png",
+              category_name: stream.category || "Just Chatting",
+              stream_name: stream.title,
+              tags: stream.tags || [],
+              is_live: stream.is_live
+            }
 
-        chat_username = Enum.random(["BIG C", "Canna", "Bis", "Mafrr"])
+            # Manually mount current_user (without enforcing authentication)
+            current_user_scope =
+              if user_token = session["user_token"] do
+                {curr_user, _} = Accounts.get_user_by_session_token(user_token) || {nil, nil}
+                Scope.for_user(curr_user)
+              else
+                Scope.for_user(nil)
+              end
 
-        chat_user_color =
-          "#" <> for _ <- 1..3, into: "", do: Integer.to_string(Enum.random(100..255), 16)
+            # Subscribe if connected so we receive live messages
+            if connected?(socket), do: subscribe(assigns_to_socket.stream_id)
 
-        {:ok,
-         socket
-         |> assign(
-           form: to_form(@initial_state, as: :chat),
-           # This is the chat user's display name
-           username: chat_username,
-           user_color: chat_user_color,
-           # Assign current_user
-           current_user: current_user_scope
-         )
-         # Assign all the streamer/stream related data
-         |> assign(assigns_to_socket)
-         |> stream(:messages, [])}
+            # If the current user is logged in, use their username and a consistent color
+            {chat_username, chat_user_color} = if current_user_scope.user do
+               {current_user_scope.user.username, "#6366f1"}
+            else
+               {Enum.random(["Guest_#{:rand.uniform(1000)}"]), "#" <> (for _ <- 1..3, into: "", do: Integer.to_string(Enum.random(100..255), 16))}
+            end
 
-      # Not found in hardcoded data, redirect
-      _ ->
-        {:halt, socket |> Phoenix.LiveView.redirect(to: ~p"/")}
+            {:ok,
+             socket
+             |> assign(
+               form: to_form(@initial_state, as: :chat),
+               username: chat_username,
+               user_color: chat_user_color,
+               current_user: current_user_scope
+             )
+             |> assign(assigns_to_socket)
+             |> stream(:messages, [])}
+        end
     end
   end
 
@@ -131,5 +130,10 @@ defmodule KameramaniPhxWeb.ChatLive do
   # This function will handle messages broadcasted via PubSub
   def handle_info({:new_message, message}, socket) do
     {:noreply, stream_insert(socket, :messages, message)}
+  end
+
+  def handle_info({:stream_status, status}, socket) do
+    is_live = (status == :online)
+    {:noreply, assign(socket, is_live: is_live)}
   end
 end

@@ -151,36 +151,36 @@ defmodule KameramaniPhxWeb.Layouts do
 
   def flash_group(assigns) do
     ~H"""
-    <div class="fixed top-2 right-2 w-80 sm:w-96 z-[100] space-y-2 pointer-events-none">
+    <div class="fixed top-6 right-6 z-[100] flex flex-col gap-3 pointer-events-none">
       <.flash
         kind={:info}
-        title="Success!"
+        title="Success"
         flash={@flash}
       />
       <.flash
         kind={:error}
-        title="Error!"
+        title="Error"
         flash={@flash}
       />
       <.flash
         id="client-error"
         kind={:error}
-        title="We can't find the internet"
+        title="Connection lost"
         phx-disconnected={JS.show(to: "#client-error")}
         phx-connected={JS.hide(to: "#client-error")}
-        class="hidden"
+        class="hidden opacity-0 transition-opacity duration-1000 delay-1000 phx-loading:opacity-100"
       >
-        Attempting to reconnect <.icon name="hero-arrow-path" class="ml-1 h-3 w-3 animate-spin" />
+        Trying to reconnect... <.icon name="hero-arrow-path" class="ml-1 size-3 animate-spin inline-block" />
       </.flash>
       <.flash
         id="server-error"
         kind={:error}
-        title="Something went wrong!"
+        title="Server issue"
         phx-disconnected={JS.show(to: "#server-error")}
         phx-connected={JS.hide(to: "#server-error")}
-        class="hidden"
+        class="hidden opacity-0 transition-opacity duration-1000 delay-1000 phx-loading:opacity-100"
       >
-        Hang in there while we get back on track <.icon name="hero-arrow-path" class="ml-1 h-3 w-3 animate-spin" />
+        We're working on getting things back on track. <.icon name="hero-arrow-path" class="ml-1 size-3 animate-spin inline-block" />
       </.flash>
     </div>
     """

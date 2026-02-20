@@ -38,9 +38,24 @@
 
           <%= if @current_stream do %>
             <div class="bg-indigo-900/10 border border-indigo-500/20 p-6 rounded-xl space-y-4">
-              <p class="text-indigo-300 font-medium">
-                Stream created! Manage your stream key in the settings.
-              </p>
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-indigo-300 font-medium">
+                    Stream setup active: <span class="text-white font-bold">{@current_stream.title}</span>
+                  </p>
+                  <p class="text-indigo-400/60 text-xs mt-1">
+                    Manage your stream key in the settings to start broadcasting.
+                  </p>
+                </div>
+                <%= if !@stream_is_live do %>
+                  <button
+                    phx-click="reset_stream"
+                    class="bg-white/5 hover:bg-white/10 text-white text-xs font-bold py-2 px-4 rounded-lg transition-all"
+                  >
+                    Start New Stream
+                  </button>
+                <% end %>
+              </div>
             </div>
           <% else %>
             <.form
@@ -64,13 +79,13 @@
                   class="bg-[#0e0e10] border-white/10 focus:border-indigo-500 text-white"
                 />
 
-                <%!-- The Dropdown Selector --%>
+                <%!-- The Dropdown Selector (now uses names) --%>
                 <.input
-                  field={@stream_form[:category_id]}
+                  field={@stream_form[:category]}
                   type="select"
                   label="Category Selection"
-                  options={Enum.map(@categories, &{&1.name, &1.id})}
-                  value={@selected_category_id}
+                  options={Enum.map(@categories, &{&1.name, &1.name})}
+                  value={@selected_category_name}
                   prompt="Choose a category"
                   class="bg-[#0e0e10] border-white/10 focus:border-indigo-500 text-white"
                 />
@@ -81,15 +96,15 @@
                 <div class="flex justify-between items-center">
                   <label class="text-sm font-medium text-gray-400">Category Preview</label>
                   <span class="text-[10px] text-indigo-400 font-mono">
-                    {if @selected_category_id, do: "Ready", else: "Select below"}
+                    {if @selected_category_name, do: "Ready", else: "Select below"}
                   </span>
                 </div>
 
                 <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 max-h-56 overflow-y-auto p-2 bg-black/20 rounded-lg border border-white/5 scrollbar-hide">
                   <%= for category <- @categories do %>
                     <div
-                      phx-click={JS.push("select_category", value: %{category_id: category.id})}
-                      class={"relative aspect-3/4 rounded-md overflow-hidden cursor-pointer border-2 transition-all duration-200 group #{if @selected_category_id == category.id, do: "border-indigo-500 ring-2 ring-indigo-500/30 scale-[0.98]", else: "border-transparent hover:border-white/20"}"}
+                      phx-click={JS.push("select_category", value: %{category_name: category.name})}
+                      class={"relative aspect-3/4 rounded-md overflow-hidden cursor-pointer border-2 transition-all duration-200 group #{if @selected_category_name == category.name, do: "border-indigo-500 ring-2 ring-indigo-500/30 scale-[0.98]", else: "border-transparent hover:border-white/20"}"}
                     >
                       <img
                         src={
@@ -108,7 +123,7 @@
                         </span>
                       </div>
 
-                      <%= if @selected_category_id == category.id do %>
+                      <%= if @selected_category_name == category.name do %>
                         <div class="absolute top-1 right-1 bg-indigo-500 rounded-full p-0.5">
                           <.icon name="hero-check" class="h-3 w-3 text-white" />
                         </div>
@@ -117,7 +132,7 @@
                   <% end %>
                 </div>
                 <%!-- Hidden input to ensure the form picks up the thumbnail click --%>
-                <input type="hidden" name="stream[category_id]" value={@selected_category_id} />
+                <input type="hidden" name="stream[category]" value={@selected_category_name} />
               </div>
 
               <div class="flex justify-end pt-2">

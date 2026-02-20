@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "timestamp": 1771500470782,
+  "timestamp": 1771591555724,
   "workspaceRoot": "/home/dtech/Projects/kameramani_phx",
   "registries": {
     "components": {
@@ -256,94 +256,129 @@
           ]
         ],
         [
-          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/obs_rtmp_server.ex",
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/rtmp_ingest_listener/client_handler.ex",
+          []
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/application.ex",
+          []
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/pipeline.ex",
+          []
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/rtmp_ingest_pipeline.ex",
+          []
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/router.ex",
+          []
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/studio_live.ex",
+          []
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/endpoint.ex",
+          []
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/chat_live.ex",
           []
         ],
         [
           "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/card_components.ex",
           [
             {
-              "name": "category_card",
+              "name": "card",
               "moduleName": "KameramaniPhxWeb.CardComponents",
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/card_components.ex",
-              "line": 46,
+              "line": 13,
               "attributes": [
                 {
-                  "name": "box_art",
+                  "name": "stream_name",
                   "type": "string",
-                  "required": false,
-                  "default": "\"https://placehold.co/400x533/4c1d95/ffffff?text=Game+Art\"",
-                  "rawType": "string"
+                  "rawType": ":string",
+                  "required": true
                 },
                 {
-                  "name": "viewers",
+                  "name": "streamer",
+                  "type": "string",
+                  "rawType": ":string",
+                  "required": true
+                },
+                {
+                  "name": "category",
+                  "type": "string",
+                  "rawType": ":string",
+                  "required": true
+                },
+                {
+                  "name": "tags",
+                  "type": "string",
+                  "rawType": ":string",
+                  "required": true
+                },
+                {
+                  "name": "viewer_count",
                   "type": "integer",
-                  "required": true,
-                  "rawType": "integer"
+                  "rawType": ":integer",
+                  "required": true
                 },
                 {
-                  "name": "slug",
+                  "name": "avatar",
                   "type": "string",
-                  "required": true,
-                  "rawType": "string"
+                  "rawType": ":string",
+                  "required": false,
+                  "default": "\"https://ui-avatars.com/api/?background=random\""
                 },
                 {
-                  "name": "name",
-                  "type": "string",
-                  "required": true,
-                  "rawType": "string"
+                  "name": "id",
+                  "type": "any",
+                  "rawType": ":any",
+                  "required": true
+                },
+                {
+                  "name": "is_live",
+                  "type": "boolean",
+                  "rawType": ":boolean",
+                  "required": false,
+                  "default": "false"
                 }
               ],
               "slots": []
             },
             {
-              "name": "card",
+              "name": "category_card",
               "moduleName": "KameramaniPhxWeb.CardComponents",
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/card_components.ex",
-              "line": 12,
+              "line": 51,
               "attributes": [
                 {
-                  "name": "id",
-                  "type": "integer",
-                  "required": true,
-                  "rawType": "integer"
+                  "name": "name",
+                  "type": "string",
+                  "rawType": ":string",
+                  "required": true
                 },
                 {
-                  "name": "avatar",
+                  "name": "slug",
                   "type": "string",
+                  "rawType": ":string",
+                  "required": true
+                },
+                {
+                  "name": "viewers",
+                  "type": "integer",
+                  "rawType": ":integer",
+                  "required": true
+                },
+                {
+                  "name": "box_art",
+                  "type": "string",
+                  "rawType": ":string",
                   "required": false,
-                  "default": "\"https://ui-avatars.com/api/?background=random\"",
-                  "rawType": "string"
-                },
-                {
-                  "name": "viewer_count",
-                  "type": "integer",
-                  "required": true,
-                  "rawType": "integer"
-                },
-                {
-                  "name": "tags",
-                  "type": "string",
-                  "required": true,
-                  "rawType": "string"
-                },
-                {
-                  "name": "category",
-                  "type": "string",
-                  "required": true,
-                  "rawType": "string"
-                },
-                {
-                  "name": "streamer",
-                  "type": "string",
-                  "required": true,
-                  "rawType": "string"
-                },
-                {
-                  "name": "stream_name",
-                  "type": "string",
-                  "required": true,
-                  "rawType": "string"
+                  "default": "\"https://placehold.co/400x533/4c1d95/ffffff?text=Game+Art\""
                 }
               ],
               "slots": []
@@ -360,28 +395,28 @@
               "line": 10,
               "attributes": [
                 {
-                  "name": "dt",
-                  "type": "any",
-                  "required": false,
-                  "rawType": "any"
-                },
-                {
-                  "name": "text",
+                  "name": "name",
                   "type": "string",
-                  "required": false,
-                  "rawType": "string"
+                  "rawType": ":string",
+                  "required": true
                 },
                 {
                   "name": "color",
                   "type": "string",
-                  "required": true,
-                  "rawType": "string"
+                  "rawType": ":string",
+                  "required": true
                 },
                 {
-                  "name": "name",
+                  "name": "text",
                   "type": "string",
-                  "required": true,
-                  "rawType": "string"
+                  "rawType": ":string",
+                  "required": false
+                },
+                {
+                  "name": "dt",
+                  "type": "any",
+                  "rawType": ":any",
+                  "required": false
                 }
               ],
               "slots": []
@@ -392,135 +427,87 @@
           "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/core_components.ex",
           [
             {
-              "name": "icon",
+              "name": "flash",
               "moduleName": "KameramaniPhxWeb.CoreComponents",
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/core_components.ex",
-              "line": 455,
+              "line": 52,
               "attributes": [
-                {
-                  "name": "class",
-                  "type": "any",
-                  "required": false,
-                  "default": "\"size-4\"",
-                  "rawType": "any"
-                },
-                {
-                  "name": "name",
-                  "type": "string",
-                  "required": true,
-                  "rawType": "string"
-                }
-              ],
-              "slots": []
-            },
-            {
-              "name": "list",
-              "moduleName": "KameramaniPhxWeb.CoreComponents",
-              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/core_components.ex",
-              "line": 421,
-              "attributes": [],
-              "slots": [
-                {
-                  "name": "item",
-                  "required": true,
-                  "attributes": [
-                    {
-                      "default": null,
-                      "line": 418,
-                      "name": "title",
-                      "type": "string",
-                      "values": null,
-                      "doc": null,
-                      "required": true
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "table",
-              "moduleName": "KameramaniPhxWeb.CoreComponents",
-              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/core_components.ex",
-              "line": 369,
-              "attributes": [
-                {
-                  "name": "row_item",
-                  "type": "any",
-                  "required": false,
-                  "default": "{:&, [line: 360, column: 14], [{:/, [line: 360, column: 32], [{{:., [line: 360, column: 23], [{:__aliases__, [last: [line: 360, column: 15], line: 360, column: 15], [:Function]}, :identity]}, [no_parens: true, line: 360, column: 24], []}, 1]}]}",
-                  "doc": "the function for mapping each row before calling the :col and :action slots",
-                  "rawType": "any"
-                },
-                {
-                  "name": "row_click",
-                  "type": "any",
-                  "required": false,
-                  "default": "nil",
-                  "doc": "the function for handling phx-click on each row",
-                  "rawType": "any"
-                },
-                {
-                  "name": "row_id",
-                  "type": "any",
-                  "required": false,
-                  "default": "nil",
-                  "doc": "the function for generating the row id",
-                  "rawType": "any"
-                },
-                {
-                  "name": "rows",
-                  "type": "list",
-                  "required": true,
-                  "rawType": "list"
-                },
                 {
                   "name": "id",
                   "type": "string",
-                  "required": true,
-                  "rawType": "string"
+                  "rawType": ":string",
+                  "required": false,
+                  "doc": "the optional id of flash container"
+                },
+                {
+                  "name": "flash",
+                  "type": "map",
+                  "rawType": ":map",
+                  "required": false,
+                  "default": "%{}",
+                  "doc": "the map of flash messages to display"
+                },
+                {
+                  "name": "title",
+                  "type": "string",
+                  "rawType": ":string",
+                  "required": false,
+                  "default": "nil"
+                },
+                {
+                  "name": "kind",
+                  "type": "atom",
+                  "rawType": ":atom",
+                  "required": false,
+                  "values": [
+                    "info",
+                    "error"
+                  ],
+                  "doc": "used for styling and flash lookup"
+                },
+                {
+                  "name": "rest",
+                  "type": "global",
+                  "rawType": ":global",
+                  "required": false,
+                  "doc": "the arbitrary HTML attributes to add to the flash container"
                 }
               ],
               "slots": [
                 {
-                  "name": "action",
+                  "name": "inner_block",
                   "required": false,
-                  "doc": "the slot for showing user actions in the last table column",
-                  "attributes": []
-                },
-                {
-                  "name": "col",
-                  "required": true,
-                  "attributes": [
-                    {
-                      "default": null,
-                      "line": 364,
-                      "name": "label",
-                      "type": "string",
-                      "values": null,
-                      "doc": null,
-                      "required": false
-                    }
-                  ]
+                  "attributes": [],
+                  "doc": "the optional inner block that renders the flash message"
                 }
               ]
             },
             {
-              "name": "header",
+              "name": "button",
               "moduleName": "KameramaniPhxWeb.CoreComponents",
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/core_components.ex",
-              "line": 328,
-              "attributes": [],
+              "line": 108,
+              "attributes": [
+                {
+                  "name": "rest",
+                  "type": "global",
+                  "rawType": ":global",
+                  "required": false
+                },
+                {
+                  "name": "class",
+                  "type": "any",
+                  "rawType": ":any",
+                  "required": false
+                },
+                {
+                  "name": "variant",
+                  "type": "string",
+                  "rawType": ":string",
+                  "required": false
+                }
+              ],
               "slots": [
-                {
-                  "name": "actions",
-                  "required": false,
-                  "attributes": []
-                },
-                {
-                  "name": "subtitle",
-                  "required": false,
-                  "attributes": []
-                },
                 {
                   "name": "inner_block",
                   "required": true,
@@ -532,204 +519,184 @@
               "name": "input",
               "moduleName": "KameramaniPhxWeb.CoreComponents",
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/core_components.ex",
-              "line": 197,
+              "line": 207,
               "attributes": [
                 {
-                  "name": "rest",
-                  "type": "global",
+                  "name": "options",
+                  "type": "list",
+                  "rawType": ":list",
                   "required": false,
-                  "rawType": "global"
-                },
-                {
-                  "name": "error_class",
-                  "type": "any",
-                  "required": false,
-                  "default": "nil",
-                  "doc": "the input error class to use over defaults",
-                  "rawType": "any"
-                },
-                {
-                  "name": "class",
-                  "type": "any",
-                  "required": false,
-                  "default": "nil",
-                  "doc": "the input class to use over defaults",
-                  "rawType": "any"
+                  "doc": "the options to pass to Phoenix.HTML.Form.options_for_select/2"
                 },
                 {
                   "name": "multiple",
                   "type": "boolean",
+                  "rawType": ":boolean",
                   "required": false,
                   "default": "false",
-                  "doc": "the multiple flag for select inputs",
-                  "rawType": "boolean"
+                  "doc": "the multiple flag for select inputs"
                 },
                 {
-                  "name": "options",
-                  "type": "list",
-                  "required": false,
-                  "doc": "the options to pass to Phoenix.HTML.Form.options_for_select/2",
-                  "rawType": "list"
-                },
-                {
-                  "name": "prompt",
-                  "type": "string",
+                  "name": "class",
+                  "type": "any",
+                  "rawType": ":any",
                   "required": false,
                   "default": "nil",
-                  "doc": "the prompt for select inputs",
-                  "rawType": "string"
+                  "doc": "the input class to use over defaults"
                 },
                 {
-                  "name": "checked",
-                  "type": "boolean",
-                  "required": false,
-                  "doc": "the checked flag for checkbox inputs",
-                  "rawType": "boolean"
-                },
-                {
-                  "name": "errors",
-                  "type": "list",
-                  "required": false,
-                  "default": "[]",
-                  "rawType": "list"
-                },
-                {
-                  "name": "field",
-                  "type": "{:__aliases__, [last: [line: 182, column: 29], line: 182, column: 16], [:Phoenix, :HTML, :FormField]}",
-                  "required": false,
-                  "doc": "a form field struct retrieved from the form, for example: @form[:email]",
-                  "rawType": "{:__aliases__, [last: [line: 182, column: 29], line: 182, column: 16], [:Phoenix, :HTML, :FormField]}"
-                },
-                {
-                  "name": "type",
-                  "type": "string",
-                  "required": false,
-                  "default": "\"text\"",
-                  "rawType": "string"
-                },
-                {
-                  "name": "value",
+                  "name": "error_class",
                   "type": "any",
-                  "required": false,
-                  "rawType": "any"
-                },
-                {
-                  "name": "label",
-                  "type": "string",
+                  "rawType": ":any",
                   "required": false,
                   "default": "nil",
-                  "rawType": "string"
+                  "doc": "the input error class to use over defaults"
                 },
                 {
-                  "name": "name",
-                  "type": "any",
-                  "required": false,
-                  "rawType": "any"
-                },
-                {
-                  "name": "id",
-                  "type": "any",
-                  "required": false,
-                  "default": "nil",
-                  "rawType": "any"
+                  "name": "rest",
+                  "type": "global",
+                  "rawType": ":global",
+                  "required": false
                 }
               ],
               "slots": []
             },
             {
-              "name": "button",
+              "name": "error",
               "moduleName": "KameramaniPhxWeb.CoreComponents",
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/core_components.ex",
-              "line": 109,
-              "attributes": [
-                {
-                  "name": "variant",
-                  "type": "string",
-                  "required": false,
-                  "rawType": "string"
-                },
-                {
-                  "name": "class",
-                  "type": "any",
-                  "required": false,
-                  "rawType": "any"
-                },
-                {
-                  "name": "rest",
-                  "type": "global",
-                  "required": false,
-                  "rawType": "global"
-                },
-                {
-                  "name": "flash",
-                  "type": "map",
-                  "required": true,
-                  "rawType": "map"
-                }
-              ],
+              "line": 309,
+              "attributes": [],
+              "slots": []
+            },
+            {
+              "name": "header",
+              "moduleName": "KameramaniPhxWeb.CoreComponents",
+              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/core_components.ex",
+              "line": 325,
+              "attributes": [],
               "slots": [
                 {
                   "name": "inner_block",
                   "required": true,
+                  "attributes": []
+                },
+                {
+                  "name": "subtitle",
+                  "required": false,
+                  "attributes": []
+                },
+                {
+                  "name": "actions",
+                  "required": false,
                   "attributes": []
                 }
               ]
             },
             {
-              "name": "flash",
+              "name": "table",
               "moduleName": "KameramaniPhxWeb.CoreComponents",
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/core_components.ex",
-              "line": 52,
+              "line": 366,
               "attributes": [
-                {
-                  "name": "rest",
-                  "type": "global",
-                  "required": false,
-                  "doc": "the arbitrary HTML attributes to add to the flash container",
-                  "rawType": "global"
-                },
-                {
-                  "name": "kind",
-                  "type": "atom",
-                  "required": false,
-                  "values": [
-                    "info",
-                    "error"
-                  ],
-                  "doc": "used for styling and flash lookup",
-                  "rawType": "atom"
-                },
-                {
-                  "name": "title",
-                  "type": "string",
-                  "required": false,
-                  "default": "nil",
-                  "rawType": "string"
-                },
-                {
-                  "name": "flash",
-                  "type": "map",
-                  "required": false,
-                  "default": "{:%{}, [closing: [line: 45, column: 33], line: 45, column: 31], []}",
-                  "doc": "the map of flash messages to display",
-                  "rawType": "map"
-                },
                 {
                   "name": "id",
                   "type": "string",
+                  "rawType": ":string",
+                  "required": true
+                },
+                {
+                  "name": "rows",
+                  "type": "list",
+                  "rawType": ":list",
+                  "required": true
+                },
+                {
+                  "name": "row_id",
+                  "type": "any",
+                  "rawType": ":any",
                   "required": false,
-                  "doc": "the optional id of flash container",
-                  "rawType": "string"
+                  "default": "nil",
+                  "doc": "the function for generating the row id"
+                },
+                {
+                  "name": "row_click",
+                  "type": "any",
+                  "rawType": ":any",
+                  "required": false,
+                  "default": "nil",
+                  "doc": "the function for handling phx-click on each row"
+                },
+                {
+                  "name": "row_item",
+                  "type": "any",
+                  "rawType": ":any",
+                  "required": false
                 }
               ],
               "slots": [
                 {
-                  "name": "inner_block",
+                  "name": "col",
+                  "required": true,
+                  "attributes": [
+                    {
+                      "name": "label",
+                      "type": "string",
+                      "rawType": ":string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "action",
                   "required": false,
-                  "doc": "the optional inner block that renders the flash message",
-                  "attributes": []
+                  "attributes": [],
+                  "doc": "the slot for showing user actions in the last table column"
                 }
               ]
+            },
+            {
+              "name": "list",
+              "moduleName": "KameramaniPhxWeb.CoreComponents",
+              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/core_components.ex",
+              "line": 418,
+              "attributes": [],
+              "slots": [
+                {
+                  "name": "item",
+                  "required": true,
+                  "attributes": [
+                    {
+                      "name": "title",
+                      "type": "string",
+                      "rawType": ":string",
+                      "required": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "icon",
+              "moduleName": "KameramaniPhxWeb.CoreComponents",
+              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/core_components.ex",
+              "line": 452,
+              "attributes": [
+                {
+                  "name": "name",
+                  "type": "string",
+                  "rawType": ":string",
+                  "required": true
+                },
+                {
+                  "name": "class",
+                  "type": "any",
+                  "rawType": ":any",
+                  "required": false,
+                  "default": "\"size-4\""
+                }
+              ],
+              "slots": []
             }
           ]
         ],
@@ -765,10 +732,10 @@
               ]
             },
             {
-              "name": "theme_toggle",
+              "name": "auth",
               "moduleName": "KameramaniPhxWeb.Layouts",
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/layouts.ex",
-              "line": 143,
+              "line": 138,
               "attributes": [
                 {
                   "name": "flash",
@@ -778,6 +745,35 @@
                   "doc": "the map of flash messages"
                 }
               ],
+              "slots": [
+                {
+                  "name": "inner_block",
+                  "required": true,
+                  "attributes": []
+                }
+              ]
+            },
+            {
+              "name": "flash_group",
+              "moduleName": "KameramaniPhxWeb.Layouts",
+              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/layouts.ex",
+              "line": 152,
+              "attributes": [
+                {
+                  "name": "flash",
+                  "type": "map",
+                  "rawType": ":map",
+                  "required": true
+                }
+              ],
+              "slots": []
+            },
+            {
+              "name": "theme_toggle",
+              "moduleName": "KameramaniPhxWeb.Layouts",
+              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/layouts.ex",
+              "line": 194,
+              "attributes": [],
               "slots": []
             }
           ]
@@ -792,21 +788,21 @@
               "line": 7,
               "attributes": [
                 {
+                  "name": "current_user",
+                  "type": "any",
+                  "rawType": ":any",
+                  "required": true
+                },
+                {
                   "name": "layout",
                   "type": "atom",
+                  "rawType": ":atom",
                   "required": false,
                   "default": ":fixed",
                   "values": [
                     "floating",
                     "fixed"
-                  ],
-                  "rawType": "atom"
-                },
-                {
-                  "name": "current_user",
-                  "type": "any",
-                  "required": true,
-                  "rawType": "any"
+                  ]
                 }
               ],
               "slots": []
@@ -817,57 +813,57 @@
           "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/reg_components.ex",
           [
             {
-              "name": "log",
-              "moduleName": "LogComponents",
+              "name": "mesage",
+              "moduleName": "RegComponents",
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/reg_components.ex",
-              "line": 30,
+              "line": 8,
               "attributes": [
                 {
-                  "name": "rest",
-                  "type": "global",
-                  "required": false,
-                  "rawType": "global"
+                  "name": "field",
+                  "type": "Phoenix.HTML.FormField",
+                  "rawType": "Phoenix.HTML.FormField",
+                  "required": true
                 },
                 {
                   "name": "type",
                   "type": "string",
+                  "rawType": ":string",
                   "required": false,
-                  "default": "\"text\"",
-                  "rawType": "string"
+                  "default": "\"text\""
                 },
                 {
-                  "name": "field",
-                  "type": "{:__aliases__, [last: [line: 26, column: 29], line: 26, column: 16], [:Phoenix, :HTML, :FormField]}",
-                  "required": true,
-                  "rawType": "{:__aliases__, [last: [line: 26, column: 29], line: 26, column: 16], [:Phoenix, :HTML, :FormField]}"
+                  "name": "rest",
+                  "type": "global",
+                  "rawType": ":global",
+                  "required": false
                 }
               ],
               "slots": []
             },
             {
-              "name": "mesage",
-              "moduleName": "LogComponents",
+              "name": "log",
+              "moduleName": "RegComponents",
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/reg_components.ex",
-              "line": 8,
+              "line": 30,
               "attributes": [
                 {
-                  "name": "rest",
-                  "type": "global",
-                  "required": false,
-                  "rawType": "global"
+                  "name": "field",
+                  "type": "Phoenix.HTML.FormField",
+                  "rawType": "Phoenix.HTML.FormField",
+                  "required": true
                 },
                 {
                   "name": "type",
                   "type": "string",
+                  "rawType": ":string",
                   "required": false,
-                  "default": "\"text\"",
-                  "rawType": "string"
+                  "default": "\"text\""
                 },
                 {
-                  "name": "field",
-                  "type": "{:__aliases__, [last: [line: 4, column: 29], line: 4, column: 16], [:Phoenix, :HTML, :FormField]}",
-                  "required": true,
-                  "rawType": "{:__aliases__, [last: [line: 4, column: 29], line: 4, column: 16], [:Phoenix, :HTML, :FormField]}"
+                  "name": "rest",
+                  "type": "global",
+                  "rawType": ":global",
+                  "required": false
                 }
               ],
               "slots": []
@@ -884,36 +880,36 @@
               "line": 10,
               "attributes": [
                 {
-                  "name": "active",
-                  "type": "boolean",
-                  "required": false,
-                  "default": "false",
-                  "rawType": "boolean"
-                },
-                {
-                  "name": "src",
+                  "name": "name",
                   "type": "string",
-                  "required": false,
-                  "default": "\"https://i.pravatar.cc/150?img=1\"",
-                  "rawType": "string"
-                },
-                {
-                  "name": "viewer_count",
-                  "type": "string",
-                  "required": false,
-                  "rawType": "string"
+                  "rawType": ":string",
+                  "required": true
                 },
                 {
                   "name": "game",
                   "type": "string",
-                  "required": false,
-                  "rawType": "string"
+                  "rawType": ":string",
+                  "required": false
                 },
                 {
-                  "name": "name",
+                  "name": "viewer_count",
                   "type": "string",
-                  "required": true,
-                  "rawType": "string"
+                  "rawType": ":string",
+                  "required": false
+                },
+                {
+                  "name": "src",
+                  "type": "string",
+                  "rawType": ":string",
+                  "required": false,
+                  "default": "\"https://i.pravatar.cc/150?img=1\""
+                },
+                {
+                  "name": "active",
+                  "type": "boolean",
+                  "rawType": ":boolean",
+                  "required": false,
+                  "default": "false"
                 }
               ],
               "slots": []
@@ -930,11 +926,18 @@
         ]
       ],
       "fileHashes": {
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/obs_rtmp_server.ex": "0d559ad71976bb43320742de7421c323e43bfb57",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/card_components.ex": "a8fc453ea363d04f1d1fa0bb14c79920eb297a48",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/rtmp_ingest_listener/client_handler.ex": "c8b7f6ab4e4d12f7326c66929ed70ebfa6902faa",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/application.ex": "5a0190c2e15b679e6717676b75a9f50f7204de79",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/pipeline.ex": "069a08241fa15a26fc97d978f9e1f8471eb5afe6",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/rtmp_ingest_pipeline.ex": "a207906329403f8c333786b2c016343d21cb1c62",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/router.ex": "787a40963cf8d21767d60062255d70854f9795bf",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/studio_live.ex": "7fec577ac008ea581d9bb29925faab839cdaab95",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/endpoint.ex": "f271a9630e8fdbb54731962a5d00fa965c4a9b0f",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/chat_live.ex": "e7752b1dd5bc436f75d28df4e756c25f06cb9af8",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/card_components.ex": "3f4ad5ef811fc8a181910923eb96ee95c8ad52c2",
         "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/chat_components.ex": "ea0cd5489309642ab8bf70296bc2833b12d8f0c1",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/core_components.ex": "643728bdbc8060b82d6996bd8c2ef23be22863c5",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/layouts.ex": "087dcb0f7a12e6a155a98525ff3a8cfb04b032ab",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/core_components.ex": "5dc76323ca652d639dab2517fcfcbdb3b49f0dab",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/layouts.ex": "cb14f2e1d6d0479169335fc58fb5018b6bb6ff22",
         "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/nav_components.ex": "b4794704c957f3f624dddc2f74aecace2ad51405",
         "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/reg_components.ex": "6e720c4dc78a427a2d493d19844afde913d6895b",
         "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/components/sidebar_components.ex": "e7d68fbd35bbb00add4e59981dca2d43f8644636",
@@ -951,10 +954,6 @@
             "moduleName": "KameramaniPhx.Accounts.User",
             "tableName": "users",
             "fields": [
-              {
-                "name": "id",
-                "type": "id"
-              },
               {
                 "name": "name",
                 "type": "string"
@@ -1000,16 +999,41 @@
                 "type": "utc_datetime"
               },
               {
+                "name": "following",
+                "type": "list",
+                "elixirType": "KameramaniPhx.Accounts.User"
+              },
+              {
+                "name": "followers",
+                "type": "list",
+                "elixirType": "KameramaniPhx.Accounts.User"
+              },
+              {
                 "name": "inserted_at",
                 "type": "naive_datetime"
               },
               {
                 "name": "updated_at",
                 "type": "naive_datetime"
+              },
+              {
+                "name": "id",
+                "type": "id"
               }
             ],
             "associations": {},
-            "associationsDetailed": [],
+            "associationsDetailed": [
+              {
+                "fieldName": "following",
+                "targetModule": "KameramaniPhx.Accounts.User",
+                "type": "many_to_many"
+              },
+              {
+                "fieldName": "followers",
+                "targetModule": "KameramaniPhx.Accounts.User",
+                "type": "many_to_many"
+              }
+            ],
             "aliases": {},
             "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/accounts/user.ex",
             "line": 7
@@ -1021,10 +1045,6 @@
             "moduleName": "KameramaniPhx.Accounts.UserToken",
             "tableName": "users_tokens",
             "fields": [
-              {
-                "name": "id",
-                "type": "id"
-              },
               {
                 "name": "token",
                 "type": "binary"
@@ -1053,10 +1073,20 @@
               {
                 "name": "updated_at",
                 "type": "naive_datetime"
+              },
+              {
+                "name": "id",
+                "type": "id"
               }
             ],
             "associations": {},
-            "associationsDetailed": [],
+            "associationsDetailed": [
+              {
+                "fieldName": "user",
+                "targetModule": "KameramaniPhx.Accounts.User",
+                "type": "belongs_to"
+              }
+            ],
             "aliases": {},
             "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/accounts/user_token.ex",
             "line": 16
@@ -1069,17 +1099,13 @@
             "tableName": "live_chats",
             "fields": [
               {
-                "name": "id",
-                "type": "id"
-              },
-              {
                 "name": "body",
                 "type": "string"
               },
               {
                 "name": "stream",
                 "type": "assoc",
-                "elixirType": "KameramaniPhx.Chat.Stream"
+                "elixirType": "KameramaniPhx.Streaming.Stream"
               },
               {
                 "name": "user_id",
@@ -1092,10 +1118,20 @@
               {
                 "name": "updated_at",
                 "type": "naive_datetime"
+              },
+              {
+                "name": "id",
+                "type": "id"
               }
             ],
             "associations": {},
-            "associationsDetailed": [],
+            "associationsDetailed": [
+              {
+                "fieldName": "stream",
+                "targetModule": "KameramaniPhx.Streaming.Stream",
+                "type": "belongs_to"
+              }
+            ],
             "aliases": {},
             "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/chat/live_chat.ex",
             "line": 5
@@ -1107,10 +1143,6 @@
             "moduleName": "KameramaniPhx.Content.Category",
             "tableName": "categories",
             "fields": [
-              {
-                "name": "id",
-                "type": "id"
-              },
               {
                 "name": "name",
                 "type": "string"
@@ -1130,6 +1162,10 @@
               {
                 "name": "updated_at",
                 "type": "naive_datetime"
+              },
+              {
+                "name": "id",
+                "type": "id"
               }
             ],
             "associations": {},
@@ -1145,10 +1181,6 @@
             "moduleName": "KameramaniPhx.Streaming.Stream",
             "tableName": "streams",
             "fields": [
-              {
-                "name": "id",
-                "type": "id"
-              },
               {
                 "name": "title",
                 "type": "string"
@@ -1178,10 +1210,25 @@
               {
                 "name": "updated_at",
                 "type": "naive_datetime"
+              },
+              {
+                "name": "id",
+                "type": "id"
               }
             ],
             "associations": {},
-            "associationsDetailed": [],
+            "associationsDetailed": [
+              {
+                "fieldName": "user",
+                "targetModule": "KameramaniPhx.Accounts.User",
+                "type": "belongs_to"
+              },
+              {
+                "fieldName": "category",
+                "targetModule": "KameramaniPhx.Content.Category",
+                "type": "belongs_to"
+              }
+            ],
             "aliases": {},
             "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/streaming/stream.ex",
             "line": 6
@@ -1193,10 +1240,6 @@
             "moduleName": "KameramaniPhx.Users",
             "tableName": "users",
             "fields": [
-              {
-                "name": "id",
-                "type": "id"
-              },
               {
                 "name": "name",
                 "type": "string"
@@ -1232,6 +1275,10 @@
               {
                 "name": "updated_at",
                 "type": "naive_datetime"
+              },
+              {
+                "name": "id",
+                "type": "id"
               }
             ],
             "associations": {},
@@ -1250,10 +1297,6 @@
               "moduleName": "KameramaniPhx.Accounts.User",
               "tableName": "users",
               "fields": [
-                {
-                  "name": "id",
-                  "type": "id"
-                },
                 {
                   "name": "name",
                   "type": "string"
@@ -1299,16 +1342,41 @@
                   "type": "utc_datetime"
                 },
                 {
+                  "name": "following",
+                  "type": "list",
+                  "elixirType": "KameramaniPhx.Accounts.User"
+                },
+                {
+                  "name": "followers",
+                  "type": "list",
+                  "elixirType": "KameramaniPhx.Accounts.User"
+                },
+                {
                   "name": "inserted_at",
                   "type": "naive_datetime"
                 },
                 {
                   "name": "updated_at",
                   "type": "naive_datetime"
+                },
+                {
+                  "name": "id",
+                  "type": "id"
                 }
               ],
               "associations": {},
-              "associationsDetailed": [],
+              "associationsDetailed": [
+                {
+                  "fieldName": "following",
+                  "targetModule": "KameramaniPhx.Accounts.User",
+                  "type": "many_to_many"
+                },
+                {
+                  "fieldName": "followers",
+                  "targetModule": "KameramaniPhx.Accounts.User",
+                  "type": "many_to_many"
+                }
+              ],
               "aliases": {},
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/accounts/user.ex",
               "line": 7
@@ -1322,10 +1390,6 @@
               "moduleName": "KameramaniPhx.Accounts.UserToken",
               "tableName": "users_tokens",
               "fields": [
-                {
-                  "name": "id",
-                  "type": "id"
-                },
                 {
                   "name": "token",
                   "type": "binary"
@@ -1354,10 +1418,20 @@
                 {
                   "name": "updated_at",
                   "type": "naive_datetime"
+                },
+                {
+                  "name": "id",
+                  "type": "id"
                 }
               ],
               "associations": {},
-              "associationsDetailed": [],
+              "associationsDetailed": [
+                {
+                  "fieldName": "user",
+                  "targetModule": "KameramaniPhx.Accounts.User",
+                  "type": "belongs_to"
+                }
+              ],
               "aliases": {},
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/accounts/user_token.ex",
               "line": 16
@@ -1372,17 +1446,13 @@
               "tableName": "live_chats",
               "fields": [
                 {
-                  "name": "id",
-                  "type": "id"
-                },
-                {
                   "name": "body",
                   "type": "string"
                 },
                 {
                   "name": "stream",
                   "type": "assoc",
-                  "elixirType": "KameramaniPhx.Chat.Stream"
+                  "elixirType": "KameramaniPhx.Streaming.Stream"
                 },
                 {
                   "name": "user_id",
@@ -1395,10 +1465,20 @@
                 {
                   "name": "updated_at",
                   "type": "naive_datetime"
+                },
+                {
+                  "name": "id",
+                  "type": "id"
                 }
               ],
               "associations": {},
-              "associationsDetailed": [],
+              "associationsDetailed": [
+                {
+                  "fieldName": "stream",
+                  "targetModule": "KameramaniPhx.Streaming.Stream",
+                  "type": "belongs_to"
+                }
+              ],
               "aliases": {},
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/chat/live_chat.ex",
               "line": 5
@@ -1412,10 +1492,6 @@
               "moduleName": "KameramaniPhx.Content.Category",
               "tableName": "categories",
               "fields": [
-                {
-                  "name": "id",
-                  "type": "id"
-                },
                 {
                   "name": "name",
                   "type": "string"
@@ -1435,6 +1511,10 @@
                 {
                   "name": "updated_at",
                   "type": "naive_datetime"
+                },
+                {
+                  "name": "id",
+                  "type": "id"
                 }
               ],
               "associations": {},
@@ -1452,10 +1532,6 @@
               "moduleName": "KameramaniPhx.Streaming.Stream",
               "tableName": "streams",
               "fields": [
-                {
-                  "name": "id",
-                  "type": "id"
-                },
                 {
                   "name": "title",
                   "type": "string"
@@ -1485,10 +1561,25 @@
                 {
                   "name": "updated_at",
                   "type": "naive_datetime"
+                },
+                {
+                  "name": "id",
+                  "type": "id"
                 }
               ],
               "associations": {},
-              "associationsDetailed": [],
+              "associationsDetailed": [
+                {
+                  "fieldName": "user",
+                  "targetModule": "KameramaniPhx.Accounts.User",
+                  "type": "belongs_to"
+                },
+                {
+                  "fieldName": "category",
+                  "targetModule": "KameramaniPhx.Content.Category",
+                  "type": "belongs_to"
+                }
+              ],
               "aliases": {},
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/streaming/stream.ex",
               "line": 6
@@ -1502,10 +1593,6 @@
               "moduleName": "KameramaniPhx.Users",
               "tableName": "users",
               "fields": [
-                {
-                  "name": "id",
-                  "type": "id"
-                },
                 {
                   "name": "name",
                   "type": "string"
@@ -1541,6 +1628,10 @@
                 {
                   "name": "updated_at",
                   "type": "naive_datetime"
+                },
+                {
+                  "name": "id",
+                  "type": "id"
                 }
               ],
               "associations": {},
@@ -1553,9 +1644,9 @@
         ]
       ],
       "fileHashes": {
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/accounts/user.ex": "ad38fdf2c67369cfcbe7b80c305c59f2e6f58793",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/accounts/user.ex": "1a0083007da46751ce67a59ae6f780c0ed07b6a8",
         "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/accounts/user_token.ex": "1ae92a94f559705140be1ebffac7f74a044bcdf7",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/chat/live_chat.ex": "3638c7951e309589710c4cd3ad6ab40e2cc457be",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/chat/live_chat.ex": "b21e9e57dfb71d28425a5ee06a32eb9afd8dbeb5",
         "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/content/category.ex": "f4fe1dc3e4c68db6ff7187a895d73f9d0a995a89",
         "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/streaming/stream.ex": "73ca8eabf699cae761c53710ba5ae8e33e676829",
         "/home/dtech/Projects/kameramani_phx/lib/users.ex": "6f1c5a553c95f1000cf76159fdfb25cbea23043c"
@@ -1565,23 +1656,124 @@
     "events": {
       "events": [
         [
-          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/obs_rtmp_server.ex",
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/rtmp_ingest_listener/client_handler.ex",
+          [
+            {
+              "name": "send_me_data",
+              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/rtmp_ingest_listener/client_handler.ex",
+              "moduleName": "Handler",
+              "line": 41,
+              "params": "{send_me_data, source_pid}",
+              "kind": "handle_info",
+              "nameKind": "atom"
+            }
+          ]
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/application.ex",
           []
         ],
         [
-          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/Settings/stream_settings_live.ex",
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/pipeline.ex",
+          []
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/rtmp_ingest_pipeline.ex",
+          []
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/router.ex",
+          []
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/studio_live.ex",
+          [
+            {
+              "name": "validate",
+              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/studio_live.ex",
+              "moduleName": "KameramaniPhxWeb.StudioLive",
+              "line": 45,
+              "params": "%{\"stream\" => params}",
+              "kind": "handle_event",
+              "clause": "def handle_event(\"validate\", %{\"stream\" => params}, socket) do",
+              "nameKind": "string"
+            },
+            {
+              "name": "create_stream",
+              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/studio_live.ex",
+              "moduleName": "KameramaniPhxWeb.StudioLive",
+              "line": 54,
+              "params": "%{\"stream\" => stream_params}",
+              "kind": "handle_event",
+              "clause": "def handle_event(\"create_stream\", %{\"stream\" => stream_params}, socket) do",
+              "nameKind": "string"
+            },
+            {
+              "name": "select_category",
+              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/studio_live.ex",
+              "moduleName": "KameramaniPhxWeb.StudioLive",
+              "line": 93,
+              "params": "%{\"category_id\" => category_id}",
+              "kind": "handle_event",
+              "clause": "def handle_event(\"select_category\", %{\"category_id\" => category_id}, socket) do",
+              "nameKind": "string"
+            },
+            {
+              "name": "reset_stream",
+              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/studio_live.ex",
+              "moduleName": "KameramaniPhxWeb.StudioLive",
+              "line": 97,
+              "params": "_params",
+              "kind": "handle_event",
+              "clause": "def handle_event(\"reset_stream\", _params, socket) do",
+              "nameKind": "string"
+            }
+          ]
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/endpoint.ex",
+          []
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/chat_live.ex",
+          [
+            {
+              "name": "send_message",
+              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/chat_live.ex",
+              "moduleName": "KameramaniPhxWeb.ChatLive",
+              "line": 83,
+              "params": "%{\"chat\" => %{\"ch_message\" => message_text}}",
+              "kind": "handle_event",
+              "clause": "def handle_event(\"send_message\", %{\"chat\" => %{\"ch_message\" => message_text}}, socket) do",
+              "nameKind": "string"
+            },
+            {
+              "name": "validate",
+              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/chat_live.ex",
+              "moduleName": "KameramaniPhxWeb.ChatLive",
+              "line": 119,
+              "params": "%{\"chat\" => %{\"ch_message\" => message}}",
+              "kind": "handle_event",
+              "clause": "def handle_event(\"validate\", %{\"chat\" => %{\"ch_message\" => message}}, socket) do",
+              "nameKind": "string"
+            }
+          ]
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Profile/user_profile_live.ex",
           []
         ],
         [
           "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/Settings/stream_key_live.ex",
           [
             {
-              "name": "copy_stream_key",
+              "name": "generate_stream_key",
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/Settings/stream_key_live.ex",
               "moduleName": "KameramaniPhxWeb.Streaming.Settings.StreamKeyLive",
-              "line": 69,
+              "line": 32,
               "params": "_params",
               "kind": "handle_event",
+              "clause": "def handle_event(\"generate_stream_key\", _params, socket) do",
               "nameKind": "string"
             },
             {
@@ -1591,21 +1783,23 @@
               "line": 65,
               "params": "_params",
               "kind": "handle_event",
+              "clause": "def handle_event(\"toggle_key_visibility\", _params, socket) do",
               "nameKind": "string"
             },
             {
-              "name": "generate_stream_key",
+              "name": "copy_stream_key",
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/Settings/stream_key_live.ex",
               "moduleName": "KameramaniPhxWeb.Streaming.Settings.StreamKeyLive",
-              "line": 32,
+              "line": 69,
               "params": "_params",
               "kind": "handle_event",
+              "clause": "def handle_event(\"copy_stream_key\", _params, socket) do",
               "nameKind": "string"
             }
           ]
         ],
         [
-          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/category_live.ex",
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/Settings/stream_settings_live.ex",
           []
         ],
         [
@@ -1613,28 +1807,16 @@
           []
         ],
         [
-          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Profile/user_profile_live.ex",
-          []
-        ],
-        [
           "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/auth_live.ex",
           [
             {
-              "name": "login",
+              "name": "validate_entry",
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/auth_live.ex",
               "moduleName": "KameramaniPhxWeb.AuthLive",
-              "line": 93,
-              "params": "%{}",
+              "line": 25,
+              "params": "%{\"reg\" => reg_msg}",
               "kind": "handle_event",
-              "nameKind": "string"
-            },
-            {
-              "name": "validate_log",
-              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/auth_live.ex",
-              "moduleName": "KameramaniPhxWeb.AuthLive",
-              "line": 72,
-              "params": "%{}",
-              "kind": "handle_event",
+              "clause": "def handle_event(\"validate_entry\", %{\"reg\" => reg_msg}, socket) do",
               "nameKind": "string"
             },
             {
@@ -1642,23 +1824,35 @@
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/auth_live.ex",
               "moduleName": "KameramaniPhxWeb.AuthLive",
               "line": 67,
-              "params": "%{}",
+              "params": "%{\"reg\" => reg_msg}",
               "kind": "handle_event",
+              "clause": "def handle_event(\"register\", %{\"reg\" => reg_msg}, socket) do",
               "nameKind": "string"
             },
             {
-              "name": "validate_entry",
+              "name": "validate_log",
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/auth_live.ex",
               "moduleName": "KameramaniPhxWeb.AuthLive",
-              "line": 25,
-              "params": "%{}",
+              "line": 72,
+              "params": "%{\"log\" => log_msg}",
               "kind": "handle_event",
+              "clause": "def handle_event(\"validate_log\", %{\"log\" => log_msg}, socket) do",
+              "nameKind": "string"
+            },
+            {
+              "name": "login",
+              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/auth_live.ex",
+              "moduleName": "KameramaniPhxWeb.AuthLive",
+              "line": 93,
+              "params": "%{\"log\" => log_msg}",
+              "kind": "handle_event",
+              "clause": "def handle_event(\"login\", %{\"log\" => log_msg}, socket) do",
               "nameKind": "string"
             }
           ]
         ],
         [
-          "/home/dtech/Projects/kameramani_phx/lib/Profile/user_profile_live.ex",
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/category_live.ex",
           []
         ],
         [
@@ -1670,33 +1864,66 @@
           []
         ],
         [
-          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/chat_live.ex",
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/new_auth_live.ex",
           [
             {
-              "name": "new_message",
-              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/chat_live.ex",
-              "moduleName": "KameramaniPhxWeb.ChatLive",
-              "line": 132,
-              "params": "{new_message, message}",
-              "kind": "handle_info",
-              "nameKind": "atom"
-            },
-            {
-              "name": "validate",
-              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/chat_live.ex",
-              "moduleName": "KameramaniPhxWeb.ChatLive",
-              "line": 120,
-              "params": "%{}",
+              "name": "toggle_password",
+              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/new_auth_live.ex",
+              "moduleName": "KameramaniPhxWeb.NewAuthLive",
+              "line": 35,
+              "params": "_params",
               "kind": "handle_event",
+              "clause": "def handle_event(\"toggle_password\", _params, socket) do",
               "nameKind": "string"
             },
             {
-              "name": "send_message",
-              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/chat_live.ex",
-              "moduleName": "KameramaniPhxWeb.ChatLive",
-              "line": 84,
-              "params": "%{}",
+              "name": "set_panel_login",
+              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/new_auth_live.ex",
+              "moduleName": "KameramaniPhxWeb.NewAuthLive",
+              "line": 39,
+              "params": "_params",
               "kind": "handle_event",
+              "clause": "def handle_event(\"set_panel_login\", _params, socket) do",
+              "nameKind": "string"
+            },
+            {
+              "name": "set_panel_register",
+              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/new_auth_live.ex",
+              "moduleName": "KameramaniPhxWeb.NewAuthLive",
+              "line": 43,
+              "params": "_params",
+              "kind": "handle_event",
+              "clause": "def handle_event(\"set_panel_register\", _params, socket) do",
+              "nameKind": "string"
+            },
+            {
+              "name": "validate_reg",
+              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/new_auth_live.ex",
+              "moduleName": "KameramaniPhxWeb.NewAuthLive",
+              "line": 47,
+              "params": "%{\"reg\" => user_params}",
+              "kind": "handle_event",
+              "clause": "def handle_event(\"validate_reg\", %{\"reg\" => user_params}, socket) do",
+              "nameKind": "string"
+            },
+            {
+              "name": "validate_log",
+              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/new_auth_live.ex",
+              "moduleName": "KameramaniPhxWeb.NewAuthLive",
+              "line": 52,
+              "params": "%{\"user\" => params}",
+              "kind": "handle_event",
+              "clause": "def handle_event(\"validate_log\", %{\"user\" => params}, socket) do",
+              "nameKind": "string"
+            },
+            {
+              "name": "register",
+              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/new_auth_live.ex",
+              "moduleName": "KameramaniPhxWeb.NewAuthLive",
+              "line": 57,
+              "params": "%{\"reg\" => user_params}",
+              "kind": "handle_event",
+              "clause": "def handle_event(\"register\", %{\"reg\" => user_params}, socket) do",
               "nameKind": "string"
             }
           ]
@@ -1709,113 +1936,10 @@
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/user_live/confirmation.ex",
               "moduleName": "KameramaniPhxWeb.UserLive.Confirmation",
               "line": 89,
-              "params": "%{}",
+              "params": "%{\"user\" => params}",
               "kind": "handle_event",
+              "clause": "def handle_event(\"submit\", %{\"user\" => params}, socket) do",
               "nameKind": "string"
-            }
-          ]
-        ],
-        [
-          "/home/dtech/Projects/kameramani_phx/test/kameramani_phx_web/live/user_live/confirmation_test.exs",
-          []
-        ],
-        [
-          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/new_auth_live.ex",
-          [
-            {
-              "name": "register",
-              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/new_auth_live.ex",
-              "moduleName": "KameramaniPhxWeb.NewAuthLive",
-              "line": 57,
-              "params": "%{}",
-              "kind": "handle_event",
-              "nameKind": "string"
-            },
-            {
-              "name": "validate_log",
-              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/new_auth_live.ex",
-              "moduleName": "KameramaniPhxWeb.NewAuthLive",
-              "line": 52,
-              "params": "%{}",
-              "kind": "handle_event",
-              "nameKind": "string"
-            },
-            {
-              "name": "validate_reg",
-              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/new_auth_live.ex",
-              "moduleName": "KameramaniPhxWeb.NewAuthLive",
-              "line": 47,
-              "params": "%{}",
-              "kind": "handle_event",
-              "nameKind": "string"
-            },
-            {
-              "name": "set_panel_register",
-              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/new_auth_live.ex",
-              "moduleName": "KameramaniPhxWeb.NewAuthLive",
-              "line": 43,
-              "params": "_params",
-              "kind": "handle_event",
-              "nameKind": "string"
-            },
-            {
-              "name": "set_panel_login",
-              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/new_auth_live.ex",
-              "moduleName": "KameramaniPhxWeb.NewAuthLive",
-              "line": 39,
-              "params": "_params",
-              "kind": "handle_event",
-              "nameKind": "string"
-            },
-            {
-              "name": "toggle_password",
-              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/new_auth_live.ex",
-              "moduleName": "KameramaniPhxWeb.NewAuthLive",
-              "line": 35,
-              "params": "_params",
-              "kind": "handle_event",
-              "nameKind": "string"
-            }
-          ]
-        ],
-        [
-          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/studio_live.ex",
-          [
-            {
-              "name": "select_category",
-              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/studio_live.ex",
-              "moduleName": "KameramaniPhxWeb.StudioLive",
-              "line": 85,
-              "params": "%{}",
-              "kind": "handle_event",
-              "nameKind": "string"
-            },
-            {
-              "name": "create_stream",
-              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/studio_live.ex",
-              "moduleName": "KameramaniPhxWeb.StudioLive",
-              "line": 46,
-              "params": "%{}",
-              "kind": "handle_event",
-              "nameKind": "string"
-            },
-            {
-              "name": "validate",
-              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/studio_live.ex",
-              "moduleName": "KameramaniPhxWeb.StudioLive",
-              "line": 37,
-              "params": "%{}",
-              "kind": "handle_event",
-              "nameKind": "string"
-            },
-            {
-              "name": "stream_status_updated",
-              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/studio_live.ex",
-              "moduleName": "KameramaniPhxWeb.StudioLive",
-              "line": 29,
-              "params": "{stream_status_updated, =}",
-              "kind": "handle_info",
-              "nameKind": "atom"
             }
           ]
         ],
@@ -1823,30 +1947,13 @@
           "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/user_live/user_settings_live.ex",
           [
             {
-              "name": "update_dp",
+              "name": "validate_email",
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/user_live/user_settings_live.ex",
               "moduleName": "KameramaniPhxWeb.UserLive.UserSettingsLive",
-              "line": 108,
-              "params": "%{}",
-              "kind": "handle_event",
-              "nameKind": "string"
-            },
-            {
-              "name": "update_password",
-              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/user_live/user_settings_live.ex",
-              "moduleName": "KameramaniPhxWeb.UserLive.UserSettingsLive",
-              "line": 93,
+              "line": 48,
               "params": "params",
               "kind": "handle_event",
-              "nameKind": "string"
-            },
-            {
-              "name": "validate_password",
-              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/user_live/user_settings_live.ex",
-              "moduleName": "KameramaniPhxWeb.UserLive.UserSettingsLive",
-              "line": 81,
-              "params": "params",
-              "kind": "handle_event",
+              "clause": "def handle_event(\"validate_email\", params, socket) do",
               "nameKind": "string"
             },
             {
@@ -1856,18 +1963,44 @@
               "line": 60,
               "params": "params",
               "kind": "handle_event",
+              "clause": "def handle_event(\"update_email\", params, socket) do",
               "nameKind": "string"
             },
             {
-              "name": "validate_email",
+              "name": "validate_password",
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/user_live/user_settings_live.ex",
               "moduleName": "KameramaniPhxWeb.UserLive.UserSettingsLive",
-              "line": 48,
+              "line": 81,
               "params": "params",
               "kind": "handle_event",
+              "clause": "def handle_event(\"validate_password\", params, socket) do",
+              "nameKind": "string"
+            },
+            {
+              "name": "update_password",
+              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/user_live/user_settings_live.ex",
+              "moduleName": "KameramaniPhxWeb.UserLive.UserSettingsLive",
+              "line": 93,
+              "params": "params",
+              "kind": "handle_event",
+              "clause": "def handle_event(\"update_password\", params, socket) do",
+              "nameKind": "string"
+            },
+            {
+              "name": "update_dp",
+              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/user_live/user_settings_live.ex",
+              "moduleName": "KameramaniPhxWeb.UserLive.UserSettingsLive",
+              "line": 108,
+              "params": "%{\"user\" => user_params}",
+              "kind": "handle_event",
+              "clause": "def handle_event(\"update_dp\", %{\"user\" => user_params}, socket) do",
               "nameKind": "string"
             }
           ]
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/test/kameramani_phx_web/live/user_live/confirmation_test.exs",
+          []
         ],
         [
           "/home/dtech/Projects/kameramani_phx/test/kameramani_phx_web/live/user_live/login_test.exs",
@@ -1883,22 +2016,26 @@
         ]
       ],
       "fileHashes": {
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/obs_rtmp_server.ex": "0d559ad71976bb43320742de7421c323e43bfb57",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/Settings/stream_settings_live.ex": "f8484ad7c968d067d41a0dfaa0b44c36677ce1b6",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/rtmp_ingest_listener/client_handler.ex": "c8b7f6ab4e4d12f7326c66929ed70ebfa6902faa",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/application.ex": "5a0190c2e15b679e6717676b75a9f50f7204de79",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/pipeline.ex": "069a08241fa15a26fc97d978f9e1f8471eb5afe6",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx/rtmp_ingest_pipeline.ex": "a207906329403f8c333786b2c016343d21cb1c62",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/router.ex": "787a40963cf8d21767d60062255d70854f9795bf",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/studio_live.ex": "7fec577ac008ea581d9bb29925faab839cdaab95",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/endpoint.ex": "f271a9630e8fdbb54731962a5d00fa965c4a9b0f",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/chat_live.ex": "e7752b1dd5bc436f75d28df4e756c25f06cb9af8",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Profile/user_profile_live.ex": "270133c2e84d7b38c03a0668499a62f4f7b6a315",
         "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/Settings/stream_key_live.ex": "c38c106f6b944aa5998749f1a87fd1bd8a67529c",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/category_live.ex": "ce078ca11aab8b31a1a7c24492f5cb5302c92efb",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/Settings/stream_settings_live.ex": "f8484ad7c968d067d41a0dfaa0b44c36677ce1b6",
         "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/stream_test_live.ex": "1e72877bca3d330e0e4fac75580cf82284bf02c6",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Profile/user_profile_live.ex": "847b716f769fbe53b54ec14a4a6e3aafb97b2f9e",
         "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/auth_live.ex": "e16cacec7d327ee9c393a2c20bde89ed91d1f467",
-        "/home/dtech/Projects/kameramani_phx/lib/Profile/user_profile_live.ex": "813f076661237e285f7624770608d298cf65a7d5",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/category_live.ex": "ce078ca11aab8b31a1a7c24492f5cb5302c92efb",
         "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/directory_live.ex": "4ef4dae5a4df027f81d4d55e42a34665b00fdcb1",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/landing_live.ex": "30f7fa55f0b42d8e9f9aa6d36537abcbd4cfce17",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/chat_live.ex": "733a0964d892044561857e63560086cda818a07b",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/user_live/confirmation.ex": "8cf2b19d41c65624b01f184ae74ede1cc777a338",
-        "/home/dtech/Projects/kameramani_phx/test/kameramani_phx_web/live/user_live/confirmation_test.exs": "cb0bd2c2d3478c7b41289816c4c659e09801cd7e",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/landing_live.ex": "222aa4da0143a3c4ec96a721f978d595bbc4b1db",
         "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/new_auth_live.ex": "a83cc9a9e1e8ea1eb747dda2974d25c88af9bb76",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/studio_live.ex": "8965e58b37724f35e19039585c5233ff24aaea2b",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/user_live/confirmation.ex": "8cf2b19d41c65624b01f184ae74ede1cc777a338",
         "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/user_live/user_settings_live.ex": "f98971083b2366a2decf3f108c96c60c3a3d06ae",
+        "/home/dtech/Projects/kameramani_phx/test/kameramani_phx_web/live/user_live/confirmation_test.exs": "cb0bd2c2d3478c7b41289816c4c659e09801cd7e",
         "/home/dtech/Projects/kameramani_phx/test/kameramani_phx_web/live/user_live/login_test.exs": "50f1a98a7e52034857fae706bc0a0b21e1b8cc04",
         "/home/dtech/Projects/kameramani_phx/test/kameramani_phx_web/live/user_live/registration_test.exs": "424c9cbe33d20234880fc4a821f72c463d9598ea",
         "/home/dtech/Projects/kameramani_phx/test/kameramani_phx_web/live/user_live/settings_test.exs": "9542c88c24525d92792a3d51993f1b983fdadda7"
@@ -2015,10 +2152,20 @@
           "isResource": false
         },
         {
+          "verb": "FORWARD",
+          "path": "/live",
+          "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/router.ex",
+          "line": 64,
+          "forwardTo": "Plug.Static",
+          "helperBase": "live",
+          "params": [],
+          "isResource": false
+        },
+        {
           "verb": "POST",
           "path": "/users/update-password",
           "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/router.ex",
-          "line": 66,
+          "line": 80,
           "controller": "KameramaniPhxWeb.UserSessionController",
           "action": "update_password",
           "helperBase": "user_update_password",
@@ -2029,7 +2176,7 @@
           "verb": "LIVE",
           "path": "/users/profile/:username",
           "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/router.ex",
-          "line": 74,
+          "line": 88,
           "liveModule": "KameramaniPhxWeb.Profile.UserProfileLive",
           "liveAction": "UserProfileLive",
           "helperBase": "user_profile",
@@ -2042,7 +2189,7 @@
           "verb": "LIVE",
           "path": "/users/settings",
           "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/router.ex",
-          "line": 75,
+          "line": 89,
           "liveModule": "KameramaniPhxWeb.UserLive.UserSettingsLive",
           "liveAction": "UserSettingsLive",
           "helperBase": "user_setting",
@@ -2053,7 +2200,7 @@
           "verb": "LIVE",
           "path": "/users/settings/stream-key",
           "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/router.ex",
-          "line": 76,
+          "line": 90,
           "liveModule": "KameramaniPhxWeb.Streaming.Settings.StreamKeyLive",
           "liveAction": "StreamKeyLive",
           "helperBase": "user_setting_stream_key",
@@ -2064,7 +2211,7 @@
           "verb": "LIVE",
           "path": "/studio",
           "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/router.ex",
-          "line": 82,
+          "line": 96,
           "liveModule": "KameramaniPhxWeb.StudioLive",
           "liveAction": "StudioLive",
           "helperBase": "studio",
@@ -2075,7 +2222,7 @@
           "verb": "LIVE",
           "path": "/stream-settings",
           "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/router.ex",
-          "line": 83,
+          "line": 97,
           "liveModule": "KameramaniPhxWeb.Streaming.Settings.StreamSettingsLive",
           "liveAction": "StreamSettingsLive",
           "helperBase": "stream_setting",
@@ -2086,7 +2233,7 @@
           "verb": "FORWARD",
           "path": "/dev/mailbox",
           "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/router.ex",
-          "line": 95,
+          "line": 109,
           "forwardTo": "Plug.Swoosh.MailboxPreview",
           "helperBase": "mailbox",
           "params": [],
@@ -2096,7 +2243,7 @@
         }
       ],
       "fileHashes": {
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/router.ex": "9bba6c9a2911f39c204516c750fae91e56b07928"
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/router.ex": "787a40963cf8d21767d60062255d70854f9795bf"
       },
       "workspaceRoot": "/home/dtech/Projects/kameramani_phx"
     },
@@ -2154,17 +2301,6 @@
     "templates": {
       "templatesByModule": [
         [
-          "KameramaniPhxWeb.Profile.UserProfileLive",
-          [
-            {
-              "moduleName": "KameramaniPhxWeb.Profile.UserProfileLive",
-              "name": "render",
-              "format": "html",
-              "filePath": "/home/dtech/Projects/kameramani_phx/lib/Profile/user_profile_live.ex#render"
-            }
-          ]
-        ],
-        [
           "KameramaniPhxWeb.PageHTML",
           [
             {
@@ -2174,51 +2310,9 @@
               "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/controllers/page_html/home.html.heex"
             }
           ]
-        ],
-        [
-          "KameramaniPhxWeb.Streaming.Settings.StreamTestLive",
-          [
-            {
-              "moduleName": "KameramaniPhxWeb.Streaming.Settings.StreamTestLive",
-              "name": "render",
-              "format": "html",
-              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/stream_test_live.ex#render"
-            }
-          ]
-        ],
-        [
-          "KameramaniPhxWeb.AuthLive",
-          [
-            {
-              "moduleName": "KameramaniPhxWeb.AuthLive",
-              "name": "render",
-              "format": "html",
-              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/auth_live.ex#render"
-            }
-          ]
-        ],
-        [
-          "KameramaniPhxWeb.UserLive.Confirmation",
-          [
-            {
-              "moduleName": "KameramaniPhxWeb.UserLive.Confirmation",
-              "name": "render",
-              "format": "html",
-              "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/user_live/confirmation.ex#render"
-            }
-          ]
         ]
       ],
       "templatesByPath": [
-        [
-          "/home/dtech/Projects/kameramani_phx/lib/Profile/user_profile_live.ex#render",
-          {
-            "moduleName": "KameramaniPhxWeb.Profile.UserProfileLive",
-            "name": "render",
-            "format": "html",
-            "filePath": "/home/dtech/Projects/kameramani_phx/lib/Profile/user_profile_live.ex#render"
-          }
-        ],
         [
           "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/controllers/page_html/home.html.heex",
           {
@@ -2227,86 +2321,476 @@
             "format": "html",
             "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/controllers/page_html/home.html.heex"
           }
-        ],
-        [
-          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/stream_test_live.ex#render",
-          {
-            "moduleName": "KameramaniPhxWeb.Streaming.Settings.StreamTestLive",
-            "name": "render",
-            "format": "html",
-            "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/stream_test_live.ex#render"
-          }
-        ],
-        [
-          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/auth_live.ex#render",
-          {
-            "moduleName": "KameramaniPhxWeb.AuthLive",
-            "name": "render",
-            "format": "html",
-            "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/auth_live.ex#render"
-          }
-        ],
-        [
-          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/user_live/confirmation.ex#render",
-          {
-            "moduleName": "KameramaniPhxWeb.UserLive.Confirmation",
-            "name": "render",
-            "format": "html",
-            "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/user_live/confirmation.ex#render"
-          }
         ]
       ],
       "moduleByFile": [
         [
-          "/home/dtech/Projects/kameramani_phx/lib/Profile/user_profile_live.ex",
-          "KameramaniPhxWeb.Profile.UserProfileLive"
-        ],
-        [
           "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/controllers/page_html.ex",
           "KameramaniPhxWeb.PageHTML"
-        ],
-        [
-          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/stream_test_live.ex",
-          "KameramaniPhxWeb.Streaming.Settings.StreamTestLive"
-        ],
-        [
-          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/auth_live.ex",
-          "KameramaniPhxWeb.AuthLive"
-        ],
-        [
-          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/user_live/confirmation.ex",
-          "KameramaniPhxWeb.UserLive.Confirmation"
         ]
       ],
       "fileHashes": {
-        "/home/dtech/Projects/kameramani_phx/lib/Profile/user_profile_live.ex": "813f076661237e285f7624770608d298cf65a7d5",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/controllers/page_html.ex": "1afd139ee94f8598195eb8365e7aea32ed63937f",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/stream_test_live.ex": "1e72877bca3d330e0e4fac75580cf82284bf02c6",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/auth_live.ex": "e16cacec7d327ee9c393a2c20bde89ed91d1f467",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/user_live/confirmation.ex": "8cf2b19d41c65624b01f184ae74ede1cc777a338"
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/controllers/page_html.ex": "1afd139ee94f8598195eb8365e7aea32ed63937f"
       },
       "workspaceRoot": "/home/dtech/Projects/kameramani_phx"
     },
     "liveview": {
-      "liveViews": [],
+      "liveViews": [
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/studio_live.ex",
+          {
+            "module": "KameramaniPhxWeb.StudioLive",
+            "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/studio_live.ex",
+            "functions": [
+              {
+                "line": 116,
+                "name": "handle_params",
+                "type": "handle_params",
+                "module_name": "KameramaniPhxWeb.StudioLive"
+              },
+              {
+                "line": 97,
+                "name": "reset_stream",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.StudioLive",
+                "event_name": "reset_stream"
+              },
+              {
+                "line": 93,
+                "name": "select_category",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.StudioLive",
+                "event_name": "select_category"
+              },
+              {
+                "line": 54,
+                "name": "create_stream",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.StudioLive",
+                "event_name": "create_stream"
+              },
+              {
+                "line": 45,
+                "name": "validate",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.StudioLive",
+                "event_name": "validate"
+              },
+              {
+                "line": 33,
+                "name": "stream_status_updated",
+                "type": "handle_info",
+                "module_name": "KameramaniPhxWeb.StudioLive",
+                "event_name": "stream_status_updated"
+              },
+              {
+                "line": 11,
+                "name": "mount",
+                "type": "mount",
+                "module_name": "KameramaniPhxWeb.StudioLive"
+              }
+            ]
+          }
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/chat_live.ex",
+          {
+            "module": "KameramaniPhxWeb.ChatLive",
+            "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/chat_live.ex",
+            "functions": [
+              {
+                "line": 135,
+                "name": "stream_status",
+                "type": "handle_info",
+                "module_name": "KameramaniPhxWeb.ChatLive",
+                "event_name": "stream_status"
+              },
+              {
+                "line": 131,
+                "name": "new_message",
+                "type": "handle_info",
+                "module_name": "KameramaniPhxWeb.ChatLive",
+                "event_name": "new_message"
+              },
+              {
+                "line": 124,
+                "name": "handle_params",
+                "type": "handle_params",
+                "module_name": "KameramaniPhxWeb.ChatLive"
+              },
+              {
+                "line": 119,
+                "name": "validate",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.ChatLive",
+                "event_name": "validate"
+              },
+              {
+                "line": 83,
+                "name": "send_message",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.ChatLive",
+                "event_name": "send_message"
+              },
+              {
+                "line": 27,
+                "name": "mount",
+                "type": "mount",
+                "module_name": "KameramaniPhxWeb.ChatLive"
+              }
+            ]
+          }
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Profile/user_profile_live.ex",
+          {
+            "module": "KameramaniPhxWeb.Profile.UserProfileLive",
+            "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Profile/user_profile_live.ex",
+            "functions": [
+              {
+                "line": 16,
+                "name": "render",
+                "type": "render",
+                "module_name": "KameramaniPhxWeb.Profile.UserProfileLive"
+              },
+              {
+                "line": 5,
+                "name": "mount",
+                "type": "mount",
+                "module_name": "KameramaniPhxWeb.Profile.UserProfileLive"
+              }
+            ]
+          }
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/auth_live.ex",
+          {
+            "module": "KameramaniPhxWeb.AuthLive",
+            "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/auth_live.ex",
+            "functions": [
+              {
+                "line": 98,
+                "name": "render",
+                "type": "render",
+                "module_name": "KameramaniPhxWeb.AuthLive"
+              },
+              {
+                "line": 93,
+                "name": "login",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.AuthLive",
+                "event_name": "login"
+              },
+              {
+                "line": 72,
+                "name": "validate_log",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.AuthLive",
+                "event_name": "validate_log"
+              },
+              {
+                "line": 67,
+                "name": "register",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.AuthLive",
+                "event_name": "register"
+              },
+              {
+                "line": 25,
+                "name": "validate_entry",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.AuthLive",
+                "event_name": "validate_entry"
+              },
+              {
+                "line": 19,
+                "name": "mount",
+                "type": "mount",
+                "module_name": "KameramaniPhxWeb.AuthLive"
+              }
+            ]
+          }
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/new_auth_live.ex",
+          {
+            "module": "KameramaniPhxWeb.NewAuthLive",
+            "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/new_auth_live.ex",
+            "functions": [
+              {
+                "line": 70,
+                "name": "handle_params",
+                "type": "handle_params",
+                "module_name": "KameramaniPhxWeb.NewAuthLive"
+              },
+              {
+                "line": 57,
+                "name": "register",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.NewAuthLive",
+                "event_name": "register"
+              },
+              {
+                "line": 52,
+                "name": "validate_log",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.NewAuthLive",
+                "event_name": "validate_log"
+              },
+              {
+                "line": 47,
+                "name": "validate_reg",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.NewAuthLive",
+                "event_name": "validate_reg"
+              },
+              {
+                "line": 43,
+                "name": "set_panel_register",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.NewAuthLive",
+                "event_name": "set_panel_register"
+              },
+              {
+                "line": 39,
+                "name": "set_panel_login",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.NewAuthLive",
+                "event_name": "set_panel_login"
+              },
+              {
+                "line": 35,
+                "name": "toggle_password",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.NewAuthLive",
+                "event_name": "toggle_password"
+              },
+              {
+                "line": 13,
+                "name": "mount",
+                "type": "mount",
+                "module_name": "KameramaniPhxWeb.NewAuthLive"
+              }
+            ]
+          }
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/category_live.ex",
+          {
+            "module": "KameramaniPhxWeb.CategoryLive",
+            "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/category_live.ex",
+            "functions": [
+              {
+                "line": 4,
+                "name": "mount",
+                "type": "mount",
+                "module_name": "KameramaniPhxWeb.CategoryLive"
+              }
+            ]
+          }
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/stream_test_live.ex",
+          {
+            "module": "KameramaniPhxWeb.Streaming.Settings.StreamTestLive",
+            "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/stream_test_live.ex",
+            "functions": [
+              {
+                "line": 4,
+                "name": "render",
+                "type": "render",
+                "module_name": "KameramaniPhxWeb.Streaming.Settings.StreamTestLive"
+              }
+            ]
+          }
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/Settings/stream_key_live.ex",
+          {
+            "module": "KameramaniPhxWeb.Streaming.Settings.StreamKeyLive",
+            "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/Settings/stream_key_live.ex",
+            "functions": [
+              {
+                "line": 74,
+                "name": "handle_params",
+                "type": "handle_params",
+                "module_name": "KameramaniPhxWeb.Streaming.Settings.StreamKeyLive"
+              },
+              {
+                "line": 69,
+                "name": "copy_stream_key",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.Streaming.Settings.StreamKeyLive",
+                "event_name": "copy_stream_key"
+              },
+              {
+                "line": 65,
+                "name": "toggle_key_visibility",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.Streaming.Settings.StreamKeyLive",
+                "event_name": "toggle_key_visibility"
+              },
+              {
+                "line": 32,
+                "name": "generate_stream_key",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.Streaming.Settings.StreamKeyLive",
+                "event_name": "generate_stream_key"
+              },
+              {
+                "line": 10,
+                "name": "mount",
+                "type": "mount",
+                "module_name": "KameramaniPhxWeb.Streaming.Settings.StreamKeyLive"
+              }
+            ]
+          }
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/landing_live.ex",
+          {
+            "module": "KameramaniPhxWeb.LandingLive",
+            "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/landing_live.ex",
+            "functions": [
+              {
+                "line": 74,
+                "name": "handle_params",
+                "type": "handle_params",
+                "module_name": "KameramaniPhxWeb.LandingLive"
+              },
+              {
+                "line": 35,
+                "name": "stream_status_updated",
+                "type": "handle_info",
+                "module_name": "KameramaniPhxWeb.LandingLive",
+                "event_name": "stream_status_updated"
+              },
+              {
+                "line": 10,
+                "name": "mount",
+                "type": "mount",
+                "module_name": "KameramaniPhxWeb.LandingLive"
+              }
+            ]
+          }
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/Settings/stream_settings_live.ex",
+          {
+            "module": "KameramaniPhxWeb.Streaming.Settings.StreamSettingsLive",
+            "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/Settings/stream_settings_live.ex",
+            "functions": [
+              {
+                "line": 4,
+                "name": "mount",
+                "type": "mount",
+                "module_name": "KameramaniPhxWeb.Streaming.Settings.StreamSettingsLive"
+              }
+            ]
+          }
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/user_live/confirmation.ex",
+          {
+            "module": "KameramaniPhxWeb.UserLive.Confirmation",
+            "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/user_live/confirmation.ex",
+            "functions": [
+              {
+                "line": 89,
+                "name": "submit",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.UserLive.Confirmation",
+                "event_name": "submit"
+              },
+              {
+                "line": 74,
+                "name": "mount",
+                "type": "mount",
+                "module_name": "KameramaniPhxWeb.UserLive.Confirmation"
+              },
+              {
+                "line": 7,
+                "name": "render",
+                "type": "render",
+                "module_name": "KameramaniPhxWeb.UserLive.Confirmation"
+              }
+            ]
+          }
+        ],
+        [
+          "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/user_live/user_settings_live.ex",
+          {
+            "module": "KameramaniPhxWeb.UserLive.UserSettingsLive",
+            "filePath": "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/user_live/user_settings_live.ex",
+            "functions": [
+              {
+                "line": 108,
+                "name": "update_dp",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.UserLive.UserSettingsLive",
+                "event_name": "update_dp"
+              },
+              {
+                "line": 93,
+                "name": "update_password",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.UserLive.UserSettingsLive",
+                "event_name": "update_password"
+              },
+              {
+                "line": 81,
+                "name": "validate_password",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.UserLive.UserSettingsLive",
+                "event_name": "validate_password"
+              },
+              {
+                "line": 60,
+                "name": "update_email",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.UserLive.UserSettingsLive",
+                "event_name": "update_email"
+              },
+              {
+                "line": 48,
+                "name": "validate_email",
+                "type": "handle_event",
+                "module_name": "KameramaniPhxWeb.UserLive.UserSettingsLive",
+                "event_name": "validate_email"
+              },
+              {
+                "line": 20,
+                "name": "mount",
+                "type": "mount",
+                "module_name": "KameramaniPhxWeb.UserLive.UserSettingsLive"
+              },
+              {
+                "line": 7,
+                "name": "mount",
+                "type": "mount",
+                "module_name": "KameramaniPhxWeb.UserLive.UserSettingsLive"
+              }
+            ]
+          }
+        ]
+      ],
       "fileHashes": {
-        "/home/dtech/Projects/kameramani_phx/lib/Profile/user_profile_live.ex": "813f076661237e285f7624770608d298cf65a7d5",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Profile/user_profile_live.ex": "847b716f769fbe53b54ec14a4a6e3aafb97b2f9e",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/Settings/stream_key_live.ex": "c38c106f6b944aa5998749f1a87fd1bd8a67529c",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/Settings/stream_settings_live.ex": "f8484ad7c968d067d41a0dfaa0b44c36677ce1b6",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/stream_test_live.ex": "1e72877bca3d330e0e4fac75580cf82284bf02c6",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/auth_live.ex": "e16cacec7d327ee9c393a2c20bde89ed91d1f467",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/category_live.ex": "ce078ca11aab8b31a1a7c24492f5cb5302c92efb",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/chat_live.ex": "733a0964d892044561857e63560086cda818a07b",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/studio_live.ex": "7fec577ac008ea581d9bb29925faab839cdaab95",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/chat_live.ex": "e7752b1dd5bc436f75d28df4e756c25f06cb9af8",
         "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/directory_live.ex": "4ef4dae5a4df027f81d4d55e42a34665b00fdcb1",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/landing_live.ex": "30f7fa55f0b42d8e9f9aa6d36537abcbd4cfce17",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Profile/user_profile_live.ex": "270133c2e84d7b38c03a0668499a62f4f7b6a315",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/auth_live.ex": "e16cacec7d327ee9c393a2c20bde89ed91d1f467",
         "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/new_auth_live.ex": "a83cc9a9e1e8ea1eb747dda2974d25c88af9bb76",
-        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/studio_live.ex": "8965e58b37724f35e19039585c5233ff24aaea2b",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/category_live.ex": "ce078ca11aab8b31a1a7c24492f5cb5302c92efb",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/stream_test_live.ex": "1e72877bca3d330e0e4fac75580cf82284bf02c6",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/Settings/stream_key_live.ex": "c38c106f6b944aa5998749f1a87fd1bd8a67529c",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/landing_live.ex": "222aa4da0143a3c4ec96a721f978d595bbc4b1db",
+        "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/Streaming/Settings/stream_settings_live.ex": "f8484ad7c968d067d41a0dfaa0b44c36677ce1b6",
+        "/home/dtech/Projects/kameramani_phx/test/kameramani_phx_web/live/user_live/confirmation_test.exs": "cb0bd2c2d3478c7b41289816c4c659e09801cd7e",
+        "/home/dtech/Projects/kameramani_phx/test/kameramani_phx_web/live/user_live/registration_test.exs": "424c9cbe33d20234880fc4a821f72c463d9598ea",
+        "/home/dtech/Projects/kameramani_phx/test/kameramani_phx_web/live/user_live/login_test.exs": "50f1a98a7e52034857fae706bc0a0b21e1b8cc04",
         "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/user_live/confirmation.ex": "8cf2b19d41c65624b01f184ae74ede1cc777a338",
         "/home/dtech/Projects/kameramani_phx/lib/kameramani_phx_web/live/user_live/user_settings_live.ex": "f98971083b2366a2decf3f108c96c60c3a3d06ae",
-        "/home/dtech/Projects/kameramani_phx/test/kameramani_phx_web/live/user_live/confirmation_test.exs": "cb0bd2c2d3478c7b41289816c4c659e09801cd7e",
-        "/home/dtech/Projects/kameramani_phx/test/kameramani_phx_web/live/user_live/login_test.exs": "50f1a98a7e52034857fae706bc0a0b21e1b8cc04",
-        "/home/dtech/Projects/kameramani_phx/test/kameramani_phx_web/live/user_live/registration_test.exs": "424c9cbe33d20234880fc4a821f72c463d9598ea",
         "/home/dtech/Projects/kameramani_phx/test/kameramani_phx_web/live/user_live/settings_test.exs": "9542c88c24525d92792a3d51993f1b983fdadda7"
       },
       "workspaceRoot": "/home/dtech/Projects/kameramani_phx"

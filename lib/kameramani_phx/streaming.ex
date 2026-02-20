@@ -9,10 +9,9 @@ defmodule KameramaniPhx.Streaming do
   alias KameramaniPhx.Streaming.Stream
 
   def get_active_stream_for_user(user_id) do
-    case Repo.all(from s in Stream, where: s.user_id == ^user_id) do
-      [] -> nil
-      [stream | _rest] -> stream
-    end
+    Stream
+    |> where([s], s.user_id == ^user_id)
+    |> Repo.one()
   end
 
   def get_stream_by_key(stream_key) do
@@ -47,6 +46,11 @@ defmodule KameramaniPhx.Streaming do
 
   """
   def get_stream!(id), do: Repo.get!(Stream, id)
+
+  #getting streams by vategory
+  def get_streams_by_category(category) do
+    Repo.all(from s in Stream, where: ^category in s.categories)
+  end
 
   # get the stream_key for a given stream id
 
@@ -127,9 +131,27 @@ defmodule KameramaniPhx.Streaming do
 
   """
   def update_stream(%Stream{} = stream, attrs) do
-    stream
-    |> Stream.changeset(attrs)
-    |> Repo.update()
+    case stream
+         |> Stream.changeset(attrs)
+         |> Repo.update() do
+      {:ok, updated_stream} ->
+        Phoenix.PubSub.broadcast(
+          KameramaniPhx.PubSub,
+          "streams:#{updated_stream.id}",
+          {:stream_status_updated, updated_stream}
+        )
+
+        Phoenix.PubSub.broadcast(
+          KameramaniPhx.PubSub,
+          "streams:all",
+          {:stream_status_updated, updated_stream}
+        )
+
+        {:ok, updated_stream}
+
+      error ->
+        error
+    end
   end
 
   @doc """

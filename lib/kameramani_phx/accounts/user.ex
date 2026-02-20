@@ -91,15 +91,6 @@ defmodule KameramaniPhx.Accounts.User do
     end
   end
 
-  defp maybe_validate_unique_email(changeset, opts) do
-    if Keyword.get(opts, :validate_unique, true) do
-      unsafe_validate_unique(changeset, :email, KameramaniPhx.Repo)
-      |> unique_constraint(:email)
-    else
-      changeset
-    end
-  end
-
   defp validate_password(changeset, opts) do
     changeset =
       changeset

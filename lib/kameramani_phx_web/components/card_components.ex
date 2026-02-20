@@ -7,14 +7,19 @@ defmodule KameramaniPhxWeb.CardComponents do
   attr :tags, :string, required: true
   attr :viewer_count, :integer, required: true
   attr :avatar, :string, default: "https://ui-avatars.com/api/?background=random"
-  attr :id, :integer, required: true
+  attr :id, :any, required: true
+  attr :is_live, :boolean, default: false
 
   def card(assigns) do
     ~H"""
     <.link patch={~p"/watch/#{@streamer}"}>
       <article>
-        <div class="relative aspect-video w-full bg-gradient-to-tl from-black to-slate-700 hover:scale-105 hover:z-50 hover:shadow-2xl transition-all duration-300 ease-in-out rounded-lg">
-          <div class="absolute top-1 left-1 px-1 text-red-600 text-xs">LIVE</div>
+        <div class="relative aspect-video w-full bg-gradient-to-tl from-black to-slate-700 hover:scale-105 hover:z-50 hover:shadow-2xl transition-all duration-300 ease-in-out rounded-lg overflow-hidden">
+          <%= if @is_live do %>
+            <div class="absolute top-2 left-2 bg-red-600 text-white font-black text-[10px] px-2 py-0.5 rounded shadow-lg">
+              LIVE
+            </div>
+          <% end %>
 
           <div class="absolute flex bottom-1 right-1 bg-black/60 rounded-full text-xs px-1 text-white">
             <.svg variant="eye" class="h-4 w-4 text-white mb-[0.3rem] mx-1" />{@viewer_count}

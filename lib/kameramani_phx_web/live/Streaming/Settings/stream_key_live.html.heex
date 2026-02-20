@@ -72,8 +72,15 @@
           class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold border-none rounded-lg px-6 py-3 transition-all active:scale-95 shadow-lg shadow-indigo-500/20"
           phx-disable-with="Generating..."
         >
-          Get Stream Key
+          {if @stream_key, do: "Regenerate Key", else: "Generate Key"}
         </button>
+
+        <.link
+          navigate={~p"/studio"}
+          class="bg-white/5 hover:bg-white/10 text-white font-bold border-none rounded-lg px-6 py-3 transition-all active:scale-95 border border-white/10"
+        >
+          Go to Studio
+        </.link>
       </div>
     </div>
   </main>

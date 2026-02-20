@@ -27,7 +27,7 @@ defmodule KameramaniPhxWeb.StudioLive do
      |> assign(:categories, categories)
      |> assign(:current_stream, stream)
      |> assign(:stream_is_live, stream && stream.is_live)
-     |> assign(selected_category_id: nil)}
+     |> assign(selected_category_name: nil)}
   end
 
   def handle_info({:stream_status_updated, %Streaming.Stream{} = updated_stream}, socket) do
@@ -90,8 +90,27 @@ defmodule KameramaniPhxWeb.StudioLive do
     end
   end
 
-  def handle_event("select_category", %{"category_id" => category_id}, socket) do
-    {:noreply, assign(socket, selected_category_id: category_id)}
+  def handle_event("select_category", %{"category_name" => category_name}, socket) do
+    {:noreply, assign(socket, selected_category_name: category_name)}
+  end
+
+  def handle_event("reset_stream", _params, socket) do
+    user = socket.assigns.current_user.user
+    current_stream = socket.assigns.current_stream
+
+    if current_stream && !current_stream.is_live do
+      # Delete the old stream entry so they can start fresh
+      Streaming.delete_stream(current_stream)
+    end
+
+    changeset = Streaming.change_stream(%Streaming.Stream{}, %{user_id: user.id})
+
+    {:noreply,
+     socket
+     |> assign(:current_stream, nil)
+     |> assign(:stream_is_live, false)
+     |> assign(:stream_form, to_form(changeset))
+     |> assign(:selected_category_name, nil)}
   end
 
   def handle_params(_params, _url, socket) do

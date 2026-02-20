@@ -2,30 +2,19 @@ defmodule KameramaniPhx.RTMPIngestListener do
   use Supervisor
   require Logger
 
-  alias Membrane.RTMP.SourceBin
-
-  def start_link(opts) do
-    Supervisor.start_link(__MODULE__, :ok, opts)
-  end
+  def start_link(opts), do: Supervisor.start_link(__MODULE__, :ok, opts)
 
   @impl true
   def init(:ok) do
-    Logger.info("Starting RTMP Ingest Listener (Supervisor)...")
+    Logger.info("🚀 Starting RTMP Server on port 1935")
 
     children = [
       %{
-        id: :rtmp_ingest_source_bin,
-        start:
-          {SourceBin, :start_link,
-           [
-             %{
-               url: "rtmp://localhost:1935/live",
-               client_handler: KameramaniPhx.RTMPIngestListener.ClientHandler
-             }
-           ]},
-        type: :worker,
-        restart: :permanent,
-        shutdown: 5000
+        id: :rtmp_server,
+        start: {Membrane.RTMPServer, :start_link, [[
+          port: 1935,
+          handle_new_client: &KameramaniPhx.RTMPIngestListener.ClientHandler.handle_new_client/3
+        ]]}
       }
     ]
 

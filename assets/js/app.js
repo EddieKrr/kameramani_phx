@@ -28,13 +28,6 @@ import topbar from "../vendor/topbar"
 import Hls from "hls.js"
 window.Hls = Hls
 
-const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-const liveSocket = new LiveSocket("/live", Socket, {
-  longPollFallbackMs: 2500,
-  params: { _csrf_token: csrfToken },
-    hooks: {...colocatedHooks, ...Hooks}, // Merge your custom Hooks here
-})
-
 //my hooks
 let Hooks = {}
 Hooks.ChatScroll = {
@@ -85,6 +78,13 @@ Hooks.VideoPlayer = {
     }
   }
 };
+
+const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+const liveSocket = new LiveSocket("/live", Socket, {
+  longPollFallbackMs: 2500,
+  params: { _csrf_token: csrfToken },
+    hooks: {...colocatedHooks, ...Hooks}, // Merge your custom Hooks here
+})
 // Show progress bar on live navigation and form submits
 topbar.config({ barColors: { 0: "#29d" }, shadowColor: "rgba(0, 0, 0, .3)" })
 window.addEventListener("phx:page-loading-start", _info => topbar.show(300))

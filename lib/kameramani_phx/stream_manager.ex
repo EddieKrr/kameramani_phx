@@ -7,10 +7,12 @@ defmodule KameramaniPhx.StreamManager do
 
   def add_stream(stream_id, pipeline_id) do
     Agent.update(__MODULE__, fn state -> Map.put(state, stream_id, pipeline_id) end)
+    Phoenix.PubSub.broadcast(KameramaniPhx.PubSub, "stream_state:#{stream_id}", {:stream_status, :online})
   end
 
   def remove_stream(stream_id) do
     Agent.update(__MODULE__, fn state -> Map.delete(state, stream_id) end)
+    Phoenix.PubSub.broadcast(KameramaniPhx.PubSub, "stream_state:#{stream_id}", {:stream_status, :offline})
   end
 
   def get_pipeline_id(stream_id) do

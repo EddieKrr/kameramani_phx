@@ -14,28 +14,44 @@
 
   <main class="flex-1 flex flex-col min-w-0 bg-black overflow-y-auto">
     <div class="w-full aspect-video bg-[#000] relative group ring-1 ring-white/5 shadow-2xl">
-      <div class="absolute inset-0 flex items-center justify-center bg-[#0e0e10]">
-        <div class="text-center group-hover:scale-105 transition-transform duration-500">
-          <div class="relative inline-block">
-            <div class="absolute inset-0 bg-indigo-500 blur-2xl opacity-20 animate-pulse"></div>
-            <.svg variant="camera-slash" class="h-20 w-20 text-gray-800 relative" />
+      <%= if @is_live do %>
+        <video
+          id="video-player"
+          phx-hook="VideoPlayer"
+          data-hls-url={~p"/live/#{@stream_id}/index.m3u8"}
+          class="w-full h-full object-contain"
+          controls
+          autoplay
+          muted
+          playsinline
+        >
+        </video>
+      <% else %>
+        <div class="absolute inset-0 flex items-center justify-center bg-[#0e0e10]">
+          <div class="text-center group-hover:scale-105 transition-transform duration-500">
+            <div class="relative inline-block">
+              <div class="absolute inset-0 bg-indigo-500 blur-2xl opacity-20 animate-pulse"></div>
+              <.svg variant="camera-slash" class="h-20 w-20 text-gray-800 relative" />
+            </div>
+
+            <p class="mt-4 text-gray-500 font-medium tracking-tight">
+              Stream is offline, waiting for connection from
+              <span class="text-indigo-400 font-bold">@{@streamer_name}</span>
+            </p>
           </div>
-
-          <p class="mt-4 text-gray-500 font-medium tracking-tight">
-            Waiting for signal from
-            <span class="text-indigo-400 font-bold">@{@streamer_name}</span>
-          </p>
         </div>
-      </div>
+      <% end %>
 
-      <div class="absolute top-6 left-6 flex items-center gap-2">
-        <span class="bg-red-600 text-[10px] font-black px-2 py-0.5 rounded shadow-lg animate-pulse">
-          LIVE
-        </span>
-        <span class="bg-black/60 backdrop-blur-md text-[10px] font-bold px-2 py-0.5 rounded border border-white/10 italic">
-          00:00:00
-        </span>
-      </div>
+      <%= if @is_live do %>
+        <div class="absolute top-6 left-6 flex items-center gap-2">
+          <span class="bg-red-600 text-[10px] font-black px-2 py-0.5 rounded shadow-lg animate-pulse">
+            LIVE
+          </span>
+          <span class="bg-black/60 backdrop-blur-md text-[10px] font-bold px-2 py-0.5 rounded border border-white/10 italic">
+            00:00:00
+          </span>
+        </div>
+      <% end %>
     </div>
 
     <div class="p-6 bg-[#0e0e10] border-t border-white/5">
@@ -54,7 +70,7 @@
               {@streamer_name}
             </h1>
             <h1 class="text-l font-bold tracking-tight tracking-widest">
-              {@stream_name} - {@category}
+              {@stream_name} - {@category_name}
             </h1>
 
             <div class="flex items-center gap-3 text-xs font-medium text-gray-400 mt-1">
@@ -85,6 +101,7 @@
       class="flex-1 overflow-y-auto p-2 space-y-0.5 custom-scrollbar"
       id="chat-messages"
       phx-update="stream"
+      phx-hook="ChatScroll"
     >
       <div :for={{dom_id, msg} <- @streams.messages} id={dom_id} class="group">
         <div class="px-2 py-1.5 rounded hover:bg-white/[0.03] transition-colors text-[13px]">

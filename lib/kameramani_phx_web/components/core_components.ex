@@ -45,6 +45,7 @@ defmodule KameramaniPhxWeb.CoreComponents do
   attr :flash, :map, default: %{}, doc: "the map of flash messages to display"
   attr :title, :string, default: nil
   attr :kind, :atom, values: [:info, :error], doc: "used for styling and flash lookup"
+  attr :class, :any, default: nil
   attr :rest, :global, doc: "the arbitrary HTML attributes to add to the flash container"
 
   slot :inner_block, doc: "the optional inner block that renders the flash message"
@@ -58,23 +59,42 @@ defmodule KameramaniPhxWeb.CoreComponents do
       id={@id}
       phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
       role="alert"
-      class="toast toast-top toast-end z-50"
+      class={["group pointer-events-auto", @class]}
       {@rest}
     >
       <div class={[
-        "alert w-80 sm:w-96 max-w-80 sm:max-w-96 text-wrap",
-        @kind == :info && "alert-info",
-        @kind == :error && "alert-error"
+        "relative overflow-hidden rounded-2xl p-4 shadow-2xl transition-all duration-300 hover:scale-[1.02]",
+        "border backdrop-blur-md flex items-start gap-4 min-w-[320px] max-w-md",
+        @kind == :info && "bg-indigo-500/10 border-indigo-500/20 text-indigo-100",
+        @kind == :error && "bg-rose-500/10 border-rose-500/20 text-rose-100"
       ]}>
-        <.svg :if={@kind == :info} variant="info" class="size-5 shrink-0" />
-        <.svg :if={@kind == :error} variant="exclamation" class="size-5 shrink-0" />
-        <div>
-          <p :if={@title} class="font-semibold">{@title}</p>
-          <p>{msg}</p>
+        <%!-- Decorative background glow --%>
+        <div class={[
+          "absolute -right-4 -top-4 size-24 blur-3xl opacity-20 transition-opacity group-hover:opacity-40",
+          @kind == :info && "bg-indigo-400",
+          @kind == :error && "bg-rose-400"
+        ]} />
+
+        <div class={[
+          "flex size-10 shrink-0 items-center justify-center rounded-xl",
+          @kind == :info && "bg-indigo-500/20 text-indigo-400",
+          @kind == :error && "bg-rose-500/20 text-rose-400"
+        ]}>
+          <.svg :if={@kind == :info} variant="info" class="size-6" />
+          <.svg :if={@kind == :error} variant="exclamation" class="size-6" />
         </div>
-        <div class="flex-1" />
-        <button type="button" class="group self-start cursor-pointer" aria-label={gettext("close")}>
-          <.svg variant="x" class="size-5 opacity-40 group-hover:opacity-70" />
+
+        <div class="flex-1 pt-0.5">
+          <p :if={@title} class="text-sm font-bold tracking-tight mb-0.5">{@title}</p>
+          <p class="text-[13px] leading-relaxed opacity-90 font-medium">{msg}</p>
+        </div>
+
+        <button
+          type="button"
+          class="shrink-0 rounded-lg p-1 transition-colors hover:bg-white/5 opacity-40 hover:opacity-100"
+          aria-label={gettext("close")}
+        >
+          <.svg variant="x" class="size-4" />
         </button>
       </div>
     </div>
@@ -289,20 +309,18 @@ defmodule KameramaniPhxWeb.CoreComponents do
   def input(assigns) do
     ~H"""
     <div class="fieldset mb-2">
-      <label>
-        <span :if={@label} class="label mb-1">{@label}</span>
-        <input
-          type={@type}
-          name={@name}
-          id={@id}
-          value={Phoenix.HTML.Form.normalize_value(@type, @value)}
-          class={[
-            @class || "w-full input",
-            @errors != [] && (@error_class || "input-error")
-          ]}
-          {@rest}
-        />
-      </label>
+      <label :if={@label} for={@id} class="label mb-1">{@label}</label>
+      <input
+        type={@type}
+        name={@name}
+        id={@id}
+        value={Phoenix.HTML.Form.normalize_value(@type, @value)}
+        class={[
+          @class || "w-full input",
+          @errors != [] && (@error_class || "input-error")
+        ]}
+        {@rest}
+      />
       <.error :for={msg <- @errors}>{msg}</.error>
     </div>
     """
