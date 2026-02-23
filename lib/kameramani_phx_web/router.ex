@@ -13,6 +13,15 @@ defmodule KameramaniPhxWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user_for_user
+    plug :put_guest_id
+  end
+
+  defp put_guest_id(conn, _opts) do
+    if get_session(conn, :live_socket_id) || get_session(conn, :guest_id) do
+      conn
+    else
+      put_session(conn, :guest_id, "guest_#{Ecto.UUID.generate()}")
+    end
   end
 
   pipeline :api do
