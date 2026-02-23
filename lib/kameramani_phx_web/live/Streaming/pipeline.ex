@@ -1,52 +1,46 @@
 defmodule KameramaniPhxWeb.Streaming.Pipeline do
   use Membrane.Pipeline
   import Membrane.ChildrenSpec
-  # New import
-  import Membrane.Pad
+  require Logger
 
-  # These aliases ensure the compiler knows exactly where to look
-  alias Membrane.RTMP.SourceBin
   alias Membrane.H264.Parser, as: H264Parser
   alias Membrane.HTTPAdaptiveStream.SinkBin
   alias Membrane.HTTPAdaptiveStream.HLS
   alias Membrane.HTTPAdaptiveStream.Storages.FileStorage, as: FileStorage
 
-  def start() do
-    start_link(:my_pipeline, [])
-  end
-
-  def start_link(name, opts) do
-    Membrane.Pipeline.start_link(__MODULE__, name, opts)
+  def start_link(id, hls_dir) do
+    # Use Membrane's start_link instead of GenServer
+    Membrane.Pipeline.start_link(__MODULE__, {id, hls_dir}, name: id)
   end
 
   @impl true
-  def handle_init(_ctx, _opts) do
+  def handle_init(_ctx, {_id, hls_dir}) do
+    Logger.info("🎬 Initializing HLS Pipeline in #{hls_dir}")
+
     spec = [
-      # Audio path: src:audio -> sink:input(audio)
-      child(:src, %SourceBin{
-        url: "rtmp://127.0.0.1:1935/live/cube_test"
-      })
-      |> via_out(:audio)
-      |> via_in(Pad.ref(:input, :audio),
-        options: [encoding: :AAC, segment_duration: Membrane.Time.seconds(4)]
-      )
-      |> child(:sink, %SinkBin{
+      # Video parser for H264 input
+      child(:video_parser, %H264Parser{output_alignment: :au}),
+      # HLS sink for output
+      child(:sink, %SinkBin{
         manifest_module: HLS,
         target_window_duration: :infinity,
         persist?: false,
-        storage: %FileStorage{directory: "priv/static/live/cube"}
-      }),
-
-      # Video path: src:video -> parser:input -> sink:input(video)
-      get_child(:src)
-      |> via_out(:video)
-      |> child(:parser, %H264Parser{output_alignment: :au})
-      |> via_in(Pad.ref(:input, :video),
-        options: [encoding: :H264, segment_duration: Membrane.Time.seconds(4)]
-      )
-      |> get_child(:sink)
+        storage: %FileStorage{directory: hls_dir}
+      })
     ]
 
-    {[spec: spec], %{}}
+    links = [
+      # Connect video parser output to sink video input
+      get_child(:video_parser)
+      |> via_out(Pad.ref(:output))
+      |> get_child(:sink)
+      |> via_in(Pad.ref(:video))
+    ]
+
+    {[spec: spec, links: links], %{hls_dir: hls_dir}}
+  end
+
+  def stop_stream(id) do
+    Membrane.Pipeline.terminate(id)
   end
 end

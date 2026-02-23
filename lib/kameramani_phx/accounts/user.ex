@@ -1,5 +1,6 @@
 defmodule KameramaniPhx.Accounts.User do
   use Ecto.Schema
+  @primary_key {:id, :binary_id, autogenerate: true}
   import Ecto.Changeset
   alias KameramaniPhx.Repo
 
@@ -87,15 +88,6 @@ defmodule KameramaniPhx.Accounts.User do
 
       %{} = changeset ->
         changeset
-    end
-  end
-
-  defp maybe_validate_unique_email(changeset, opts) do
-    if Keyword.get(opts, :validate_unique, true) do
-      unsafe_validate_unique(changeset, :email, KameramaniPhx.Repo)
-      |> unique_constraint(:email)
-    else
-      changeset
     end
   end
 

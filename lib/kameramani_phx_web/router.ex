@@ -2,6 +2,8 @@ defmodule KameramaniPhxWeb.Router do
   use KameramaniPhxWeb, :router
 
   import KameramaniPhxWeb.UserAuth
+  # alias KameramaniPhxWeb.Settings # Removed
+  # alias KameramaniPhxWeb.Profile # Removed
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -36,8 +38,6 @@ defmodule KameramaniPhxWeb.Router do
       live "/watch/:username", ChatLive, :show
       live "/register", AuthLive
       live "/categories", CategoryLive
-      live "/users/settings", UserLive.Settings, :edit
-      live "/studio", StudioLive
       live "/directory", DirectoryLive, :index
       live "/directory/:slug", DirectoryLive, :show
     end
@@ -55,13 +55,29 @@ defmodule KameramaniPhxWeb.Router do
   end
 
   # =========================================================
+  # HLS STREAMING ROUTES (Public - for video playback)
+  # =========================================================
+  scope "/" do
+    pipe_through [:browser]
+
+    # Serve HLS playlist and segments
+    forward "/live", Plug.Static,
+      at: "/live",
+      from: :kameramani_phx,
+      gzip: false,
+      only: ~w(m3u8 ts)
+  end
+
+  # =========================================================
   # PROTECTED ROUTES (Must be logged in)
   # =========================================================
-  scope "/", KameramaniPhxWeb do
+  # Removed KameramaniPhxWeb from scope argument
+  scope "/" do
     # 2. USE THE RENAMED PIPELINE HERE
     pipe_through [:browser, :require_auth]
 
-    post "/users/update-password", UserSessionController, :update_password
+    # Full module name
+    post "/users/update-password", KameramaniPhxWeb.UserSessionController, :update_password
 
     # 3. LIVE SESSION FOR AUTH USERS
     live_session :require_authenticated_user,
@@ -69,10 +85,16 @@ defmodule KameramaniPhxWeb.Router do
       layout: {KameramaniPhxWeb.Layouts, :app} do
       # I moved ChatLive here assuming you want chatting to be private.
       # If you want it public, move it back to the top scope!
-      live "/users/profile/:username", Profile.UserProfileLive, :show
-      live "/users/settings", UserLive.Settings, :edit
-      live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
-      live "/stream-settings", Streaming.Settings.StreamTestLive
+      live "/users/profile/:username", KameramaniPhxWeb.Profile.UserProfileLive, :show
+      live "/users/settings", KameramaniPhxWeb.UserLive.UserSettingsLive
+      live "/users/settings/stream-key", KameramaniPhxWeb.Streaming.Settings.StreamKeyLive
+
+      live "/users/settings/confirm-email/:token",
+           KameramaniPhxWeb.UserLive.UserSettingsLive,
+           :confirm_email
+
+      live "/studio", KameramaniPhxWeb.StudioLive
+      live "/stream-settings", KameramaniPhxWeb.Streaming.Settings.StreamSettingsLive
     end
   end
 

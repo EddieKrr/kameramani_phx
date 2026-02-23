@@ -5,21 +5,22 @@ defmodule KameramaniPhx.Application do
 
   use Application
 
-  @impl true
+@impl true
   def start(_type, _args) do
     children = [
       KameramaniPhxWeb.Telemetry,
       KameramaniPhx.Repo,
+      KameramaniPhx.StreamManager,
       {DNSCluster, query: Application.get_env(:kameramani_phx, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: KameramaniPhx.PubSub},
-      # Start a worker by calling: KameramaniPhx.Worker.start_link(arg)
-      # {KameramaniPhx.Worker, arg},
+
+      
+      KameramaniPhx.RTMPIngestListener,
+
       # Start to serve requests, typically the last entry
       KameramaniPhxWeb.Endpoint
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: KameramaniPhx.Supervisor]
     Supervisor.start_link(children, opts)
   end

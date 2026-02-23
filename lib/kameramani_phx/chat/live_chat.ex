@@ -5,7 +5,7 @@ defmodule KameramaniPhx.Chat.LiveChat do
   schema "live_chats" do
     field :body, :string
     # References UUID stream.id
-    belongs_to :stream, KameramaniPhx.Chat.Stream, type: :binary_id
+    belongs_to :stream, KameramaniPhx.Streaming.Stream, type: :binary_id
     # User ID associated with message sender (bigint)
     field :user_id, :id
 
