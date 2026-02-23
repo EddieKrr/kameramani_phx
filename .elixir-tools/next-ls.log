@@ -41175,3 +41175,392 @@ PATH=/home/eddie/.local/share/mise/installs/elixir/1.19.5-otp-28/bin:/home/eddie
 16:51:37.464 id=2942 [debug] handled request client -> server textDocument/codeAction in 1ms
 
 16:52:34.133 [debug] handled notification client -> server textDocument/didClose in 2ms
+
+10:27:45.113 [debug] handled notification client -> server textDocument/didChange in 3ms
+
+10:27:45.181 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:27:45.186 [debug] handled notification client -> server textDocument/didChange in 3ms
+
+10:27:45.188 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:27:45.272 id=3084 [debug] handled request client -> server textDocument/documentSymbol in 27ms
+
+10:27:45.284 id=3085 [debug] handled request client -> server textDocument/codeAction in 7ms
+
+10:27:45.292 id=3086 [debug] handled request client -> server textDocument/documentSymbol in 12ms
+
+10:27:46.242 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 24ms
+
+10:28:19.165 [info] Loading 146 CA(s) from :otp store
+
+10:28:19.443 id=0 [debug] handled request client -> server initialize in 182ms
+
+10:28:19.513 [debug] sent notification server -> client window/logMessage
+
+10:28:19.519 [debug] NextLS v0.23.4 has initialized!
+
+10:28:19.519 [debug] sent notification server -> client window/logMessage
+
+10:28:19.519 [debug] Log file located at /home/eddie/Elixir/kameramani_phx/.elixir-tools/next-ls.log
+
+10:28:19.527 [debug] sent notification server -> client window/logMessage
+
+10:28:19.527 [info] [extension] Credo initializing with options %NextLS.InitOpts.Extensions.Credo{enable: true, cli_options: []}
+
+10:28:19.527 id=3 [debug] sent request server -> client client/registerCapability
+
+10:28:19.553 [debug] handled notification client -> server textDocument/didOpen in 13ms
+
+10:28:19.780 id=1 [debug] handled request client -> server textDocument/codeAction in 220ms
+
+10:28:20.110 id=2 [debug] handled request client -> server textDocument/documentSymbol in 32ms
+
+10:28:20.180 [debug] handled notification client -> server $/setTrace in 5ms
+
+10:28:20.862 [debug] sent notification server -> client window/logMessage
+
+10:28:20.862 [warning] Failed to unzip and install the bundled Elixir archive.
+
+** (MatchError) no match of right hand side value: {"** (ArgumentError) cannot escape #Reference<0.760477295.3307077633.240219>. The supported values are: lists, tuples, maps, atoms, numbers, bitstrings, PIDs and remote functions in the format &Mod.fun/arity\n    (elixir 1.17.3) src/elixir_quote.erl:500: :elixir_quote.argument_error/1\n    (elixir 1.17.3) src/elixir_quote.erl:409: :elixir_quote.do_quote_simple_list/3\n    (elixir 1.17.3) src/elixir_quote.erl:409: :elixir_quote.do_quote_simple_list/3\n    (elixir 1.17.3) src/elixir_quote.erl:149: :elixir_quote.do_escape/2\n    (elixir 1.17.3) src/elixir_quote.erl:355: :elixir_quote.do_quote/2\n    (elixir 1.17.3) src/elixir_quote.erl:409: :elixir_quote.do_quote_simple_list/3\n    (elixir 1.17.3) src/elixir_quote.erl:409: :elixir_quote.do_quote_simple_list/3\n    /home/eddie/Elixir/kameramani_phx/config/config.exs:79: (file)\n", 1}
+    (next_ls 0.23.4) lib/next_ls/runtime/bundled_elixir.ex:55: NextLS.Runtime.BundledElixir.install/2
+    (next_ls 0.23.4) lib/next_ls.ex:882: NextLS.handle_notification/2
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:528: anonymous fn/2 in GenLSP.loop/3
+    (telemetry 1.3.0) /Users/runner/work/next-ls/next-ls/deps/telemetry/src/telemetry.erl:324: :telemetry.span/3
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:524: anonymous fn/4 in GenLSP.loop/3
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:601: anonymous fn/4 in GenLSP.attempt/4
+    (elixir 1.17.3) lib/task/supervised.ex:101: Task.Supervised.invoke_mfa/2
+
+
+
+10:28:20.862 [debug] sent notification server -> client window/logMessage
+
+10:28:20.862 [debug] Booting runtimes...
+
+10:28:20.866 id=194 [debug] sent request server -> client window/workDoneProgress/create
+
+10:28:20.893 [debug] sent notification server -> client window/logMessage
+
+10:28:20.893 [info] Beginning DB migration...
+
+10:28:20.903 [debug] sent notification server -> client window/logMessage
+
+10:28:20.904 [info] Database is on the latest version: 7
+
+10:28:20.904 [debug] sent notification server -> client window/logMessage
+
+10:28:20.904 [info] Finished DB migration...
+
+10:28:20.904 [debug] sent notification server -> client window/logMessage
+
+10:28:20.904 [info] Booting runtime for kameramani_phx.
+
+- elixir: /home/eddie/.local/share/mise/installs/elixir/1.19.5-otp-28/bin/elixir
+- zombie wrapper script: /home/eddie/.local/share/.burrito/next_ls_erts-15.2_0.23.4/lib/next_ls-0.23.4/priv/cmd
+- working_dir: /home/eddie/Elixir/kameramani_phx
+- command: /home/eddie/.local/share/mise/installs/elixir/1.19.5-otp-28/bin/elixir --no-halt --sname nextls-runtime-1771831700903921868 --cookie HHYKTHK2JHVUZI3HDBMAF64GPJFPN4AV4Y7CQDE27SSFQKZPVAFQ==== -S mix loadpaths --no-compile
+
+Environment: 
+
+LSP=nextls
+NEXTLS_PARENT_PID=g1h3KW5leHQtbHMtMTc3MTgzMTY5OTE5NjQ1MTEyOUBFZGRpZXMtTGFwdG9wAAAA6gAAAABpnAGU
+MIX_ENV=dev
+MIX_TARGET=host
+MIX_BUILD_ROOT=.elixir-tools/_build
+ROOTDIR=false
+BINDIR=false
+RELEASE_ROOT=false
+RELEASE_SYS_CONFIG=false
+PATH=/home/eddie/.local/share/mise/installs/elixir/1.19.5-otp-28/bin:/home/eddie/.local/share/.burrito/next_ls_erts-15.2_0.23.4/bin:/home/eddie/.local/bin:/home/eddie/.local/share/mise/installs/elixir/1.19.5-otp-28/bin:/home/eddie/.local/share/mise/installs/elixir/1.19.5-otp-28/.mix/escripts:/home/eddie/.local/share/mise/installs/erlang/28.3.1/bin:/home/eddie/.local/bin:/home/eddie/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/eddie/.spicetify
+
+
+10:28:20.904 [debug] handled notification client -> server initialized in 1398ms
+
+10:28:21.562 [debug] sent notification server -> client $/progress
+
+10:28:21.680 id=3 [debug] handled request client -> server textDocument/codeAction in 1ms
+
+10:28:21.689 id=4 [debug] handled request client -> server textDocument/codeAction in 888µs
+
+10:28:21.689 [debug] handled notification client -> server $/cancelRequest in 9ms
+
+10:28:21.772 [debug] handled notification client -> server $/cancelRequest in 669µs
+
+10:28:21.822 id=6 [debug] handled request client -> server textDocument/codeAction in 917µs
+
+10:28:21.823 [debug] handled notification client -> server $/cancelRequest in 450µs
+
+10:28:21.827 id=7 [debug] handled request client -> server textDocument/codeAction in 665µs
+
+10:28:21.941 [debug] sent notification server -> client window/logMessage
+
+10:28:21.941 [info] Connected to node nextls-runtime-1771831700903921868@Eddies-Laptop
+
+10:28:22.161 id=8 [debug] handled request client -> server textDocument/hover in 32ms
+
+10:28:22.307 [debug] handled notification client -> server $/setTrace in 275µs
+
+10:28:22.331 [debug] handled notification client -> server $/setTrace in 229µs
+
+10:28:22.404 [debug] sent notification server -> client window/logMessage
+
+10:28:22.405 [info] ** (ArgumentError) The module Phoenix.CodeReloader was given as a child to a supervisor but it does not exist
+    (elixir 1.19.5) lib/supervisor.ex:814: Supervisor.init_child/1
+    (elixir 1.19.5) lib/supervisor.ex:922: Supervisor.child_spec/2
+    (elixir 1.19.5) lib/enum.ex:1688: Enum."-map/2-lists^map/1-1-"/2
+    (mix 1.19.5) lib/mix/pubsub.ex:80: Mix.PubSub.listener_supervisor/0
+    (mix 1.19.5) lib/mix/pubsub.ex:62: Mix.PubSub.start_listeners/0
+    (mix 1.19.5) lib/mix/tasks/deps.loadpaths.ex:83: Mix.Tasks.Deps.Loadpaths.run/1
+    (mix 1.19.5) lib/mix/task.ex:499: anonymous fn/3 in Mix.Task.run_task/5
+    (mix 1.19.5) lib/mix/tasks/loadpaths.ex:43: Mix.Tasks.Loadpaths.run/1
+
+
+10:28:22.406 [debug] sent notification server -> client window/logMessage
+
+10:28:22.406 [debug] sent notification server -> client $/progress
+
+10:28:22.406 [error] Bad RPC call to node nextls-runtime-1771831700903921868@Eddies-Laptop: :nodedown
+
+10:28:22.412 [debug] sent notification server -> client window/logMessage
+
+10:28:22.412 [error] Runtime for folder kameramani_phx failed to initialize
+
+10:28:22.417 [debug] sent notification server -> client window/logMessage
+
+10:28:22.417 [info] The runtime for kameramani_phx has successfully shut down.
+
+10:28:22.457 id=9 [debug] handled request client -> server textDocument/codeAction in 623µs
+
+10:28:22.776 id=10 [debug] handled request client -> server textDocument/documentSymbol in 4ms
+
+10:28:22.815 id=11 [debug] handled request client -> server textDocument/codeAction in 663µs
+
+10:28:22.815 [debug] handled notification client -> server $/cancelRequest in 424µs
+
+10:28:22.816 id=12 [debug] handled request client -> server textDocument/codeAction in 661µs
+
+10:28:22.836 [debug] handled notification client -> server $/setTrace in 180µs
+
+10:28:22.970 [debug] handled notification client -> server $/setTrace in 239µs
+
+10:28:23.116 id=13 [debug] handled request client -> server textDocument/codeAction in 619µs
+
+10:28:23.352 [debug] handled notification client -> server $/setTrace in 185µs
+
+10:28:23.448 id=14 [debug] handled request client -> server textDocument/codeAction in 1ms
+
+10:28:23.487 id=15 [debug] handled request client -> server textDocument/documentSymbol in 4ms
+
+10:28:24.782 id=16 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+10:28:24.872 id=17 [debug] handled request client -> server textDocument/codeAction in 580µs
+
+10:28:24.872 [debug] handled notification client -> server $/cancelRequest in 149µs
+
+10:28:24.873 id=18 [debug] handled request client -> server textDocument/codeAction in 422µs
+
+10:28:25.161 id=19 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+10:30:12.596 id=20 [debug] handled request client -> server textDocument/codeAction in 4ms
+
+10:31:08.524 [debug] handled notification client -> server textDocument/didOpen in 656µs
+
+10:31:08.553 id=21 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:31:08.839 id=22 [debug] handled request client -> server textDocument/documentSymbol in 682µs
+
+10:31:12.090 [debug] handled notification client -> server textDocument/didClose in 9ms
+
+10:31:12.154 id=23 [debug] handled request client -> server textDocument/codeAction in 733µs
+
+10:31:12.476 id=24 [debug] handled request client -> server textDocument/documentSymbol in 17ms
+
+10:31:12.738 [debug] handled notification client -> server $/cancelRequest in 364µs
+
+10:31:13.475 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1026ms
+
+10:31:14.316 [debug] handled notification client -> server textDocument/didOpen in 335µs
+
+10:31:14.330 id=26 [debug] handled request client -> server textDocument/documentSymbol in 702µs
+
+10:31:14.622 id=27 [debug] handled request client -> server textDocument/documentSymbol in 619µs
+
+10:31:18.775 [debug] handled notification client -> server textDocument/didClose in 285µs
+
+10:31:18.848 id=28 [debug] handled request client -> server textDocument/codeAction in 862µs
+
+10:31:19.180 id=29 [debug] handled request client -> server textDocument/documentSymbol in 6ms
+
+10:31:20.129 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1002ms
+
+10:31:27.895 [debug] handled notification client -> server textDocument/didOpen in 481µs
+
+10:31:27.923 id=30 [debug] handled request client -> server textDocument/documentSymbol in 658µs
+
+10:31:28.195 id=31 [debug] handled request client -> server textDocument/documentSymbol in 772µs
+
+10:31:30.521 [debug] handled notification client -> server textDocument/didClose in 166µs
+
+10:31:30.577 id=32 [debug] handled request client -> server textDocument/codeAction in 535µs
+
+10:31:30.877 id=33 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+10:31:31.865 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1001ms
+
+10:31:37.728 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 44ms
+
+10:31:37.775 id=34 [debug] handled request client -> server textDocument/codeAction in 1ms
+
+10:31:38.622 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 18ms
+
+10:31:38.711 [debug] handled notification client -> server textDocument/didChange in 109ms
+
+10:31:38.775 id=35 [debug] handled request client -> server textDocument/documentSymbol in 16ms
+
+10:31:38.792 id=36 [debug] handled request client -> server textDocument/documentSymbol in 16ms
+
+10:31:40.187 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 3014ms
+
+10:31:41.624 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 3ms
+
+10:31:44.681 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 3ms
+
+10:31:45.701 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:31:46.051 [debug] handled notification client -> server $/setTrace in 217µs
+
+10:31:50.358 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 4ms
+
+10:31:51.395 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 4ms
+
+10:31:55.630 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 4ms
+
+10:31:56.829 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 22ms
+
+10:32:01.172 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 6ms
+
+10:32:02.386 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 3ms
+
+10:32:06.850 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:32:07.885 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 3ms
+
+10:32:12.606 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 7ms
+
+10:32:12.853 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 2ms
+
+10:32:14.445 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 5ms
+
+10:32:19.647 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 9ms
+
+10:32:20.802 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:32:25.815 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 3ms
+
+10:32:27.096 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 3ms
+
+10:32:31.980 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 7ms
+
+10:32:32.256 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 2ms
+
+10:32:33.457 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 2ms
+
+10:32:37.932 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 3ms
+
+10:32:39.012 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 2ms
+
+10:32:43.554 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 2ms
+
+10:32:44.610 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:32:48.853 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 3ms
+
+10:32:50.035 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 3ms
+
+10:32:54.336 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 2ms
+
+10:32:55.393 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 3ms
+
+10:32:59.931 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 4ms
+
+10:33:01.112 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 2ms
+
+10:33:02.967 [debug] handled notification client -> server textDocument/didOpen in 2ms
+
+10:33:02.983 id=37 [debug] handled request client -> server textDocument/codeAction in 1ms
+
+10:33:03.006 id=38 [debug] handled request client -> server textDocument/documentSymbol in 22ms
+
+10:33:03.272 id=39 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:33:03.343 id=40 [debug] handled request client -> server textDocument/codeAction in 418µs
+
+10:33:05.111 id=41 [debug] handled request client -> server textDocument/codeAction in 456µs
+
+10:33:06.158 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 10ms
+
+10:33:07.475 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 2ms
+
+10:33:07.556 [debug] handled notification client -> server textDocument/didChange in 2ms
+
+10:33:07.557 id=42 [debug] handled request client -> server textDocument/codeAction in 638µs
+
+10:33:07.563 id=43 [debug] handled request client -> server textDocument/documentSymbol in 5ms
+
+10:33:07.850 id=44 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:33:07.981 id=45 [debug] handled request client -> server textDocument/codeAction in 584µs
+
+10:33:08.342 id=46 [debug] handled request client -> server textDocument/codeAction in 597µs
+
+10:33:08.524 [debug] handled notification client -> server textDocument/didSave in 7ms
+
+10:33:09.028 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 2ms
+
+10:33:09.073 [debug] handled notification client -> server $/cancelRequest in 393µs
+
+10:33:10.092 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:33:12.500 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 4ms
+
+10:33:13.707 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:33:16.281 [debug] handled notification client -> server textDocument/didChange in 728µs
+
+10:33:16.390 id=48 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:33:16.409 id=49 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:33:16.994 id=50 [debug] handled request client -> server textDocument/codeAction in 616µs
+
+10:33:17.042 [debug] handled notification client -> server textDocument/didSave in 1ms
+
+10:33:17.546 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:33:17.931 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 2ms
+
+10:33:18.685 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:33:21.336 id=51 [debug] handled request client -> server textDocument/codeAction in 633µs
+
+10:33:21.618 id=52 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:33:23.638 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 3ms
+
+10:33:24.631 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:33:29.395 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 4ms
+
+10:33:30.400 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 2ms
+
+10:33:34.595 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 3ms
+
+10:33:35.616 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:33:39.758 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 7ms
+
+10:33:40.875 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 7ms
+
+10:33:44.858 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 2ms
+
+10:33:45.796 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
