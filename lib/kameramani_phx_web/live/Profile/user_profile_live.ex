@@ -1,28 +1,18 @@
 defmodule KameramaniPhxWeb.Profile.UserProfileLive do
-  use Phoenix.LiveView
+  use KameramaniPhxWeb, :live_view
   alias KameramaniPhx.Accounts
 
-  def mount(%{"username" => username}, _session, socket) do
-    # Fetch user from the database based on username
+  def mount(_params, _session, socket) do
+    {:ok, assign(socket, user: nil, is_live: false)}
+  end
+
+  def handle_params(%{"username" => username}, uri, socket) do
     user = Accounts.get_user_by_username(username)
 
     if user do
-      {:ok, assign(socket, user: user)}
+      {:noreply, assign(socket, user: user, is_live: true)}
     else
-      {:ok, assign(socket, user: nil)}
+      {:noreply, assign(socket, user: nil, is_live: false)}
     end
-  end
-
-  def render(assigns) do
-    ~H"""
-    <div class="profile">
-      <h1>{@user.name}'s Profile</h1>
-      <p>Username: {@user.username}</p>
-      <p>Email: {@user.email}</p>
-      <p>Age: {@user.age}</p>
-      <p>Bio: {@user.bio}</p>
-      <%!-- <img src="<%= @user.profile_picture %>" alt="Profile Picture" class="profile-picture"/> --%>
-    </div>
-    """
   end
 end

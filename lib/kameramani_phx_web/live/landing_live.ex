@@ -9,11 +9,12 @@ defmodule KameramaniPhxWeb.LandingLive do
 
   def mount(_params, _session, socket) do
     # Fetch only streams where is_live is true
-    streams = KameramaniPhx.Repo.all(
-      from s in KameramaniPhx.Streaming.Stream,
-      where: s.is_live == true,
-      preload: [:user]
-    )
+    streams =
+      KameramaniPhx.Repo.all(
+        from s in KameramaniPhx.Streaming.Stream,
+          where: s.is_live == true,
+          preload: [:user]
+      )
 
     # Subscribe to each stream to get live updates
     if connected?(socket) do
@@ -36,24 +37,27 @@ defmodule KameramaniPhxWeb.LandingLive do
     # Reload stream with user
     updated_stream = KameramaniPhx.Repo.preload(updated_stream, :user)
 
-    streams_data = if updated_stream.is_live do
-      # Add or update in list
-      existing_ids = Enum.map(socket.assigns.streams_data, & &1.id)
+    streams_data =
+      if updated_stream.is_live do
+        # Add or update in list
+        existing_ids = Enum.map(socket.assigns.streams_data, & &1.id)
 
-      if updated_stream.id in existing_ids do
-        Enum.map(socket.assigns.streams_data, fn
-          s when s.id == updated_stream.id -> map_stream(updated_stream)
-          s -> s
-        end)
+        if updated_stream.id in existing_ids do
+          Enum.map(socket.assigns.streams_data, fn
+            s when s.id == updated_stream.id -> map_stream(updated_stream)
+            s -> s
+          end)
+        else
+          # Subscribe to this specific stream's future updates if it's new
+          if connected?(socket),
+            do: Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "streams:#{updated_stream.id}")
+
+          [map_stream(updated_stream) | socket.assigns.streams_data]
+        end
       else
-        # Subscribe to this specific stream's future updates if it's new
-        if connected?(socket), do: Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "streams:#{updated_stream.id}")
-        [map_stream(updated_stream) | socket.assigns.streams_data]
+        # Remove from list if no longer live
+        Enum.reject(socket.assigns.streams_data, &(&1.id == updated_stream.id))
       end
-    else
-      # Remove from list if no longer live
-      Enum.reject(socket.assigns.streams_data, &(&1.id == updated_stream.id))
-    end
 
     {:noreply, assign(socket, streams_data: streams_data)}
   end

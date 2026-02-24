@@ -170,7 +170,8 @@ defmodule KameramaniPhxWeb.Layouts do
         phx-connected={JS.hide(to: "#client-error")}
         class="hidden opacity-0 transition-opacity duration-1000 delay-1000 phx-loading:opacity-100"
       >
-        Trying to reconnect... <.icon name="hero-arrow-path" class="ml-1 size-3 animate-spin inline-block" />
+        Trying to reconnect...
+        <.icon name="hero-arrow-path" class="ml-1 size-3 animate-spin inline-block" />
       </.flash>
       <.flash
         id="server-error"
@@ -180,7 +181,8 @@ defmodule KameramaniPhxWeb.Layouts do
         phx-connected={JS.hide(to: "#server-error")}
         class="hidden opacity-0 transition-opacity duration-1000 delay-1000 phx-loading:opacity-100"
       >
-        We're working on getting things back on track. <.icon name="hero-arrow-path" class="ml-1 size-3 animate-spin inline-block" />
+        We're working on getting things back on track.
+        <.icon name="hero-arrow-path" class="ml-1 size-3 animate-spin inline-block" />
       </.flash>
     </div>
     """

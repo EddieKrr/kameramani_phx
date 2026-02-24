@@ -1,5 +1,5 @@
 defmodule KameramaniPhxWeb.DirectoryLive do
-alias KameramaniPhxWeb.CardComponents
+  alias KameramaniPhxWeb.CardComponents
   use KameramaniPhxWeb, :live_view
 
   import CardComponents
@@ -14,7 +14,7 @@ alias KameramaniPhxWeb.CardComponents
   end
 
   def mount(_params, _session, socket) do
-    mock_ls =  list_categories()
+    mock_ls = list_categories()
     {:ok, assign(socket, mock_ls: mock_ls)}
   end
 end

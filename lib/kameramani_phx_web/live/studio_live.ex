@@ -32,6 +32,7 @@ defmodule KameramaniPhxWeb.StudioLive do
 
   def handle_info({:stream_status_updated, %Streaming.Stream{} = updated_stream}, socket) do
     Logger.info("Studio Live: Stream status updated - is_live=#{updated_stream.is_live}")
+
     if socket.assigns.current_stream && socket.assigns.current_stream.id == updated_stream.id do
       {:noreply,
        socket

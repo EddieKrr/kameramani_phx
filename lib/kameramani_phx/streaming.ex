@@ -47,7 +47,7 @@ defmodule KameramaniPhx.Streaming do
   """
   def get_stream!(id), do: Repo.get!(Stream, id)
 
-  #getting streams by vategory
+  # getting streams by vategory
   def get_streams_by_category(category) do
     Repo.all(from s in Stream, where: ^category in s.categories)
   end

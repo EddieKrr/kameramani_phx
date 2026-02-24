@@ -27,13 +27,19 @@ defmodule KameramaniPhxWeb.ChatLive do
   def mount(%{"username" => username}, session, socket) do
     case Accounts.get_user_by_username(username) do
       nil ->
-        {:halt, socket |> Phoenix.LiveView.put_flash(:error, "User not found") |> Phoenix.LiveView.redirect(to: ~p"/")}
+        {:halt,
+         socket
+         |> Phoenix.LiveView.put_flash(:error, "User not found")
+         |> Phoenix.LiveView.redirect(to: ~p"/")}
 
       user ->
         # Fetch the stream for this user
         case KameramaniPhx.Streaming.get_active_stream_for_user(user.id) do
           nil ->
-            {:halt, socket |> Phoenix.LiveView.put_flash(:error, "Stream not found") |> Phoenix.LiveView.redirect(to: ~p"/")}
+            {:halt,
+             socket
+             |> Phoenix.LiveView.put_flash(:error, "Stream not found")
+             |> Phoenix.LiveView.redirect(to: ~p"/")}
 
           stream ->
             # Found real data, assign to socket
@@ -60,11 +66,13 @@ defmodule KameramaniPhxWeb.ChatLive do
             if connected?(socket), do: subscribe(assigns_to_socket.stream_id)
 
             # If the current user is logged in, use their username and a consistent color
-            {chat_username, chat_user_color} = if current_user_scope.user do
-               {current_user_scope.user.username, "#6366f1"}
-            else
-               {Enum.random(["Guest_#{:rand.uniform(1000)}"]), "#" <> (for _ <- 1..3, into: "", do: Integer.to_string(Enum.random(100..255), 16))}
-            end
+            {chat_username, chat_user_color} =
+              if current_user_scope.user do
+                {current_user_scope.user.username, "#6366f1"}
+              else
+                {Enum.random(["Guest_#{:rand.uniform(1000)}"]),
+                 "#" <> for(_ <- 1..3, into: "", do: Integer.to_string(Enum.random(100..255), 16))}
+              end
 
             {:ok,
              socket
@@ -133,7 +141,7 @@ defmodule KameramaniPhxWeb.ChatLive do
   end
 
   def handle_info({:stream_status, status}, socket) do
-    is_live = (status == :online)
+    is_live = status == :online
     {:noreply, assign(socket, is_live: is_live)}
   end
 end

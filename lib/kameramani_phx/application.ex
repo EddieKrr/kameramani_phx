@@ -5,7 +5,7 @@ defmodule KameramaniPhx.Application do
 
   use Application
 
-@impl true
+  @impl true
   def start(_type, _args) do
     children = [
       KameramaniPhxWeb.Telemetry,
@@ -13,8 +13,6 @@ defmodule KameramaniPhx.Application do
       KameramaniPhx.StreamManager,
       {DNSCluster, query: Application.get_env(:kameramani_phx, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: KameramaniPhx.PubSub},
-
-      
       KameramaniPhx.RTMPIngestListener,
 
       # Start to serve requests, typically the last entry

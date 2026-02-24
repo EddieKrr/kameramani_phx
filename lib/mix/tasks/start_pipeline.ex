@@ -75,7 +75,8 @@ defmodule Mix.Tasks.StartPipeline do
         IO.puts("🛑 Pipeline loop ending")
         :ok
     after
-      5000 ->  # Check every 5 seconds
+      # Check every 5 seconds
+      5000 ->
         pipeline_loop(stream_id, output_dir)
     end
   end
