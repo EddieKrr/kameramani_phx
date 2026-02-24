@@ -2,7 +2,8 @@ defmodule KameramaniPhx.RTMPIngestPipeline do
   use Membrane.Pipeline
   import Membrane.ChildrenSpec
   require Logger
-  require Membrane.Time # ADDED: Required for time helpers
+  # ADDED: Required for time helpers
+  require Membrane.Time
 
   def start_link(args), do: Membrane.Pipeline.start_link(__MODULE__, args)
 
@@ -10,7 +11,6 @@ defmodule KameramaniPhx.RTMPIngestPipeline do
   def handle_init(_ctx, {hls_dir, client_ref}) do
     spec = [
       child(:src, %Membrane.RTMP.SourceBin{client_ref: client_ref}),
-
       child(:sink, %Membrane.HTTPAdaptiveStream.SinkBin{
         manifest_name: "index",
         manifest_module: Membrane.HTTPAdaptiveStream.HLS,
@@ -25,7 +25,8 @@ defmodule KameramaniPhx.RTMPIngestPipeline do
       |> via_in(Pad.ref(:input, :video),
         options: [
           encoding: :H264,
-          segment_duration: Membrane.Time.seconds(4) # ADDED
+          # ADDED
+          segment_duration: Membrane.Time.seconds(4)
         ]
       )
       |> get_child(:sink),
@@ -36,7 +37,8 @@ defmodule KameramaniPhx.RTMPIngestPipeline do
       |> via_in(Pad.ref(:input, :audio),
         options: [
           encoding: :AAC,
-          segment_duration: Membrane.Time.seconds(4) # ADDED
+          # ADDED
+          segment_duration: Membrane.Time.seconds(4)
         ]
       )
       |> get_child(:sink)

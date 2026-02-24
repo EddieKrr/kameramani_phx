@@ -29,26 +29,29 @@ defmodule Mix.Tasks.StopPipeline do
       nil ->
         IO.puts("Error: Stream #{stream_id} not found")
         :error
+
       stream ->
         # Get pipeline ID
         pipeline_id = String.to_atom("stream_pipeline_#{stream_id}")
-        
+
         case StreamManager.get_pipeline_id(stream_id) do
           nil ->
             IO.puts("❌ No active pipeline found for stream #{stream_id}")
             :error
+
           ^pipeline_id ->
             # Stop the pipeline
             Pipeline.stop_stream(pipeline_id)
-            
+
             # Unregister the stream
             StreamManager.remove_stream(stream_id)
-            
+
             # Update stream status
             Streaming.update_stream(stream, %{is_live: false})
-            
+
             IO.puts("✅ Pipeline stopped successfully for stream #{stream_id}")
             :ok
+
           _other_pipeline_id ->
             IO.puts("❌ Pipeline mismatch for stream #{stream_id}")
             :error
@@ -61,11 +64,12 @@ defmodule Mix.Tasks.StopPipeline do
     IO.puts("Usage: mix stop_pipeline <stream_id>")
     IO.puts("")
     IO.puts("Active pipelines:")
-    
+
     # List all active streams
     case Streaming.list_streams() do
       [] ->
         IO.puts("  No streams found")
+
       streams ->
         Enum.each(streams, fn stream ->
           pipeline_id = StreamManager.get_pipeline_id(stream.id)

@@ -12,34 +12,38 @@ defmodule KameramaniPhxWeb.CardComponents do
 
   def card(assigns) do
     ~H"""
-    <.link patch={~p"/watch/#{@streamer}"}>
-      <article>
-        <div class="relative aspect-video w-full bg-gradient-to-tl from-black to-slate-700 hover:scale-105 hover:z-50 hover:shadow-2xl transition-all duration-300 ease-in-out rounded-lg overflow-hidden">
-          <%= if @is_live do %>
-            <div class="absolute top-2 left-2 bg-red-600 text-white font-black text-[10px] px-2 py-0.5 rounded shadow-lg">
-              LIVE
-            </div>
-          <% end %>
-
-          <div class="absolute flex bottom-1 right-1 bg-black/60 rounded-full text-xs px-1 text-white">
-            <.svg variant="eye" class="h-4 w-4 text-white mb-[0.3rem] mx-1" />{@viewer_count}
+    <article>
+      <div class="relative aspect-video w-full bg-gradient-to-tl from-black to-slate-700 hover:scale-105 hover:z-50 hover:shadow-2xl transition-all duration-300 ease-in-out rounded-lg overflow-hidden">
+        <%= if @is_live do %>
+          <div class="absolute top-2 left-2 bg-red-600 text-white font-black text-[10px] px-2 py-0.5 rounded shadow-lg">
+            LIVE
           </div>
+        <% end %>
+
+        <div class="absolute flex bottom-1 right-1 bg-black/60 rounded-full text-xs px-1">
+          <.svg variant="eye" class="h-4 w-4 mb-[0.3rem] mx-1" />{@viewer_count}
         </div>
+      </div>
 
-        <div class="flex flex-row gap-3">
-          <img class="h-10 w-10 rounded-full" alt={@streamer} src={@avatar} />
-          <div class="flex flex-col min-w-0">
-            <div class="font-bold text-white truncate">{@stream_name}</div>
+      <div class="flex flex-row gap-3">
+        <img class="h-10 w-10 rounded-full" alt={@streamer} src={@avatar} />
+        <div class="flex flex-col min-w-0">
+          <div class="font-bold text-white truncate">{@stream_name}</div>
 
-            <div class="text-gray-400 text-sm">{@streamer}</div>
+          <div class="text-gray-400 text-sm">{@streamer}</div>
 
-            <div class="text-gray-400 text-sm">{@tags}</div>
+          <div class="text-gray-400 text-sm">{@tags}</div>
 
-            <div class="bg-gray-700 text-xs text-gray-300 rounded-full px-2 w-fit">{@category}</div>
-          </div>
+          <button
+            type="button"
+            phx-click={JS.navigate(~p"/directory")}
+            class="bg-blue-900 text-xs text-gray-300 rounded-full px-2 w-fit transition-primary hover:bg-blue-700/80"
+          >
+            {@category}
+          </button>
         </div>
-      </article>
-    </.link>
+      </div>
+    </article>
     """
   end
 

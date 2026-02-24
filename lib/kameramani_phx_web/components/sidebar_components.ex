@@ -18,10 +18,11 @@ defmodule KameramaniPhxWeb.SidebarComponents do
       <div class="relative shrink-0">
         <img src={@src} class="rounded-full h-8 w-8 object-cover" />
         <%= if !@show_details do %>
-           <div class="absolute -top-1 -right-1 w-2 h-2 bg-red-600 rounded-full border border-[#18181b]"></div>
+          <div class="absolute -top-1 -right-1 w-2 h-2 bg-red-600 rounded-full border border-[#18181b]">
+          </div>
         <% end %>
       </div>
-      
+
       <%= if @show_details do %>
         <div class="flex flex-col flex-1 min-w-0 mx-3">
           <div class="text-sm font-bold text-[#efeff1] truncate">{@name}</div>

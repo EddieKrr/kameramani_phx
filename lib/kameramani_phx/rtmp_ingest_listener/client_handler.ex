@@ -9,13 +9,14 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
     case Streaming.get_stream_by_key(stream_key) do
       nil ->
         Logger.warning("❌ Unauthorized stream key: #{stream_key}")
-        nil
+        :kick
 
       stream ->
         hls_dir = "priv/static/live/#{stream.id}"
         File.mkdir_p!(hls_dir)
 
-        {:ok, _sup, pipeline_pid} = KameramaniPhx.RTMPIngestPipeline.start_link({hls_dir, client_ref})
+        {:ok, _sup, pipeline_pid} =
+          KameramaniPhx.RTMPIngestPipeline.start_link({hls_dir, client_ref})
 
         StreamManager.add_stream(stream.id, pipeline_pid)
         Streaming.update_stream(stream, %{is_live: true})
@@ -49,7 +50,8 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
     # 2. OBS sends video/audio data. We forward it to the saved Pipeline PID.
     # CRITICAL FIX: Return state DIRECTLY
     @impl true
-    def handle_data_available(data, %{source_pid: source_pid} = state) when not is_nil(source_pid) do
+    def handle_data_available(data, %{source_pid: source_pid} = state)
+        when not is_nil(source_pid) do
       # THE MAGIC FIX: Changed :rtmp_data to :data
       send(source_pid, {:data, data})
       state
@@ -87,6 +89,7 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
       if stream_id = Map.get(state, :stream_id) do
         perform_cleanup(stream_id)
       end
+
       state
     end
 
@@ -94,7 +97,7 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
       # Only perform cleanup if the stream is currently considered running in StreamManager
       if StreamManager.is_stream_running?(stream_id) do
         Logger.info("🧹 Cleaning up stream #{stream_id}...")
-        
+
         # Update DB - This will also broadcast :stream_status_updated to StudioLive
         case Streaming.get_stream!(stream_id) do
           stream -> Streaming.update_stream(stream, %{is_live: false})

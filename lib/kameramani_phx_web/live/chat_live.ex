@@ -16,7 +16,6 @@ defmodule KameramaniPhxWeb.ChatLive do
 
   @initial_state %{"ch_message" => ""}
 
-
   defp subscribe(stream_id) do
     Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "stream_chat:#{stream_id}")
     Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "stream_state:#{stream_id}")
@@ -80,24 +79,32 @@ defmodule KameramaniPhxWeb.ChatLive do
             is_following = if current_user_obj, do: Accounts.is_following?(current_user_obj, user), else: false
 
             # Fetch recommended streamers for the sidebar (similar to LandingLive)
-            recommended_streams = KameramaniPhx.Repo.all(
-              from s in KameramaniPhx.Streaming.Stream,
-              where: s.is_live == true,
-              limit: 10,
-              preload: [:user]
-            ) |> Enum.map(fn s ->
-              count = Presence.list("stream_viewers:#{s.id}") |> map_size()
-              %{
-                name: s.user.username,
-                game: s.category || "Just Chatting",
-                viewer_count: count,
-                src: if(s.user.profile_picture in [nil, ""], do: "https://ui-avatars.com/api/?name=#{s.user.username}&background=random", else: s.user.profile_picture)
-              }
-            end)
+            recommended_streams =
+              KameramaniPhx.Repo.all(
+                from s in KameramaniPhx.Streaming.Stream,
+                  where: s.is_live == true,
+                  limit: 10,
+                  preload: [:user]
+              )
+              |> Enum.map(fn s ->
+                count = Presence.list("stream_viewers:#{s.id}") |> map_size()
 
-            avatar_url = if user.profile_picture in [nil, ""],
-              do: "https://ui-avatars.com/api/?name=#{user.username}&background=random",
-              else: user.profile_picture
+                %{
+                  name: s.user.username,
+                  game: s.category || "Just Chatting",
+                  viewer_count: count,
+                  src:
+                    if(s.user.profile_picture in [nil, ""],
+                      do: "https://ui-avatars.com/api/?name=#{s.user.username}&background=random",
+                      else: s.user.profile_picture
+                    )
+                }
+              end)
+
+            avatar_url =
+              if user.profile_picture in [nil, ""],
+                do: "https://ui-avatars.com/api/?name=#{user.username}&background=random",
+                else: user.profile_picture
 
             # Assign all the data to the socket
             assigns_to_socket = %{
@@ -146,7 +153,7 @@ defmodule KameramaniPhxWeb.ChatLive do
     end
   end
 
-  #toggle sidebars
+  # toggle sidebars
   def handle_event("toggle_left_sidebar", _, socket) do
     {:noreply, assign(socket, left_sidebar_open: !socket.assigns.left_sidebar_open)}
   end

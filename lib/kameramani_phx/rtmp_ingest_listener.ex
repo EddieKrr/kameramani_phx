@@ -11,10 +11,15 @@ defmodule KameramaniPhx.RTMPIngestListener do
     children = [
       %{
         id: :rtmp_server,
-        start: {Membrane.RTMPServer, :start_link, [[
-          port: 1935,
-          handle_new_client: &KameramaniPhx.RTMPIngestListener.ClientHandler.handle_new_client/3
-        ]]}
+        start:
+          {Membrane.RTMPServer, :start_link,
+           [
+             [
+               port: 1935,
+               handle_new_client:
+                 &KameramaniPhx.RTMPIngestListener.ClientHandler.handle_new_client/3
+             ]
+           ]}
       }
     ]
 
