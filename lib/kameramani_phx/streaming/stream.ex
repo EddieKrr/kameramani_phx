@@ -20,5 +20,6 @@ defmodule KameramaniPhx.Streaming.Stream do
     |> cast(attrs, [:title, :stream_key, :is_live, :tags, :user_id, :category])
     |> validate_required([:title, :stream_key, :is_live, :tags, :user_id])
     |> unique_constraint(:stream_key)
+    |> unique_constraint(:user_id)
   end
 end

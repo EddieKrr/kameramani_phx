@@ -16,7 +16,7 @@ defmodule KameramaniPhxWeb.Streaming.Settings.StreamKeyLive do
         user -> user
       end
 
-    stream = Streaming.get_active_stream_for_user(user.id)
+    stream = Streaming.get_stream_for_user(user.id)
 
     stream_key = if stream, do: stream.stream_key, else: nil
 
@@ -38,7 +38,7 @@ defmodule KameramaniPhxWeb.Streaming.Settings.StreamKeyLive do
         user -> user
       end
 
-    case Streaming.get_active_stream_for_user(user.id) do
+    case Streaming.get_stream_for_user(user.id) do
       nil ->
         # If no stream exists, create one with a new key
         {:ok, stream} = Streaming.create_stream(%{user_id: user.id, title: "My Stream"})

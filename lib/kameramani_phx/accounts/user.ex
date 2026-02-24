@@ -15,6 +15,7 @@ defmodule KameramaniPhx.Accounts.User do
 
     field :bio, :string
     field :profile_picture, :string
+    field :chat_color, :string
 
     field :hashed_password, :string, redact: true
     field :confirmed_at, :utc_datetime
@@ -33,15 +34,26 @@ defmodule KameramaniPhx.Accounts.User do
     timestamps(type: :utc_datetime)
   end
 
+  @chat_colors ~w(#3b82f6 #ef4444 #f97316 #eab308 #ec4899 #a855f7 #22c55e #84cc16)
+
   @doc """
   A user changeset for registration.
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:name, :username, :email, :age, :password])
+    |> cast(attrs, [:name, :username, :email, :age, :password, :chat_color])
     |> validate_required([:name, :username, :email, :age, :password])
     |> validate_email(opts)
     |> validate_password(opts)
+    |> maybe_put_chat_color()
+  end
+
+  defp maybe_put_chat_color(changeset) do
+    if get_field(changeset, :chat_color) do
+      changeset
+    else
+      put_change(changeset, :chat_color, Enum.random(@chat_colors))
+    end
   end
 
   defp validate_email(changeset, opts) do
@@ -76,7 +88,7 @@ defmodule KameramaniPhx.Accounts.User do
     user
     |> cast(attrs, [:password, :password_confirmation])
     |> validate_required([:password])
-    |> validate_length(:password, min: 12, max: 72)
+    |> validate_length(:password, min: 6, max: 72)
     |> validate_confirmation(:password, message: "does not match password")
     |> case do
       %{changes: %{password: _}} = changeset ->

@@ -45,10 +45,16 @@
           <div class="flex-1 text-center md:text-left">
             <div class="flex items-center gap-3 mb-2">
               <h1 class="text-4xl font-bold">{@user.name}</h1>
-              <!-- Offline Status Badge -->
-              <div class="bg-gray-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-                OFFLINE
-              </div>
+              <!-- Live/Offline Status Badge -->
+              <%= if @is_live do %>
+                <div class="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse">
+                  LIVE
+                </div>
+              <% else %>
+                <div class="bg-gray-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                  OFFLINE
+                </div>
+              <% end %>
             </div>
             <p class="text-xl text-gray-300 mb-4">@{@user.username}</p>
             
@@ -65,6 +71,14 @@
 
             <!-- User Stats -->
             <div class="flex flex-wrap gap-6 justify-center md:justify-start">
+              <div class="text-center">
+                <p class="text-2xl font-bold text-white">{@follower_count}</p>
+                <p class="text-sm text-gray-400">Followers</p>
+              </div>
+              <div class="text-center">
+                <p class="text-2xl font-bold text-white">{@following_count}</p>
+                <p class="text-sm text-gray-400">Following</p>
+              </div>
               <div class="text-center">
                 <p class="text-2xl font-bold text-white">{@user.age || "N/A"}</p>
                 <p class="text-sm text-gray-400">Age</p>
@@ -206,14 +220,33 @@
 
       <!-- Action Buttons -->
       <div class="flex justify-center gap-4">
+        <%= if @is_live do %>
+          <.link
+            navigate={~p"/watch/#{@user.username}"}
+            class="bg-red-600 hover:bg-red-500 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2"
+          >
+            <.svg variant="play" class="h-5 w-5" /> Watch Live
+          </.link>
+        <% end %>
+        
         <button class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2">
           <.svg variant="envelope" class="h-5 w-5" />
           Send Message
         </button>
-        <button class="bg-purple-600 hover:bg-purple-500 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2">
-          <.svg variant="heart" class="h-5 w-5" />
-          Follow
-        </button>
+
+        <%= if @current_user.user && @current_user.user.id != @user.id do %>
+          <button
+            phx-click="toggle_follow"
+            class={"px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2 " <> 
+              if(@is_following, do: "bg-gray-700 hover:bg-gray-600", else: "bg-purple-600 hover:bg-purple-500")}
+          >
+            <%= if @is_following do %>
+              <.svg variant="heart-solid" class="h-5 w-5 text-red-500" /> Unfollow
+            <% else %>
+              <.svg variant="heart" class="h-5 w-5" /> Follow
+            <% end %>
+          </button>
+        <% end %>
       </div>
     </div>
   </div>

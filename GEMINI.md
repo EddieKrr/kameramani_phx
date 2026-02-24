@@ -1,6 +1,17 @@
 # Project Progress: KameramaniPhx
 
-## Latest Updates (Friday, Feb 20, 2026)
+## Latest Updates (Monday, Feb 23, 2026)
+- **Streaming Setup**: Verified RTMP configuration. Advised on using TCP tunneling (ngrok tcp/playit.gg) for OBS.
+- **Viewer Counting**:
+  - Implemented persistent `guest_id` in session to prevent viewer count inflation on refresh.
+  - Integrated real-time viewer counts into `StudioLive` sidebar and `LandingLive` cards.
+  - Fixed `UptimeTimer` to halt when stream goes offline.
+- **Profile Management**:
+  - **Universal Access**: Updated `LandingLive` (sidebar/cards), `ChatLive`, and `StudioLive` to consistently fetch and display the user's `profile_picture` with dynamic fallbacks.
+  - **Settings UI**: Refactored `UserSettingsLive` to remove the manual URL input and strictly enforce image uploads via Phoenix LiveView.
+  - **Upload Fixes**: Corrected form nesting issues that prevented file submission and updated the storage path to `priv/static/uploads` for immediate availability.
+
+## Previous Updates (Friday, Feb 20, 2026)
 - **Flash Styling**: Refactored `CoreComponents.flash/1` with glassmorphism (translucency, backdrop-blur, indigo/rose glows).
 - **Flash UX**: Added CSS `delay-1000` and `phx-loading` transitions to connection-related flashes to prevent flickering on page refreshes.
 - **Category Refactoring**:
@@ -10,5 +21,5 @@
   - Updated `StudioLive` (LiveView and template) to handle category selection by name instead of ID.
 
 ## Next Steps
-- Live streaming verification with OBS using the new HLS pipeline.
+- Validate live streaming with the new upload and viewer count logic.
 - Further UI/UX refinements.

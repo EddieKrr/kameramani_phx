@@ -8,9 +8,19 @@ defmodule KameramaniPhx.Streaming do
 
   alias KameramaniPhx.Streaming.Stream
 
-  def get_active_stream_for_user(user_id) do
+  def get_stream_for_user(user_id) do
     Stream
     |> where([s], s.user_id == ^user_id)
+    |> order_by([s], desc: s.updated_at)
+    |> limit(1)
+    |> Repo.one()
+  end
+
+  def get_active_stream_for_user(user_id) do
+    Stream
+    |> where([s], s.user_id == ^user_id and s.is_live == true)
+    |> order_by([s], desc: s.updated_at)
+    |> limit(1)
     |> Repo.one()
   end
 
