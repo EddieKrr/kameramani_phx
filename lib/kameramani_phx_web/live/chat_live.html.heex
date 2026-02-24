@@ -1,14 +1,9 @@
-<div class="flex h-screen pt-[64px] w-full bg-[#0e0e10] text-[#efeff1] overflow-hidden font-sans">
-  
-  <aside class={"bg-[#18181b] border-r border-white/5 flex flex-col transition-all duration-300 ease-in-out " <> (if @left_sidebar_open, do: "w-64", else: "w-[50px] items-center")}>
-    <div class="flex items-center justify-between p-3 border-b border-white/5">
-      <span class={"text-[11px] font-bold text-[#adadb8] uppercase tracking-widest whitespace-nowrap " <> (if @left_sidebar_open, do: "block", else: "hidden")}>
-        For You
-      </span>
-      <button phx-click="toggle_left_sidebar" class="p-1 rounded hover:bg-white/10 text-[#adadb8] transition-colors" title="Collapse">
-        <.svg variant={if @left_sidebar_open, do: "chevron-left", else: "chevron-right"} class="w-4 h-4" />
-      </button>
-    </div>
+<div class="flex h-full w-full bg-[#060606] text-gray-100 overflow-hidden font-sans">
+  <aside class="w-[70px] xl:w-64 bg-[#0e0e10] border-r border-white/5 flex flex-col transition-all duration-300">
+    <div class="flex-1 overflow-y-auto px-2 space-y-4 py-4">
+      <div class="hidden xl:block px-2 text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+        Followed Channels
+      </div>
 
     <div class="flex-1 overflow-y-auto px-2 space-y-2 py-4 custom-scrollbar">
       <.sidebar_item

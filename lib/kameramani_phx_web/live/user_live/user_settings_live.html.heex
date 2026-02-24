@@ -61,15 +61,17 @@
               class="bg-slate-900/50 border-2 border-slate-700 text-white rounded-2xl focus:border-blue-500"
             />
 
-            <div class="space-y-2">
-              <label class="block text-slate-300 font-bold text-sm">Biography</label>
-              <.input
-                field={@profile_form[:bio]}
-                type="textarea"
-                placeholder="Tell the world about yourself..."
-                class="w-full bg-slate-900/50 border-2 border-slate-700 text-white rounded-2xl min-h-[100px] focus:border-blue-500"
-              />
-            </div>
+        <div class="flex-1 w-full space-y-6">
+          <div class="fieldset">
+            <label class="label">
+              <span class="label-text text-slate-300 font-bold">Biography</span>
+            </label>
+            <textarea
+              placeholder="Let your fans know who you are..."
+              class="textarea w-full bg-slate-900/50 border-2 border-slate-700 text-white rounded-2xl min-h-[120px] focus:border-blue-500 focus:outline-none"
+            >
+            </textarea>
+          </div>
 
             <div class="flex justify-end">
               <.button phx-disable-with="Saving..." class="btn-primary rounded-xl px-10 py-3 font-bold uppercase tracking-wider shadow-lg shadow-blue-500/20">
@@ -86,13 +88,33 @@
       <h2 class="text-2xl font-title font-bold text-blue-400 mb-6 flex items-center gap-2">
         <.svg variant="envelope" class="h-6 w-6" />Email Address
       </h2>
-      <.form for={@email_form} id="email_form" phx-submit="update_email" phx-change="validate_email" class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
-        <.input field={@email_form[:email]} label="New Email" required class="bg-slate-900/50 border-2 border-slate-700 rounded-2xl" />
+
+      <.form
+        for={@email_form}
+        id="email_form"
+        phx-submit="update_email"
+        phx-change="validate_email"
+      >
+        <.input
+          field={@email_form[:email]}
+          type="email"
+          label="New Email"
+          autocomplete="username"
+          required
+          class="bg-slate-900/50 border-2 border-slate-700 focus:outline-none rounded-2xl"
+        />
+        <.input
+          field={@email_form[:current_password]}
+          type="password"
+          label="Current Password"
+          class="bg-slate-900/50 border-2 border-slate-700 focus:outline-none rounded-2xl"
+        />
         <div class="flex justify-end">
           <.button phx-disable-with="Sending Link..." class="rounded-xl px-8 py-3 bg-slate-700 hover:bg-slate-600 transition-colors">
             Update Email
           </.button>
         </div>
+        
       </.form>
     </section>
 
@@ -101,10 +123,48 @@
       <h2 class="text-2xl font-title font-bold text-blue-400 mb-6 flex items-center gap-2">
         <.svg variant="key" class="h-6 w-6" />Update Password
       </h2>
-      <.form for={@password_form} id="password_form" action={~p"/users/update-password"} method="post" phx-change="validate_password" phx-submit="update_password" phx-trigger-action={@trigger_submit} class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
-        <input name={@password_form[:email].name} type="hidden" value={@current_email} />
-        <.input field={@password_form[:password]} type="password" label="New password" required class="bg-slate-900/50 border-2 border-slate-700 rounded-2xl" />
-        <.input field={@password_form[:password_confirmation]} type="password" label="Confirm password" class="bg-slate-900/50 border-2 border-slate-700 rounded-2xl" />
+
+      <.form
+        for={@password_form}
+        id="password_form"
+        action={~p"/users/update-password"}
+        method="post"
+        phx-change="validate_password"
+        phx-submit="update_password"
+        phx-trigger-action={@trigger_submit}
+      >
+        <input
+          name={@password_form[:email].name}
+          type="hidden"
+          id="hidden_user_email"
+          autocomplete="username"
+          value={@current_email}
+        />
+        <.input 
+          field={@password_form[:current_password]}
+          type="password"
+          label="Current Password"
+          value={@password_form[:current_password].value}
+          class="bg-slate-900/50 border-2 border-slate-700 rounded-2xl"
+          required
+        />
+        <.input
+          field={@password_form[:password]}
+          type="password"
+          label="New password"
+          autocomplete="new-password"
+          value={@password_form[:password].value}
+          required
+          class="bg-slate-900/50 border-2 border-slate-700 rounded-2xl"
+        />
+        <.input
+          field={@password_form[:password_confirmation]}
+          type="password"
+          label="Confirm new password"
+          autocomplete="new-password"
+          value={@password_form[:password_confirmation].value}
+          class="bg-slate-900/50 border-2 border-slate-700 rounded-2xl focus:outline-none"
+        />
         <div class="flex justify-end">
           <.button phx-disable-with="Saving..." class="rounded-xl px-8 py-3 bg-slate-700 hover:bg-slate-600">
             Save Password
