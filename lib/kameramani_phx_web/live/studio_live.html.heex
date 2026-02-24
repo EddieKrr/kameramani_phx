@@ -154,18 +154,52 @@
       <%!-- Empty sidebar for future additions --%>
       <div class="space-y-6">
         <div class="bg-[#18181b] p-6 rounded-xl border border-white/5 shadow-xl">
-          <h2 class="font-bold text-lg mb-4 text-white flex items-center gap-2">
-            <.icon name="hero-info" class="h-5 w-5 text-gray-500" /> Live Status
+          <div class="flex items-center gap-4 mb-6">
+            <img
+              src={
+                if @current_user.user.profile_picture in [nil, ""],
+                  do: "https://ui-avatars.com/api/?name=#{@current_user.user.username}&background=random",
+                  else: @current_user.user.profile_picture
+              }
+              class="w-12 h-12 rounded-full object-cover border border-white/10"
+            />
+            <div>
+              <h2 class="font-bold text-lg text-white leading-tight">
+                {@current_user.user.username}
+              </h2>
+              <p class="text-xs text-indigo-400">Streamer Dashboard</p>
+            </div>
+          </div>
+
+          <h2 class="font-bold text-sm mb-4 text-gray-400 flex items-center gap-2 uppercase tracking-wider">
+            <.icon name="hero-signal" class="h-4 w-4 text-indigo-500" /> Stream Status
           </h2>
-          <%= if @current_stream && @current_stream.is_live do %>
-            <p class="text-gray-400">
-              Your stream is currently: <span class="font-bold text-green-500">Online</span>
-            </p>
-          <% else %>
-            <p class="text-gray-400">
-              Your stream is currently: <span class="font-bold text-red-500">Offline</span>
-            </p>
-          <% end %>
+          
+          <div class="space-y-4">
+            <div class="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/5">
+              <span class="text-sm text-gray-400 font-medium">Status</span>
+              <%= if @current_stream && @current_stream.is_live do %>
+                <span class="flex items-center gap-1.5 px-2 py-0.5 bg-red-500/10 text-red-500 text-[10px] font-bold rounded-full border border-red-500/20">
+                  <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
+                  LIVE
+                </span>
+              <% else %>
+                <span class="px-2 py-0.5 bg-gray-500/10 text-gray-500 text-[10px] font-bold rounded-full border border-gray-500/20">
+                  OFFLINE
+                </span>
+              <% end %>
+            </div>
+
+            <%= if @current_stream do %>
+              <div class="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/5">
+                <span class="text-sm text-gray-400 font-medium">Viewers</span>
+                <div class="flex items-center gap-2 text-indigo-400">
+                  <.icon name="hero-users" class="h-4 w-4" />
+                  <span class="font-bold text-sm">{@viewer_count}</span>
+                </div>
+              </div>
+            <% end %>
+          </div>
         </div>
       </div>
     </div>

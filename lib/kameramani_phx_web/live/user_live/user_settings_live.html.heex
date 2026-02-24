@@ -1,38 +1,65 @@
-<div class="max-w-4xl mx-auto text-white">
+<div class="max-w-4xl mx-auto text-white p-4">
   <div class="text-center mb-12">
     <.header>
       <h1 class="uppercase text-3xl font-title font-extrabold tracking-tight italic">
         Account Settings
       </h1>
-
-      <p class="mt-2 text-slate-400">Manage your account email address and password settings</p>
+      <p class="mt-2 text-slate-400">Manage your profile, email, and security settings</p>
     </.header>
   </div>
 
   <div class="grid grid-cols-1 gap-8">
+    <%!-- PROFILE SECTION --%>
     <section class="bg-slate-800/40 backdrop-blur-md border-2 border-slate-700 rounded-3xl p-8 shadow-2xl">
       <h2 class="text-2xl font-title text-blue-400 font-bold mb-8 flex items-center gap-2">
-        <.svg variant="user" class="h6 w-6" />Profile Information
+        <.svg variant="user" class="h-6 w-6" />Profile Information
       </h2>
 
-      <div class="flex flex-col md:flex-row gap-10 items-center md:items-start">
-        <div class="flex flex-col items-center gap-4">
-          <div class="relative group">
-            <div class="h-32 w-32 bg-slate-900 border-4 border-slate-700 rounded-full flex items-center justify-center group-hover:border-blue-500 transition-all">
-              <span class="text-4xl font-bold text-slate-600">
-                {String.first(@current_email) |> String.upcase()}
-              </span>
-            </div>
+      <.form for={@profile_form} id="profile_form" phx-submit="update_profile" phx-change="validate_profile" class="space-y-6">
+        <div class="flex flex-col md:flex-row gap-10 items-center md:items-start">
+          <%!-- Avatar Upload UI --%>
+          <div class="flex flex-col items-center gap-4">
+            <div class="relative group">
+              <div class="h-32 w-32 bg-slate-900 border-4 border-slate-700 rounded-full flex items-center justify-center group-hover:border-blue-500 transition-all overflow-hidden shadow-inner">
+                <%= if entry = List.first(@uploads.profile_picture.entries) do %>
+                  <.live_img_preview entry={entry} class="w-full h-full rounded-full object-cover" />
+                  <button 
+                    type="button" 
+                    phx-click="cancel-upload" 
+                    phx-value-ref={entry.ref}
+                    class="absolute -top-1 -right-1 bg-red-500 rounded-full p-1 text-white hover:bg-red-600 shadow-md"
+                  >
+                    <span class="sr-only">Cancel</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                <% else %>
+                  <%= if @current_user.user.profile_picture do %>
+                    <img src={@current_user.user.profile_picture} class="w-full h-full rounded-full object-cover" />
+                  <% else %>
+                    <span class="text-4xl font-bold text-slate-600">
+                      {String.first(@current_user.user.username || @current_email) |> String.upcase()}
+                    </span>
+                  <% end %>
+                <% end %>
+              </div>
 
-            <div class="absolute inset-0 flex items-center justify-center opacity-0 bg-black/60 rounded-full group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">
-              <.svg variant="digicam" class="h-8 w-8 text-white" />
+              <label for={@uploads.profile_picture.ref} class="absolute inset-0 flex items-center justify-center opacity-0 bg-black/60 rounded-full group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">
+                <.svg variant="digicam" class="h-8 w-8 text-white" />
+              </label>
+              <.live_file_input upload={@uploads.profile_picture} class="hidden" />
             </div>
+            <span class="text-slate-500 uppercase font-bold text-[10px] tracking-widest">Change Avatar</span>
           </div>
 
-          <span class="text-slate-500 uppercase font-bold text-xs tracking-widest">
-            Change Avatar
-          </span>
-        </div>
+          <%!-- Profile Details Form --%>
+          <div class="flex-1 w-full space-y-6">
+            <.input
+              field={@profile_form[:username]}
+              label="Username"
+              class="bg-slate-900/50 border-2 border-slate-700 text-white rounded-2xl focus:border-blue-500"
+            />
 
         <div class="flex-1 w-full space-y-6">
           <div class="fieldset">
@@ -46,21 +73,20 @@
             </textarea>
           </div>
 
-          <div class="flex justify-end">
-            <button
-              class="btn btn-primary rounded-xl px-8 shadow-lg shadow-blue-500/20 cursor-not-allowed"
-              disabled
-            >
-              Update Profile
-            </button>
+            <div class="flex justify-end">
+              <.button phx-disable-with="Saving..." class="btn-primary rounded-xl px-10 py-3 font-bold uppercase tracking-wider shadow-lg shadow-blue-500/20">
+                Update Profile
+              </.button>
+            </div>
           </div>
         </div>
-      </div>
+      </.form>
     </section>
 
+    <%!-- EMAIL SECTION --%>
     <section class="bg-slate-800/40 border-2 border-slate-700 rounded-3xl p-8 backdrop-blur-md">
       <h2 class="text-2xl font-title font-bold text-blue-400 mb-6 flex items-center gap-2">
-        <.svg variant="envelope" class="h-6 w-6 text-blue-500" />Email Address
+        <.svg variant="envelope" class="h-6 w-6" />Email Address
       </h2>
 
       <.form
@@ -84,17 +110,15 @@
           class="bg-slate-900/50 border-2 border-slate-700 focus:outline-none rounded-2xl"
         />
         <div class="flex justify-end">
-          <.button
-            phx-disable-with="Changing..."
-            class="rounded-xl px-8 shadow-lg shadow-blue-500/20 cursor-pointer"
-          >
+          <.button phx-disable-with="Sending Link..." class="rounded-xl px-8 py-3 bg-slate-700 hover:bg-slate-600 transition-colors">
             Update Email
           </.button>
         </div>
       </.form>
     </section>
 
-    <section class="border-2 border-slate-700 rounded-lg bg-slate-800/40 p-8 mb-6 backdrop-blur">
+    <%!-- PASSWORD SECTION --%>
+    <section class="border-2 border-slate-700 rounded-3xl bg-slate-800/40 p-8 backdrop-blur">
       <h2 class="text-2xl font-title font-bold text-blue-400 mb-6 flex items-center gap-2">
         <.svg variant="key" class="h-6 w-6" />Update Password
       </h2>
@@ -141,10 +165,7 @@
           class="bg-slate-900/50 border-2 border-slate-700 rounded-2xl focus:outline-none"
         />
         <div class="flex justify-end">
-          <.button
-            phx-disable-with="Saving..."
-            class="rounded-lg px-8 shadow-lg shadow-blue-500/20 cursor-pointer"
-          >
+          <.button phx-disable-with="Saving..." class="rounded-xl px-8 py-3 bg-slate-700 hover:bg-slate-600">
             Save Password
           </.button>
         </div>

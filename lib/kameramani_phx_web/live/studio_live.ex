@@ -1,6 +1,7 @@
 defmodule KameramaniPhxWeb.StudioLive do
   alias KameramaniPhx.Streaming
   alias KameramaniPhx.Content
+  alias KameramaniPhxWeb.Presence
   require Logger
 
   use KameramaniPhxWeb, :live_view
@@ -15,9 +16,16 @@ defmodule KameramaniPhxWeb.StudioLive do
     stream = Streaming.get_active_stream_for_user(user.id)
 
     # Subscribe to stream updates for this user
+    viewer_count = 0
     if stream do
       Logger.info("Studio Live: Subscribing to stream updates for stream_id=#{stream.id}")
       Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "streams:#{stream.id}")
+      
+      topic = "stream_viewers:#{stream.id}"
+      if connected?(socket) do
+        KameramaniPhxWeb.Endpoint.subscribe(topic)
+      end
+      viewer_count = Presence.list(topic) |> map_size()
     end
 
     {:ok,
@@ -27,6 +35,7 @@ defmodule KameramaniPhxWeb.StudioLive do
      |> assign(:categories, categories)
      |> assign(:current_stream, stream)
      |> assign(:stream_is_live, stream && stream.is_live)
+     |> assign(:viewer_count, viewer_count)
      |> assign(selected_category_name: nil)}
   end
 
@@ -38,6 +47,17 @@ defmodule KameramaniPhxWeb.StudioLive do
        socket
        |> assign(:current_stream, updated_stream)
        |> assign(:stream_is_live, updated_stream.is_live)}
+    else
+      {:noreply, socket}
+    end
+  end
+
+  # handling the viewer count updates via Presence
+  def handle_info(%Phoenix.Socket.Broadcast{event: "presence_diff"}, socket) do
+    if stream = socket.assigns.current_stream do
+      topic = "stream_viewers:#{stream.id}"
+      new_count = Presence.list(topic) |> map_size()
+      {:noreply, assign(socket, viewer_count: new_count)}
     else
       {:noreply, socket}
     end
@@ -68,10 +88,17 @@ defmodule KameramaniPhxWeb.StudioLive do
 
     case Streaming.create_stream(attrs) do
       {:ok, stream = %Streaming.Stream{id: stream_id}} ->
+        # Subscribe to viewer count updates for the new stream
+        topic = "stream_viewers:#{stream_id}"
+        if connected?(socket) do
+          KameramaniPhxWeb.Endpoint.subscribe(topic)
+        end
+
         socket =
           socket
           |> put_flash(:info, "Stream setup complete! Get your stream key to start broadcasting.")
           |> assign(:current_stream, stream)
+          |> assign(:viewer_count, 0)
           # Reset form
           |> assign(
             :stream_form,

@@ -20,11 +20,7 @@ defmodule KameramaniPhxWeb.UserLive.UserSettingsLive do
   def mount(_params, _session, socket) do
     user = socket.assigns.current_user.user
 
-    email_changeset =
-      KameramaniPhx.Accounts.User.email_changeset(user, %{email: user.email},
-        validate_unique: false
-      )
-
+    email_changeset = Accounts.User.email_changeset(user, %{email: user.email}, validate_unique: false)
     password_changeset = Accounts.change_user_password(user, %{}, hash_password: false)
     profile_changeset = Accounts.change_user_profile(user, %{})
 
@@ -45,9 +41,7 @@ defmodule KameramaniPhxWeb.UserLive.UserSettingsLive do
   end
 
   @impl true
-  def handle_event("validate_email", params, socket) do
-    %{"user" => user_params} = params
-
+  def handle_event("validate_email", %{"user" => user_params}, socket) do
     email_form =
       socket.assigns.current_user.user
       |> Accounts.change_user_email(user_params, validate_unique: false)
@@ -57,8 +51,7 @@ defmodule KameramaniPhxWeb.UserLive.UserSettingsLive do
     {:noreply, assign(socket, email_form: email_form)}
   end
 
-  def handle_event("update_email", params, socket) do
-    %{"user" => user_params} = params
+  def handle_event("update_email", %{"user" => user_params}, socket) do
     user = socket.assigns.current_user.user
     true = Accounts.sudo_mode?(user)
 
@@ -78,9 +71,7 @@ defmodule KameramaniPhxWeb.UserLive.UserSettingsLive do
     end
   end
 
-  def handle_event("validate_password", params, socket) do
-    %{"user" => user_params} = params
-
+  def handle_event("validate_password", %{"user" => user_params}, socket) do
     password_form =
       socket.assigns.current_user.user
       |> Accounts.change_user_password(user_params, hash_password: false)
@@ -90,8 +81,7 @@ defmodule KameramaniPhxWeb.UserLive.UserSettingsLive do
     {:noreply, assign(socket, password_form: password_form)}
   end
 
-  def handle_event("update_password", params, socket) do
-    %{"user" => user_params} = params
+  def handle_event("update_password", %{"user" => user_params}, socket) do
     user = socket.assigns.current_user.user
     true = Accounts.sudo_mode?(user)
 
@@ -104,38 +94,57 @@ defmodule KameramaniPhxWeb.UserLive.UserSettingsLive do
     end
   end
 
-  # updating user profile picture and bio
-  def handle_event("update_dp", %{"user" => user_params}, socket) do
+  def handle_event("validate_profile", %{"user" => user_params}, socket) do
+    profile_form =
+      socket.assigns.current_user.user
+      |> Accounts.change_user_profile(user_params)
+      |> Map.put(:action, :validate)
+      |> to_form()
+
+    {:noreply, assign(socket, profile_form: profile_form)}
+  end
+
+  def handle_event("update_profile", %{"user" => user_params}, socket) do
     user = socket.assigns.current_user.user
 
-    # Ensure the upload key matches your allow_upload name (was :avatar in previous examples, now :profile_picture)
-    image_upload =
+    # Handle file uploads
+    uploaded_files =
       consume_uploaded_entries(socket, :profile_picture, fn %{path: path}, _entry ->
-        # Note: fixed typo .pgn -> .png
-        desti = Path.join(["priv", "static", "uploads", "#{user.id}-profile.png"])
-        File.cp!(path, desti)
-        {:ok, "/uploads/#{Path.basename(desti)}"}
+        # Use simple project-relative path for local development
+        dest_dir = Path.join(["priv", "static", "uploads"])
+        File.mkdir_p!(dest_dir)
+
+        filename = "#{user.id}-#{System.system_time(:millisecond)}.png"
+        dest_path = Path.join(dest_dir, filename)
+
+        File.cp!(path, dest_path)
+        {:ok, "/uploads/#{filename}"}
       end)
 
-    # Explicitly merge the params
+    # If a file was uploaded, add it to params; otherwise keep existing
     final_params =
-      if url = List.first(image_upload) do
-        Map.put(user_params, "profile_picture", url)
-      else
-        user_params
+      case List.first(uploaded_files) do
+        nil -> user_params
+        url -> Map.put(user_params, "profile_picture", url)
       end
 
     case Accounts.update_user_profile(user, final_params) do
       {:ok, updated_user} ->
+        # Update socket state so the UI reflects changes immediately
         socket =
           socket
           |> put_flash(:info, "Profile updated successfully.")
           |> assign(:profile_form, to_form(Accounts.change_user_profile(updated_user, %{})))
+          |> assign(:current_user, %{socket.assigns.current_user | user: updated_user})
 
         {:noreply, socket}
 
       {:error, changeset} ->
         {:noreply, assign(socket, profile_form: to_form(changeset))}
     end
+  end
+
+  def handle_event("cancel-upload", %{"ref" => ref}, socket) do
+    {:noreply, cancel_upload(socket, :profile_picture, ref)}
   end
 end

@@ -10,9 +10,13 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
     user = Accounts.get_user_by_username(username)
 
     if user do
-      {:noreply, assign(socket, user: user, is_live: true)}
+      {:ok, assign(socket, user: user, active_tab: "home")}
     else
-      {:noreply, assign(socket, user: nil, is_live: false)}
+      {:ok, assign(socket, user: nil, active_tab: "home")}
     end
+  end
+
+  def handle_event("set_active_tab", %{"tab" => tab}, socket) do
+    {:noreply, assign(socket, active_tab: tab)}
   end
 end

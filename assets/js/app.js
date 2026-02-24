@@ -79,6 +79,54 @@ Hooks.VideoPlayer = {
   }
 };
 
+
+Hooks.AnimateCount = {
+  updated() {
+    this.el.classList.remove("animate-pop");
+    void this.el.offsetWidth; 
+    this.el.classList.add("animate-pop");
+  }
+}
+
+Hooks.UptimeTimer = {
+  mounted() {
+    this.timer = setInterval(() => {
+      // Check if the stream is live
+      const isLive = this.el.getAttribute("data-is-live") === "true";
+      if (!isLive) return;
+
+      // Get the start time injected from Elixir
+      const startTimeStr = this.el.getAttribute("data-start");
+      if(!startTimeStr) return;
+
+      const startTime = new Date(startTimeStr).getTime();
+      const now = new Date().getTime();
+      const diffInSeconds = Math.floor((now - startTime) / 1000);
+
+      const hours = Math.floor(diffInSeconds / 3600);
+      const minutes = Math.floor((diffInSeconds % 3600) / 60);
+      const seconds = diffInSeconds % 60;
+
+      // Format to H:MM:SS
+      const formattedTime = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      
+      // Update the text safely
+      if(this.el.children.length > 0) {
+        // If it has an icon child, update the last child (the span)
+        const display = this.el.querySelector("span") || this.el.lastElementChild;
+        display.innerText = formattedTime;
+      } else {
+        // Just raw text
+        this.el.innerText = formattedTime;
+      }
+    }, 1000);
+  },
+  destroyed() {
+    clearInterval(this.timer);
+  }
+}
+
+
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 const liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
@@ -133,4 +181,3 @@ if (process.env.NODE_ENV === "development") {
     window.liveReloader = reloader
   })
 }
-
