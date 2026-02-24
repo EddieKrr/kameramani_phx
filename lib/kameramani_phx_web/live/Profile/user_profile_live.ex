@@ -1,18 +1,30 @@
 defmodule KameramaniPhxWeb.Profile.UserProfileLive do
   use KameramaniPhxWeb, :live_view
   alias KameramaniPhx.Accounts
+  import KameramaniPhxWeb.ProfileComponents
 
   def mount(_params, _session, socket) do
     {:ok, assign(socket, user: nil, is_live: false)}
   end
 
-  def handle_params(%{"username" => username}, uri, socket) do
-    user = Accounts.get_user_by_username(username)
+  def handle_params(%{"username" => username}, _uri, socket) do
+    case Accounts.get_user_by_username(username) do
+      nil ->
+        {:noreply, push_navigate(socket, to: ~p"/directory")}
 
-    if user do
-      {:noreply, assign(socket, user: user, active_tab: "home")}
-    else
-      {:noreply, assign(socket, user: nil, active_tab: "home")}
+      user ->
+        avatar_url =
+          if user.profile_picture in [nil, ""],
+            do: "https://ui-avatars.com/api/?name=#{user.username}&background=random&size=150",
+            else: user.profile_picture
+
+        time =
+          if user.inserted_at,
+            do: "#{DateTime.diff(DateTime.utc_now(), user.inserted_at, :day)} days",
+            else: "N/A"
+
+        {:noreply,
+         assign(socket, user: user, avatar_url: avatar_url, active_tab: "home", time: time)}
     end
   end
 
