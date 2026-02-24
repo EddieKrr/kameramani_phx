@@ -1,12 +1,13 @@
-<div class="max-w-4xl mx-auto text-white p-4">
-  <div class="text-center mb-12">
-    <.header>
-      <h1 class="uppercase text-3xl font-title font-extrabold tracking-tight italic">
-        Account Settings
-      </h1>
-      <p class="mt-2 text-slate-400">Manage your profile, email, and security settings</p>
-    </.header>
-  </div>
+<Layouts.app flash={@flash} current_user={@current_user}>
+  <div class="max-w-4xl mx-auto text-white p-4">
+    <div class="text-center mb-12">
+      <.header>
+        <h1 class="uppercase text-3xl font-title font-extrabold tracking-tight italic">
+          Account Settings
+        </h1>
+        <p class="mt-2 text-slate-400">Manage your profile, email, and security settings</p>
+      </.header>
+    </div>
 
   <div class="grid grid-cols-1 gap-8">
     <%!-- PROFILE SECTION --%>
@@ -89,16 +90,13 @@
             />
 
             <div class="flex-1 w-full space-y-6">
-              <div class="fieldset">
-                <label class="label">
-                  <span class="label-text text-slate-300 font-bold">Biography</span>
-                </label>
-                <textarea
-                  placeholder="Let your fans know who you are..."
-                  class="textarea w-full bg-slate-900/50 border-2 border-slate-700 text-white rounded-2xl min-h-[120px] focus:border-blue-500 focus:outline-none"
-                >
-            </textarea>
-              </div>
+              <.input
+                field={@profile_form[:bio]}
+                type="textarea"
+                label="Biography"
+                placeholder="Let your fans know who you are..."
+                class="bg-slate-900/50 border-2 border-slate-700 text-white rounded-2xl min-h-[120px] focus:border-blue-500 focus:outline-none"
+              />
 
               <div class="flex justify-end">
                 <.button
@@ -210,3 +208,4 @@
     </section>
   </div>
 </div>
+</Layouts.app>

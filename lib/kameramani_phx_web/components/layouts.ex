@@ -31,7 +31,8 @@ defmodule KameramaniPhxWeb.Layouts do
     default: nil,
     doc: "the current [user](https://hexdocs.pm/phoenix/users.html)"
 
-  slot :inner_block, required: true
+  attr :inner_content, :any, default: nil
+  slot :inner_block
 
   def app(assigns) do
     ~H"""
@@ -116,7 +117,13 @@ defmodule KameramaniPhxWeb.Layouts do
     </header>
 
     <main class="pt-24 bg-[#0e0e10] text-white">
-      <div class="">{@inner_content}</div>
+      <div class="">
+        <%= if @inner_content do %>
+          {@inner_content}
+        <% else %>
+          <%= render_slot(@inner_block) %>
+        <% end %>
+      </div>
     </main>
     <.flash_group flash={@flash} />
     """
@@ -133,12 +140,17 @@ defmodule KameramaniPhxWeb.Layouts do
 
   """
   attr :flash, :map, required: true, doc: "the map of flash messages"
-  slot :inner_block, required: true
+  attr :inner_content, :any, default: nil
+  slot :inner_block
 
   def auth(assigns) do
     ~H"""
     <div class="min-h-screen bg-[#0e0e10] text-white flex flex-col items-center justify-center">
-      {@inner_content}
+      <%= if @inner_content do %>
+        {@inner_content}
+      <% else %>
+        <%= render_slot(@inner_block) %>
+      <% end %>
     </div>
     <.flash_group flash={@flash} />
     """

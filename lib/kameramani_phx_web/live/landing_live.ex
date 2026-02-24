@@ -126,7 +126,7 @@ defmodule KameramaniPhxWeb.LandingLive do
       stream_name: s.title,
       streamer: s.user.username,
       category: s.category || "Just Chatting",
-      tags: Enum.join(s.tags || [], ", "),
+      tags: s.tags || [],
       viewer_count: count,
       avatar: avatar_url,
       is_live: s.is_live

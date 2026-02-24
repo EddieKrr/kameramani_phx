@@ -1,31 +1,34 @@
-<div class="flex h-full w-full bg-[#060606] text-gray-100 overflow-hidden font-sans">
-  <aside class="w-[70px] xl:w-64 bg-[#0e0e10] border-r border-white/5 flex flex-col transition-all duration-300">
-    <div class="flex-1 overflow-y-auto px-2 space-y-4 py-4">
-      <div class="hidden xl:block px-2 text-[10px] font-bold text-gray-500 uppercase tracking-widest">
-        Followed Channels
-      </div>
+<div class="flex h-screen w-full bg-[#0e0e10] text-[#efeff1] overflow-none font-sans">
+  
+  <aside class={"bg-[#18181b] border-r border-white/5 flex flex-col transition-all duration-300 ease-in-out " <> (if @left_sidebar_open, do: "w-64", else: "w-[50px] items-center")}>
+    <div class="flex items-center justify-between p-3 border-b border-white/5">
+      <span class={"text-[11px] font-bold text-[#adadb8] uppercase tracking-widest whitespace-nowrap " <> (if @left_sidebar_open, do: "block", else: "hidden")}>
+        For You
+      </span>
+      <button phx-click="toggle_left_sidebar" class="p-1 rounded hover:bg-white/10 text-[#adadb8] transition-colors" title="Collapse">
+        <.svg variant={if @left_sidebar_open, do: "chevron-left", else: "chevron-right"} class="w-4 h-4" />
+      </button>
+    </div>
 
-      <div class="flex-1 overflow-y-auto px-2 space-y-2 py-4 custom-scrollbar">
-        <.sidebar_item
-          :for={stream <- @recommended_streams}
-          name={stream.name}
-          game={stream.game}
-          viewer_count={to_string(stream.viewer_count)}
-          src={stream.src}
-          active={stream.name == @streamer_name}
-          show_details={@left_sidebar_open}
-        />
-      </div>
+    <div class="flex-1 overflow-y-auto px-2 space-y-2 py-4 custom-scrollbar">
+      <.sidebar_item
+        :for={stream <- @recommended_streams}
+        name={stream.name}
+        game={stream.game}
+        viewer_count={to_string(stream.viewer_count)}
+        src={stream.src}
+        active={stream.name == @streamer_name}
+        show_details={@left_sidebar_open}
+        navigate={~p"/watch/#{stream.name}"}
+      />
     </div>
   </aside>
 
   <main class="flex-1 flex flex-col min-w-0 bg-[#0e0e10] overflow-y-auto relative">
+    
     <%= if !@chat_open do %>
       <div class="absolute top-4 right-4 z-50">
-        <button
-          phx-click="toggle_chat"
-          class="p-2 bg-[#18181b]/80 backdrop-blur rounded hover:bg-[#18181b] border border-white/5 text-[#efeff1] shadow-lg flex items-center gap-2 group transition-all"
-        >
+        <button phx-click="toggle_chat" class="p-2 bg-[#18181b]/80 backdrop-blur rounded hover:bg-[#18181b] border border-white/5 text-[#efeff1] shadow-lg flex items-center gap-2 group transition-all">
           <.svg variant="chat-bubble-left" class="w-5 h-5 text-[#adadb8] group-hover:text-white" />
         </button>
       </div>
@@ -53,12 +56,13 @@
           </span>
           <span class="bg-black/60 backdrop-blur-md text-white text-[12px] font-bold px-2 py-0.5 rounded flex items-center gap-1.5">
             <.svg variant="user" class="h-3 w-3 text-[#eb0400]" />
-            <span id="video-viewer-count" phx-hook="AnimateCount">{@viewer_count}</span>
+            <span id="video-viewer-count" phx-hook="AnimateCount"><%= @viewer_count %></span>
           </span>
           <span class="bg-black/60 backdrop-blur-md text-white text-[12px] font-bold px-2 py-0.5 rounded" id="video-uptime" phx-update="ignore" phx-hook="UptimeTimer" data-start={@stream_started_at} data-is-live={to_string(@is_live)}>
             0:00:00
           </span>
         </div>
+
       <% else %>
         <div class="absolute inset-0 flex items-center justify-center bg-[#18181b]">
           <div class="text-center">
@@ -77,6 +81,7 @@
 
     <div class="p-5 md:p-8 shrink-0">
       <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
+        
         <div class="flex items-start gap-4">
           <.link navigate={~p"/users/profile/#{@streamer_name}"} class="relative shrink-0 group">
             <div class={"w-16 h-16 rounded-full p-0.5 transition-transform group-hover:scale-105 " <> (if @is_live, do: "bg-[#eb0400]", else: "bg-white/10")}>
@@ -98,7 +103,7 @@
             <h2 class="text-[15px] font-medium text-[#efeff1] tracking-tight mb-2 truncate max-w-2xl">
               {@stream_name}
             </h2>
-
+            
             <div class="flex items-center gap-2 mb-3">
               <span class="text-[#bf94ff] hover:underline cursor-pointer font-semibold text-sm">
                 {@category_name}
@@ -108,7 +113,7 @@
             <div class="flex flex-wrap items-center gap-1.5">
               <%= for tag <- @tags do %>
                 <span class="bg-[#26262c] hover:bg-[#323239] transition-colors cursor-pointer text-[#adadb8] font-semibold text-[12px] px-3 py-0.5 rounded-full">
-                  {tag}
+                  <%= tag %>
                 </span>
               <% end %>
             </div>
@@ -119,7 +124,7 @@
           <div class="flex items-center gap-6 text-[#eb0400] font-bold text-sm">
             <div class="flex items-center gap-1.5">
               <.svg variant="user" class="w-4 h-4" />
-              <span id="profile-viewer-count" phx-hook="AnimateCount">{@viewer_count}</span>
+              <span id="profile-viewer-count" phx-hook="AnimateCount"><%= @viewer_count %></span>
             </div>
             <div class="text-[#adadb8] font-medium flex items-center gap-1.5" id="profile-uptime" phx-update="ignore" phx-hook="UptimeTimer" data-start={@stream_started_at} data-is-live={to_string(@is_live)}>
               <.svg variant="clock" class="w-4 h-4" />
@@ -147,25 +152,22 @@
             <% end %>
           <% end %>
         </div>
+
       </div>
     </div>
   </main>
 
   <%= if @chat_open do %>
-    <aside class="w-80 bg-[#18181b] border-l border-white/5 flex flex-col shadow-[-10px_0_30px_rgba(0,0,0,0.5)] z-20 transition-all duration-300">
+    <aside class="h-screen w-80 bg-[#18181b] border-l border-white/5 flex flex-col shadow-[-10px_0_30px_rgba(0,0,0,0.5)] z-20 transition-all duration-300">
       <div class="h-12 flex items-center justify-between px-3 border-b border-white/5 shrink-0">
-        <button
-          phx-click="toggle_chat"
-          class="p-1 rounded hover:bg-white/10 text-[#adadb8] transition-colors"
-          title="Collapse"
-        >
+        <button phx-click="toggle_chat" class="p-1 rounded hover:bg-white/10 text-[#adadb8] transition-colors" title="Collapse">
           <.svg variant="chevron-right" class="w-5 h-5" />
         </button>
         <span class="text-[12px] font-bold uppercase tracking-wider text-[#efeff1]">
           Stream Chat
         </span>
         <div class="flex items-center gap-1 text-[#adadb8]">
-          <.svg variant="user" class="h-4 w-4" />
+           <.svg variant="user" class="h-4 w-4" />
         </div>
       </div>
 
@@ -187,11 +189,7 @@
             />
             <div class="flex justify-between items-center mt-2">
               <div class="flex items-center gap-2">
-                <div
-                  class="w-3 h-3 rounded-full shadow-sm"
-                  style={"background-color: #{@user_color}"}
-                >
-                </div>
+                <div class="w-3 h-3 rounded-full shadow-sm" style={"background-color: #{@user_color}"}></div>
                 <span class="text-[11px] font-bold text-[#adadb8] truncate max-w-[100px]">
                   {@username}
                 </span>
@@ -209,4 +207,5 @@
       </div>
     </aside>
   <% end %>
+
 </div>

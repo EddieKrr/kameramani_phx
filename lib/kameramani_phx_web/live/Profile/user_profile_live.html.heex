@@ -1,16 +1,22 @@
 <div class="min-h-screen bg-[#0e0e10] text-white">
   <!-- Background Pattern -->
   <div class="fixed inset-0 opacity-5">
-    <div
-      class="absolute inset-0"
-      style="background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.1) 35px, rgba(255,255,255,.1) 70px);"
-    >
-    </div>
+    <div class="absolute inset-0" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.1) 35px, rgba(255,255,255,.1) 70px);"></div>
   </div>
-
+  
   <div class="relative z-10">
     <!-- Channel Banner -->
-   
+    <div class="bg-gradient-to-r from-purple-600 to-indigo-600 py-3 px-6">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <.svg variant="cog-6-tooth" class="h-5 w-5" />
+          <span class="font-semibold">Customize your channel</span>
+        </div>
+        <button class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg font-medium transition-colors">
+          Customize channel
+        </button>
+      </div>
+    </div>
 
     <div class="max-w-7xl mx-auto px-4 py-8">
       <!-- Profile Header -->
@@ -22,8 +28,7 @@
               <img
                 src={
                   if @user.profile_picture in [nil, ""],
-                    do:
-                      "https://ui-avatars.com/api/?name=#{@user.username}&background=random&size=150",
+                    do: "https://ui-avatars.com/api/?name=#{@user.username}&background=random&size=150",
                     else: @user.profile_picture
                 }
                 alt="{@user.name}'s Profile Picture"
@@ -35,25 +40,19 @@
               </div>
             </div>
           </div>
-          
-<!-- User Info -->
+
+          <!-- User Info -->
           <div class="flex-1 text-center md:text-left">
             <div class="flex items-center gap-3 mb-2">
               <h1 class="text-4xl font-bold">{@user.name}</h1>
-              <!-- Live/Offline Status Badge -->
-              <%= if @is_live do %>
-                <div class="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse">
-                  LIVE
-                </div>
-              <% else %>
-                <div class="bg-gray-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-                  OFFLINE
-                </div>
-              <% end %>
+              <!-- Offline Status Badge -->
+              <div class="bg-gray-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                OFFLINE
+              </div>
             </div>
             <p class="text-xl text-gray-300 mb-4">@{@user.username}</p>
             
-<!-- Bio Section -->
+            <!-- Bio Section -->
             <%= if @user.bio && @user.bio != "" do %>
               <div class="bg-white/5 rounded-lg p-4 mb-4">
                 <p class="text-gray-300 leading-relaxed">{@user.bio}</p>
@@ -63,161 +62,158 @@
                 <p class="text-gray-500 italic">No bio yet...</p>
               </div>
             <% end %>
-            
-<!-- User Stats -->
+
+            <!-- User Stats -->
             <div class="flex flex-wrap gap-6 justify-center md:justify-start">
-              <div class="text-center">
-                <p class="text-2xl font-bold text-white">{@follower_count}</p>
-                <p class="text-sm text-gray-400">Followers</p>
-              </div>
-              <div class="text-center">
-                <p class="text-2xl font-bold text-white">{@following_count}</p>
-                <p class="text-sm text-gray-400">Following</p>
-              </div>
               <div class="text-center">
                 <p class="text-2xl font-bold text-white">{@user.age || "N/A"}</p>
                 <p class="text-sm text-gray-400">Age</p>
               </div>
               <div class="text-center">
                 <p class="text-2xl font-bold text-white">
-                  {if @user.inserted_at,
-                    do: "#{DateTime.diff(DateTime.utc_now(), @user.inserted_at, :day)} days",
-                    else: "N/A"}
+                  {if @user.inserted_at, do: "#{DateTime.diff(DateTime.utc_now(), @user.inserted_at, :day)} days", else: "N/A"}
                 </p>
                 <p class="text-sm text-gray-400">Member</p>
+              </div>
+              <div class="text-center">
+                <p class="text-2xl font-bold text-white">{@follower_count || 0}</p>
+                <p class="text-sm text-gray-400">Followers</p>
+              </div>
+              <div class="text-center">
+                <p class="text-2xl font-bold text-white">{@following_count || 0}</p>
+                <p class="text-sm text-gray-400">Following</p>
               </div>
             </div>
           </div>
         </div>
       </div>
-      
-<!-- Navigation Tabs -->
+
+      <!-- Navigation Tabs -->
       <div class="bg-[#18181b] border border-white/5 rounded-2xl shadow-2xl mb-8">
         <div class="flex flex-wrap border-b border-white/5">
-          <button
-            phx-click="set_active_tab"
-            phx-value-tab="home"
+          <button 
+            phx-click="set_active_tab" 
+            phx-value-tab="home" 
             class={"px-6 py-4 font-medium text-white hover:bg-white/5 transition-colors border-b-2 relative " <> 
               if(@active_tab == "home", do: "border-white bg-white/10", else: "border-transparent hover:border-white/20")}
           >
             Home
           </button>
-          <button
-            phx-click="set_active_tab"
-            phx-value-tab="about"
+          <button 
+            phx-click="set_active_tab" 
+            phx-value-tab="about" 
             class={"px-6 py-4 font-medium text-white hover:bg-white/5 transition-colors border-b-2 relative " <> 
               if(@active_tab == "about", do: "border-white bg-white/10", else: "border-transparent hover:border-white/20")}
           >
             About
           </button>
-          <button
-            phx-click="set_active_tab"
-            phx-value-tab="schedule"
+          <button 
+            phx-click="set_active_tab" 
+            phx-value-tab="schedule" 
             class={"px-6 py-4 font-medium text-white hover:bg-white/5 transition-colors border-b-2 relative " <> 
               if(@active_tab == "schedule", do: "border-white bg-white/10", else: "border-transparent hover:border-white/20")}
           >
             Schedule
           </button>
-          <button
-            phx-click="set_active_tab"
-            phx-value-tab="videos"
+          <button 
+            phx-click="set_active_tab" 
+            phx-value-tab="videos" 
             class={"px-6 py-4 font-medium text-white hover:bg-white/5 transition-colors border-b-2 relative " <> 
               if(@active_tab == "videos", do: "border-white bg-white/10", else: "border-transparent hover:border-white/20")}
           >
             Videos
           </button>
-          <button
-            phx-click="set_active_tab"
-            phx-value-tab="chat"
+          <button 
+            phx-click="set_active_tab" 
+            phx-value-tab="chat" 
             class={"px-6 py-4 font-medium text-white hover:bg-white/5 transition-colors border-b-2 relative " <> 
               if(@active_tab == "chat", do: "border-white bg-white/10", else: "border-transparent hover:border-white/20")}
           >
             Chat
           </button>
         </div>
-        
-<!-- Tab Content -->
+
+        <!-- Tab Content -->
         <div class="p-8">
           <%= case @active_tab do %>
             <% "home" -> %>
               <div class="text-center py-12">
                 <.svg variant="home" class="h-16 w-16 text-gray-500 mx-auto mb-4" />
-                <h3 class="text-2xl font-bold text-white mb-2">
-                  Welcome to {@user.name}'s Channel
-                </h3>
-                <p class="text-gray-400 mb-6">
-                  This is where the latest stream and activity will appear.
-                </p>
+                <h3 class="text-2xl font-bold text-white mb-2">Welcome to {@user.name}'s Channel</h3>
+                <p class="text-gray-400 mb-6">This is where the latest stream and activity will appear.</p>
                 <div class="bg-gray-600/20 rounded-lg p-8 border-2 border-dashed border-gray-600">
                   <p class="text-gray-400 text-lg">{@user.username} is currently offline</p>
                 </div>
               </div>
+
             <% "about" -> %>
               <div>
                 <h3 class="text-2xl font-bold text-white mb-6">About {@user.name}</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div class="bg-white/5 rounded-lg p-6">
-                    <h4 class="text-sm font-semibold text-indigo-300 mb-2 uppercase tracking-wider">
-                      Email Address
-                    </h4>
+                    <h4 class="text-sm font-semibold text-indigo-300 mb-2 uppercase tracking-wider">Email Address</h4>
                     <p class="text-white font-medium">{@user.email}</p>
                   </div>
-
+                  
                   <div class="bg-white/5 rounded-lg p-6">
-                    <h4 class="text-sm font-semibold text-indigo-300 mb-2 uppercase tracking-wider">
-                      Username
-                    </h4>
+                    <h4 class="text-sm font-semibold text-indigo-300 mb-2 uppercase tracking-wider">Username</h4>
                     <p class="text-white font-medium">@{@user.username}</p>
                   </div>
-
+                  
                   <div class="bg-white/5 rounded-lg p-6">
-                    <h4 class="text-sm font-semibold text-indigo-300 mb-2 uppercase tracking-wider">
-                      Age
-                    </h4>
+                    <h4 class="text-sm font-semibold text-indigo-300 mb-2 uppercase tracking-wider">Age</h4>
                     <p class="text-white font-medium">{@user.age || "Not specified"}</p>
                   </div>
-
+                  
                   <div class="bg-white/5 rounded-lg p-6">
-                    <h4 class="text-sm font-semibold text-indigo-300 mb-2 uppercase tracking-wider">
-                      Member Since
-                    </h4>
+                    <h4 class="text-sm font-semibold text-indigo-300 mb-2 uppercase tracking-wider">Member Since</h4>
                     <p class="text-white font-medium">
-                      {if @user.inserted_at,
-                        do: Calendar.strftime(@user.inserted_at, "%B %d, %Y"),
-                        else: "Unknown"}
+                      {if @user.inserted_at, do: Calendar.strftime(@user.inserted_at, "%B %d, %Y"), else: "Unknown"}
                     </p>
                   </div>
+                  
+                  <div class="bg-white/5 rounded-lg p-6">
+                    <h4 class="text-sm font-semibold text-indigo-300 mb-2 uppercase tracking-wider">Followers</h4>
+                    <p class="text-white font-medium text-xl">{@follower_count || 0}</p>
+                  </div>
+                  
+                  <div class="bg-white/5 rounded-lg p-6">
+                    <h4 class="text-sm font-semibold text-indigo-300 mb-2 uppercase tracking-wider">Following</h4>
+                    <p class="text-white font-medium text-xl">{@following_count || 0}</p>
+                  </div>
                 </div>
-
+                
                 <%= if @user.bio && @user.bio != "" do %>
                   <div class="mt-6">
-                    <h4 class="text-sm font-semibold text-indigo-300 mb-2 uppercase tracking-wider">
-                      Biography
-                    </h4>
+                    <h4 class="text-sm font-semibold text-indigo-300 mb-2 uppercase tracking-wider">Biography</h4>
                     <div class="bg-white/5 rounded-lg p-6">
                       <p class="text-gray-300 leading-relaxed">{@user.bio}</p>
                     </div>
                   </div>
                 <% end %>
               </div>
+
             <% "schedule" -> %>
               <div class="text-center py-12">
                 <.svg variant="calendar" class="h-16 w-16 text-gray-500 mx-auto mb-4" />
                 <h3 class="text-2xl font-bold text-white mb-2">Stream Schedule</h3>
                 <p class="text-gray-400">No streams scheduled yet. Check back later!</p>
               </div>
+
             <% "videos" -> %>
               <div class="text-center py-12">
                 <.svg variant="video-camera" class="h-16 w-16 text-gray-500 mx-auto mb-4" />
                 <h3 class="text-2xl font-bold text-white mb-2">Recent Videos</h3>
                 <p class="text-gray-400">No videos available yet.</p>
               </div>
+
             <% "chat" -> %>
               <div class="text-center py-12">
                 <.svg variant="chat-bubble-left" class="h-16 w-16 text-gray-500 mx-auto mb-4" />
                 <h3 class="text-2xl font-bold text-white mb-2">Channel Chat</h3>
                 <p class="text-gray-400">Chat is only available when {@user.username} is live.</p>
               </div>
+
             <% _ -> %>
               <div class="text-center py-12">
                 <p class="text-gray-400">Select a tab to view content</p>
@@ -225,35 +221,30 @@
           <% end %>
         </div>
       </div>
-      
-<!-- Action Buttons -->
-      <div class="flex justify-center gap-4">
-        <%= if @is_live do %>
-          <.link
-            navigate={~p"/watch/#{@user.username}"}
-            class="bg-red-600 hover:bg-red-500 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2"
-          >
-            <.svg variant="play" class="h-5 w-5" /> Watch Live
-          </.link>
-        <% end %>
-        
-        <button class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2">
-          <.svg variant="envelope" class="h-5 w-5" /> Send Message
-        </button>
 
-        <%= if @current_user.user && @current_user.user.id != @user.id do %>
-          <button
-            phx-click="toggle_follow"
-            class={"px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2 " <> 
-              if(@is_following, do: "bg-gray-700 hover:bg-gray-600", else: "bg-purple-600 hover:bg-purple-500")}
-          >
-            <%= if @is_following do %>
-              <.svg variant="heart-solid" class="h-5 w-5 text-red-500" /> Unfollow
-            <% else %>
-              <.svg variant="heart" class="h-5 w-5" /> Follow
-            <% end %>
-          </button>
-        <% end %>
+      <!-- Action Buttons -->
+      <div class="flex justify-center gap-4">
+        <button class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2">
+          <.svg variant="envelope" class="h-5 w-5" />
+          Send Message
+        </button>
+        <button 
+          phx-click="toggle_follow" 
+          class={
+            if @is_following do
+              "bg-gray-600 hover:bg-gray-500 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2"
+            else
+              "bg-purple-600 hover:bg-purple-500 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2"
+            end
+          }
+        >
+          <.svg variant="heart" class="h-5 w-5" />
+          <%= if @is_following do %>
+            Following
+          <% else %>
+            Follow
+          <% end %>
+        </button>
       </div>
     </div>
   </div>
