@@ -7,6 +7,7 @@ defmodule KameramaniPhxWeb.ChatLive do
   alias KameramaniPhxWeb.DummyData
 
   alias KameramaniPhx.Accounts
+  alias KameramaniPhx.Chat
 
   alias KameramaniPhx.Accounts.Scope
   alias KameramaniPhxWeb.Presence
@@ -24,27 +25,25 @@ defmodule KameramaniPhxWeb.ChatLive do
     Phoenix.PubSub.broadcast(KameramaniPhx.PubSub, "stream_chat:#{stream_id}", value)
   end
 
-  # FIX 1: Only expect "username" from the URL parameters
   def mount(%{"username" => username}, session, socket) do
     case Accounts.get_user_by_username(username) do
       nil ->
-        {:halt,
+        {:ok,
          socket
-         |> Phoenix.LiveView.put_flash(:error, "User not found")
-         |> Phoenix.LiveView.redirect(to: ~p"/")}
+         |> put_flash(:error, "User not found")
+         |> push_navigate(to: ~p"/")}
 
       user ->
-        # Fetch the stream for this user
-        case KameramaniPhx.Streaming.get_active_stream_for_user(user.id) do
+        # Fetch the stream for this user (even if offline)
+        case KameramaniPhx.Streaming.get_stream_for_user(user.id) do
           nil ->
-            {:halt,
+            {:ok,
              socket
-             |> Phoenix.LiveView.put_flash(:error, "Stream not found")
-             |> Phoenix.LiveView.redirect(to: ~p"/")}
+             |> put_flash(:error, "This user hasn't set up a channel yet")
+             |> push_navigate(to: ~p"/")}
 
           stream ->
-            # FIX 2: Now that we have the stream from the DB, we know the stream.id!
-            # We can safely setup Presence tracking here.
+            # Setup Presence and PubSub topics
             topic = "stream_viewers:#{stream.id}"
             user_id = session["live_socket_id"] || session["guest_id"] || socket.id
 
@@ -62,6 +61,22 @@ defmodule KameramaniPhxWeb.ChatLive do
 
             # Get the initial viewer count
             initial_count = Presence.list(topic) |> map_size()
+
+            # Check if current user is following this streamer
+            is_following = false
+            current_user_obj = nil
+
+            # Manually mount current_user (without enforcing authentication)
+            current_user_scope =
+              if user_token = session["user_token"] do
+                {curr_user, _} = Accounts.get_user_by_session_token(user_token) || {nil, nil}
+                current_user_obj = curr_user
+                Scope.for_user(curr_user)
+              else
+                Scope.for_user(nil)
+              end
+
+            is_following = if current_user_obj, do: Accounts.is_following?(current_user_obj, user), else: false
 
             # Fetch recommended streamers for the sidebar (similar to LandingLive)
             recommended_streams =
@@ -94,7 +109,7 @@ defmodule KameramaniPhxWeb.ChatLive do
             # Assign all the data to the socket
             assigns_to_socket = %{
               stream_id: stream.id,
-              # Added viewer count here
+              streamer_id: user.id,
               viewer_count: initial_count,
               streamer_name: user.username,
               streamer_profile_picture: avatar_url,
@@ -102,29 +117,27 @@ defmodule KameramaniPhxWeb.ChatLive do
               stream_name: stream.title,
               tags: stream.tags || [],
               is_live: stream.is_live,
+              is_following: is_following,
               left_sidebar_open: true,
               chat_open: true,
               stream_started_at: stream.updated_at || DateTime.utc_now(),
               recommended_streams: recommended_streams
             }
 
-            # Manually mount current_user (without enforcing authentication)
-            current_user_scope =
-              if user_token = session["user_token"] do
-                {curr_user, _} = Accounts.get_user_by_session_token(user_token) || {nil, nil}
-                Scope.for_user(curr_user)
-              else
-                Scope.for_user(nil)
-              end
+            # Curated list of visible colors: blue, red, orange, yellow, pink, purple, green, lime
+            chat_colors = ~w(#3b82f6 #ef4444 #f97316 #eab308 #ec4899 #a855f7 #22c55e #84cc16)
 
-            # If the current user is logged in, use their username and a consistent color
+            # If the current user is logged in, use their username and their stored color
             {chat_username, chat_user_color} =
               if current_user_scope.user do
-                {current_user_scope.user.username, "#6366f1"}
+                {current_user_scope.user.username, current_user_scope.user.chat_color || "#6366f1"}
               else
                 {Enum.random(["Guest_#{:rand.uniform(1000)}"]),
-                 "#" <> for(_ <- 1..3, into: "", do: Integer.to_string(Enum.random(100..255), 16))}
+                 Enum.random(chat_colors)}
               end
+
+            # Load existing messages
+            messages = Chat.list_messages_for_stream(stream.id)
 
             {:ok,
              socket
@@ -135,7 +148,7 @@ defmodule KameramaniPhxWeb.ChatLive do
                current_user: current_user_scope
              )
              |> assign(assigns_to_socket)
-             |> stream(:messages, [])}
+             |> stream(:messages, messages)}
         end
     end
   end
@@ -149,27 +162,55 @@ defmodule KameramaniPhxWeb.ChatLive do
     {:noreply, assign(socket, chat_open: !socket.assigns.chat_open)}
   end
 
+  def handle_event("toggle_follow", _params, socket) do
+    current_user = socket.assigns.current_user.user
+    streamer_id = socket.assigns.streamer_id
+
+    if current_user do
+      if current_user.id == streamer_id do
+        {:noreply, put_flash(socket, :error, "You cannot follow yourself")}
+      else
+        if socket.assigns.is_following do
+          Accounts.unfollow_user(current_user, streamer_id)
+          {:noreply, assign(socket, is_following: false)}
+        else
+          Accounts.follow_user(current_user, streamer_id)
+          {:noreply, assign(socket, is_following: true)}
+        end
+      end
+    else
+      {:noreply,
+       socket
+       |> put_flash(:info, "Please log in to follow")
+       |> push_navigate(to: ~p"/auth")}
+    end
+  end
+
   def handle_event("send_message", %{"chat" => %{"ch_message" => message_text}}, socket) do
     # Check if user is logged in
-    if socket.assigns.current_user.user do
-      message = String.trim(message_text)
+    if current_user = socket.assigns.current_user.user do
+      message_body = String.trim(message_text)
 
-      if message != "" do
-        nai_time = DateTime.now!("Africa/Nairobi")
-        nu_time = KameramaniPhxWeb.Cldr.Time.to_string!(nai_time, format: :medium)
-
-        new_message = %{
-          id: System.unique_integer([:positive]),
-          name: socket.assigns.username,
-          text: message,
-          dt: nu_time,
-          color: socket.assigns.user_color
+      if message_body != "" do
+        attrs = %{
+          body: message_body,
+          stream_id: socket.assigns.stream_id,
+          user_id: current_user.id
         }
 
-        # Broadcast to everyone (including yourself)
-        broadcast(socket.assigns.stream_id, {:new_message, new_message})
+        case Chat.create_stream_message(attrs) do
+          {:ok, message} ->
+            # Preload user for the broadcast so others can see who sent it
+            message = Map.put(message, :user, current_user)
 
-        {:noreply, assign(socket, form: to_form(@initial_state, as: :chat))}
+            # Broadcast to everyone (including yourself)
+            broadcast(socket.assigns.stream_id, {:new_message, message})
+
+            {:noreply, assign(socket, form: to_form(@initial_state, as: :chat))}
+
+          {:error, _changeset} ->
+            {:noreply, put_flash(socket, :error, "Could not send message")}
+        end
       else
         {:noreply, socket}
       end

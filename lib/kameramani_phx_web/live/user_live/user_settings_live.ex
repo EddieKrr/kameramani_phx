@@ -34,7 +34,7 @@ defmodule KameramaniPhxWeb.UserLive.UserSettingsLive do
       |> assign(:profile_form, to_form(profile_changeset))
       |> assign(:trigger_submit, false)
       |> allow_upload(:profile_picture,
-        accept: ~w(.jpg .jpeg .png),
+        accept: ~w(.jpg .jpeg .png .webp),
         max_entries: 1,
         max_file_size: 5_000_000
       )
@@ -138,6 +138,7 @@ defmodule KameramaniPhxWeb.UserLive.UserSettingsLive do
           |> put_flash(:info, "Profile updated successfully.")
           |> assign(:profile_form, to_form(Accounts.change_user_profile(updated_user, %{})))
           |> assign(:current_user, %{socket.assigns.current_user | user: updated_user})
+          |> push_navigate(to: ~p"/users/profile/#{updated_user.username}")
 
         {:noreply, socket}
 

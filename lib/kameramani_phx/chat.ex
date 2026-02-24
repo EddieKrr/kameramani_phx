@@ -8,10 +8,30 @@ defmodule KameramaniPhx.Chat do
 
   alias KameramaniPhx.Chat.LiveChat, as: Message
   alias KameramaniPhx.Accounts.Scope
-  # Removed Stream alias and related functions to separate concerns.
 
   @doc """
-  Subscribes to userd notifications about any message changes.
+  Returns the list of messages for a specific stream.
+  Preloads the user for each message.
+  """
+  def list_messages_for_stream(stream_id) do
+    Message
+    |> where([m], m.stream_id == ^stream_id)
+    |> order_by([m], asc: m.inserted_at)
+    |> preload(:user)
+    |> Repo.all()
+  end
+
+  @doc """
+  Creates a message for a stream.
+  """
+  def create_stream_message(attrs) do
+    %Message{}
+    |> Message.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Subscribes to notifications about any message changes for a user.
 
   The broadcasted messages match the pattern:
 
@@ -76,9 +96,11 @@ defmodule KameramaniPhx.Chat do
 
   """
   def create_message(%Scope{} = user, attrs) do
+    attrs = Map.put(attrs, :user_id, user.user.id)
+
     with {:ok, message = %Message{}} <-
            %Message{}
-           |> Message.changeset(attrs, user)
+           |> Message.changeset(attrs)
            |> Repo.insert() do
       broadcast_message(user, {:created, message})
       {:ok, message}
@@ -102,7 +124,7 @@ defmodule KameramaniPhx.Chat do
 
     with {:ok, message = %Message{}} <-
            message
-           |> Message.changeset(attrs, user)
+           |> Message.changeset(attrs)
            |> Repo.update() do
       broadcast_message(user, {:updated, message})
       {:ok, message}
@@ -143,6 +165,6 @@ defmodule KameramaniPhx.Chat do
   def change_message(%Scope{} = user, %Message{} = message, attrs \\ %{}) do
     true = message.user_id == user.user.id
 
-    Message.changeset(message, attrs, user)
+    Message.changeset(message, attrs)
   end
 end

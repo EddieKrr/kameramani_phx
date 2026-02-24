@@ -31,4 +31,34 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
   def handle_event("set_active_tab", %{"tab" => tab}, socket) do
     {:noreply, assign(socket, active_tab: tab)}
   end
+
+  def handle_event("toggle_follow", _params, socket) do
+    current_user = socket.assigns.current_user.user
+    profile_user = socket.assigns.user
+
+    if current_user do
+      if current_user.id == profile_user.id do
+        {:noreply, put_flash(socket, :error, "You cannot follow yourself")}
+      else
+        if socket.assigns.is_following do
+          Accounts.unfollow_user(current_user, profile_user)
+          {:noreply,
+           socket
+           |> assign(is_following: false)
+           |> assign(follower_count: socket.assigns.follower_count - 1)}
+        else
+          Accounts.follow_user(current_user, profile_user)
+          {:noreply,
+           socket
+           |> assign(is_following: true)
+           |> assign(follower_count: socket.assigns.follower_count + 1)}
+        end
+      end
+    else
+      {:noreply,
+       socket
+       |> put_flash(:info, "Please log in to follow")
+       |> push_navigate(to: ~p"/auth")}
+    end
+  end
 end

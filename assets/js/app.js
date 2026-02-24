@@ -45,8 +45,7 @@ Hooks.VideoPlayer = {
   updated() {
     // If the HLS URL changes, re-initialize the player
     const newHlsUrl = this.el.dataset.hlsUrl;
-    if (this.player && this.player.url !== newHlsUrl) {
-      this.player.destroy(); // Clean up old Hls instance
+    if (this.player && this.currentUrl !== newHlsUrl) {
       this.initPlayer();
     }
   },
@@ -60,6 +59,12 @@ Hooks.VideoPlayer = {
   initPlayer() {
     const video = this.el;
     const hlsUrl = video.dataset.hlsUrl;
+    
+    if (this.player) {
+      this.player.destroy();
+    }
+
+    this.currentUrl = hlsUrl;
 
     if (Hls.isSupported()) {
       this.player = new Hls();
@@ -81,10 +86,17 @@ Hooks.VideoPlayer = {
 
 
 Hooks.AnimateCount = {
+  mounted() {
+    this.lastValue = this.el.innerText;
+  },
   updated() {
-    this.el.classList.remove("animate-pop");
-    void this.el.offsetWidth; 
-    this.el.classList.add("animate-pop");
+    const newValue = this.el.innerText;
+    if (newValue !== this.lastValue) {
+      this.lastValue = newValue;
+      this.el.classList.remove("animate-pop");
+      void this.el.offsetWidth; 
+      this.el.classList.add("animate-pop");
+    }
   }
 }
 
