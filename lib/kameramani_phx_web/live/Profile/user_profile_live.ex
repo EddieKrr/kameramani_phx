@@ -10,9 +10,9 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
     user = Accounts.get_user_by_username(username)
 
     if user do
-      {:ok, assign(socket, user: user, active_tab: "home")}
+      {:noreply, assign(socket, user: user, active_tab: "home")}
     else
-      {:ok, assign(socket, user: nil, active_tab: "home")}
+      {:noreply, assign(socket, user: nil, active_tab: "home")}
     end
   end
 

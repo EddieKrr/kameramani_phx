@@ -31,26 +31,34 @@ defmodule KameramaniPhxWeb.LandingLive do
     end
 
     # Map database streams to the format expected by the card component
-    streams_data = Enum.map(streams, fn s ->
-      count = Presence.list("stream_viewers:#{s.id}") |> map_size()
-      map_stream(s, count)
-    end)
+    streams_data =
+      Enum.map(streams, fn s ->
+        count = Presence.list("stream_viewers:#{s.id}") |> map_size()
+        map_stream(s, count)
+      end)
 
     # Fetch recommended streamers for the sidebar
-    recommended_streams = KameramaniPhx.Repo.all(
-      from s in KameramaniPhx.Streaming.Stream,
-      where: s.is_live == true,
-      limit: 10,
-      preload: [:user]
-    ) |> Enum.map(fn s ->
-      count = Presence.list("stream_viewers:#{s.id}") |> map_size()
-      %{
-        name: s.user.username,
-        game: s.category || "Just Chatting",
-        viewer_count: count,
-        src: if(s.user.profile_picture in [nil, ""], do: "https://ui-avatars.com/api/?name=#{s.user.username}&background=random", else: s.user.profile_picture)
-      }
-    end)
+    recommended_streams =
+      KameramaniPhx.Repo.all(
+        from s in KameramaniPhx.Streaming.Stream,
+          where: s.is_live == true,
+          limit: 10,
+          preload: [:user]
+      )
+      |> Enum.map(fn s ->
+        count = Presence.list("stream_viewers:#{s.id}") |> map_size()
+
+        %{
+          name: s.user.username,
+          game: s.category || "Just Chatting",
+          viewer_count: count,
+          src:
+            if(s.user.profile_picture in [nil, ""],
+              do: "https://ui-avatars.com/api/?name=#{s.user.username}&background=random",
+              else: s.user.profile_picture
+            )
+        }
+      end)
 
     {:ok, assign(socket, streams_data: streams_data, recommended_streams: recommended_streams)}
   end
@@ -64,47 +72,54 @@ defmodule KameramaniPhxWeb.LandingLive do
         # Add or update in list
         existing_ids = Enum.map(socket.assigns.streams_data, & &1.id)
 
-      if updated_stream.id in existing_ids do
-        Enum.map(socket.assigns.streams_data, fn
-          s when s.id == updated_stream.id ->
-            count = Presence.list("stream_viewers:#{updated_stream.id}") |> map_size()
-            map_stream(updated_stream, count)
-          s -> s
-        end)
-      else
-        # Subscribe to this specific stream's future updates if it's new
-        if connected?(socket) do
-          Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "streams:#{updated_stream.id}")
-          KameramaniPhxWeb.Endpoint.subscribe("stream_viewers:#{updated_stream.id}")
-        end
+        if updated_stream.id in existing_ids do
+          Enum.map(socket.assigns.streams_data, fn
+            s when s.id == updated_stream.id ->
+              count = Presence.list("stream_viewers:#{updated_stream.id}") |> map_size()
+              map_stream(updated_stream, count)
 
-        count = Presence.list("stream_viewers:#{updated_stream.id}") |> map_size()
-        [map_stream(updated_stream, count) | socket.assigns.streams_data]
+            s ->
+              s
+          end)
+        else
+          # Subscribe to this specific stream's future updates if it's new
+          if connected?(socket) do
+            Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "streams:#{updated_stream.id}")
+            KameramaniPhxWeb.Endpoint.subscribe("stream_viewers:#{updated_stream.id}")
+          end
+
+          count = Presence.list("stream_viewers:#{updated_stream.id}") |> map_size()
+          [map_stream(updated_stream, count) | socket.assigns.streams_data]
+        end
+      else
+        # Remove from list if no longer live
+        Enum.reject(socket.assigns.streams_data, &(&1.id == updated_stream.id))
       end
-    else
-      # Remove from list if no longer live
-      Enum.reject(socket.assigns.streams_data, &(&1.id == updated_stream.id))
-    end
 
     {:noreply, assign(socket, streams_data: streams_data)}
   end
 
   # handling the viewer count updates via Presence
-  def handle_info(%Phoenix.Socket.Broadcast{topic: "stream_viewers:" <> stream_id, event: "presence_diff"}, socket) do
+  def handle_info(
+        %Phoenix.Socket.Broadcast{topic: "stream_viewers:" <> stream_id, event: "presence_diff"},
+        socket
+      ) do
     new_count = Presence.list("stream_viewers:#{stream_id}") |> map_size()
 
-    streams_data = Enum.map(socket.assigns.streams_data, fn
-      s when s.id == stream_id -> %{s | viewer_count: new_count}
-      s -> s
-    end)
+    streams_data =
+      Enum.map(socket.assigns.streams_data, fn
+        s when s.id == stream_id -> %{s | viewer_count: new_count}
+        s -> s
+      end)
 
     {:noreply, assign(socket, streams_data: streams_data)}
   end
 
   defp map_stream(s, count \\ 0) do
-    avatar_url = if s.user.profile_picture in [nil, ""],
-      do: "https://ui-avatars.com/api/?name=#{s.user.username}&background=random",
-      else: s.user.profile_picture
+    avatar_url =
+      if s.user.profile_picture in [nil, ""],
+        do: "https://ui-avatars.com/api/?name=#{s.user.username}&background=random",
+        else: s.user.profile_picture
 
     %{
       id: s.id,

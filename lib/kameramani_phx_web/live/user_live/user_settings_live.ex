@@ -20,7 +20,9 @@ defmodule KameramaniPhxWeb.UserLive.UserSettingsLive do
   def mount(_params, _session, socket) do
     user = socket.assigns.current_user.user
 
-    email_changeset = Accounts.User.email_changeset(user, %{email: user.email}, validate_unique: false)
+    email_changeset =
+      Accounts.User.email_changeset(user, %{email: user.email}, validate_unique: false)
+
     password_changeset = Accounts.change_user_password(user, %{}, hash_password: false)
     profile_changeset = Accounts.change_user_profile(user, %{})
 

@@ -158,7 +158,8 @@
             <img
               src={
                 if @current_user.user.profile_picture in [nil, ""],
-                  do: "https://ui-avatars.com/api/?name=#{@current_user.user.username}&background=random",
+                  do:
+                    "https://ui-avatars.com/api/?name=#{@current_user.user.username}&background=random",
                   else: @current_user.user.profile_picture
               }
               class="w-12 h-12 rounded-full object-cover border border-white/10"
@@ -174,14 +175,13 @@
           <h2 class="font-bold text-sm mb-4 text-gray-400 flex items-center gap-2 uppercase tracking-wider">
             <.icon name="hero-signal" class="h-4 w-4 text-indigo-500" /> Stream Status
           </h2>
-          
+
           <div class="space-y-4">
             <div class="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/5">
               <span class="text-sm text-gray-400 font-medium">Status</span>
               <%= if @current_stream && @current_stream.is_live do %>
                 <span class="flex items-center gap-1.5 px-2 py-0.5 bg-red-500/10 text-red-500 text-[10px] font-bold rounded-full border border-red-500/20">
-                  <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
-                  LIVE
+                  <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span> LIVE
                 </span>
               <% else %>
                 <span class="px-2 py-0.5 bg-gray-500/10 text-gray-500 text-[10px] font-bold rounded-full border border-gray-500/20">
