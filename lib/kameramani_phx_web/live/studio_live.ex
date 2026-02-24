@@ -13,23 +13,22 @@ defmodule KameramaniPhxWeb.StudioLive do
     user = socket.assigns.current_user.user
     changeset = Streaming.change_stream(%Streaming.Stream{}, %{user_id: user.id})
     categories = Content.list_categories()
-    stream = Streaming.get_active_stream_for_user(user.id)
+    stream = Streaming.get_stream_for_user(user.id)
 
     # Subscribe to stream updates for this user
-    viewer_count = 0
-
-    if stream do
-      Logger.info("Studio Live: Subscribing to stream updates for stream_id=#{stream.id}")
-      Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "streams:#{stream.id}")
-
-      topic = "stream_viewers:#{stream.id}"
-
-      if connected?(socket) do
-        KameramaniPhxWeb.Endpoint.subscribe(topic)
+    viewer_count = 
+      if stream do
+        Logger.info("Studio Live: Subscribing to stream updates for stream_id=#{stream.id}")
+        Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "streams:#{stream.id}")
+        
+        topic = "stream_viewers:#{stream.id}"
+        if connected?(socket) do
+          KameramaniPhxWeb.Endpoint.subscribe(topic)
+        end
+        Presence.list(topic) |> map_size()
+      else
+        0
       end
-
-      viewer_count = Presence.list(topic) |> map_size()
-    end
 
     {:ok,
      socket

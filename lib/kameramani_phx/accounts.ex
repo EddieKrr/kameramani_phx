@@ -6,7 +6,7 @@ defmodule KameramaniPhx.Accounts do
   import Ecto.Query, warn: false
   alias KameramaniPhx.Repo
 
-  alias KameramaniPhx.Accounts.{User, UserToken, UserNotifier}
+  alias KameramaniPhx.Accounts.{User, UserToken, UserNotifier, Follow}
 
   ## Database getters
 
@@ -127,40 +127,53 @@ defmodule KameramaniPhx.Accounts do
   end
 
   # lets make the user followable by adding a followers and following association
-  def follow_user(follower, following_id) do
+  def follow_user(follower, following) do
     follower_id = if is_map(follower), do: follower.id, else: follower
+    followed_id = if is_map(following), do: following.id, else: following
 
-    f_id =
-      cond do
-        is_map(following_id) -> following_id.id
-        is_binary(following_id) -> String.to_integer(following_id)
-        true -> following_id
-      end
+    now = DateTime.utc_now() |> DateTime.truncate(:second)
 
-    Repo.insert_all("follows", [
+    Repo.insert_all(Follow, [
       [
         follower_id: follower_id,
-        followed_id: f_id,
-        inserted_at: DateTime.utc_now(),
-        updated_at: DateTime.utc_now()
+        followed_id: followed_id,
+        inserted_at: now,
+        updated_at: now
       ]
-    ])
+    ], on_conflict: :nothing)
   end
 
   # unfollow a user
-  def unfollow_user(follower, following_id) do
+  def unfollow_user(follower, following) do
     follower_id = if is_map(follower), do: follower.id, else: follower
+    followed_id = if is_map(following), do: following.id, else: following
 
-    f_id =
-      cond do
-        is_map(following_id) -> following_id.id
-        is_binary(following_id) -> String.to_integer(following_id)
-        true -> following_id
-      end
-
-    query = from f in "follows", where: f.follower_id == ^follower_id and f.followed_id == ^f_id
+    query = from f in Follow,
+      where: f.follower_id == ^follower_id and f.followed_id == ^followed_id
 
     Repo.delete_all(query)
+  end
+
+  def is_following?(follower, following) do
+    follower_id = if is_map(follower), do: follower.id, else: follower
+    followed_id = if is_map(following), do: following.id, else: following
+
+    query = from f in Follow,
+      where: f.follower_id == ^follower_id and f.followed_id == ^followed_id
+
+    Repo.exists?(query)
+  end
+
+  def get_followers_count(user) do
+    user_id = if is_map(user), do: user.id, else: user
+    query = from f in Follow, where: f.followed_id == ^user_id
+    Repo.aggregate(query, :count)
+  end
+
+  def get_following_count(user) do
+    user_id = if is_map(user), do: user.id, else: user
+    query = from f in Follow, where: f.follower_id == ^user_id
+    Repo.aggregate(query, :count)
   end
 
   def deliver_user_update_email_instructions(%User{} = user, current_email, update_email_url_fun)
