@@ -1,5 +1,5 @@
 defmodule KameramaniPhxWeb.Profile.UserProfileLive do
-  use Phoenix.LiveView
+  use KameramaniPhxWeb, :live_view
   alias KameramaniPhx.Accounts
 
   def mount(%{"username" => username}, _session, socket) do
@@ -7,22 +7,13 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
     user = Accounts.get_user_by_username(username)
 
     if user do
-      {:ok, assign(socket, user: user)}
+      {:ok, assign(socket, user: user, active_tab: "home")}
     else
-      {:ok, assign(socket, user: nil)}
+      {:ok, assign(socket, user: nil, active_tab: "home")}
     end
   end
 
-  def render(assigns) do
-    ~H"""
-    <div class="profile">
-      <h1>{@user.name}'s Profile</h1>
-      <p>Username: {@user.username}</p>
-      <p>Email: {@user.email}</p>
-      <p>Age: {@user.age}</p>
-      <p>Bio: {@user.bio}</p>
-      <%!-- <img src="<%= @user.profile_picture %>" alt="Profile Picture" class="profile-picture"/> --%>
-    </div>
-    """
+  def handle_event("set_active_tab", %{"tab" => tab}, socket) do
+    {:noreply, assign(socket, active_tab: tab)}
   end
 end

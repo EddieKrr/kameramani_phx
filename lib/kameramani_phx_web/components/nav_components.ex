@@ -14,7 +14,11 @@ defmodule KameramaniPhxWeb.NavComponents do
 
         <img
           alt={@current_user.username}
-          src={@current_user.avatar || "https://ui-avatars.com/api/?background=random"}
+          src={
+            if @current_user.profile_picture in [nil, ""],
+              do: "https://ui-avatars.com/api/?name=#{@current_user.username}&background=random",
+              else: @current_user.profile_picture
+          }
           class="rounded-full h-12 w-12 object-contain"
         />
       <% else %>
