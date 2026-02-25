@@ -72747,3 +72747,685 @@ PATH=/home/eddie/.local/share/mise/installs/elixir/1.19.5-otp-28/bin:/home/eddie
 09:35:07.372 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 3ms
 
 09:35:21.569 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 502µs
+
+09:53:34.104 id=584 [debug] handled request client -> server textDocument/codeAction in 571µs
+
+09:53:34.366 id=585 [debug] handled request client -> server textDocument/codeAction in 547µs
+
+09:53:34.402 id=586 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+09:53:36.215 id=587 [debug] handled request client -> server textDocument/codeAction in 432µs
+
+09:53:39.996 id=588 [debug] handled request client -> server textDocument/codeAction in 408µs
+
+09:54:59.623 [debug] handled notification client -> server textDocument/didSave in 1ms
+
+09:54:59.938 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 684µs
+
+09:55:02.917 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 544µs
+
+09:59:32.835 id=589 [debug] handled request client -> server textDocument/codeAction in 635µs
+
+09:59:33.092 id=590 [debug] handled request client -> server textDocument/codeAction in 425µs
+
+09:59:33.133 id=591 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+09:59:35.543 [debug] handled notification client -> server $/cancelRequest in 391µs
+
+10:11:17.097 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 547µs
+
+10:11:18.674 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 690µs
+
+10:11:19.039 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 412µs
+
+10:11:21.215 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 663µs
+
+10:12:53.510 [debug] handled notification client -> server textDocument/didClose in 15ms
+
+10:12:53.529 [debug] handled notification client -> server textDocument/didOpen in 1ms
+
+10:12:53.537 id=593 [debug] handled request client -> server textDocument/codeAction in 576µs
+
+10:12:53.542 id=594 [debug] handled request client -> server textDocument/documentSymbol in 4ms
+
+10:12:53.840 id=595 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:13:01.233 [debug] handled notification client -> server textDocument/didClose in 589µs
+
+10:13:01.254 [debug] handled notification client -> server textDocument/didOpen in 776µs
+
+10:13:01.263 id=596 [debug] handled request client -> server textDocument/codeAction in 798µs
+
+10:13:01.268 id=597 [debug] handled request client -> server textDocument/documentSymbol in 5ms
+
+10:13:01.513 id=598 [debug] handled request client -> server textDocument/codeAction in 530µs
+
+10:13:01.558 id=599 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:13:02.884 [debug] handled notification client -> server $/cancelRequest in 471µs
+
+10:13:04.713 [debug] handled notification client -> server $/cancelRequest in 214µs
+
+10:13:07.432 id=602 [debug] handled request client -> server textDocument/hover in 1001ms
+
+10:13:19.929 [debug] handled notification client -> server $/cancelRequest in 236µs
+
+10:13:20.546 id=604 [debug] handled request client -> server textDocument/codeAction in 409µs
+
+10:13:23.739 [debug] handled notification client -> server textDocument/didChange in 824µs
+
+10:13:23.843 id=605 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:13:23.844 id=606 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:13:24.999 [debug] handled notification client -> server textDocument/didChange in 975µs
+
+10:13:24.999 id=607 [debug] handled request client -> server textDocument/codeAction in 401µs
+
+10:13:25.100 id=608 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:13:25.101 id=609 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:13:25.430 [debug] handled notification client -> server textDocument/didChange in 929µs
+
+10:13:25.532 id=610 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:13:25.532 id=611 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:13:26.168 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:13:26.169 id=612 [debug] handled request client -> server textDocument/codeAction in 358µs
+
+10:13:26.272 id=613 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+10:13:26.272 id=614 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+10:13:27.050 [debug] handled notification client -> server textDocument/didChange in 901µs
+
+10:13:27.051 id=615 [debug] handled request client -> server textDocument/codeAction in 378µs
+
+10:13:27.151 id=616 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:13:27.152 id=617 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:13:27.629 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:13:27.630 id=618 [debug] handled request client -> server textDocument/codeAction in 454µs
+
+10:13:27.729 [debug] handled notification client -> server textDocument/didChange in 876µs
+
+10:13:27.729 [debug] handled notification client -> server $/cancelRequest in 108µs
+
+10:13:28.576 [debug] handled notification client -> server textDocument/didChange in 869µs
+
+10:13:28.576 id=620 [debug] handled request client -> server textDocument/codeAction in 471µs
+
+10:13:28.678 id=622 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+10:13:28.679 id=621 [debug] handled request client -> server textDocument/documentSymbol in 4ms
+
+10:13:29.203 [debug] handled notification client -> server textDocument/didChange in 3ms
+
+10:13:29.203 id=623 [debug] handled request client -> server textDocument/codeAction in 768µs
+
+10:13:29.299 id=624 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:13:29.301 id=625 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:13:29.961 [debug] handled notification client -> server textDocument/didSave in 1ms
+
+10:13:30.283 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:13:30.283 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 597µs
+
+10:13:30.496 id=626 [debug] handled request client -> server textDocument/codeAction in 760µs
+
+10:13:30.591 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:13:30.593 id=627 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:13:30.830 id=628 [debug] handled request client -> server textDocument/codeAction in 446µs
+
+10:13:30.931 id=630 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:13:30.931 id=629 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+10:13:31.637 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:13:31.639 id=631 [debug] handled request client -> server textDocument/codeAction in 383µs
+
+10:13:31.738 id=632 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:13:31.739 id=633 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:13:32.194 [debug] handled notification client -> server textDocument/didChange in 846µs
+
+10:13:32.195 id=634 [debug] handled request client -> server textDocument/codeAction in 333µs
+
+10:13:32.294 id=635 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:13:32.294 id=636 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:13:33.034 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:13:33.034 id=637 [debug] handled request client -> server textDocument/codeAction in 385µs
+
+10:13:33.135 id=638 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:13:33.135 id=639 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:13:33.798 [debug] handled notification client -> server textDocument/didSave in 1ms
+
+10:13:34.168 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 502µs
+
+10:13:37.835 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:13:37.838 id=640 [debug] handled request client -> server textDocument/codeAction in 555µs
+
+10:13:37.939 id=641 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:13:37.939 id=642 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:13:38.492 [debug] handled notification client -> server textDocument/didChange in 899µs
+
+10:13:38.493 id=643 [debug] handled request client -> server textDocument/codeAction in 398µs
+
+10:13:38.591 id=645 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:13:38.591 id=644 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:13:38.927 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:13:38.928 id=646 [debug] handled request client -> server textDocument/codeAction in 552µs
+
+10:13:39.027 id=647 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:13:39.027 id=648 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:13:39.689 [debug] handled notification client -> server textDocument/didSave in 1ms
+
+10:13:40.007 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 501µs
+
+10:13:40.515 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:13:40.515 id=649 [debug] handled request client -> server textDocument/codeAction in 428µs
+
+10:13:40.617 id=650 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:13:40.617 id=651 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:13:41.724 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:13:41.724 id=652 [debug] handled request client -> server textDocument/codeAction in 326µs
+
+10:13:41.825 id=653 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:13:41.825 id=654 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:13:42.486 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:13:42.486 id=655 [debug] handled request client -> server textDocument/codeAction in 497µs
+
+10:13:42.585 id=657 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:13:42.585 id=656 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:13:43.247 [debug] handled notification client -> server textDocument/didSave in 1ms
+
+10:13:43.569 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 501µs
+
+10:13:48.713 id=658 [debug] handled request client -> server textDocument/hover in 1001ms
+
+10:13:49.320 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:13:49.324 id=659 [debug] handled request client -> server textDocument/codeAction in 674µs
+
+10:13:49.423 id=660 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:13:49.423 id=661 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:13:49.773 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:13:49.774 id=662 [debug] handled request client -> server textDocument/codeAction in 428µs
+
+10:13:50.390 [debug] handled notification client -> server textDocument/didChange in 917µs
+
+10:13:50.390 id=663 [debug] handled request client -> server textDocument/codeAction in 323µs
+
+10:13:50.489 id=664 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:13:50.489 id=665 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:13:51.157 [debug] handled notification client -> server textDocument/didSave in 1ms
+
+10:13:51.466 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 569µs
+
+10:13:55.150 id=666 [debug] handled request client -> server textDocument/codeAction in 420µs
+
+10:14:01.232 [debug] handled notification client -> server textDocument/didChange in 988µs
+
+10:14:01.233 id=667 [debug] handled request client -> server textDocument/codeAction in 400µs
+
+10:14:01.333 id=668 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:14:01.372 id=669 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:14:01.507 id=670 [debug] handled request client -> server textDocument/codeAction in 392µs
+
+10:14:01.993 [debug] handled notification client -> server textDocument/didSave in 1ms
+
+10:14:02.361 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 389µs
+
+10:14:02.734 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:14:02.737 id=671 [debug] handled request client -> server textDocument/codeAction in 378µs
+
+10:14:02.837 id=672 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:14:02.875 id=673 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:14:03.497 [debug] handled notification client -> server textDocument/didSave in 1ms
+
+10:14:03.866 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 392µs
+
+10:14:05.522 id=674 [debug] handled request client -> server textDocument/codeAction in 843µs
+
+10:14:06.525 [debug] handled notification client -> server textDocument/didChange in 956µs
+
+10:14:06.641 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:14:06.643 [debug] sent notification server -> client window/logMessage
+
+10:14:06.643 id=675 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:14:06.953 [debug] sent notification server -> client window/logMessage
+
+10:14:06.953 id=676 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:14:06.955 [debug] sent notification server -> client window/logMessage
+
+10:14:06.956 id=677 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+10:14:07.615 [debug] handled notification client -> server textDocument/didSave in 1ms
+
+10:14:07.984 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 491µs
+
+10:14:09.170 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:14:09.232 id=678 [debug] handled request client -> server textDocument/codeAction in 540µs
+
+10:14:09.272 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:14:09.274 id=679 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:14:10.731 [debug] handled notification client -> server textDocument/didChange in 995µs
+
+10:14:10.732 id=680 [debug] handled request client -> server textDocument/codeAction in 359µs
+
+10:14:10.832 id=681 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:14:10.832 id=682 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:14:11.458 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:14:11.460 id=683 [debug] handled request client -> server textDocument/codeAction in 479µs
+
+10:14:11.728 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:14:11.730 id=684 [debug] handled request client -> server textDocument/codeAction in 328µs
+
+10:14:11.836 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:14:11.837 id=685 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:14:12.078 id=686 [debug] handled request client -> server textDocument/codeAction in 433µs
+
+10:14:12.181 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:14:12.183 id=687 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:14:12.678 [debug] handled notification client -> server textDocument/didChange in 2ms
+
+10:14:12.679 id=688 [debug] handled request client -> server textDocument/codeAction in 479µs
+
+10:14:12.780 id=689 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:14:12.780 id=690 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:14:13.406 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:14:13.406 id=691 [debug] handled request client -> server textDocument/codeAction in 393µs
+
+10:14:13.507 id=693 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:14:13.507 id=692 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:14:13.821 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:14:13.822 id=694 [debug] handled request client -> server textDocument/codeAction in 397µs
+
+10:14:13.925 [debug] handled notification client -> server textDocument/didChange in 3ms
+
+10:14:13.928 [debug] sent notification server -> client window/logMessage
+
+10:14:13.928 id=695 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+10:14:14.204 id=696 [debug] handled request client -> server textDocument/codeAction in 547µs
+
+10:14:14.252 [debug] sent notification server -> client window/logMessage
+
+10:14:14.252 [debug] sent notification server -> client window/logMessage
+
+10:14:14.252 id=698 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:14:14.252 id=697 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:14:14.912 [debug] handled notification client -> server textDocument/didSave in 1ms
+
+10:14:15.183 id=699 [debug] handled request client -> server textDocument/codeAction in 520µs
+
+10:14:15.279 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 522µs
+
+10:14:15.605 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:14:15.681 id=700 [debug] handled request client -> server textDocument/codeAction in 482µs
+
+10:14:15.707 id=702 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:14:15.707 id=701 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:14:16.064 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:14:16.065 id=703 [debug] handled request client -> server textDocument/codeAction in 409µs
+
+10:14:16.167 id=705 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:14:16.167 id=704 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:14:16.827 [debug] handled notification client -> server textDocument/didSave in 1ms
+
+10:14:17.195 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 574µs
+
+10:14:19.516 [debug] handled notification client -> server textDocument/didChange in 939µs
+
+10:14:19.519 id=706 [debug] handled request client -> server textDocument/codeAction in 404µs
+
+10:14:19.618 [debug] sent notification server -> client window/logMessage
+
+10:14:19.618 id=707 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:14:19.618 [debug] sent notification server -> client window/logMessage
+
+10:14:19.618 id=708 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:14:20.180 id=709 [debug] handled request client -> server textDocument/codeAction in 462µs
+
+10:14:20.280 [debug] handled notification client -> server textDocument/didSave in 1ms
+
+10:14:20.651 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:14:20.651 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 600µs
+
+10:14:20.817 [debug] handled notification client -> server textDocument/didChange in 2ms
+
+10:14:20.821 id=710 [debug] handled request client -> server textDocument/documentSymbol in 4ms
+
+10:14:21.015 id=711 [debug] handled request client -> server textDocument/codeAction in 434µs
+
+10:14:21.115 id=712 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:14:21.127 id=713 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:14:21.738 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:14:21.738 id=714 [debug] handled request client -> server textDocument/codeAction in 350µs
+
+10:14:21.839 id=715 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:14:21.839 id=716 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:14:22.205 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:14:22.206 id=717 [debug] handled request client -> server textDocument/codeAction in 618µs
+
+10:14:22.307 id=718 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:14:22.307 id=719 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:14:23.261 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:14:23.262 id=720 [debug] handled request client -> server textDocument/codeAction in 372µs
+
+10:14:23.811 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:14:23.813 id=721 [debug] handled request client -> server textDocument/codeAction in 531µs
+
+10:14:23.915 id=722 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+10:14:23.915 id=723 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+10:14:24.886 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:14:24.987 [debug] sent notification server -> client window/logMessage
+
+10:14:24.987 id=725 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:14:24.987 [debug] sent notification server -> client window/logMessage
+
+10:14:24.987 id=724 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:14:25.106 id=726 [debug] handled request client -> server textDocument/codeAction in 643µs
+
+10:14:25.619 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:14:25.695 id=727 [debug] handled request client -> server textDocument/codeAction in 517µs
+
+10:14:25.720 id=728 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:14:25.721 id=729 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:14:26.016 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:14:26.019 id=730 [debug] handled request client -> server textDocument/codeAction in 891µs
+
+10:14:26.118 id=731 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:14:26.118 id=732 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:14:26.776 [debug] handled notification client -> server textDocument/didSave in 1ms
+
+10:14:27.145 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 630µs
+
+10:15:34.583 id=733 [debug] handled request client -> server textDocument/codeAction in 441µs
+
+10:16:18.729 id=734 [debug] handled request client -> server textDocument/codeAction in 656µs
+
+10:16:18.988 id=735 [debug] handled request client -> server textDocument/codeAction in 423µs
+
+10:16:19.026 id=736 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:16:19.981 id=737 [debug] handled request client -> server textDocument/codeAction in 488µs
+
+10:16:19.983 id=738 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:16:20.279 id=739 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+10:16:24.966 [debug] handled notification client -> server $/cancelRequest in 188µs
+
+10:16:25.384 [debug] handled notification client -> server $/cancelRequest in 270µs
+
+10:16:25.636 id=742 [debug] handled request client -> server textDocument/codeAction in 445µs
+
+10:16:26.563 id=743 [debug] handled request client -> server textDocument/codeAction in 435µs
+
+10:16:27.672 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:16:27.673 id=744 [debug] handled request client -> server textDocument/codeAction in 529µs
+
+10:16:27.774 id=745 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:16:27.774 id=746 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:16:28.474 [debug] handled notification client -> server textDocument/didSave in 790µs
+
+10:16:28.804 [debug] handled notification client -> server textDocument/didChange in 731µs
+
+10:16:28.804 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 641µs
+
+10:16:28.888 id=747 [debug] handled request client -> server textDocument/codeAction in 674µs
+
+10:16:29.412 [debug] handled notification client -> server textDocument/didChange in 949µs
+
+10:16:29.413 id=748 [debug] handled request client -> server textDocument/codeAction in 438µs
+
+10:16:29.514 id=750 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:16:29.514 id=749 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+10:16:30.174 [debug] handled notification client -> server textDocument/didSave in 1ms
+
+10:16:30.543 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 508µs
+
+10:16:30.604 id=751 [debug] handled request client -> server textDocument/codeAction in 436µs
+
+10:16:31.131 [debug] handled notification client -> server textDocument/didChange in 832µs
+
+10:16:31.132 id=752 [debug] handled request client -> server textDocument/codeAction in 414µs
+
+10:16:31.234 id=753 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:16:31.235 id=754 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:16:31.917 [debug] handled notification client -> server textDocument/didChange in 769µs
+
+10:16:31.968 id=755 [debug] handled request client -> server textDocument/codeAction in 448µs
+
+10:16:32.021 [debug] sent notification server -> client window/logMessage
+
+10:16:32.022 id=757 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+10:16:32.023 [debug] sent notification server -> client window/logMessage
+
+10:16:32.023 id=756 [debug] handled request client -> server textDocument/documentSymbol in 5ms
+
+10:16:32.496 [debug] handled notification client -> server textDocument/didChange in 875µs
+
+10:16:32.497 id=758 [debug] handled request client -> server textDocument/codeAction in 385µs
+
+10:16:32.598 id=759 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:16:32.598 id=760 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:16:32.853 id=761 [debug] handled request client -> server textDocument/codeAction in 428µs
+
+10:16:33.226 [debug] handled notification client -> server textDocument/didChange in 833µs
+
+10:16:33.227 id=762 [debug] handled request client -> server textDocument/codeAction in 361µs
+
+10:16:33.329 [debug] sent notification server -> client window/logMessage
+
+10:16:33.329 id=763 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+10:16:33.330 [debug] sent notification server -> client window/logMessage
+
+10:16:33.331 id=764 [debug] handled request client -> server textDocument/documentSymbol in 4ms
+
+10:16:33.596 [debug] handled notification client -> server textDocument/didChange in 825µs
+
+10:16:33.597 id=765 [debug] handled request client -> server textDocument/codeAction in 418µs
+
+10:16:33.700 [debug] sent notification server -> client window/logMessage
+
+10:16:33.700 [debug] sent notification server -> client window/logMessage
+
+10:16:33.700 id=767 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:16:33.700 id=766 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:16:34.029 [debug] handled notification client -> server textDocument/didChange in 661µs
+
+10:16:34.132 [debug] sent notification server -> client window/logMessage
+
+10:16:34.132 [debug] sent notification server -> client window/logMessage
+
+10:16:34.132 id=769 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:16:34.132 id=768 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:16:34.817 [debug] handled notification client -> server textDocument/didChange in 679µs
+
+10:16:34.818 id=770 [debug] handled request client -> server textDocument/codeAction in 361µs
+
+10:16:34.920 id=771 [debug] handled request client -> server textDocument/documentSymbol in 2ms
+
+10:16:34.920 id=772 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:16:35.577 [debug] handled notification client -> server textDocument/didSave in 858µs
+
+10:16:35.900 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 655µs
+
+10:16:36.063 [debug] handled notification client -> server $/cancelRequest in 531µs
+
+10:16:42.498 id=774 [debug] handled request client -> server textDocument/codeAction in 860µs
+
+10:16:43.497 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:16:43.509 id=775 [debug] handled request client -> server textDocument/codeAction in 1ms
+
+10:16:43.618 id=776 [debug] handled request client -> server textDocument/documentSymbol in 4ms
+
+10:16:43.649 id=777 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+10:16:44.420 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:16:44.443 id=778 [debug] handled request client -> server textDocument/codeAction in 862µs
+
+10:16:44.521 id=779 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+10:16:44.524 id=780 [debug] handled request client -> server textDocument/documentSymbol in 4ms
+
+10:16:45.170 [debug] handled notification client -> server textDocument/didSave in 1ms
+
+10:16:45.490 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 605µs
+
+10:27:28.059 id=781 [debug] handled request client -> server textDocument/hover in 1001ms
+
+10:27:59.514 id=782 [debug] handled request client -> server textDocument/codeAction in 649µs
+
+10:27:59.775 id=783 [debug] handled request client -> server textDocument/codeAction in 474µs
+
+10:27:59.811 id=784 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:28:03.084 id=785 [debug] handled request client -> server textDocument/codeAction in 506µs
+
+10:28:13.692 [debug] handled notification client -> server textDocument/didChange in 900µs
+
+10:28:13.793 id=787 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:28:13.793 id=786 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:28:14.457 [debug] handled notification client -> server textDocument/didSave in 1ms
+
+10:28:14.822 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 592µs
+
+10:29:34.937 id=788 [debug] handled request client -> server textDocument/hover in 1001ms
+
+10:29:40.112 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:29:40.114 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:29:41.039 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 15ms
+
+10:29:41.922 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 2ms
+
+10:29:45.617 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 867µs
+
+10:29:45.892 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 887µs
+
+10:29:46.425 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 5ms
+
+10:29:52.311 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 11ms
+
+10:29:53.055 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 6ms
+
+10:29:53.428 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 7ms
