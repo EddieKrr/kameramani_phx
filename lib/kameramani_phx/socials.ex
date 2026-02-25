@@ -5,7 +5,7 @@ defmodule KameramaniPhx.Socials do
 
   import Ecto.Query, warn: false
   alias KameramaniPhx.Repo
-
+  alias KameramaniPhx.Accounts.User
   alias KameramaniPhx.Socials.SocialAccount
 
   @doc """
@@ -21,6 +21,11 @@ defmodule KameramaniPhx.Socials do
     Repo.all(from sa in SocialAccount, where: sa.username == ^username)
   end
 
+
+  #list trhe user social accounts
+  def list_user_socials(%User{} = user) do
+    Repo.all(from sa in SocialAccount, where: sa.user_id == ^user.id)
+  end
   @doc """
   Gets a single social_account.
 
@@ -49,8 +54,9 @@ defmodule KameramaniPhx.Socials do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_social_account(attrs) do
-    %SocialAccount{}
+  def add_social_account(%User{} = user, attrs) do
+  user
+    |> Ecto.build_assoc(:social_accounts)
     |> SocialAccount.changeset(attrs)
     |> Repo.insert()
   end

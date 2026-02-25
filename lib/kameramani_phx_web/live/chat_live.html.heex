@@ -187,6 +187,14 @@
               autocomplete="off"
               class="w-full bg-transparent border-none focus:ring-0 text-[#efeff1] text-sm p-0 mb-2 resize-none"
             />
+            <%= if !@current_user.user do %>
+              <div class="text-[11px] text-[#adadb8] mb-2" id="chat-login-hint">
+                <.link navigate={~p"/auth"} class="text-[#bf94ff] hover:text-[#a970ff] transition-colors font-semibold">
+                  Log in to chat
+                </.link>
+                <span class="text-[#adadb8]"> — guests can watch only.</span>
+              </div>
+            <% end %>
             <div class="flex justify-between items-center mt-2">
               <div class="flex items-center gap-2">
                 <div class="w-3 h-3 rounded-full shadow-sm" style={"background-color: #{@user_color}"}></div>

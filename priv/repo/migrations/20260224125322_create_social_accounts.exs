@@ -4,7 +4,7 @@ defmodule KameramaniPhx.Repo.Migrations.CreateSocialAccounts do
   def change do
     create table(:social_accounts, primary_key: false) do
       add :id, :binary_id, primary_key: true
-      add :platform, :string
+      add :platform, :string, null: false
       add :url, :string
       add :username, :string
       add :user_id, references(:users, type: :binary_id, on_delete: :nothing)
@@ -13,5 +13,6 @@ defmodule KameramaniPhx.Repo.Migrations.CreateSocialAccounts do
     end
 
     create index(:social_accounts, [:user_id])
+    create unique_index(:social_accounts, [:user_id, :platform])
   end
 end

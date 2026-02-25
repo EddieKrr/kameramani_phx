@@ -1,6 +1,7 @@
 defmodule KameramaniPhxWeb.Profile.UserProfileLive do
   use KameramaniPhxWeb, :live_view
   alias KameramaniPhx.Accounts
+  alias KameramaniPhx.Socials
   alias KameramaniPhx.Streaming
 
   on_mount {KameramaniPhxWeb.UserAuth, :mount_current_user}
@@ -15,6 +16,8 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
          |> push_navigate(to: ~p"/")}
 
       user ->
+        social_accounts = Socials.list_user_socials(user)
+
         is_following =
           if socket.assigns.current_user.user do
             Accounts.is_following?(socket.assigns.current_user.user, user)
@@ -28,6 +31,7 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
         socket =
           socket
           |> assign(user: user)
+          |> assign(social_accounts: social_accounts)
           |> assign(active_tab: "home")
           |> assign(is_following: is_following)
           |> assign(follower_count: Accounts.get_followers_count(user))
