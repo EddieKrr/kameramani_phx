@@ -40,4 +40,4 @@ npm-debug.log
 
 /config/dev.local.exs
 
-/priv/static/live/cube.2
+/priv/static/live/

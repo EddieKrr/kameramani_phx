@@ -17,6 +17,17 @@ defmodule Mix.Tasks.StartPipeline do
   """
 
   @impl true
+  def run([]) do
+    IO.puts("❌ Error: Stream ID is required")
+    IO.puts("📖 Usage: mix start_pipeline <stream_id>")
+    IO.puts("")
+    IO.puts("💡 Example:")
+    IO.puts("   mix start_pipeline 40852182-b0c9-4998-896a-26bd347da4ee")
+    IO.puts("")
+    IO.puts("🔍 To find stream IDs, check your database or:")
+    IO.puts("   mix list_streams")
+  end
+
   def run([stream_id]) do
     IO.puts("🚀 Starting pipeline for stream: #{stream_id}")
 
@@ -79,16 +90,5 @@ defmodule Mix.Tasks.StartPipeline do
       5000 ->
         pipeline_loop(stream_id, output_dir)
     end
-  end
-
-  def run([]) do
-    IO.puts("❌ Error: Stream ID is required")
-    IO.puts("📖 Usage: mix start_pipeline <stream_id>")
-    IO.puts("")
-    IO.puts("💡 Example:")
-    IO.puts("   mix start_pipeline 40852182-b0c9-4998-896a-26bd347da4ee")
-    IO.puts("")
-    IO.puts("🔍 To find stream IDs, check your database or:")
-    IO.puts("   mix list_streams")
   end
 end

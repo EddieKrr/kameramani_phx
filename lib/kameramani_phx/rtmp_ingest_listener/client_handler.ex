@@ -73,14 +73,12 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
     @impl true
     def handle_delete_stream(state), do: state
 
-    @impl true
     def handle_teardown(%{stream_id: stream_id} = _state) do
       Logger.info("📹 RTMP connection teardown.")
       perform_cleanup(stream_id)
       :ok
     end
 
-    @impl true
     def handle_teardown(_state), do: :ok
 
     @impl true

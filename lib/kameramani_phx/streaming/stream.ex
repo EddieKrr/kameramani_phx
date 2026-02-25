@@ -21,5 +21,17 @@ defmodule KameramaniPhx.Streaming.Stream do
     |> validate_required([:title, :stream_key, :is_live, :tags, :user_id])
     |> unique_constraint(:stream_key)
     |> unique_constraint(:user_id)
+    |> sanitize_tags()
   end
+
+
+  defp sanitize_tags(changeset) do
+  if tags = get_change(changeset, :tags) do
+    # Trim whitespace from every tag in the list
+    clean_tags = Enum.map(tags, &String.trim/1)
+    put_change(changeset, :tags, clean_tags)
+  else
+    changeset
+  end
+end
 end

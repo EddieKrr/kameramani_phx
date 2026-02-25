@@ -20,6 +20,7 @@ defmodule KameramaniPhx.Accounts do
 
   def get_user_by_username(username) when is_binary(username) do
     Repo.get_by(User, username: username)
+    |> Repo.preload(:social_accounts)
   end
 
   def get_user_by_email_and_password(email, password)
@@ -228,34 +229,4 @@ defmodule KameramaniPhx.Accounts do
     end)
   end
 
-  defp user_registration_changeset(attrs) do
-    %User{}
-    |> User.registration_changeset(attrs)
-  end
-
-  defp user_email_changeset(user, _current_email, new_email) do
-    user
-    |> Ecto.Changeset.change()
-    |> Ecto.Changeset.put_change(:email, new_email)
-    |> Ecto.Changeset.validate_required(:email)
-    |> Ecto.Changeset.validate_length(:email, min: 3, max: 160)
-    |> Ecto.Changeset.validate_format(:email, ~r/@/)
-  end
-
-  defp user_password_changeset(password) do
-    Ecto.Changeset.change(%User{}, :password)
-    |> Ecto.Changeset.validate_required(:password)
-    |> Ecto.Changeset.validate_length(:password, min: 12, max: 80)
-    |> Ecto.Changeset.validate_format(:password, ~r/^(?=.*[a-z]+?=.*[0-9])|(?=.*[a-z]+.*$)/)
-    |> Ecto.Changeset.put_change(
-      :hashed_password,
-      Bcrypt.hash_pwd_salt(password)
-    )
-  end
-
-  defp user_confirm_changeset(user) do
-    user
-    |> Ecto.Changeset.change(:confirmed_at)
-    |> Ecto.Changeset.put_change(:confirmed_at, DateTime.utc_now())
-  end
 end

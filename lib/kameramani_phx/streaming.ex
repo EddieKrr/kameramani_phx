@@ -58,8 +58,16 @@ defmodule KameramaniPhx.Streaming do
   def get_stream!(id), do: Repo.get!(Stream, id)
 
   # getting streams by vategory
-  def get_streams_by_category(category) do
-    Repo.all(from s in Stream, where: ^category in s.categories)
+  def get_streams_by_category(category) when is_binary(category) do
+    search_category = String.trim(category)
+
+      query =
+        from s in Stream,
+        where: ilike(s.category, ^"%#{search_category}%"),
+        where: s.is_live == true,
+        order_by: [desc: s.inserted_at],
+        preload: [:user]
+      Repo.all(query)
   end
 
   # get the stream_key for a given stream id
@@ -192,4 +200,34 @@ defmodule KameramaniPhx.Streaming do
   def change_stream(%Stream{} = stream, attrs \\ %{}) do
     Stream.changeset(stream, attrs)
   end
+
+  #==================================FOR THE TAGS=======================
+    def list_streams_by_tags(tags) when is_binary(tags) do
+      search_tag = String.trim(tags)
+
+      if search_tag == "" do
+        []
+      else
+        query =
+          from s in Stream,
+            where: fragment("? @> ?", s.tags, ^[search_tag]),
+            where: s.is_live == true,
+            order_by: [desc: s.inserted_at]
+          # preload: [:user]
+
+        Repo.all(query)
+      end
+    end
+
+    def list_stream_by_multiple_tags(tag_list) when is_list(tag_list) do
+
+      query =
+        from s in Stream,
+        where: fragment("? && ?", s.tags, ^tag_list),
+        where: s.is_live == true,
+        order_by: [desc: s.inserted_at]
+        # preloads: [:user]
+      Repo.all(query)
+    end
+
 end

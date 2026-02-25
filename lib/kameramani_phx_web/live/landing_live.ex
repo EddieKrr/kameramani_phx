@@ -4,7 +4,6 @@ defmodule KameramaniPhxWeb.LandingLive do
   import KameramaniPhxWeb.SidebarComponents
   import KameramaniPhxWeb.CardComponents
   alias KameramaniPhxWeb.Presence
-  alias KameramaniPhxWeb.DummyData
 
   on_mount {KameramaniPhxWeb.UserAuth, :mount_current_user}
 
@@ -63,6 +62,25 @@ defmodule KameramaniPhxWeb.LandingLive do
     {:ok, assign(socket, streams_data: streams_data, recommended_streams: recommended_streams)}
   end
 
+
+    #filter streams by category
+    def handle_event("filter_by_tags", %{"tags" => tags}, socket) do
+      filtered_streams =
+        KameramaniPhx.Repo.all(
+          from s in KameramaniPhx.Streaming.Stream,
+            where: s.is_live == true and ^tags in s.tags,
+            preload: [:user]
+        )
+
+      streams_data =
+        Enum.map(filtered_streams, fn s ->
+          count = Presence.list("stream_viewers:#{s.id}") |> map_size()
+          map_stream(s, count)
+        end)
+
+      {:noreply, assign(socket, streams_data: streams_data)}
+    end
+
   def handle_info({:stream_status_updated, updated_stream}, socket) do
     # Reload stream with user
     updated_stream = KameramaniPhx.Repo.preload(updated_stream, :user)
@@ -115,7 +133,7 @@ defmodule KameramaniPhxWeb.LandingLive do
     {:noreply, assign(socket, streams_data: streams_data)}
   end
 
-  defp map_stream(s, count \\ 0) do
+  defp map_stream(s, count) do
     avatar_url =
       if s.user.profile_picture in [nil, ""],
         do: "https://ui-avatars.com/api/?name=#{s.user.username}&background=random",
