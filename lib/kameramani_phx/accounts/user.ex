@@ -20,6 +20,7 @@ defmodule KameramaniPhx.Accounts.User do
     field :hashed_password, :string, redact: true
     field :confirmed_at, :utc_datetime
     field :authenticated_at, :utc_datetime, virtual: true
+    has_many :social_accounts, KameramaniPhx.Socials.SocialAccount
 
     # People THIS user is following
     many_to_many :following, KameramaniPhx.Accounts.User,

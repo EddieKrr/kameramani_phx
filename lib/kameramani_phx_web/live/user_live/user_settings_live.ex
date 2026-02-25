@@ -2,9 +2,10 @@ defmodule KameramaniPhxWeb.UserLive.UserSettingsLive do
   use KameramaniPhxWeb, :live_view
 
   alias KameramaniPhx.Accounts
-
+  alias KameramaniPhx.Socials
   @impl true
   def mount(%{"token" => token}, _session, socket) do
+    socket = assign(socket, :social_form, to_form(Socials.change_social_account(%Socials.SocialAccount{})))
     socket =
       case Accounts.update_user_email(socket.assigns.current_user.user, token) do
         {:ok, _user} ->
@@ -33,6 +34,8 @@ defmodule KameramaniPhxWeb.UserLive.UserSettingsLive do
       |> assign(:password_form, to_form(password_changeset))
       |> assign(:profile_form, to_form(profile_changeset))
       |> assign(:trigger_submit, false)
+      |> assign(:social_form, to_form(Socials.change_social_account(%Socials.SocialAccount{})))
+      |> assign(:user_socials, Socials.list_user_socials(user))
       |> allow_upload(:profile_picture,
         accept: ~w(.jpg .jpeg .png .webp),
         max_entries: 1,

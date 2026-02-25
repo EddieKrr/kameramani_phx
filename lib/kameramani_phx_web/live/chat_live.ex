@@ -62,22 +62,13 @@ defmodule KameramaniPhxWeb.ChatLive do
             # Get the initial viewer count
             initial_count = Presence.list(topic) |> map_size()
 
+            # Use current_user from the live_session mount, allow guests to view
+            current_user_scope = socket.assigns.current_user || %Scope{user: nil}
+            current_user = current_user_scope.user
+
             # Check if current user is following this streamer
-            is_following = false
-            current_user_obj = nil
-
-            # Manually mount current_user (without enforcing authentication)
-            current_user_scope =
-              if user_token = session["user_token"] do
-                {curr_user, _} = Accounts.get_user_by_session_token(user_token) || {nil, nil}
-                current_user_obj = curr_user
-                Scope.for_user(curr_user)
-              else
-                Scope.for_user(nil)
-              end
-
             is_following =
-              if current_user_obj, do: Accounts.is_following?(current_user_obj, user), else: false
+              if current_user, do: Accounts.is_following?(current_user, user), else: false
 
             # Fetch recommended streamers for the sidebar (similar to LandingLive)
             recommended_streams =
@@ -130,9 +121,8 @@ defmodule KameramaniPhxWeb.ChatLive do
 
             # If the current user is logged in, use their username and their stored color
             {chat_username, chat_user_color} =
-              if current_user_scope.user do
-                {current_user_scope.user.username,
-                 current_user_scope.user.chat_color || "#6366f1"}
+              if current_user do
+                {current_user.username, current_user.chat_color || "#6366f1"}
               else
                 {Enum.random(["Guest_#{:rand.uniform(1000)}"]), Enum.random(chat_colors)}
               end
@@ -164,7 +154,9 @@ defmodule KameramaniPhxWeb.ChatLive do
   end
 
   def handle_event("toggle_follow", _params, socket) do
-    current_user = socket.assigns.current_user.user
+    current_user =
+      if socket.assigns.current_user, do: socket.assigns.current_user.user, else: nil
+
     streamer_id = socket.assigns.streamer_id
 
     if current_user do
@@ -189,7 +181,10 @@ defmodule KameramaniPhxWeb.ChatLive do
 
   def handle_event("send_message", %{"chat" => %{"ch_message" => message_text}}, socket) do
     # Check if user is logged in
-    if current_user = socket.assigns.current_user.user do
+    current_user =
+      if socket.assigns.current_user, do: socket.assigns.current_user.user, else: nil
+
+    if current_user do
       message_body = String.trim(message_text)
 
       if message_body != "" do
