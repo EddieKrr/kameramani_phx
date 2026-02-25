@@ -94,7 +94,7 @@ defmodule KameramaniPhxWeb.Router do
       layout: {KameramaniPhxWeb.Layouts, :app} do
       # I moved ChatLive here assuming you want chatting to be private.
       # If you want it public, move it back to the top scope!
-      live "/users/profile/:username", KameramaniPhxWeb.Profile.UserProfileLive, :show
+      live "/users/profile/:username", KameramaniPhxWeb.Profile.UserProfileLive, :showgit 
       live "/users/profile/:username/:tab", KameramaniPhxWeb.Profile.UserProfileLive
       live "/users/settings", KameramaniPhxWeb.UserLive.UserSettingsLive
       live "/users/settings/stream-key", KameramaniPhxWeb.Streaming.Settings.StreamKeyLive

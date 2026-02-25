@@ -73389,3 +73389,43 @@ PATH=/home/eddie/.local/share/mise/installs/elixir/1.19.5-otp-28/bin:/home/eddie
 10:16:45.490 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 605µs
 
 10:27:28.059 id=781 [debug] handled request client -> server textDocument/hover in 1001ms
+
+10:27:59.514 id=782 [debug] handled request client -> server textDocument/codeAction in 649µs
+
+10:27:59.775 id=783 [debug] handled request client -> server textDocument/codeAction in 474µs
+
+10:27:59.811 id=784 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:28:03.084 id=785 [debug] handled request client -> server textDocument/codeAction in 506µs
+
+10:28:13.692 [debug] handled notification client -> server textDocument/didChange in 900µs
+
+10:28:13.793 id=787 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:28:13.793 id=786 [debug] handled request client -> server textDocument/documentSymbol in 1ms
+
+10:28:14.457 [debug] handled notification client -> server textDocument/didSave in 1ms
+
+10:28:14.822 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 592µs
+
+10:29:34.937 id=788 [debug] handled request client -> server textDocument/hover in 1001ms
+
+10:29:40.112 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:29:40.114 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:29:41.039 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 15ms
+
+10:29:41.922 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 2ms
+
+10:29:45.617 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 867µs
+
+10:29:45.892 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 887µs
+
+10:29:46.425 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 5ms
+
+10:29:52.311 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 11ms
+
+10:29:53.055 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 6ms
+
+10:29:53.428 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 7ms
