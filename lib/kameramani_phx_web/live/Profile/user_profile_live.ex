@@ -2,6 +2,8 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
   use KameramaniPhxWeb, :live_view
   alias KameramaniPhx.Accounts
   import KameramaniPhxWeb.ProfileComponents
+  alias KameramaniPhx.Socials
+  alias KameramaniPhx.Streaming
 
   def mount(_params, _session, socket) do
     {:ok, assign(socket, user: nil, is_live: false)}
@@ -22,6 +24,27 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
           if user.inserted_at,
             do: "#{DateTime.diff(DateTime.utc_now(), user.inserted_at, :day)} days",
             else: "N/A"
+        social_accounts = Socials.list_user_socials(user)
+
+        is_following =
+          if socket.assigns.current_user.user do
+            Accounts.is_following?(socket.assigns.current_user.user, user)
+          else
+            false
+          end
+
+        # Check if user is live
+        active_stream = Streaming.get_active_stream_for_user(user.id)
+
+        socket =
+          socket
+          |> assign(user: user)
+          |> assign(social_accounts: social_accounts)
+          |> assign(active_tab: "home")
+          |> assign(is_following: is_following)
+          |> assign(follower_count: Accounts.get_followers_count(user))
+          |> assign(following_count: Accounts.get_following_count(user))
+          |> assign(is_live: !!active_stream)
 
         {:noreply,
          assign(socket, user: user, avatar_url: avatar_url, active_tab: "home", time: time)}

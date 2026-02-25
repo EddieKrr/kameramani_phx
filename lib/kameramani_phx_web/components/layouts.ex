@@ -31,9 +31,18 @@ defmodule KameramaniPhxWeb.Layouts do
     default: nil,
     doc: "the current [user](https://hexdocs.pm/phoenix/users.html)"
 
-  slot :inner_block, required: true
+  attr :inner_content, :any, default: nil
+  slot :inner_block
 
   def app(assigns) do
+    current_user =
+      case assigns.current_user do
+        nil -> nil
+        %{} = map -> Map.get(map, :user, map)
+        other -> other
+      end
+    assigns = assign(assigns, :current_user_obj, current_user)
+
     ~H"""
     <header class="mx-auto max-w-[1440px] navbar fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-6 lg:px-8">
       <div class="mx-4 flex items-center gap-4 justify-between w-full px-4 sm:px-6 py-2 rounded-xl bg-slate-800/60 backdrop-blur-sm border-2 mt-3 border-slate-700">
@@ -48,7 +57,7 @@ defmodule KameramaniPhxWeb.Layouts do
           </.link>
         </div>
 
-        <%= if @current_user do %>
+        <%= if @current_user_obj do %>
           <div class="flex items-center gap-6">
             <div class="relative">
               <input
@@ -61,21 +70,19 @@ defmodule KameramaniPhxWeb.Layouts do
               <span class="text-white">
                 Welcome,
                 <span class="font-semibold text-blue-400 capitalize">
-                  {Map.get(@current_user, :user, @current_user).username}
+                  {@current_user_obj.username}
                 </span>
               </span>
               <div class="relative group cursor-pointer">
                 <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                  {String.first(Map.get(@current_user, :user, @current_user).username || "U")
+                  {String.first(@current_user_obj.username || "U")
                   |> String.upcase()}
                 </div>
 
                 <div class="absolute right-0 top-full mt-2 w-48 bg-slate-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                   <div class="py-2">
                     <.link
-                      navigate={
-                        ~p"/users/profile/#{Map.get(@current_user, :user, @current_user).username}"
-                      }
+                      navigate={~p"/users/profile/#{@current_user_obj.username}"}
                       class="flex items-center gap-2 px-4 py-2 text-white hover:bg-slate-600 transition colors"
                     >
                       <.svg variant="user-icon" class="w-5 h-5" /> Profile
@@ -116,7 +123,13 @@ defmodule KameramaniPhxWeb.Layouts do
     </header>
 
     <main class="pt-24 bg-[#0e0e10] text-white">
-      <div class="">{@inner_content}</div>
+      <div class="">
+        <%= if @inner_content do %>
+          {@inner_content}
+        <% else %>
+          <%= render_slot(@inner_block) %>
+        <% end %>
+      </div>
     </main>
     <.flash_group flash={@flash} />
     """
@@ -133,12 +146,17 @@ defmodule KameramaniPhxWeb.Layouts do
 
   """
   attr :flash, :map, required: true, doc: "the map of flash messages"
-  slot :inner_block, required: true
+  attr :inner_content, :any, default: nil
+  slot :inner_block
 
   def auth(assigns) do
     ~H"""
     <div class="min-h-screen bg-[#0e0e10] text-white flex flex-col items-center justify-center">
-      {@inner_content}
+      <%= if @inner_content do %>
+        {@inner_content}
+      <% else %>
+        <%= render_slot(@inner_block) %>
+      <% end %>
     </div>
     <.flash_group flash={@flash} />
     """
