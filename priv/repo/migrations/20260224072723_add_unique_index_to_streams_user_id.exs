@@ -16,7 +16,7 @@ defmodule KameramaniPhx.Repo.Migrations.AddUniqueIndexToStreamsUserId do
 
     # Drop existing non-unique index if it exists
     drop_if_exists index(:streams, [:user_id])
-    
+
     # Create unique index
     create unique_index(:streams, [:user_id])
   end

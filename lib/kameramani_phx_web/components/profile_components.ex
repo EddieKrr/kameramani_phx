@@ -9,7 +9,7 @@ defmodule KameramaniPhxWeb.ProfileComponents do
 
   def profile_header(assigns) do
     ~H"""
-    <div class="bg-[#18181b] border border-white/5 rounded-2xl p-8 mb-8 shadow-2xl">
+    <div class="bg-slate-900/80 backdrop-blur-sm border border-white/5 rounded-2xl p-8 mb-8 shadow-2xl">
       <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
         <!-- Profile Picture -->
         <div class="shrink-0">
@@ -61,9 +61,6 @@ defmodule KameramaniPhxWeb.ProfileComponents do
         </div>
         <!-- Action Buttons -->
         <div class="flex justify-center gap-4">
-          <button class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2">
-            <.svg variant="envelope" class="h-5 w-5" /> Send Message
-          </button>
           <button class="bg-purple-600 hover:bg-purple-500 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2">
             <.svg variant="heart" class="h-5 w-5" /> Follow
           </button>
@@ -77,44 +74,33 @@ defmodule KameramaniPhxWeb.ProfileComponents do
   attr :age, :string, default: "Not Specified"
   attr :member_since, :string, default: "Unknown"
   attr :email, :string, required: true
+  attr :username, :string, required: true
 
   def about_section(assigns) do
     ~H"""
     <div class="bg-[#18181b] border border-white/5 rounded-2xl shadow-2xl mb-8">
-      <div class="flex flex-wrap border-b border-white/5">
-        <button
-          phx-click="set_active_tab"
-          phx-value-tab="about"
-          class="border-white bg-white/10"
-        >
-          About
-        </button>
-      </div>
-
-    <!-- Tab Content -->
       <div class="p-8">
-            <%!-- <h3 class="text-2xl font-bold text-white mb-6">About {@user.name}</h3> --%>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <h3 class="text-2xl font-bold text-white mb-6 capitalize">About {@username}</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-white/5 rounded-lg p-6">
+            <h4 class="font-semibold font-title text-lg text-indigo-300 mb-2 uppercase tracking-wider">
+              Username
+            </h4>
+            <p class="text-white font-medium">{@username}</p>
+          </div>
 
-              <div class="bg-white/5 rounded-lg p-6">
-                <h4 class="font-semibold font-title text-lg text-indigo-300 mb-2 uppercase tracking-wider">
-                  Username
-                </h4>
-                <%!-- <p class="text-white font-medium">{@user.username}</p> --%>
-              </div>
+          <div class="bg-white/5 rounded-lg p-6">
+            <h4 class="text-lg font-title font-semibold text-indigo-300 mb-2 uppercase tracking-wider">
+              Member For
+            </h4>
+            <p class="text-white font-medium">{@member_since}</p>
+          </div>
 
-              <div class="bg-white/5 rounded-lg p-6">
-                <h4 class="text-lg font-title font-semibold text-indigo-300 mb-2 uppercase tracking-wider">
-                  Member For
-                </h4>
-                <p class="text-white font-medium">{@member_since}</p>
-              </div>
-
-              <div class="bg-white/5 rounded-xl p-6 text-indigo-300 mb-2">
-                <h4 class = "font-title text-lg"></h4>
-                <p class = "font-title text-lg"></p>
-              </div>
-            </div>
+          <div class="bg-white/5 rounded-xl p-6 text-indigo-300 mb-2">
+            <h4 class="font-title text-lg mb-2 uppercase tracking-wider">Biography</h4>
+            <p class="font-medium">{@bio}</p>
+          </div>
+        </div>
       </div>
     </div>
     """

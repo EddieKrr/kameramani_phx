@@ -16,15 +16,17 @@ defmodule KameramaniPhxWeb.StudioLive do
     stream = Streaming.get_stream_for_user(user.id)
 
     # Subscribe to stream updates for this user
-    viewer_count = 
+    viewer_count =
       if stream do
         Logger.info("Studio Live: Subscribing to stream updates for stream_id=#{stream.id}")
         Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "streams:#{stream.id}")
-        
+
         topic = "stream_viewers:#{stream.id}"
+
         if connected?(socket) do
           KameramaniPhxWeb.Endpoint.subscribe(topic)
         end
+
         Presence.list(topic) |> map_size()
       else
         0

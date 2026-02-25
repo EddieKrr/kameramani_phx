@@ -42,12 +42,14 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
       else
         if socket.assigns.is_following do
           Accounts.unfollow_user(current_user, profile_user)
+
           {:noreply,
            socket
            |> assign(is_following: false)
            |> assign(follower_count: socket.assigns.follower_count - 1)}
         else
           Accounts.follow_user(current_user, profile_user)
+
           {:noreply,
            socket
            |> assign(is_following: true)

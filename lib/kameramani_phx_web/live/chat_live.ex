@@ -76,7 +76,8 @@ defmodule KameramaniPhxWeb.ChatLive do
                 Scope.for_user(nil)
               end
 
-            is_following = if current_user_obj, do: Accounts.is_following?(current_user_obj, user), else: false
+            is_following =
+              if current_user_obj, do: Accounts.is_following?(current_user_obj, user), else: false
 
             # Fetch recommended streamers for the sidebar (similar to LandingLive)
             recommended_streams =
@@ -130,10 +131,10 @@ defmodule KameramaniPhxWeb.ChatLive do
             # If the current user is logged in, use their username and their stored color
             {chat_username, chat_user_color} =
               if current_user_scope.user do
-                {current_user_scope.user.username, current_user_scope.user.chat_color || "#6366f1"}
+                {current_user_scope.user.username,
+                 current_user_scope.user.chat_color || "#6366f1"}
               else
-                {Enum.random(["Guest_#{:rand.uniform(1000)}"]),
-                 Enum.random(chat_colors)}
+                {Enum.random(["Guest_#{:rand.uniform(1000)}"]), Enum.random(chat_colors)}
               end
 
             # Load existing messages

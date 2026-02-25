@@ -133,14 +133,16 @@ defmodule KameramaniPhx.Accounts do
 
     now = DateTime.utc_now() |> DateTime.truncate(:second)
 
-    Repo.insert_all(Follow, [
+    Repo.insert_all(
+      Follow,
       [
-        follower_id: follower_id,
-        followed_id: followed_id,
-        inserted_at: now,
-        updated_at: now
-      ]
-    ], on_conflict: :nothing)
+        [
+          follower_id: follower_id,
+          followed_id: followed_id,
+          inserted_at: now,
+          updated_at: now
+        ]
+      ], on_conflict: :nothing)
   end
 
   # unfollow a user
@@ -148,8 +150,9 @@ defmodule KameramaniPhx.Accounts do
     follower_id = if is_map(follower), do: follower.id, else: follower
     followed_id = if is_map(following), do: following.id, else: following
 
-    query = from f in Follow,
-      where: f.follower_id == ^follower_id and f.followed_id == ^followed_id
+    query =
+      from f in Follow,
+        where: f.follower_id == ^follower_id and f.followed_id == ^followed_id
 
     Repo.delete_all(query)
   end
@@ -158,8 +161,9 @@ defmodule KameramaniPhx.Accounts do
     follower_id = if is_map(follower), do: follower.id, else: follower
     followed_id = if is_map(following), do: following.id, else: following
 
-    query = from f in Follow,
-      where: f.follower_id == ^follower_id and f.followed_id == ^followed_id
+    query =
+      from f in Follow,
+        where: f.follower_id == ^follower_id and f.followed_id == ^followed_id
 
     Repo.exists?(query)
   end
