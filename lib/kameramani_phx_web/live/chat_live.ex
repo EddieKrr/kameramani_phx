@@ -124,8 +124,7 @@ defmodule KameramaniPhxWeb.ChatLive do
               if current_user do
                 {current_user.username, current_user.chat_color || "#6366f1"}
               else
-                {Enum.random(["Guest_#{:rand.uniform(1000)}"]),
-                 Enum.random(chat_colors)}
+                {Enum.random(["Guest_#{:rand.uniform(1000)}"]), Enum.random(chat_colors)}
               end
 
             # Load existing messages

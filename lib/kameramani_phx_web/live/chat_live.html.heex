@@ -49,7 +49,7 @@
           >
           </video>
         </div>
-        
+
         <div class="absolute top-4 left-4 flex items-center gap-2 pointer-events-none">
           <span class="bg-[#eb0400] text-white text-[12px] font-bold px-2 py-0.5 rounded shadow-lg">
             LIVE
@@ -58,7 +58,14 @@
             <.svg variant="user" class="h-3 w-3 text-[#eb0400]" />
             <span id="video-viewer-count" phx-hook="AnimateCount"><%= @viewer_count %></span>
           </span>
-          <span class="bg-black/60 backdrop-blur-md text-white text-[12px] font-bold px-2 py-0.5 rounded" id="video-uptime" phx-update="ignore" phx-hook="UptimeTimer" data-start={@stream_started_at} data-is-live={to_string(@is_live)}>
+          <span
+            class="bg-black/60 backdrop-blur-md text-white text-[12px] font-bold px-2 py-0.5 rounded"
+            id="video-uptime"
+            phx-update="ignore"
+            phx-hook="UptimeTimer"
+            data-start={@stream_started_at}
+            data-is-live={to_string(@is_live)}
+          >
             0:00:00
           </span>
         </div>
@@ -85,7 +92,11 @@
         <div class="flex items-start gap-4">
           <.link navigate={~p"/users/profile/#{@streamer_name}"} class="relative shrink-0 group">
             <div class={"w-16 h-16 rounded-full p-0.5 transition-transform group-hover:scale-105 " <> (if @is_live, do: "bg-[#eb0400]", else: "bg-white/10")}>
-              <img class="w-full h-full rounded-full object-cover border-2 border-[#0e0e10]" src={@streamer_profile_picture} alt={@streamer_name} />
+              <img
+                class="w-full h-full rounded-full object-cover border-2 border-[#0e0e10]"
+                src={@streamer_profile_picture}
+                alt={@streamer_name}
+              />
             </div>
             <%= if @is_live do %>
               <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#eb0400] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-sm border-2 border-[#0e0e10] leading-none tracking-wide">
@@ -96,7 +107,10 @@
 
           <div class="flex flex-col">
             <div class="flex items-center gap-2 mb-1">
-              <.link navigate={~p"/users/profile/#{@streamer_name}"} class="text-xl font-bold text-[#efeff1] tracking-tight hover:text-[#bf94ff] transition-colors">
+              <.link
+                navigate={~p"/users/profile/#{@streamer_name}"}
+                class="text-xl font-bold text-[#efeff1] tracking-tight hover:text-[#bf94ff] transition-colors"
+              >
                 {@streamer_name}
               </.link>
             </div>
@@ -126,7 +140,14 @@
               <.svg variant="user" class="w-4 h-4" />
               <span id="profile-viewer-count" phx-hook="AnimateCount"><%= @viewer_count %></span>
             </div>
-            <div class="text-[#adadb8] font-medium flex items-center gap-1.5" id="profile-uptime" phx-update="ignore" phx-hook="UptimeTimer" data-start={@stream_started_at} data-is-live={to_string(@is_live)}>
+            <div
+              class="text-[#adadb8] font-medium flex items-center gap-1.5"
+              id="profile-uptime"
+              phx-update="ignore"
+              phx-hook="UptimeTimer"
+              data-start={@stream_started_at}
+              data-is-live={to_string(@is_live)}
+            >
               <.svg variant="clock" class="w-4 h-4" />
               <span>0:00:00</span>
             </div>
@@ -146,7 +167,10 @@
             </button>
           <% else %>
             <%= if !@current_user.user do %>
-              <button phx-click="toggle_follow" class="bg-[#bf94ff] hover:bg-[#a970ff] text-black px-4 py-1.5 rounded font-bold text-sm transition-colors flex items-center gap-2 shadow">
+              <button
+                phx-click="toggle_follow"
+                class="bg-[#bf94ff] hover:bg-[#a970ff] text-black px-4 py-1.5 rounded font-bold text-sm transition-colors flex items-center gap-2 shadow"
+              >
                 <.svg variant="heart" class="w-4 h-4" /> Follow
               </button>
             <% end %>
@@ -171,10 +195,24 @@
         </div>
       </div>
 
-      <div class="flex-1 overflow-y-auto p-3 space-y-1.5 custom-scrollbar" id="chat-messages" phx-update="stream" phx-hook="ChatScroll">
-        <div :for={{dom_id, msg} <- @streams.messages} id={dom_id} class="group text-[13px] leading-relaxed break-words">
-          <span class="font-bold cursor-pointer hover:underline" style={"color: #{msg.user.chat_color || "#6366f1"}"}><%= msg.user.username %></span><span class="text-white">:</span>
-          <span class="text-[#efeff1] ml-1"><%= msg.body %></span>
+      <div
+        class="flex-1 overflow-y-auto p-3 space-y-1.5 custom-scrollbar"
+        id="chat-messages"
+        phx-update="stream"
+        phx-hook="ChatScroll"
+      >
+        <div
+          :for={{dom_id, msg} <- @streams.messages}
+          id={dom_id}
+          class="group text-[13px] leading-relaxed break-words"
+        >
+          <span
+            class="font-bold cursor-pointer hover:underline"
+            style={"color: #{msg.user.chat_color || "#6366f1"}"}
+          >
+            {msg.user.username}
+          </span><span class="text-white">:</span>
+          <span class="text-[#efeff1] ml-1">{msg.body}</span>
         </div>
       </div>
 

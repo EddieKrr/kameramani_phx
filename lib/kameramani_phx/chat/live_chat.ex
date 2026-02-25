@@ -6,7 +6,7 @@ defmodule KameramaniPhx.Chat.LiveChat do
   @foreign_key_type :binary_id
   schema "live_chats" do
     field :body, :string
-    
+
     belongs_to :stream, KameramaniPhx.Streaming.Stream
     belongs_to :user, KameramaniPhx.Accounts.User
 

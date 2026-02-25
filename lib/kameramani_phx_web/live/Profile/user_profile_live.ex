@@ -1,21 +1,29 @@
 defmodule KameramaniPhxWeb.Profile.UserProfileLive do
   use KameramaniPhxWeb, :live_view
   alias KameramaniPhx.Accounts
+  import KameramaniPhxWeb.ProfileComponents
   alias KameramaniPhx.Socials
   alias KameramaniPhx.Streaming
 
-  on_mount {KameramaniPhxWeb.UserAuth, :mount_current_user}
+  def mount(_params, _session, socket) do
+    {:ok, assign(socket, user: nil, is_live: false)}
+  end
 
-  def mount(%{"username" => username}, _session, socket) do
-    # Fetch user from the database based on username
+  def handle_params(%{"username" => username}, _uri, socket) do
     case Accounts.get_user_by_username(username) do
       nil ->
-        {:ok,
-         socket
-         |> put_flash(:error, "User not found")
-         |> push_navigate(to: ~p"/")}
+        {:noreply, push_navigate(socket, to: ~p"/directory")}
 
       user ->
+        avatar_url =
+          if user.profile_picture in [nil, ""],
+            do: "https://ui-avatars.com/api/?name=#{user.username}&background=random&size=150",
+            else: user.profile_picture
+
+        time =
+          if user.inserted_at,
+            do: "#{DateTime.diff(DateTime.utc_now(), user.inserted_at, :day)} days",
+            else: "N/A"
         social_accounts = Socials.list_user_socials(user)
 
         is_following =
@@ -38,7 +46,8 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
           |> assign(following_count: Accounts.get_following_count(user))
           |> assign(is_live: !!active_stream)
 
-        {:ok, socket}
+        {:noreply,
+         assign(socket, user: user, avatar_url: avatar_url, active_tab: "home", time: time)}
     end
   end
 
@@ -56,12 +65,14 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
       else
         if socket.assigns.is_following do
           Accounts.unfollow_user(current_user, profile_user)
+
           {:noreply,
            socket
            |> assign(is_following: false)
            |> assign(follower_count: socket.assigns.follower_count - 1)}
         else
           Accounts.follow_user(current_user, profile_user)
+
           {:noreply,
            socket
            |> assign(is_following: true)
