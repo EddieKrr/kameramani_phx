@@ -149,7 +149,8 @@ defmodule KameramaniPhxWeb.LandingLive do
       tags: s.tags || [],
       viewer_count: count,
       avatar: avatar_url,
-      is_live: s.is_live
+      is_live: s.is_live,
+      thumbnail_url: "/thumbnails/#{s.id}.jpg"
     }
   end
 

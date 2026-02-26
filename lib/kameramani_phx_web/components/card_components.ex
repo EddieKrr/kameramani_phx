@@ -9,12 +9,25 @@ defmodule KameramaniPhxWeb.CardComponents do
   attr :avatar, :string, default: "https://ui-avatars.com/api/?background=random"
   attr :id, :any, required: true
   attr :is_live, :boolean, default: false
+  attr :thumbnail_url, :string, default: nil
 
   def card(assigns) do
     ~H"""
       <article>
     <.link navigate={~p"/watch/#{@streamer}"} class="group block">
         <div class="relative aspect-video w-full bg-gradient-to-tl from-black to-slate-700 group-hover:scale-[1.03] group-hover:z-50 group-hover:shadow-2xl transition-all duration-300 ease-in-out rounded-lg overflow-hidden">
+          <%= if @thumbnail_url do %>
+            <img
+              src={@thumbnail_url}
+              alt={"#{@streamer} stream thumbnail"}
+              class="h-full w-full object-cover"
+              loading="lazy"
+            />
+          <% else %>
+            <div class="flex h-full w-full items-center justify-center text-sm text-white/70">
+              Stream offline
+            </div>
+          <% end %>
           <%= if @is_live do %>
             <div class="absolute top-2 left-2 bg-red-600 text-white font-black text-[10px] px-2 py-0.5 rounded shadow-lg">
               LIVE

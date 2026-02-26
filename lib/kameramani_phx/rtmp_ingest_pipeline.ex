@@ -25,13 +25,11 @@ defmodule KameramaniPhx.RTMPIngestPipeline do
       |> via_in(Pad.ref(:input, :video),
         options: [
           encoding: :H264,
-          # ADDED
+          # take 4s captures for each segment
           segment_duration: Membrane.Time.seconds(4)
         ]
       )
       |> get_child(:sink),
-
-      # 2. Wire the Audio track
       get_child(:src)
       |> via_out(:audio)
       |> via_in(Pad.ref(:input, :audio),
