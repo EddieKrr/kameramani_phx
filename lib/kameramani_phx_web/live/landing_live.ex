@@ -4,7 +4,7 @@ defmodule KameramaniPhxWeb.LandingLive do
   import KameramaniPhxWeb.SidebarComponents
   import KameramaniPhxWeb.CardComponents
   alias KameramaniPhxWeb.Presence
-  alias KameramaniPhxWeb.DummyData
+  alias KameramaniPhx.Streaming
 
   on_mount {KameramaniPhxWeb.UserAuth, :mount_current_user}
 
@@ -12,7 +12,7 @@ defmodule KameramaniPhxWeb.LandingLive do
     # Fetch only streams where is_live is true
     streams =
       KameramaniPhx.Repo.all(
-        from s in KameramaniPhx.Streaming.Stream,
+        from s in Streaming.Stream,
           where: s.is_live == true,
           preload: [:user]
       )
@@ -25,17 +25,12 @@ defmodule KameramaniPhxWeb.LandingLive do
       # Subscribe to existing live streams to know when they go offline
       # AND their viewer count changes
       Enum.each(streams, fn s ->
-        Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "streams:#{s.id}")
         KameramaniPhxWeb.Endpoint.subscribe("stream_viewers:#{s.id}")
       end)
     end
 
     # Map database streams to the format expected by the card component
-    streams_data =
-      Enum.map(streams, fn s ->
-        count = Presence.list("stream_viewers:#{s.id}") |> map_size()
-        map_stream(s, count)
-      end)
+    streams_data = streams_to_cards(streams)
 
     # Fetch recommended streamers for the sidebar
     recommended_streams =
@@ -60,7 +55,32 @@ defmodule KameramaniPhxWeb.LandingLive do
         }
       end)
 
-    {:ok, assign(socket, streams_data: streams_data, recommended_streams: recommended_streams)}
+    {:ok,
+     socket
+     |> assign(
+       search_form: to_form(%{"query" => ""}, as: :search),
+       streams_data: streams_data,
+       all_streams_data: streams_data,
+       recommended_streams: recommended_streams
+     )}
+  end
+
+  def handle_event("search_username", %{"search" => %{"query" => query}}, socket) do
+    query = String.trim(query)
+
+    streams_data =
+      if query == "" do
+        socket.assigns.all_streams_data
+      else
+        query
+        |> Streaming.list_live_streams_by_username()
+        |> streams_to_cards()
+      end
+
+    {:noreply,
+     socket
+     |> assign(streams_data: streams_data)
+     |> assign(search_form: to_form(%{"query" => query}, as: :search))}
   end
 
   def handle_info({:stream_status_updated, updated_stream}, socket) do
@@ -115,7 +135,7 @@ defmodule KameramaniPhxWeb.LandingLive do
     {:noreply, assign(socket, streams_data: streams_data)}
   end
 
-  defp map_stream(s, count \\ 0) do
+  defp map_stream(s, count) do
     avatar_url =
       if s.user.profile_picture in [nil, ""],
         do: "https://ui-avatars.com/api/?name=#{s.user.username}&background=random",
@@ -131,6 +151,13 @@ defmodule KameramaniPhxWeb.LandingLive do
       avatar: avatar_url,
       is_live: s.is_live
     }
+  end
+
+  defp streams_to_cards(streams) do
+    Enum.map(streams, fn s ->
+      count = Presence.list("stream_viewers:#{s.id}") |> map_size()
+      map_stream(s, count)
+    end)
   end
 
   def handle_params(_params, _url, socket) do

@@ -3,9 +3,6 @@ defmodule KameramaniPhxWeb.ChatLive do
   import Ecto.Query
   import KameramaniPhxWeb.SidebarComponents
 
-  # Alias DummyData for shared hardcoded data
-  alias KameramaniPhxWeb.DummyData
-
   alias KameramaniPhx.Accounts
   alias KameramaniPhx.Chat
 
@@ -250,3 +247,4 @@ defmodule KameramaniPhxWeb.ChatLive do
     {:noreply, assign(socket, viewer_count: new_count)}
   end
 end
+

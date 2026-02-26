@@ -29,11 +29,14 @@ defmodule KameramaniPhxWeb.ProfileComponents do
         <div class="flex-1 text-center md:text-left">
           <div class="flex items-center gap-3 mb-2">
             <h1 class="text-4xl font-bold">{@name}</h1>
-            <!-- Offline Status Badge -->
-            <div class="bg-gray-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-              OFFLINE
-            </div>
+            <%= if @is_live do %>
+              <.icon name="hero-signal" class="h-5 w-5 text-red-500 animate-pulse" />
+              <span class="text-red-500 rounded-full bg-white/10 px-3 py-1 text-sm font-medium">Live</span>
+              <%else%>
+                  <span class="bg-gray-600 text-white px-3 py-1 rounded-full text-sm font-medium">Offline</span>
+             <% end %>
           </div>
+
           <p class="text-xl text-gray-300 mb-4">@{@username}</p>
 
           <%!-- <%= if @bio && @bio != "" do %>

@@ -90,8 +90,6 @@ module.exports = {
       "--radius-selector": "0.25rem",
       "--radius-field": "0.25rem",
       "--radius-box": "0.5rem",
-      
-      
       "--border": "1.5px",
       "--depth": "1",
       "--noise": "0",

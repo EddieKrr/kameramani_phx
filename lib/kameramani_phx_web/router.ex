@@ -74,7 +74,7 @@ defmodule KameramaniPhxWeb.Router do
       at: "/live",
       from: :kameramani_phx,
       gzip: false,
-      only: ~w(m3u8 ts)
+      only: ~w(m3u8 ts m4s mp4)
   end
 
   # =========================================================

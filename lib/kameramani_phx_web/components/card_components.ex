@@ -53,22 +53,36 @@ defmodule KameramaniPhxWeb.CardComponents do
     """
   end
 
+
+
   attr :name, :string, required: true
   attr :slug, :string, required: true
-  attr :viewers, :integer, required: true
-  attr :box_art, :string, default: "https://placehold.co/400x533/4c1d95/ffffff?text=Game+Art"
+  attr :thumbnail_url, :string, default: "https://placehold.co/400x533/4c1d95/ffffff?text=Game+Art"
 
   def category_card(assigns) do
     ~H"""
     <.link navigate={~p"/directory/#{@slug}"}>
-      <div class="grid grid-cols-5">
-        <div>
-          <img src={@box_art} />
-          <div>{@name}</div>
-          <div>{@viewers}</div>
-          <div>{@slug}</div>
+      <article class="group">
+        <div class="relative aspect-[3/4] overflow-hidden rounded-xl bg-[#15131a] border border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.45)]">
+          <img
+            src={@thumbnail_url}
+            alt={@name}
+            class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.06]"
+            loading="lazy"
+          />
+          <div class="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+          <div class="absolute bottom-2 left-2 right-2 flex items-center justify-between">
+            <span class="rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-white/90 border border-white/10">
+              {@slug}
+            </span>
+          </div>
         </div>
-      </div>
+        <div class="mt-3">
+          <div class="text-sm font-semibold text-white group-hover:text-[#7cf6ff] transition-colors">
+            {@name}
+          </div>
+        </div>
+      </article>
     </.link>
     """
   end

@@ -38,8 +38,19 @@ defmodule KameramaniPhx.Streaming do
 
   """
   def list_streams do
-    Repo.all(Stream)
+    Repo.all(from s in Stream, preload: [:user])
   end
+
+  def list_live_streams do
+    Repo.all(
+      from s in Stream,
+        where: s.is_live == true,
+        order_by: [desc: s.inserted_at],
+        preload: [:user]
+    )
+  end
+
+
 
   @doc """
   Gets a single stream.
@@ -58,8 +69,16 @@ defmodule KameramaniPhx.Streaming do
   def get_stream!(id), do: Repo.get!(Stream, id)
 
   # getting streams by vategory
-  def get_streams_by_category(category) do
-    Repo.all(from s in Stream, where: ^category in s.categories)
+  def get_streams_by_category(category) when is_binary(category) do
+    search_category = String.trim(category)
+
+      query =
+        from s in Stream,
+        where: ilike(s.category, ^"%#{search_category}%"),
+        where: s.is_live == true,
+        order_by: [desc: s.inserted_at],
+        preload: [:user]
+      Repo.all(query)
   end
 
   # get the stream_key for a given stream id
@@ -192,4 +211,77 @@ defmodule KameramaniPhx.Streaming do
   def change_stream(%Stream{} = stream, attrs \\ %{}) do
     Stream.changeset(stream, attrs)
   end
+
+  #==================================FOR THE TAGS=======================
+    def list_streams_by_tags(tags) when is_binary(tags) do
+      search_tag = String.trim(tags)
+
+      if search_tag == "" do
+        []
+      else
+        query =
+          from s in Stream,
+            where: fragment("? @> ?", s.tags, ^[search_tag]),
+            where: s.is_live == true,
+            order_by: [desc: s.inserted_at]
+          # preload: [:user]
+
+        Repo.all(query)
+      end
+    end
+
+    def list_stream_by_multiple_tags(tag_list) when is_list(tag_list) do
+
+      query =
+        from s in Stream,
+        where: fragment("? && ?", s.tags, ^tag_list),
+        where: s.is_live == true,
+        order_by: [desc: s.inserted_at]
+        # preloads: [:user]
+      Repo.all(query)
+    end
+
+    def list_live_streams_by_username(search) when is_binary(search) do
+      search_query = String.trim(search)
+
+      if search_query == "" do
+        []
+      else
+        query =
+          from s in Stream,
+            join: u in assoc(s, :user),
+            where: ilike(u.username, ^"%#{search_query}%"),
+            where: s.is_live == true,
+            order_by: [desc: s.inserted_at],
+            preload: [:user]
+
+        Repo.all(query)
+      end
+    end
+
+    def list_live_streams_by_category_or_tag(search) when is_binary(search) do
+      search_query = String.trim(search)
+
+      if search_query == "" do
+        []
+      else
+        pattern = "%#{search_query}%"
+
+        query =
+          from s in Stream,
+            where:
+              ilike(s.category, ^pattern) or
+                fragment(
+                  "EXISTS (SELECT 1 FROM unnest(COALESCE(?, '{}'::varchar[])) tag WHERE tag ILIKE ?)",
+                  s.tags,
+                  ^pattern
+                ),
+            where: s.is_live == true,
+            order_by: [desc: s.inserted_at],
+            preload: [:user]
+
+        Repo.all(query)
+      end
+    end
+
 end
