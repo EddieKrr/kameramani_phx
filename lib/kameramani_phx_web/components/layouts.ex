@@ -71,6 +71,7 @@ defmodule KameramaniPhxWeb.Layouts do
                 <span class="font-semibold text-blue-400 capitalize">
                   {@current_user_obj.username}
                 </span>
+                
               </span>
               <div class="relative group cursor-pointer">
                 <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
