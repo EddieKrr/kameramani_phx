@@ -39,8 +39,8 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
         active_stream = Streaming.get_active_stream_for_user(user.id)
 
         tab =  Map.get(params, "tab", "home")
-        query =from(v in KameramaniPhx.Streaming.Stream, where: v.user_id == ^user.id and v.is_live == false)
-        vod = Repo.all(query)
+        query =from(v in KameramaniPhx.Streaming.Stream, where: v.user_id == ^user.id and v.is_live == false, preload: [:user])
+        vods = Repo.all(query)
 
         socket =
           socket
@@ -48,7 +48,7 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
           |> assign(avatar_url: avatar_url)
           |> assign(active_tab: tab)
           |> assign(user: user)
-          |>assign(vod: vod)
+          |>assign(vods: vods)
           |> assign(social_accounts: social_accounts)
           |> assign(is_following: is_following)
           |> assign(follower_count: Accounts.get_followers_count(user))

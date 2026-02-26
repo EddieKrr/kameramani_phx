@@ -12,8 +12,8 @@ defmodule KameramaniPhxWeb.CardComponents do
 
   def card(assigns) do
     ~H"""
-    <.link navigate={~p"/watch/#{@streamer}"} class="group block">
       <article>
+    <.link navigate={~p"/watch/#{@streamer}"} class="group block">
         <div class="relative aspect-video w-full bg-gradient-to-tl from-black to-slate-700 group-hover:scale-[1.03] group-hover:z-50 group-hover:shadow-2xl transition-all duration-300 ease-in-out rounded-lg overflow-hidden">
           <%= if @is_live do %>
             <div class="absolute top-2 left-2 bg-red-600 text-white font-black text-[10px] px-2 py-0.5 rounded shadow-lg">
@@ -26,6 +26,7 @@ defmodule KameramaniPhxWeb.CardComponents do
           </div>
         </div>
 
+    </.link>
         <div class="flex flex-row gap-3 mt-3">
           <img class="h-10 w-10 rounded-full" alt={@streamer} src={@avatar} />
           <div class="flex flex-col min-w-0">
@@ -49,7 +50,6 @@ defmodule KameramaniPhxWeb.CardComponents do
           </div>
         </div>
       </article>
-    </.link>
     """
   end
 
