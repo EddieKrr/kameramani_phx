@@ -37,7 +37,10 @@
           bio={@user.bio}
           />
       <% "videos" -> %>
-         <.video_section/>
+        <h4 class="font-title text-3xl capitalize text-indigo-300">Watch {@user.username}'s Past Streams</h4>
+         <.video_section
+          vods={@vods}
+         />
       <% "home" -> %>
         <.home_section/>
       <% end %>

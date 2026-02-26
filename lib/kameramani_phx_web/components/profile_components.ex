@@ -1,6 +1,7 @@
 defmodule KameramaniPhxWeb.ProfileComponents do
   use Phoenix.Component
   import KameramaniPhxWeb.CoreComponents
+  import KameramaniPhxWeb.CardComponents
 
   attr :username, :string, required: true
   attr :name, :string, required: true
@@ -125,8 +126,22 @@ defmodule KameramaniPhxWeb.ProfileComponents do
     """
   end
 
+
+  attr :vods, :list, required: true
   def video_section(assigns) do
     ~H"""
+      <div :for={vod <- @vods} class="flex">
+
+        <.card
+          stream_name = {vod.title}
+          streamer = {vod.user.username}
+          category = {vod.category}
+          avatar = {vod.user.profile_picture}
+          viewer_count = {vod.vod_play_count}
+          id = {vod.id}
+          is_live = {false}
+          />
+      </div>
     """
   end
 
