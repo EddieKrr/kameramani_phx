@@ -6,10 +6,10 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
   alias KameramaniPhx.Streaming
 
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, user: nil, is_live: false)}
+    {:ok, assign(socket, user: nil, is_live: false, page_title: "User Profile")}
   end
 
-  def handle_params(%{"username" => username}, _uri, socket) do
+  def handle_params(%{"username" => username} = params, _uri, socket) do
     case Accounts.get_user_by_username(username) do
       nil ->
         {:noreply, push_navigate(socket, to: ~p"/directory")}
@@ -36,18 +36,21 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
         # Check if user is live
         active_stream = Streaming.get_active_stream_for_user(user.id)
 
+        tab =  Map.get(params, "tab", "home")
+
         socket =
           socket
+          |> assign(time: time)
+          |> assign(avatar_url: avatar_url)
+          |> assign(active_tab: tab)
           |> assign(user: user)
           |> assign(social_accounts: social_accounts)
-          |> assign(active_tab: "home")
           |> assign(is_following: is_following)
           |> assign(follower_count: Accounts.get_followers_count(user))
           |> assign(following_count: Accounts.get_following_count(user))
           |> assign(is_live: !!active_stream)
 
-        {:noreply,
-         assign(socket, user: user, avatar_url: avatar_url, active_tab: "home", time: time)}
+        {:noreply, socket}
     end
   end
 

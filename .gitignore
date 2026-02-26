@@ -41,3 +41,6 @@ npm-debug.log
 /config/dev.local.exs
 
 /priv/static/live/
+/priv/static/live/cube.2
+
+GEMINI.md

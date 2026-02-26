@@ -108,4 +108,30 @@ defmodule KameramaniPhxWeb.ProfileComponents do
     </div>
     """
   end
+
+  attr :patch, :string, required: true
+  attr :label, :string, required: true
+  attr :is_active, :boolean, default: false
+
+  def profile_tab(assigns) do
+    ~H"""
+      <.link
+        patch={@patch}
+        class={["px-4 py-2 rounded-lg",
+        if(@is_active, do: "bg-indigo-900 text-white", else: "text-gray-400 hover:text-gray-800")]}
+      >
+      {@label}
+      </.link>
+    """
+  end
+
+  def video_section(assigns) do
+    ~H"""
+    """
+  end
+
+  def home_section(assigns) do
+    ~H"""
+    """
+  end
 end

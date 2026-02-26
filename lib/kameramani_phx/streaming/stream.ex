@@ -9,6 +9,9 @@ defmodule KameramaniPhx.Streaming.Stream do
     field :is_live, :boolean, default: false
     field :tags, {:array, :string}
     field :category, :string, default: "Just Chatting"
+    field :duration_seconds, :integer
+    field :storage_path, :string
+    field :vod_play_count, :integer
     belongs_to :user, KameramaniPhx.Accounts.User, type: :binary_id
 
     timestamps(type: :utc_datetime)
@@ -17,7 +20,7 @@ defmodule KameramaniPhx.Streaming.Stream do
   @doc false
   def changeset(stream, attrs) do
     stream
-    |> cast(attrs, [:title, :stream_key, :is_live, :tags, :user_id, :category])
+    |> cast(attrs, [:title, :stream_key, :is_live, :tags, :user_id, :category, :duration_seconds, :storage_path, :vod_play_count])
     |> validate_required([:title, :stream_key, :is_live, :tags, :user_id])
     |> unique_constraint(:stream_key)
     |> unique_constraint(:user_id)
