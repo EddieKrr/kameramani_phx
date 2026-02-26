@@ -16,7 +16,7 @@ defmodule KameramaniPhx.Accounts.User do
     field :bio, :string
     field :profile_picture, :string
     field :chat_color, :string
-
+    field :mobile_number, :string
     field :hashed_password, :string, redact: true
     field :confirmed_at, :utc_datetime
     field :authenticated_at, :utc_datetime, virtual: true
@@ -147,12 +147,13 @@ defmodule KameramaniPhx.Accounts.User do
   # update user stream profile
   def profile_changeset(user, attr) do
     user
-    |> cast(attr, [:username, :bio, :profile_picture])
+    |> cast(attr, [:username, :bio, :profile_picture, :mobile_number])
     |> validate_required([:username])
     |> validate_length(:username, min: 3, max: 20)
     |> validate_length(:bio, max: 160)
     |> unsafe_validate_unique(:username, KameramaniPhx.Repo)
     |> unique_constraint(:username)
+    |> unique_constraint(:mobile_number)
   end
 
   @doc """
