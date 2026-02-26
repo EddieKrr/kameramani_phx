@@ -38,8 +38,19 @@ defmodule KameramaniPhx.Streaming do
 
   """
   def list_streams do
-    Repo.all(Stream)
+    Repo.all(from s in Stream, preload: [:user])
   end
+
+  def list_live_streams do
+    Repo.all(
+      from s in Stream,
+        where: s.is_live == true,
+        order_by: [desc: s.inserted_at],
+        preload: [:user]
+    )
+  end
+
+
 
   @doc """
   Gets a single stream.
@@ -228,6 +239,49 @@ defmodule KameramaniPhx.Streaming do
         order_by: [desc: s.inserted_at]
         # preloads: [:user]
       Repo.all(query)
+    end
+
+    def list_live_streams_by_username(search) when is_binary(search) do
+      search_query = String.trim(search)
+
+      if search_query == "" do
+        []
+      else
+        query =
+          from s in Stream,
+            join: u in assoc(s, :user),
+            where: ilike(u.username, ^"%#{search_query}%"),
+            where: s.is_live == true,
+            order_by: [desc: s.inserted_at],
+            preload: [:user]
+
+        Repo.all(query)
+      end
+    end
+
+    def list_live_streams_by_category_or_tag(search) when is_binary(search) do
+      search_query = String.trim(search)
+
+      if search_query == "" do
+        []
+      else
+        pattern = "%#{search_query}%"
+
+        query =
+          from s in Stream,
+            where:
+              ilike(s.category, ^pattern) or
+                fragment(
+                  "EXISTS (SELECT 1 FROM unnest(COALESCE(?, '{}'::varchar[])) tag WHERE tag ILIKE ?)",
+                  s.tags,
+                  ^pattern
+                ),
+            where: s.is_live == true,
+            order_by: [desc: s.inserted_at],
+            preload: [:user]
+
+        Repo.all(query)
+      end
     end
 
 end

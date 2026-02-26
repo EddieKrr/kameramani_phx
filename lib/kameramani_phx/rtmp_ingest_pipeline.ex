@@ -37,7 +37,6 @@ defmodule KameramaniPhx.RTMPIngestPipeline do
       |> via_in(Pad.ref(:input, :audio),
         options: [
           encoding: :AAC,
-          # ADDED
           segment_duration: Membrane.Time.seconds(4)
         ]
       )

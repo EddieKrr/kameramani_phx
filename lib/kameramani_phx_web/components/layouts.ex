@@ -41,6 +41,7 @@ defmodule KameramaniPhxWeb.Layouts do
         %{} = map -> Map.get(map, :user, map)
         other -> other
       end
+
     assigns = assign(assigns, :current_user_obj, current_user)
 
     ~H"""
@@ -59,13 +60,11 @@ defmodule KameramaniPhxWeb.Layouts do
 
         <%= if @current_user_obj do %>
           <div class="flex items-center gap-6">
-            <div class="relative">
-              <input
-                type="text"
-                placeholder="Search streams..."
-                class="bg-slate-700 text-white px-4 py-2 rounded-full w-64 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-slate-400"
-              />
-            </div>
+            <.live_component
+              module={KameramaniPhxWeb.NavbarSearchComponent}
+              id={"navbar-search-#{if @inner_content, do: "root", else: "inner"}"}
+              current_user={@current_user}
+            />
             <div class="flex items-center gap-3">
               <span class="text-white">
                 Welcome,

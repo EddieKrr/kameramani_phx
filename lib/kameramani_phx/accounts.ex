@@ -5,14 +5,31 @@ defmodule KameramaniPhx.Accounts do
 
   import Ecto.Query, warn: false
   alias KameramaniPhx.Repo
-
+  alias KameramaniPhx.Streaming
   alias KameramaniPhx.Accounts.{User, UserToken, UserNotifier, Follow}
 
   ## Database getters
 
   def get_all_users do
-    Repo.all(User)
+    Repo.all(User) |> Repo.preload(:social_accounts)
   end
+
+  #list users on nav
+  def list_users_by_username(_current_user, search) when is_binary(search) do
+    search_query = String.trim(search)
+
+    if search_query == "" do
+      []
+    else
+      from(u in User,
+        where: ilike(u.username, ^"%#{search_query}%"),
+        order_by: [asc: u.username],
+        limit: 8
+      )
+      |> Repo.all()
+    end
+  end
+
 
   def get_user_by_email(email) when is_binary(email) do
     Repo.get_by(User, email: email)
