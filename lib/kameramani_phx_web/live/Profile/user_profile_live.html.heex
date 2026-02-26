@@ -10,13 +10,37 @@
         />
       </div>
     </div>
-    <div class="mt-8">
-      <.about_section
-      username={@user.username}
-      email={@user.email}
-      member_since={@time}
-      bio={@user.bio}
+    <div class="flex">
+     <.profile_tab
+        patch={~p"/users/profile/#{@user.username}/home"}
+        label="Home"
+        is_active={@active_tab == "home"}
       />
+      <.profile_tab
+        patch={~p"/users/profile/#{@user.username}/about"}
+        label="About"
+        is_active={@active_tab == "about"}
+      />
+      <.profile_tab 
+        patch={~p"/users/profile/#{@user.username}/videos"}
+        label="Videos"
+        is_active={@active_tab == "videos"}
+      />
+    </div>
+    <div class="mt-8">
+    <%= case @active_tab do %>
+      <% "about" -> %>
+          <.about_section
+          username={@user.username}
+          email={@user.email}
+          member_since={@time}
+          bio={@user.bio}
+          />
+      <% "videos" -> %>
+         <.video_section/>
+      <% "home" -> %>
+        <.home_section/>
+      <% end %>
     </div>
   </div>
 </div>
