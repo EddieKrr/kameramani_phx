@@ -9,6 +9,8 @@ defmodule KameramaniPhx.Application do
   def start(_type, _args) do
     children = [
       KameramaniPhxWeb.Telemetry,
+      {Registry, keys: :unique, name: KameramaniPhx.ThumbnailRegistry},
+      {DynamicSupervisor, name: KameramaniPhx.ThumbnailSupervisor},
       KameramaniPhx.Repo,
       KameramaniPhx.StreamManager,
       {DNSCluster, query: Application.get_env(:kameramani_phx, :dns_cluster_query) || :ignore},

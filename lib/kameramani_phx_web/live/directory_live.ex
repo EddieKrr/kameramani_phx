@@ -124,7 +124,8 @@ defmodule KameramaniPhxWeb.DirectoryLive do
             do: "https://ui-avatars.com/api/?name=#{s.user.username}&background=random",
             else: s.user.profile_picture
           ),
-        is_live: s.is_live
+        is_live: s.is_live,
+        thumbnail_url: "/thumbnails/#{s.id}.jpg"
       }
     end)
   end

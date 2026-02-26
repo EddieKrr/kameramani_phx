@@ -140,6 +140,7 @@ defmodule KameramaniPhxWeb.ProfileComponents do
           viewer_count = {vod.vod_play_count}
           id = {vod.id}
           is_live = {false}
+          thumbnail_url = {"/thumbnails/#{vod.id}.jpg"}
           />
       </div>
     """

@@ -58,7 +58,7 @@ config :kameramani_phx, KameramaniPhxWeb.Endpoint,
     web_console_logger: true,
     patterns: [
       # Static assets, except user uploads
-      ~r"priv/static/(?!uploads/).*\.(js|css|png|jpeg|jpg|gif|svg)$",
+      ~r"priv/static/(?!uploads/|thumbnails/).*\.(js|css|png|jpeg|jpg|gif|svg)$",
       # Gettext translations
       ~r"priv/gettext/.*\.po$",
       # Router, Controllers, LiveViews and LiveComponents
