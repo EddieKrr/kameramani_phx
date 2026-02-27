@@ -4,6 +4,7 @@ defmodule KameramaniPhxWeb.CardComponents do
   attr :stream_name, :string, required: true
   attr :streamer, :string, required: true
   attr :category, :string, required: true
+  attr :category_slug, :string, required: true
   attr :tags, :list, default: []
   attr :viewer_count, :integer, required: true
   attr :avatar, :string, default: "https://ui-avatars.com/api/?background=random"
@@ -48,18 +49,20 @@ defmodule KameramaniPhxWeb.CardComponents do
             </div>
 
             <div class="text-gray-400 text-sm">{@streamer}</div>
+            <.link navigate={~p"/directory/#{@category}"}>
+              <span class="text-[#bf94ff] hover:underline cursor-pointer font-semibold text-sm">
+                {@category}
+              </span>
+            </.link>
 
             <div class="flex flex-wrap items-center gap-1.5 mt-2">
               <%= for tag <- @tags do %>
-                <span class="text-[11px] uppercase tracking-widest font-semibold px-2.5 py-0.5 rounded-full bg-[#0f172a] text-[#7dd3fc] border border-[#0ea5e9]/30">
+                <span class="bg-[#26262c] hover:bg-[#323239] transition-colors cursor-pointer text-[#adadb8] font-semibold text-[12px] px-3 py-0.5 rounded-full">
                   {tag}
                 </span>
               <% end %>
             </div>
 
-            <span class="mt-2 text-[11px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#1f2937] text-[#fbbf24] border border-[#fbbf24]/30 w-fit">
-              {@category}
-            </span>
           </div>
         </div>
       </article>

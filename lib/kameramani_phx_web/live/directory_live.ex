@@ -3,6 +3,7 @@ defmodule KameramaniPhxWeb.DirectoryLive do
   alias KameramaniPhx.Streaming
   alias KameramaniPhxWeb.Presence
   alias KameramaniPhx.Content
+  alias KameramaniPhx.Content
   use KameramaniPhxWeb, :live_view
 
   import CardComponents
@@ -111,12 +112,19 @@ defmodule KameramaniPhxWeb.DirectoryLive do
   defp streams_to_cards(streams) do
     Enum.map(streams, fn s ->
       count = Presence.list("stream_viewers:#{s.id}") |> map_size()
+      category_slug =
+        if s.category do
+          KameramaniPhx.Content.get_category_by_name(s.category).slug
+        else
+          "just-chatting" # Default slug
+        end
 
       %{
         id: s.id,
         stream_name: s.title,
         streamer: s.user.username,
         category: s.category || "Just Chatting",
+        category_slug: category_slug,
         tags: s.tags || [],
         viewer_count: count,
         avatar:
@@ -129,4 +137,5 @@ defmodule KameramaniPhxWeb.DirectoryLive do
       }
     end)
   end
+
 end

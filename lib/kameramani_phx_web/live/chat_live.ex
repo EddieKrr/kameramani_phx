@@ -4,22 +4,15 @@ defmodule KameramaniPhxWeb.ChatLive do
   import KameramaniPhxWeb.SidebarComponents
 
   alias KameramaniPhx.Accounts
-  alias KameramaniPhx.Chat
 
   alias KameramaniPhx.Accounts.Scope
   alias KameramaniPhxWeb.Presence
   # Keep your mount user
   # on_mount {KameramaniPhxWeb.UserAuth, :mount_current_user} # Removed
 
-  @initial_state %{"ch_message" => ""}
 
   defp subscribe(stream_id) do
-    Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "stream_chat:#{stream_id}")
     Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "stream_state:#{stream_id}")
-  end
-
-  defp broadcast(stream_id, value) do
-    Phoenix.PubSub.broadcast(KameramaniPhx.PubSub, "stream_chat:#{stream_id}", value)
   end
 
   def mount(%{"username" => username}, session, socket) do
@@ -113,30 +106,10 @@ defmodule KameramaniPhxWeb.ChatLive do
               recommended_streams: recommended_streams
             }
 
-            # Curated list of visible colors: blue, red, orange, yellow, pink, purple, green, lime
-            chat_colors = ~w(#3b82f6 #ef4444 #f97316 #eab308 #ec4899 #a855f7 #22c55e #84cc16)
-
-            # If the current user is logged in, use their username and their stored color
-            {chat_username, chat_user_color} =
-              if current_user do
-                {current_user.username, current_user.chat_color || "#6366f1"}
-              else
-                {Enum.random(["Guest_#{:rand.uniform(1000)}"]), Enum.random(chat_colors)}
-              end
-
-            # Load existing messages
-            messages = Chat.list_messages_for_stream(stream.id)
-
             {:ok,
              socket
-             |> assign(
-               form: to_form(@initial_state, as: :chat),
-               username: chat_username,
-               user_color: chat_user_color,
-               current_user: current_user_scope
-             )
-             |> assign(assigns_to_socket)
-             |> stream(:messages, messages)}
+             |> assign(current_user: current_user_scope)
+             |> assign(assigns_to_socket)}
         end
     end
   end
@@ -176,53 +149,7 @@ defmodule KameramaniPhxWeb.ChatLive do
     end
   end
 
-  def handle_event("send_message", %{"chat" => %{"ch_message" => message_text}}, socket) do
-    # Check if user is logged in
-    current_user =
-      if socket.assigns.current_user, do: socket.assigns.current_user.user, else: nil
 
-    if current_user do
-      message_body = String.trim(message_text)
-
-      if message_body != "" do
-        attrs = %{
-          body: message_body,
-          stream_id: socket.assigns.stream_id,
-          user_id: current_user.id
-        }
-
-        case Chat.create_stream_message(attrs) do
-          {:ok, message} ->
-            # Preload user for the broadcast so others can see who sent it
-            message = Map.put(message, :user, current_user)
-
-            # Broadcast to everyone (including yourself)
-            broadcast(socket.assigns.stream_id, {:new_message, message})
-
-            {:noreply, assign(socket, form: to_form(@initial_state, as: :chat))}
-
-          {:error, _changeset} ->
-            {:noreply, put_flash(socket, :error, "Could not send message")}
-        end
-      else
-        {:noreply, socket}
-      end
-    else
-      # User not logged in, show flash message and don't send message
-      socket =
-        socket
-        |> Phoenix.LiveView.put_flash(:error, "You must log in to chat.")
-        # Clear form even if not logged in
-        |> assign(form: to_form(@initial_state, as: :chat))
-
-      {:noreply, socket}
-    end
-  end
-
-  def handle_event("validate", %{"chat" => %{"ch_message" => message}}, socket) do
-    form = to_form(%{"ch_message" => message}, as: :chat)
-    {:noreply, assign(socket, form: form)}
-  end
 
   def handle_params(_params, _url, socket) do
     {:noreply,
@@ -230,10 +157,7 @@ defmodule KameramaniPhxWeb.ChatLive do
      |> assign(page_title: socket.assigns.streamer_name <> " | Chat")}
   end
 
-  # This function will handle messages broadcasted via PubSub
-  def handle_info({:new_message, message}, socket) do
-    {:noreply, stream_insert(socket, :messages, message)}
-  end
+
 
   def handle_info({:stream_status, status}, socket) do
     is_live = status == :online

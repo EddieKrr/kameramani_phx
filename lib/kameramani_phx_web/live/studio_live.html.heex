@@ -28,6 +28,55 @@
             PREVIEW
           </div>
         </div>
+        <div class="gap-3 col-span-2">
+          <div class="bg-[#18181b] p-6 rounded-xl border border-white/5 shadow-xl">
+            <div class="flex items-center gap-4 mb-6">
+              <img
+                src={
+                  if @current_user.user.profile_picture in [nil, ""],
+                    do:
+                      "https://ui-avatars.com/api/?name=#{@current_user.user.username}&background=random",
+                    else: @current_user.user.profile_picture
+                }
+                class="w-12 h-12 rounded-full object-cover border border-white/10"
+              />
+              <div>
+                <h2 class="font-bold text-lg text-white leading-tight">
+                  {@current_user.user.username}
+                </h2>
+                <p class="text-xs text-indigo-400">Streamer Dashboard</p>
+              </div>
+            </div>
+
+            <h2 class="font-bold text-sm mb-4 text-gray-400 flex items-center gap-2 uppercase tracking-wider">
+              <.icon name="hero-signal" class="h-4 w-4 text-indigo-500" /> Stream Status
+            </h2>
+
+            <div class="space-y-4">
+              <div class="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/5">
+                <span class="text-sm text-gray-400 font-medium">Status</span>
+                <%= if @current_stream && @current_stream.is_live do %>
+                  <span class="flex items-center gap-1.5 px-2 py-0.5 bg-red-500/10 text-red-500 text-[10px] font-bold rounded-full border border-red-500/20">
+                    <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span> LIVE
+                  </span>
+                <% else %>
+                  <span class="px-2 py-0.5 bg-gray-500/10 text-gray-500 text-[10px] font-bold rounded-full border border-gray-500/20">
+                    OFFLINE
+                  </span>
+                <% end %>
+              </div>
+
+              <%= if @current_stream do %>
+                <div class="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/5">
+                  <span class="text-sm text-gray-400 font-medium">Viewers</span>
+                  <div class="flex items-center gap-2 text-indigo-400">
+                    <.icon name="hero-users" class="h-4 w-4" />
+                    <span class="font-bold text-sm">{@viewer_count}</span>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
 
         <div class="bg-[#18181b] p-6 rounded-xl border border-white/5 shadow-2xl">
           <div class="flex items-center gap-2 mb-6 border-b border-white/5 pb-4">
@@ -71,7 +120,7 @@
                 class="bg-[#0e0e10] border-white/10 focus:border-indigo-500 text-white"
               />
 
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="grid lg:grid-cols-1 md:grid-cols-2 gap-4">
                 <.input
                   field={@stream_form[:tags]}
                   label="Tags"
@@ -150,58 +199,17 @@
           <% end %>
         </div>
       </div>
-
-      <%!-- Empty sidebar for future additions --%>
-      <div class="space-y-6">
-        <div class="bg-[#18181b] p-6 rounded-xl border border-white/5 shadow-xl">
-          <div class="flex items-center gap-4 mb-6">
-            <img
-              src={
-                if @current_user.user.profile_picture in [nil, ""],
-                  do:
-                    "https://ui-avatars.com/api/?name=#{@current_user.user.username}&background=random",
-                  else: @current_user.user.profile_picture
-              }
-              class="w-12 h-12 rounded-full object-cover border border-white/10"
-            />
-            <div>
-              <h2 class="font-bold text-lg text-white leading-tight">
-                {@current_user.user.username}
-              </h2>
-              <p class="text-xs text-indigo-400">Streamer Dashboard</p>
-            </div>
-          </div>
-
-          <h2 class="font-bold text-sm mb-4 text-gray-400 flex items-center gap-2 uppercase tracking-wider">
-            <.icon name="hero-signal" class="h-4 w-4 text-indigo-500" /> Stream Status
-          </h2>
-
-          <div class="space-y-4">
-            <div class="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/5">
-              <span class="text-sm text-gray-400 font-medium">Status</span>
-              <%= if @current_stream && @current_stream.is_live do %>
-                <span class="flex items-center gap-1.5 px-2 py-0.5 bg-red-500/10 text-red-500 text-[10px] font-bold rounded-full border border-red-500/20">
-                  <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span> LIVE
-                </span>
-              <% else %>
-                <span class="px-2 py-0.5 bg-gray-500/10 text-gray-500 text-[10px] font-bold rounded-full border border-gray-500/20">
-                  OFFLINE
-                </span>
-              <% end %>
-            </div>
-
-            <%= if @current_stream do %>
-              <div class="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/5">
-                <span class="text-sm text-gray-400 font-medium">Viewers</span>
-                <div class="flex items-center gap-2 text-indigo-400">
-                  <.icon name="hero-users" class="h-4 w-4" />
-                  <span class="font-bold text-sm">{@viewer_count}</span>
-                </div>
-              </div>
-            <% end %>
-          </div>
-        </div>
       </div>
-    </div>
+        <%= if @current_stream do %>
+          <.live_component
+            module={KameramaniPhxWeb.ChatLiveComponent}
+            id="studio-chat-component"
+            stream_id={@current_stream.id}
+            current_user={@current_user.user}
+            streamer_id={@current_user.user.id}
+            title="My Chat"
+          />
+        <% end %>
+      </div>
   </main>
 </div>

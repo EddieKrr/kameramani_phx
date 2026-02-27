@@ -43,10 +43,12 @@ defmodule KameramaniPhxWeb.Layouts do
       end
 
     assigns = assign(assigns, :current_user_obj, current_user)
+    socket = Map.get(assigns, :socket)
+    is_chat_page = socket && socket.view == KameramaniPhxWeb.ChatLive
 
     ~H"""
-    <header class="mx-auto max-w-[1440px] navbar fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-6 lg:px-8">
-      <div class="mx-4 flex items-center gap-4 justify-between w-full px-4 sm:px-6 py-2 rounded-xl bg-slate-800/60 backdrop-blur-sm border-2 mt-3 border-slate-700">
+    <header class={"navbar fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-6 lg:px-8 #{if !is_chat_page, do: "mx-auto max-w-[1440px]"}"}>
+      <div class={"flex items-center gap-4 justify-between bg-slate-800/60 backdrop-blur-md px-4 sm:px-6 py-3 w-full #{if !is_chat_page, do: "rounded-xl bg-slate-800/60 backdrop-blur-sm border-2 mt-3 border-slate-700"}"}>
         <div class="flex">
           <.link
             href="/"
@@ -71,7 +73,7 @@ defmodule KameramaniPhxWeb.Layouts do
                 <span class="font-semibold text-blue-400 capitalize">
                   {@current_user_obj.username}
                 </span>
-                
+
               </span>
               <div class="relative group cursor-pointer">
                 <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
