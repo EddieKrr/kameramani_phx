@@ -4,7 +4,7 @@ defmodule KameramaniPhxWeb.CardComponents do
   attr :stream_name, :string, required: true
   attr :streamer, :string, required: true
   attr :category, :string, required: true
-  attr :category_slug, :string, required: true
+  attr :category_slug, :string, default: nil
   attr :tags, :list, default: []
   attr :viewer_count, :integer, required: true
   attr :avatar, :string, default: "https://ui-avatars.com/api/?background=random"
@@ -48,7 +48,10 @@ defmodule KameramaniPhxWeb.CardComponents do
           </div>
 
           <div class="text-gray-400 text-sm">{@streamer}</div>
-          <.link navigate={~p"/directory/#{@category}"}>
+          <.link
+            navigate={~p"/directory/#{resolve_category_slug(@category_slug, @category)}"}
+            class="self-start"
+          >
             <span class="text-[#bf94ff] hover:underline cursor-pointer font-semibold text-sm">
               {@category}
             </span>
@@ -84,7 +87,7 @@ defmodule KameramaniPhxWeb.CardComponents do
           loading="lazy"
         />
         <div class="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-          </div>
+        </div>
         <div class="absolute bottom-2 left-2 right-2 flex items-center justify-between">
           <span class="rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-white/90 border border-white/10">
             {@slug}
@@ -99,4 +102,18 @@ defmodule KameramaniPhxWeb.CardComponents do
     </article>
     """
   end
+
+  defp resolve_category_slug(category_slug, _category_name) when is_binary(category_slug) do
+    String.trim(category_slug)
+  end
+
+  defp resolve_category_slug(_category_slug, category_name) when is_binary(category_name) do
+    category_name
+    |> String.trim()
+    |> String.downcase()
+    |> String.replace(~r/[^a-z0-9]+/u, "-")
+    |> String.trim("-")
+  end
+
+  defp resolve_category_slug(_category_slug, _category_name), do: "just-chatting"
 end

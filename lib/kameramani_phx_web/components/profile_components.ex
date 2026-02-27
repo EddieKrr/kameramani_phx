@@ -151,7 +151,7 @@ defmodule KameramaniPhxWeb.ProfileComponents do
   attr :vods, :list, required: true
   def video_section(assigns) do
     ~H"""
-      <div :for={vod <- @vods} class="flex">
+      <div :for={vod <- @vods} class="flex flex-row">
 
         <.card
           stream_name = {vod.title}
