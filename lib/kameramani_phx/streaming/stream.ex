@@ -9,11 +9,11 @@ defmodule KameramaniPhx.Streaming.Stream do
     field :is_live, :boolean, default: false
     field :tags, {:array, :string}
     field :category, :string, default: "Just Chatting"
+
     field :duration_seconds, :integer
     field :storage_path, :string
     field :vod_play_count, :integer
     belongs_to :user, KameramaniPhx.Accounts.User, type: :binary_id
-
     timestamps(type: :utc_datetime)
   end
 
