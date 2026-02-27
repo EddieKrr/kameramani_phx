@@ -1,12 +1,18 @@
 <div class="flex h-screen w-full bg-[#0e0e10] text-[#efeff1] overflow-none font-sans">
-  
   <aside class={"bg-[#18181b] border-r border-white/5 flex flex-col transition-all duration-300 ease-in-out " <> (if @left_sidebar_open, do: "w-64", else: "w-[50px] items-center")}>
     <div class="flex items-center justify-between p-3 border-b border-white/5">
       <span class={"text-[11px] font-bold text-[#adadb8] uppercase tracking-widest whitespace-nowrap " <> (if @left_sidebar_open, do: "block", else: "hidden")}>
         For You
       </span>
-      <button phx-click="toggle_left_sidebar" class="p-1 rounded hover:bg-white/10 text-[#adadb8] transition-colors" title="Collapse">
-        <.svg variant={if @left_sidebar_open, do: "chevron-left", else: "chevron-right"} class="w-4 h-4" />
+      <button
+        phx-click="toggle_left_sidebar"
+        class="p-1 rounded hover:bg-white/10 text-[#adadb8] transition-colors"
+        title="Collapse"
+      >
+        <.svg
+          variant={if @left_sidebar_open, do: "chevron-left", else: "chevron-right"}
+          class="w-4 h-4"
+        />
       </button>
     </div>
 
@@ -25,10 +31,12 @@
   </aside>
 
   <main class="flex-1 flex flex-col min-w-0 bg-[#0e0e10] overflow-y-auto relative">
-    
     <%= if !@chat_open do %>
       <div class="absolute top-4 right-4 z-50">
-        <button phx-click="toggle_chat" class="p-2 bg-[#18181b]/80 backdrop-blur rounded hover:bg-[#18181b] border border-white/5 text-[#efeff1] shadow-lg flex items-center gap-2 group transition-all">
+        <button
+          phx-click="toggle_chat"
+          class="p-2 bg-[#18181b]/80 backdrop-blur rounded hover:bg-[#18181b] border border-white/5 text-[#efeff1] shadow-lg flex items-center gap-2 group transition-all"
+        >
           <.svg variant="chat-bubble-left" class="w-5 h-5 text-[#adadb8] group-hover:text-white" />
         </button>
       </div>
@@ -42,7 +50,6 @@
             phx-hook="VideoPlayer"
             data-hls-url={~p"/live/#{@stream_id}/index.m3u8"}
             class="w-full h-full object-contain"
-            controls
             autoplay
             muted
             playsinline
@@ -56,7 +63,7 @@
           </span>
           <span class="bg-black/60 backdrop-blur-md text-white text-[12px] font-bold px-2 py-0.5 rounded flex items-center gap-1.5">
             <.svg variant="user" class="h-3 w-3 text-[#eb0400]" />
-            <span id="video-viewer-count" phx-hook="AnimateCount"><%= @viewer_count %></span>
+            <span id="video-viewer-count" phx-hook="AnimateCount">{@viewer_count}</span>
           </span>
           <span
             class="bg-black/60 backdrop-blur-md text-white text-[12px] font-bold px-2 py-0.5 rounded"
@@ -69,17 +76,17 @@
             0:00:00
           </span>
         </div>
-
       <% else %>
         <div class="absolute inset-0 flex items-center justify-center bg-[#18181b]">
           <div class="text-center">
             <div class="relative inline-block mb-4">
-              <div class="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center">
-                <.svg variant="camera-slash" class="h-10 w-10 text-[#adadb8]" />
+              <.svg variant="camera-slash" class="h-10 w-10 text-gray-400 absolute bottom-0" />
+              <div class="w-20 h-20 bg-indigo-500 blur-3xl rounded-full flex items-center justify-center animate-pulse">
               </div>
             </div>
             <p class="text-[#adadb8] font-medium tracking-tight">
-              <span class="text-[#efeff1] font-bold">{@streamer_name}</span> is currently offline.
+              <span class="text-[#efeff1] font-bold capitalize">{@streamer_name}</span>
+              is currently offline.
             </p>
           </div>
         </div>
@@ -88,7 +95,6 @@
 
     <div class="p-5 md:p-8 shrink-0">
       <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
-        
         <div class="flex items-start gap-4">
           <.link navigate={~p"/users/profile/#{@streamer_name}"} class="relative shrink-0 group">
             <div class={"w-16 h-16 rounded-full p-0.5 transition-transform group-hover:scale-105 " <> (if @is_live, do: "bg-[#eb0400]", else: "bg-white/10")}>
@@ -117,7 +123,7 @@
             <h2 class="text-[15px] font-medium text-[#efeff1] tracking-tight mb-2 truncate max-w-2xl">
               {@stream_name}
             </h2>
-            
+
             <div class="flex items-center gap-2 mb-3">
               <span class="text-[#bf94ff] hover:underline cursor-pointer font-semibold text-sm">
                 {@category_name}
@@ -126,8 +132,11 @@
 
             <div class="flex flex-wrap items-center gap-1.5">
               <%= for tag <- @tags do %>
-                <.link navigate={~p"/directory?query=#{tag}"} class="bg-[#26262c] hover:bg-[#323239] transition-colors cursor-pointer text-[#adadb8] font-semibold text-[12px] px-3 py-0.5 rounded-full">
-                  <%= tag %>
+                <.link
+                  navigate={~p"/directory?query=#{tag}"}
+                  class="bg-[#26262c] hover:bg-[#323239] transition-colors cursor-pointer text-[#adadb8] font-semibold text-[12px] px-3 py-0.5 rounded-full"
+                >
+                  {tag}
                 </.link>
               <% end %>
             </div>
@@ -138,7 +147,7 @@
           <div class="flex items-center gap-6 text-[#eb0400] font-bold text-sm">
             <div class="flex items-center gap-1.5">
               <.svg variant="user" class="w-4 h-4" />
-              <span id="profile-viewer-count" phx-hook="AnimateCount"><%= @viewer_count %></span>
+              <span id="profile-viewer-count" phx-hook="AnimateCount">{@viewer_count}</span>
             </div>
             <div
               class="text-[#adadb8] font-medium flex items-center gap-1.5"
@@ -157,7 +166,7 @@
             <button
               phx-click="toggle_follow"
               class={"px-4 py-1.5 rounded font-bold text-sm transition-colors flex items-center gap-2 shadow " <> 
-                if(@is_following, do: "bg-gray-700 hover:bg-gray-600 text-white", else: "bg-[#bf94ff] hover:bg-[#a970ff] text-black")}
+                if(@is_following, do: "bg-gray-700 hover:bg-gray-600 text-white", else: "bg-indigo-400 hover:bg-indigo-500 text-black")}
             >
               <%= if @is_following do %>
                 <.svg variant="heart-solid" class="w-4 h-4 text-red-500" /> Unfollow
@@ -176,7 +185,6 @@
             <% end %>
           <% end %>
         </div>
-
       </div>
     </div>
   </main>
@@ -191,5 +199,4 @@
       title="Stream Chat"
     />
   <% end %>
-
 </div>

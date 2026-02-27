@@ -76,9 +76,7 @@ defmodule KameramaniPhx.ThumbnailGenerator do
         {:error, reason}
 
       {output, status} ->
-        Logger.warning(
-          "The thumbnail failed for stream #{stream_id} (exit #{status}): #{output}"
-        )
+        Logger.warning("The thumbnail failed for stream #{stream_id} (exit #{status}): #{output}")
 
         {:error, :ffmpeg_failed}
     end

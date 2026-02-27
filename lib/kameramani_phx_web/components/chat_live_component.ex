@@ -74,6 +74,7 @@ defmodule KameramaniPhxWeb.ChatLiveComponent do
             message = Map.put(message, :user, current_user)
             broadcast(socket.assigns.stream_id, {:new_message, message})
             {:noreply, assign(socket, form: to_form(@initial_state, as: :chat))}
+
           {:error, _changeset} ->
             {:noreply, put_flash(socket, :error, "Could not send message")}
         end
@@ -85,6 +86,7 @@ defmodule KameramaniPhxWeb.ChatLiveComponent do
         socket
         |> Phoenix.LiveView.put_flash(:error, "You must log in to chat.")
         |> assign(form: to_form(@initial_state, as: :chat))
+
       {:noreply, socket}
     end
   end

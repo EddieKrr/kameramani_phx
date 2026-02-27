@@ -20,21 +20,30 @@ defmodule KameramaniPhx.Streaming.Stream do
   @doc false
   def changeset(stream, attrs) do
     stream
-    |> cast(attrs, [:title, :stream_key, :is_live, :tags, :user_id, :category, :duration_seconds, :storage_path, :vod_play_count])
+    |> cast(attrs, [
+      :title,
+      :stream_key,
+      :is_live,
+      :tags,
+      :user_id,
+      :category,
+      :duration_seconds,
+      :storage_path,
+      :vod_play_count
+    ])
     |> validate_required([:title, :stream_key, :is_live, :tags, :user_id])
     |> unique_constraint(:stream_key)
     |> unique_constraint(:user_id)
     |> sanitize_tags()
   end
 
-
   defp sanitize_tags(changeset) do
-  if tags = get_change(changeset, :tags) do
-    # Trim whitespace from every tag in the list
-    clean_tags = Enum.map(tags, &String.trim/1)
-    put_change(changeset, :tags, clean_tags)
-  else
-    changeset
+    if tags = get_change(changeset, :tags) do
+      # Trim whitespace from every tag in the list
+      clean_tags = Enum.map(tags, &String.trim/1)
+      put_change(changeset, :tags, clean_tags)
+    else
+      changeset
+    end
   end
-end
 end

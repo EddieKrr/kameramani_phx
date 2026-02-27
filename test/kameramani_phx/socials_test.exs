@@ -35,9 +35,16 @@ defmodule KameramaniPhx.SocialsTest do
 
     test "update_social_account/2 with valid data updates the social_account" do
       social_account = social_account_fixture()
-      update_attrs = %{url: "some updated url", username: "some updated username", platform: "some updated platform"}
 
-      assert {:ok, %SocialAccount{} = social_account} = Socials.update_social_account(social_account, update_attrs)
+      update_attrs = %{
+        url: "some updated url",
+        username: "some updated username",
+        platform: "some updated platform"
+      }
+
+      assert {:ok, %SocialAccount{} = social_account} =
+               Socials.update_social_account(social_account, update_attrs)
+
       assert social_account.url == "some updated url"
       assert social_account.username == "some updated username"
       assert social_account.platform == "some updated platform"
@@ -45,7 +52,10 @@ defmodule KameramaniPhx.SocialsTest do
 
     test "update_social_account/2 with invalid data returns error changeset" do
       social_account = social_account_fixture()
-      assert {:error, %Ecto.Changeset{}} = Socials.update_social_account(social_account, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Socials.update_social_account(social_account, @invalid_attrs)
+
       assert social_account == Socials.get_social_account!(social_account.id)
     end
 

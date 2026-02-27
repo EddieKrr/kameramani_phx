@@ -10,7 +10,6 @@ defmodule KameramaniPhxWeb.ChatLive do
   # Keep your mount user
   # on_mount {KameramaniPhxWeb.UserAuth, :mount_current_user} # Removed
 
-
   defp subscribe(stream_id) do
     Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "stream_state:#{stream_id}")
   end
@@ -149,15 +148,11 @@ defmodule KameramaniPhxWeb.ChatLive do
     end
   end
 
-
-
   def handle_params(_params, _url, socket) do
     {:noreply,
      socket
      |> assign(page_title: socket.assigns.streamer_name <> " | Chat")}
   end
-
-
 
   def handle_info({:stream_status, status}, socket) do
     is_live = status == :online
@@ -171,4 +166,3 @@ defmodule KameramaniPhxWeb.ChatLive do
     {:noreply, assign(socket, viewer_count: new_count)}
   end
 end
-

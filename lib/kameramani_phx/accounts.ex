@@ -14,7 +14,7 @@ defmodule KameramaniPhx.Accounts do
     Repo.all(User) |> Repo.preload(:social_accounts)
   end
 
-  #list users on nav
+  # list users on nav
   def list_users_by_username(_current_user, search) when is_binary(search) do
     search_query = String.trim(search)
 
@@ -29,7 +29,6 @@ defmodule KameramaniPhx.Accounts do
       |> Repo.all()
     end
   end
-
 
   def get_user_by_email(email) when is_binary(email) do
     Repo.get_by(User, email: email)
@@ -160,7 +159,9 @@ defmodule KameramaniPhx.Accounts do
           inserted_at: now,
           updated_at: now
         ]
-      ], on_conflict: :nothing)
+      ],
+      on_conflict: :nothing
+    )
   end
 
   # unfollow a user
@@ -245,5 +246,4 @@ defmodule KameramaniPhx.Accounts do
       end
     end)
   end
-
 end

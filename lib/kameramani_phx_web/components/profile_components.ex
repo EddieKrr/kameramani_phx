@@ -7,6 +7,7 @@ defmodule KameramaniPhxWeb.ProfileComponents do
   attr :name, :string, required: true
   attr :avatar_url, :string, required: true
   attr :is_live, :boolean, default: false
+  attr :can_follow, :boolean, default: false
 
   def profile_header(assigns) do
     ~H"""
@@ -65,9 +66,29 @@ defmodule KameramaniPhxWeb.ProfileComponents do
         </div>
         <!-- Action Buttons -->
         <div class="flex justify-center gap-4">
-          <button class="bg-purple-600 hover:bg-purple-500 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2">
-            <.svg variant="heart" class="h-5 w-5" /> Follow
-          </button>
+          <%!-- <%= if @current_user.user && @current_user.user.id != @streamer_id do %>
+            <button
+              phx-click="toggle_follow"
+              class={"px-4 py-1.5 rounded font-bold text-sm transition-colors flex items-center gap-2 shadow " <>
+                if(@is_following, do: "bg-gray-700 hover:bg-gray-600 text-white", else: "bg-indigo-400 hover:bg-indigo-500 text-black")}
+            >
+              <%= if @is_following do %>
+                <.svg variant="heart-solid" class="w-4 h-4 text-red-500" /> Unfollow
+              <% else %>
+                <.svg variant="heart" class="w-4 h-4" /> Follow
+              <% end %>
+            </button>
+          <% else %>
+            <%= if !@current_user.user do %>
+              <button
+                phx-click="toggle_follow"
+                class="bg-[#bf94ff] hover:bg-[#a970ff] text-black px-4 py-1.5 rounded font-bold text-sm transition-colors flex items-center gap-2 shadow"
+              >
+                <.svg variant="heart" class="w-4 h-4" /> Follow
+              </button>
+            <% end %> --%>
+            <%= if @current_user.user && @current_user.user.id != @streamer_id do %>
+            <% end %>
         </div>
       </div>
     </div>

@@ -94,8 +94,7 @@ defmodule KameramaniPhxWeb.NavbarSearchComponent do
                 </div>
                 <%= if MapSet.member?(@live_user_ids, user.id) do %>
                   <span class="ml-auto inline-flex items-center gap-1 rounded-full bg-red-500/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
-                    <.icon name="hero-signal" class="h-3 w-3" />
-                    Live
+                    <.icon name="hero-signal" class="h-3 w-3" /> Live
                   </span>
                 <% else %>
                   <span class="ml-auto inline-flex items-center gap-1 rounded-full bg-gray-500/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">

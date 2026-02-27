@@ -98,6 +98,7 @@ defmodule KameramaniPhxWeb.Router do
       live "/users/profile/:username/:tab", KameramaniPhxWeb.Profile.UserProfileLive
       live "/users/settings", KameramaniPhxWeb.UserLive.UserSettingsLive
       live "/users/settings/stream-key", KameramaniPhxWeb.Streaming.Settings.StreamKeyLive
+
       live "/users/settings/confirm-email/:token",
            KameramaniPhxWeb.UserLive.UserSettingsLive,
            :confirm_email

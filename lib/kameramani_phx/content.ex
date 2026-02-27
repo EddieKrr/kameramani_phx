@@ -106,7 +106,4 @@ defmodule KameramaniPhx.Content do
   def change_category(%Category{} = category, attrs \\ %{}) do
     Category.changeset(category, attrs)
   end
-
-
-
 end

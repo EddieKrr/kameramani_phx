@@ -21,11 +21,11 @@ defmodule KameramaniPhx.Socials do
     Repo.all(from sa in SocialAccount, where: sa.username == ^username)
   end
 
-
-  #list trhe user social accounts
+  # list trhe user social accounts
   def list_user_socials(%User{} = user) do
     Repo.all(from sa in SocialAccount, where: sa.user_id == ^user.id)
   end
+
   @doc """
   Gets a single social_account.
 
@@ -55,7 +55,7 @@ defmodule KameramaniPhx.Socials do
 
   """
   def add_social_account(%User{} = user, attrs) do
-  user
+    user
     |> Ecto.build_assoc(:social_accounts)
     |> SocialAccount.changeset(attrs)
     |> Repo.insert()

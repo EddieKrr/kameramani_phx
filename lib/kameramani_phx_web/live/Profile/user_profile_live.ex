@@ -26,6 +26,7 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
           if user.inserted_at,
             do: "#{DateTime.diff(DateTime.utc_now(), user.inserted_at, :day)} days",
             else: "N/A"
+
         social_accounts = Socials.list_user_socials(user)
 
         is_following =
@@ -38,9 +39,14 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
         # Check if user is live
         active_stream = Streaming.get_active_stream_for_user(user.id)
 
-          tab =  Map.get(params, "tab", "home")
+        tab = Map.get(params, "tab", "home")
 
-        query =from(v in KameramaniPhx.Streaming.Stream, where: v.user_id == ^user.id and v.is_live == false, preload: [:user])
+        query =
+          from(v in KameramaniPhx.Streaming.Stream,
+            where: v.user_id == ^user.id and v.is_live == false,
+            preload: [:user]
+          )
+
         vods = Repo.all(query)
 
         socket =
