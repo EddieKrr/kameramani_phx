@@ -201,6 +201,16 @@
             <% end %>
           </div>
         </div>
+        <%= if @current_stream do %>
+          <.live_component
+            module={KameramaniPhxWeb.ChatLiveComponent}
+            id="studio-chat-component"
+            stream_id={@current_stream.id}
+            current_user={@current_user.user}
+            streamer_id={@current_user.user.id}
+            title="My Chat"
+          />
+        <% end %>
       </div>
     </div>
   </main>

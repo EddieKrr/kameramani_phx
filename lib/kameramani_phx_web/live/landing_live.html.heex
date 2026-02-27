@@ -33,23 +33,7 @@
         <div class="lv-ind absolute top-4 left-4 z-10 bg-red-950 h-4 w-4 rounded-full"></div>
       </div>
 
-      <div class="px-6 pb-6">
-        <div class="mb-6 max-w-xl">
-          <.form
-            for={@search_form}
-            id="landing-username-search-form"
-            phx-change="search_username"
-            phx-submit="search_username"
-          >
-            <.input
-              field={@search_form[:query]}
-              type="text"
-              placeholder="Search usernames..."
-              autocomplete="off"
-              class="w-full rounded-full bg-[#0e0e10] border border-white/10 px-4 py-2 text-sm text-white placeholder:text-[#adadb8] focus:border-[#bf94ff]/60 focus:ring-0"
-            />
-          </.form>
-        </div>
+      <div class="px-6 pb-6"> 
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
           <.card
