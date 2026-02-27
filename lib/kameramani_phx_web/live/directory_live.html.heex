@@ -114,13 +114,22 @@
           <% end %>
         </div>
       <% else %>
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          <.category_card
+        <div
+          id="directory-category-grid"
+          class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4"
+        >
+          <.link
             :for={category_card <- @categories}
-            name={category_card.name}
-            slug={category_card.slug}
-            thumbnail_url={category_card.thumbnail_url}
-          />
+            id={"directory-category-#{category_card.slug}"}
+            navigate={~p"/directory/#{category_card.slug}"}
+            class="text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7cf6ff]/70 rounded-xl"
+          >
+            <.category_card
+              name={category_card.name}
+              slug={category_card.slug}
+              thumbnail_url={category_card.thumbnail_url}
+            />
+          </.link>
         </div>
       <% end %>
     </div>

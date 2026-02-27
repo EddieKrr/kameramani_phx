@@ -42,6 +42,10 @@ defmodule KameramaniPhx.Content do
     Repo.get_by(Category, name: name)
   end
 
+  def get_category_by_slug(slug) when is_binary(slug) do
+    Repo.get_by(Category, slug: slug)
+  end
+
   @doc """
   Creates a category.
 

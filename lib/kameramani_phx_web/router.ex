@@ -46,9 +46,9 @@ defmodule KameramaniPhxWeb.Router do
       live "/", LandingLive, :index
       live "/watch/:username", ChatLive, :show
       live "/register", AuthLive
-      live "/categories", CategoryLive
+      # live "/categories", DirectoryLive, :index
       live "/directory", DirectoryLive, :index
-      live "/directory/:slug", DirectoryLive, :show
+      live "/directory/:slug", CategoryLive, :show
     end
 
     live_session :auth_pages,
@@ -95,6 +95,7 @@ defmodule KameramaniPhxWeb.Router do
       # I moved ChatLive here assuming you want chatting to be private.
       # If you want it public, move it back to the top scope!
       live "/users/profile/:username", KameramaniPhxWeb.Profile.UserProfileLive, :show
+      live "/users/profile/:username", KameramaniPhxWeb.Profile.UserProfileLive, :showgit
       live "/users/profile/:username/:tab", KameramaniPhxWeb.Profile.UserProfileLive
       live "/users/settings", KameramaniPhxWeb.UserLive.UserSettingsLive
       live "/users/settings/stream-key", KameramaniPhxWeb.Streaming.Settings.StreamKeyLive
