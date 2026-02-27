@@ -87,8 +87,6 @@ defmodule KameramaniPhxWeb.ProfileComponents do
                 <.svg variant="heart" class="w-4 h-4" /> Follow
               </button>
             <% end %> --%>
-            <%= if @current_user.user && @current_user.user.id != @streamer_id do %>
-            <% end %>
         </div>
       </div>
     </div>

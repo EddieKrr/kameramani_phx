@@ -47,8 +47,8 @@ defmodule KameramaniPhxWeb.Layouts do
     is_chat_page = socket && socket.view == KameramaniPhxWeb.ChatLive
 
     ~H"""
-    <header class={"navbar fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-6 lg:px-8 #{if !is_chat_page, do: "mx-auto max-w-[1440px]"}"}>
-      <div class={"flex items-center gap-4 justify-between bg-slate-800/60 backdrop-blur-md px-4 sm:px-6 py-3 w-full #{if !is_chat_page, do: "rounded-xl bg-slate-800/60 backdrop-blur-sm border-2 mt-3 border-slate-700"}"}>
+    <header class={"navbar sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-6 lg:px-8 #{if !is_chat_page, do: "mx-auto max-w-[1440px]"}"}>
+      <div class={"flex items-center gap-4 justify-between bg-slate-800/60 backdrop-blur-md px-4 sm:px-6 py-3 w-full #{if !is_chat_page, do: "rounded-xl bg-slate-800/60 backdrop-blur-sm border-2 border-slate-700"}"}>
         <div class="flex">
           <.link
             href="/"
@@ -123,7 +123,7 @@ defmodule KameramaniPhxWeb.Layouts do
       </div>
     </header>
 
-    <main class="pt-24 bg-[#0e0e10] text-white">
+    <main class="bg-[#0e0e10] text-white">
       <div class="">
         <%= if @inner_content do %>
           {@inner_content}
