@@ -83,3 +83,52 @@
 - Some warnings in RTMP handler and Accounts were cleaned.
 - If any remain, rerun `mix precommit` to verify.
 
+# Progress Log — 2026-02-26
+
+## Summary
+- Implemented navbar search with live dropdown results; routes to stream if live, otherwise user profile.
+- Added thumbnail capture worker (GenServer) that periodically snapshots live HLS into `/thumbnails/<stream_id>.jpg`.
+- Added thumbnail rendering on stream cards (Landing/Directory/Profile).
+- Excluded thumbnails from dev live reload to prevent constant reloads.
+- Added user search helper in Accounts for navbar dropdown.
+
+## Changes by Area
+
+### Navbar Search
+- `lib/kameramani_phx_web/components/layouts.ex`
+  - Injected `NavbarSearchComponent` with `current_user`.
+- `lib/kameramani_phx_web/components/navbar_search_component.ex`
+  - Live dropdown search for usernames.
+  - Live badge for currently live users.
+  - Conditional navigation: stream page if live, profile if offline.
+- `lib/kameramani_phx/accounts.ex`
+  - Added `list_users_by_username/2` for navbar search.
+
+### Live Thumbnails
+- `lib/kameramani_phx/thumbnail_worker.ex`
+  - GenServer that uses ffmpeg to capture a thumbnail from `index.m3u8`.
+- `lib/kameramani_phx/application.ex`
+  - Added `ThumbnailRegistry` and `ThumbnailSupervisor`.
+- `lib/kameramani_phx/stream_manager.ex`
+  - Starts/stops thumbnail worker per stream.
+- `lib/kameramani_phx_web/endpoint.ex`
+  - Serves `/thumbnails` via `Plug.Static`.
+- `config/dev.exs`
+  - Excluded `priv/static/thumbnails` from live reload patterns.
+
+### Card Thumbnails
+- `lib/kameramani_phx_web/components/card_components.ex`
+  - Added `thumbnail_url` attr and renders stream thumbnail in card.
+- `lib/kameramani_phx_web/live/landing_live.ex`
+  - Adds thumbnail URL to stream card data.
+- `lib/kameramani_phx_web/live/landing_live.html.heex`
+  - Passes `thumbnail_url` to cards.
+- `lib/kameramani_phx_web/live/directory_live.ex`
+  - Adds thumbnail URL to stream card data.
+- `lib/kameramani_phx_web/live/directory_live.html.heex`
+  - Passes `thumbnail_url` to cards.
+- `lib/kameramani_phx_web/components/profile_components.ex`
+  - Passes thumbnail URL to VOD cards.
+
+## Known Issues
+- `mix precommit` fails in this environment due to Mix PubSub socket permissions (`:eperm`).

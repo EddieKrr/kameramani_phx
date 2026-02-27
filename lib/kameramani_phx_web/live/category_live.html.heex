@@ -1,1 +1,49 @@
-<div></div>
+<Layouts.app flash={@flash} current_user={@current_user}>
+  <div class="text-white px-6 py-8 min-h-screen bg-gradient-to-b from-[#0b0a0f] via-[#0e0d14] to-[#0a0910]">
+    <div class="max-w-7xl mx-auto">
+      <div class="mb-6">
+        <nav
+          id="category-breadcrumb"
+          class="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-[#b9b3c6]"
+        >
+          <.link navigate={~p"/directory"} class="hover:text-white transition-colors">
+            Directory
+          </.link>
+          <span class="text-white/40">></span>
+          <span class="text-white">{@category.name}</span>
+        </nav>
+        <h1 class="mt-3 text-4xl font-title tracking-tight text-white">{@category.name}</h1>
+        <p class="text-sm text-[#b9b3c6]">
+          Live streams in this category
+          <span class="ml-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 font-mono text-[11px] text-[#d8d4e2]">
+            {@category_slug}
+          </span>
+        </p>
+      </div>
+
+      <%= if @stream_results == [] do %>
+        <div class="rounded-xl border border-white/10 bg-[#121018] p-8 text-center text-sm text-[#b9b3c6]">
+          No one is live in {@category.name} right now.
+        </div>
+      <% else %>
+        <div
+          id="category-live-grid"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6"
+        >
+          <.card
+            :for={card <- @stream_results}
+            id={card.id}
+            stream_name={card.stream_name}
+            streamer={card.streamer}
+            category={card.category}
+            tags={card.tags}
+            viewer_count={card.viewer_count}
+            avatar={card.avatar}
+            is_live={card.is_live}
+            thumbnail_url={card.thumbnail_url}
+          />
+        </div>
+      <% end %>
+    </div>
+  </div>
+</Layouts.app>

@@ -33,7 +33,10 @@
           phx-value-tab="categories"
           class={[
             "pb-3 text-sm font-semibold border-b-2 transition-colors",
-            if(@active_tab == "categories", do: "text-white border-[#7cf6ff]", else: "text-[#b9b3c6] border-transparent hover:text-white")
+            if(@active_tab == "categories",
+              do: "text-white border-[#7cf6ff]",
+              else: "text-[#b9b3c6] border-transparent hover:text-white"
+            )
           ]}
         >
           Categories
@@ -44,7 +47,10 @@
           phx-value-tab="live"
           class={[
             "pb-3 text-sm font-semibold border-b-2 transition-colors",
-            if(@active_tab == "live", do: "text-white border-[#7cf6ff]", else: "text-[#b9b3c6] border-transparent hover:text-white")
+            if(@active_tab == "live",
+              do: "text-white border-[#7cf6ff]",
+              else: "text-[#b9b3c6] border-transparent hover:text-white"
+            )
           ]}
         >
           Live Channels
@@ -70,7 +76,10 @@
         </div>
         <div class="flex items-center gap-2 text-sm text-[#b9b3c6]">
           <span class="font-semibold">Sort by</span>
-          <select id="directory-sort" class="rounded-lg bg-[#12111a] border border-white/10 px-3 py-2 text-sm text-white">
+          <select
+            id="directory-sort"
+            class="rounded-lg bg-[#12111a] border border-white/10 px-3 py-2 text-sm text-white"
+          >
             <option>Recommended For You</option>
             <option>Most Viewers</option>
             <option>Newly Added</option>
@@ -105,13 +114,22 @@
           <% end %>
         </div>
       <% else %>
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          <.category_card
+        <div
+          id="directory-category-grid"
+          class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4"
+        >
+          <.link
             :for={category_card <- @categories}
-            name={category_card.name}
-            slug={category_card.slug}
-            thumbnail_url={category_card.thumbnail_url}
-          />
+            id={"directory-category-#{category_card.slug}"}
+            navigate={~p"/directory/#{category_card.slug}"}
+            class="text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7cf6ff]/70 rounded-xl"
+          >
+            <.category_card
+              name={category_card.name}
+              slug={category_card.slug}
+              thumbnail_url={category_card.thumbnail_url}
+            />
+          </.link>
         </div>
       <% end %>
     </div>
