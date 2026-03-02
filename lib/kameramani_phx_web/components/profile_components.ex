@@ -7,10 +7,11 @@ defmodule KameramaniPhxWeb.ProfileComponents do
   attr :name, :string, required: true
   attr :avatar_url, :string, required: true
   attr :is_live, :boolean, default: false
+  attr :can_follow, :boolean, default: false
 
   def profile_header(assigns) do
     ~H"""
-    <div class="bg-slate-900/80 backdrop-blur-sm border border-white/5 rounded-2xl p-8 mb-8 shadow-2xl">
+    <div class="glass-pane">
       <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
         <!-- Profile Picture -->
         <div class="shrink-0">
@@ -32,10 +33,14 @@ defmodule KameramaniPhxWeb.ProfileComponents do
             <h1 class="text-4xl font-bold">{@name}</h1>
             <%= if @is_live do %>
               <.icon name="hero-signal" class="h-5 w-5 text-red-500 animate-pulse" />
-              <span class="text-red-500 rounded-full bg-white/10 px-3 py-1 text-sm font-medium">Live</span>
-              <%else%>
-                  <span class="bg-gray-600 text-white px-3 py-1 rounded-full text-sm font-medium">Offline</span>
-             <% end %>
+              <span class="text-red-500 rounded-full bg-white/10 px-3 py-1 text-sm font-medium">
+                Live
+              </span>
+            <% else %>
+              <span class="bg-gray-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                Offline
+              </span>
+            <% end %>
           </div>
 
           <p class="text-xl text-gray-300 mb-4">@{@username}</p>
@@ -65,9 +70,27 @@ defmodule KameramaniPhxWeb.ProfileComponents do
         </div>
         <!-- Action Buttons -->
         <div class="flex justify-center gap-4">
-          <button class="bg-purple-600 hover:bg-purple-500 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2">
-            <.svg variant="heart" class="h-5 w-5" /> Follow
-          </button>
+          <%!-- <%= if @current_user.user && @current_user.user.id != @streamer_id do %>
+            <button
+              phx-click="toggle_follow"
+              class={"px-4 py-1.5 rounded font-bold text-sm transition-colors flex items-center gap-2 shadow " <>
+                if(@is_following, do: "bg-gray-700 hover:bg-gray-600 text-white", else: "bg-indigo-400 hover:bg-indigo-500 text-black")}
+            >
+              <%= if @is_following do %>
+                <.svg variant="heart-solid" class="w-4 h-4 text-red-500" /> Unfollow
+              <% else %>
+                <.svg variant="heart" class="w-4 h-4" /> Follow
+              <% end %>
+            </button>
+          <% else %>
+            <%= if !@current_user.user do %>
+              <button
+                phx-click="toggle_follow"
+                class="bg-[#bf94ff] hover:bg-[#a970ff] text-black px-4 py-1.5 rounded font-bold text-sm transition-colors flex items-center gap-2 shadow"
+              >
+                <.svg variant="heart" class="w-4 h-4" /> Follow
+              </button>
+            <% end %> --%>
         </div>
       </div>
     </div>
@@ -116,33 +139,34 @@ defmodule KameramaniPhxWeb.ProfileComponents do
 
   def profile_tab(assigns) do
     ~H"""
-      <.link
-        patch={@patch}
-        class={["px-4 py-2 rounded-lg",
-        if(@is_active, do: "bg-indigo-900 text-white", else: "text-gray-400 hover:text-gray-800")]}
-      >
+    <.link
+      patch={@patch}
+      class={[
+        "px-4 py-2 rounded-lg",
+        if(@is_active, do: "bg-indigo-900 text-white", else: "text-gray-400 hover:text-gray-800")
+      ]}
+    >
       {@label}
-      </.link>
+    </.link>
     """
   end
 
-
   attr :vods, :list, required: true
+
   def video_section(assigns) do
     ~H"""
-      <div :for={vod <- @vods} class="flex flex-row">
-
-        <.card
-          stream_name = {vod.title}
-          streamer = {vod.user.username}
-          category = {vod.category}
-          avatar = {vod.user.profile_picture}
-          viewer_count = {vod.vod_play_count}
-          id = {vod.id}
-          is_live = {false}
-          thumbnail_url = {"/thumbnails/#{vod.id}.jpg"}
-          />
-      </div>
+    <div :for={vod <- @vods} class="flex flex-row">
+      <.card
+        stream_name={vod.title}
+        streamer={vod.user.username}
+        category={vod.category}
+        avatar={vod.user.profile_picture}
+        viewer_count={vod.vod_play_count}
+        id={vod.id}
+        is_live={false}
+        thumbnail_url={"/thumbnails/#{vod.id}.jpg"}
+      />
+    </div>
     """
   end
 

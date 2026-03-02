@@ -112,11 +112,13 @@ defmodule KameramaniPhxWeb.DirectoryLive do
   defp streams_to_cards(streams) do
     Enum.map(streams, fn s ->
       count = Presence.list("stream_viewers:#{s.id}") |> map_size()
+
       category_slug =
         if s.category do
           KameramaniPhx.Content.get_category_by_name(s.category).slug
         else
-          "just-chatting" # Default slug
+          # Default slug
+          "just-chatting"
         end
 
       %{
@@ -137,5 +139,4 @@ defmodule KameramaniPhxWeb.DirectoryLive do
       }
     end)
   end
-
 end

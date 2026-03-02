@@ -51,8 +51,8 @@ defmodule KameramaniPhxWeb.Layouts do
       |> assign(:is_chat_page, is_chat_page)
 
     ~H"""
-    <header class={"navbar fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-6 lg:px-8 #{if !@is_chat_page, do: "mx-auto max-w-[1440px]"}"}>
-      <div class={"flex items-center gap-4 justify-between bg-slate-800/60 backdrop-blur-md px-4 sm:px-6 py-3 w-full #{if !@is_chat_page, do: "rounded-xl bg-slate-800/60 backdrop-blur-sm border-2 mt-3 border-slate-700"}"}>
+    <header class={"navbar sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-6 lg:px-8 #{if !is_chat_page, do: "mx-auto max-w-[1440px]"}"}>
+      <div class={"flex items-center gap-4 justify-between bg-slate-800/60 backdrop-blur-md px-4 sm:px-6 py-3 w-full #{if !is_chat_page, do: "rounded-xl bg-slate-800/60 backdrop-blur-sm border-2 border-slate-700"}"}>
         <div class="flex">
           <.link
             href="/"
@@ -77,7 +77,6 @@ defmodule KameramaniPhxWeb.Layouts do
                 <span class="font-semibold text-blue-400 capitalize">
                   {@current_user_obj.username}
                 </span>
-
               </span>
               <div class="relative group cursor-pointer">
                 <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
@@ -85,30 +84,36 @@ defmodule KameramaniPhxWeb.Layouts do
                   |> String.upcase()}
                 </div>
 
-                <div class="absolute right-0 top-full mt-2 w-48 bg-slate-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div class="absolute right-0 top-full mt-2 w-48 glass opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:rounded-3xl transition-all duration-200 z-50">
                   <div class="py-2">
                     <.link
                       navigate={~p"/users/profile/#{@current_user_obj.username}"}
-                      class="flex items-center gap-2 px-4 py-2 text-white hover:bg-slate-600 transition colors"
+                      class="menu-item"
                     >
                       <.svg variant="user-icon" class="w-5 h-5" /> Profile
                     </.link>
                     <.link
                       navigate={~p"/users/settings"}
-                      class="flex items-center gap-2 px-4 py-2 text-white hover:bg-slate-600 transition-colors"
+                      class="menu-item"
                     >
                       <.svg variant="gear" class="w-5 h-5" /> Settings
                     </.link>
                     <.link
                       navigate={~p"/studio"}
-                      class="flex items-center gap-2 px-4 py-2 text-white hover:bg-slate-600 transition-colors"
+                      class="menu-item"
                     >
                       <.svg variant="camera" class="w-5 h-5" /> Studio
                     </.link>
                     <.link
+                      navigate={~p"/directory"}
+                      class="menu-item"
+                      >
+                      <.svg variant = "folder" class="h-5 w-5"/> Categories
+                    </.link>
+                    <.link
                       href={~p"/users/log-out"}
                       method="delete"
-                      class="flex items-center gap-2 px-4 py-2 text-white hover:bg-slate-600 transition-colors"
+                      class="menu-item"
                     >
                       <.svg variant="exit" class="w-5 h-5" /> Log Out
                     </.link>
@@ -117,7 +122,7 @@ defmodule KameramaniPhxWeb.Layouts do
               </div>
             </div>
           </div>
-        <% else %>
+          <% else %>
           <.link
             navigate={~p"/auth"}
             class="hover:bg-blue-400 bg-transparent border-2 border-blue-500/60 text-white px-4 py-2 rounded-full transition-colors duration-300 ease-in-out"
@@ -128,12 +133,12 @@ defmodule KameramaniPhxWeb.Layouts do
       </div>
     </header>
 
-    <main class="pt-24 bg-[#0e0e10] text-white">
+    <main class="text-white">
       <div class="">
         <%= if @inner_content do %>
           {@inner_content}
         <% else %>
-          <%= render_slot(@inner_block) %>
+          {render_slot(@inner_block)}
         <% end %>
       </div>
     </main>
@@ -161,7 +166,7 @@ defmodule KameramaniPhxWeb.Layouts do
       <%= if @inner_content do %>
         {@inner_content}
       <% else %>
-        <%= render_slot(@inner_block) %>
+        {render_slot(@inner_block)}
       <% end %>
     </div>
     <.flash_group flash={@flash} />
@@ -175,7 +180,7 @@ defmodule KameramaniPhxWeb.Layouts do
 
   def flash_group(assigns) do
     ~H"""
-    <div class="fixed top-6 right-6 z-[100] flex flex-col gap-3 pointer-events-none">
+    <div class="fixed top-0 left-0 z-50 flex flex-col gap-3 pointer-events-none">
       <.flash
         kind={:info}
         title="Success"

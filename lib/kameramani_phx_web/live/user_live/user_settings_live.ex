@@ -5,7 +5,13 @@ defmodule KameramaniPhxWeb.UserLive.UserSettingsLive do
   alias KameramaniPhx.Socials
   @impl true
   def mount(%{"token" => token}, _session, socket) do
-    socket = assign(socket, :social_form, to_form(Socials.change_social_account(%Socials.SocialAccount{})))
+    socket =
+      assign(
+        socket,
+        :social_form,
+        to_form(Socials.change_social_account(%Socials.SocialAccount{}))
+      )
+
     socket =
       case Accounts.update_user_email(socket.assigns.current_user.user, token) do
         {:ok, _user} ->

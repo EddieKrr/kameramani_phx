@@ -1,17 +1,16 @@
-<Layouts.app flash={@flash} current_user={@current_user}>
-  <div class="max-w-4xl mx-auto text-white p-4">
-    <div class="text-center mb-12">
-      <.header>
-        <h1 class="uppercase text-3xl font-title font-extrabold tracking-tight italic">
-          Account Settings
-        </h1>
-        <p class="mt-2 text-slate-400">Manage your profile, email, and security settings</p>
-      </.header>
-    </div>
+<div class="max-w-4xl mx-auto text-white p-4">
+  <div class="text-center mb-12">
+    <.header>
+      <h1 class="uppercase text-3xl font-title font-extrabold tracking-tight italic">
+        Account Settings
+      </h1>
+      <p class="mt-2 text-slate-400">Manage your profile, email, and security settings</p>
+    </.header>
+  </div>
 
   <div class="grid grid-cols-1 gap-8">
     <%!-- PROFILE SECTION --%>
-    <section class="bg-slate-800/40 backdrop-blur-md border-2 border-slate-700 rounded-3xl p-8 shadow-2xl">
+    <section class="glass-pane">
       <h2 class="text-2xl font-title text-blue-400 font-bold mb-8 flex items-center gap-2">
         <.svg variant="user" class="h-6 w-6" />Profile Information
       </h2>
@@ -64,7 +63,6 @@
                       {String.first(@current_user.user.username || @current_email)
                       |> String.upcase()}
                     </span>
-                   
                   <% end %>
                 <% end %>
               </div>
@@ -114,7 +112,7 @@
     </section>
 
     <%!-- EMAIL SECTION --%>
-    <section class="bg-slate-800/40 border-2 border-slate-700 rounded-3xl p-8 backdrop-blur-md">
+    <section class="glass-pane">
       <h2 class="text-2xl font-title font-bold text-blue-400 mb-6 flex items-center gap-2">
         <.svg variant="envelope" class="h-6 w-6" />Email Address
       </h2>
@@ -151,7 +149,7 @@
     </section>
 
     <%!-- PASSWORD SECTION --%>
-    <section class="border-2 border-slate-700 rounded-3xl bg-slate-800/40 p-8 backdrop-blur">
+    <section class="glass-pane">
       <h2 class="text-2xl font-title font-bold text-blue-400 mb-6 flex items-center gap-2">
         <.svg variant="key" class="h-6 w-6" />Update Password
       </h2>
@@ -209,4 +207,3 @@
     </section>
   </div>
 </div>
-</Layouts.app>

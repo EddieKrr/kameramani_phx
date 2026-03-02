@@ -1,4 +1,4 @@
-# KameramaniPhx: Project Context & AI Directives
+<!-- # KameramaniPhx: Project Context & AI Directives
 
 ## 🛑 AI ROLE & INSTRUCTIONS (MENTOR MODE)
 You are an expert, senior-level Elixir and Phoenix Framework engineering mentor. Your primary goal is to TEACH me, not to write my app for me. 
@@ -42,4 +42,4 @@ You are an expert, senior-level Elixir and Phoenix Framework engineering mentor.
 - **Flash Messages:** Refactored with glassmorphism and connection-delay transitions to prevent flickering.
 
 ## 🚀 Active Objective / Next Steps
-
+ -->

@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-[#0e0e10]">
+<div class="min-h-screen">
   <div class="max-w-7xl mx-auto px-4 py-8">
     <div class="aspect-video relative bg-black w-full rounded-2xl mb-8 border border-white/10">
       <div class="absolute bottom-0 ml-4">
@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="flex">
-     <.profile_tab
+      <.profile_tab
         patch={~p"/users/profile/#{@user.username}/home"}
         label="Home"
         is_active={@active_tab == "home"}
@@ -21,30 +21,29 @@
         label="About"
         is_active={@active_tab == "about"}
       />
-      <.profile_tab 
+      <.profile_tab
         patch={~p"/users/profile/#{@user.username}/videos"}
         label="Videos"
         is_active={@active_tab == "videos"}
       />
     </div>
     <div class="mt-8">
-    <%= case @active_tab do %>
-      <% "about" -> %>
+      <%= case @active_tab do %>
+        <% "about" -> %>
           <.about_section
-          username={@user.username}
-          email={@user.email}
-          member_since={@time}
-          bio={@user.bio}
+            username={@user.username}
+            email={@user.email}
+            member_since={@time}
+            bio={@user.bio}
           />
-      <% "videos" -> %>
-        <h4 class="font-title text-3xl capitalize text-indigo-300">Watch {@user.username}'s Past Streams</h4>
-         <.video_section
-          vods={@vods}
-         />
-      <% "home" -> %>
-        <.home_section/>
+        <% "videos" -> %>
+          <h4 class="font-title text-3xl capitalize text-indigo-300">
+            Watch {@user.username}'s Past Streams
+          </h4>
+          <.video_section vods={@vods} />
+        <% "home" -> %>
+          <.home_section />
       <% end %>
     </div>
   </div>
 </div>
-  

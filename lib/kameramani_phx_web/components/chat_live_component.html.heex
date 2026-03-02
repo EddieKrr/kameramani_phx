@@ -1,10 +1,10 @@
-<aside class="h-screen w-80 bg-[#18181b] border-l border-white/5 flex flex-col shadow-[-10px_0_30px_rgba(0,0,0,0.5)] z-20 transition-all duration-300">
+<aside class="h-screen w-80 glass-pane border-l border-white/5 flex flex-col shadow-[-10px_0_30px_rgba(0,0,0,0.5)] z-20 transition-all duration-300">
   <div class="h-12 flex items-center justify-between px-3 border-b border-white/5 shrink-0">
     <span class="text-[12px] font-bold uppercase tracking-wider text-[#efeff1]">
-      <%= @title %>
+      {@title}
     </span>
     <div class="flex items-center gap-1 text-[#adadb8]">
-       <.svg variant="user" class="h-4 w-4" />
+      <.svg variant="user" class="h-4 w-4" />
     </div>
   </div>
 
@@ -28,7 +28,8 @@
               style={"color: #{msg.user.chat_color || "#6366f1"}"}
             >
               {msg.user.username}
-            </span><span class="text-white">:</span>
+            </span>
+            <span class="text-white">:</span>
             <span class="text-[#efeff1] ml-1">{msg.body}</span>
           </div>
         </div>
@@ -38,14 +39,21 @@
           style={"color: #{msg.user.chat_color || "#6366f1"}"}
         >
           {msg.user.username}
-        </span><span class="text-white">:</span>
+        </span>
+        <span class="text-white">:</span>
         <span class="text-[#efeff1] ml-1">{msg.body}</span>
       <% end %>
     </div>
   </div>
 
   <div class="p-4 bg-[#18181b] border-t border-white/5 shrink-0">
-    <.form for={@form} phx-change="validate" phx-submit="send_message" phx-target={@myself} class="space-y-3">
+    <.form
+      for={@form}
+      phx-change="validate"
+      phx-submit="send_message"
+      phx-target={@myself}
+      class="space-y-3"
+    >
       <div class="bg-[#0e0e10] border-2 border-transparent focus-within:border-[#bf94ff]/50 rounded-lg p-2 transition-colors">
         <.input
           field={@form[:ch_message]}
@@ -55,7 +63,10 @@
         />
         <%= if is_nil(@current_user) do %>
           <div class="text-[11px] text-[#adadb8] mb-2" id="chat-login-hint">
-            <.link navigate={~p"/auth"} class="text-[#bf94ff] hover:text-[#a970ff] transition-colors font-semibold">
+            <.link
+              navigate={~p"/auth"}
+              class="text-[#bf94ff] hover:text-[#a970ff] transition-colors font-semibold"
+            >
               Log in to chat
             </.link>
             <span class="text-[#adadb8]"> — guests can watch only.</span>
@@ -63,7 +74,8 @@
         <% end %>
         <div class="flex justify-between items-center mt-2">
           <div class="flex items-center gap-2">
-            <div class="w-3 h-3 rounded-full shadow-sm" style={"background-color: #{@user_color}"}></div>
+            <div class="w-3 h-3 rounded-full shadow-sm" style={"background-color: #{@user_color}"}>
+            </div>
             <span class="text-[11px] font-bold text-[#adadb8] truncate max-w-[100px]">
               {@username}
             </span>

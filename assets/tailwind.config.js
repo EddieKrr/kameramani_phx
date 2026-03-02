@@ -23,6 +23,9 @@ module.exports = {
         "background": "#F9FAFB",
         "surface": "#FFFFFF",
       },
+      backgroundImage: {
+        "img": "url('/assets/static/images/bg.jpg')",
+      },
     },
   },
 
