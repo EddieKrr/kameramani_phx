@@ -2,7 +2,6 @@ defmodule KameramaniPhx.RTMPIngestPipeline do
   use Membrane.Pipeline
   import Membrane.ChildrenSpec
   require Logger
-  # ADDED: Required for time helpers
   require Membrane.Time
 
   def start_link(args), do: Membrane.Pipeline.start_link(__MODULE__, args)
@@ -19,7 +18,7 @@ defmodule KameramaniPhx.RTMPIngestPipeline do
         hls_mode: :separate_av
       }),
 
-      # 1. Wire the Video track
+      #  Wire the Video track
       get_child(:src)
       |> via_out(:video)
       |> via_in(Pad.ref(:input, :video),

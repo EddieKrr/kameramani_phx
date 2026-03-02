@@ -1,9 +1,6 @@
 defmodule KameramaniPhxWeb.ChatLiveComponent do
-  use Phoenix.LiveComponent
-  import KameramaniPhxWeb.CoreComponents
+  use KameramaniPhxWeb, :live_component
   alias KameramaniPhx.Chat
-  alias KameramaniPhx.Accounts
-  use KameramaniPhxWeb, :live_view
 
   @initial_state %{"ch_message" => ""}
 
@@ -25,7 +22,14 @@ defmodule KameramaniPhxWeb.ChatLiveComponent do
   @impl true
   def update(assigns, socket) do
     stream_id = assigns.stream_id
-    socket = assign(socket, assigns)
+
+    # If we received a new_message via send_update from parent LiveView
+    socket =
+      if message = assigns[:new_message] do
+        stream_insert(socket, :messages, message)
+      else
+        assign(socket, assigns)
+      end
 
     socket =
       if !socket.assigns.subscribed do
@@ -39,7 +43,7 @@ defmodule KameramaniPhxWeb.ChatLiveComponent do
         socket
       end
 
-    current_user = assigns.current_user
+    current_user = socket.assigns.current_user
     chat_colors = ~w(#3b82f6 #ef4444 #f97316 #eab308 #ec4899 #a855f7 #22c55e #84cc16)
 
     {chat_username, chat_user_color} =
@@ -56,6 +60,7 @@ defmodule KameramaniPhxWeb.ChatLiveComponent do
     {:ok, socket}
   end
 
+  @impl true
   def handle_event("send_message", %{"chat" => %{"ch_message" => message_text}}, socket) do
     current_user = socket.assigns.current_user
 
@@ -89,12 +94,9 @@ defmodule KameramaniPhxWeb.ChatLiveComponent do
     end
   end
 
+  @impl true
   def handle_event("validate", %{"chat" => %{"ch_message" => message}}, socket) do
     form = to_form(%{"ch_message" => message}, as: :chat)
     {:noreply, assign(socket, form: form)}
-  end
-
-  def handle_info({:new_message, message}, socket) do
-    {:noreply, stream_insert(socket, :messages, message)}
   end
 end

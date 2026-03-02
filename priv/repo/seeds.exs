@@ -1,6 +1,6 @@
 alias KameramaniPhx.Repo
 alias KameramaniPhx.Content.Category
-alias KameramaniPhx.Accounts.User
+alias KameramaniPhx.Accounts.{User, Role, Permission}
 import Ecto.UUID
 
 categories = [
@@ -95,5 +95,66 @@ Enum.each(users, fn user_attrs ->
       IO.puts("Failed to create user #{user_attrs.username}: #{inspect(changeset.errors)}")
   end
 end)
+
+roles_to_create = ["admin", "moderator", "user"]
+for role_name <- roles_to_create do
+  case Repo.get_by(Role, name: role_name) do
+    nil ->
+      {:ok, _} = Repo.insert(%Role{name: role_name})
+      IO.puts("🔹 Created role: #{role_name}")
+    _ ->
+      IO.puts("🔹 Role '#{role_name}' already exists. Skipping.")
+  end
+end
+
+IO.puts("✅ Roles table populated.")
+
+# 2. Define the Permissions Dictionary
+permissions_data = [
+  %Permission{slug: "delete_saved_streams", description: "Delete saved streams"},
+  %Permission{slug: "stream-edit", description: "Edit existing streams"},
+  %Permission{slug: "stream-delete", description: "Delete streams"},
+  %Permission{slug: "user-ban", description: "Ban users"},
+  %Permission{slug: "user-mute", description: "Mute users"},
+  %Permission{slug: "user-warning", description: "Warn users"},
+  %Permission{slug: "manage_users", description: "Manage user accounts"},
+  %Permission{slug: "manage_streams", description: "Manage streams"},
+  %Permission{slug: "moderate_content", description: "Moderate content"},
+  %Permission{slug: "view_analytics", description: "View analytics"},
+  %Permission{slug: "manage_roles", description: "Manage roles and permissions"},
+  %Permission{slug: "access_sales_dashboard", description: "Access sales dashboard"},
+  %Permission{slug: "manage_conversations", description: "Manage conversations"},
+]
+
+
+permission_map =
+  Enum.reduce(permissions_data, %{}, fn data, acc ->
+    perm =
+      case Repo.get_by(Permission, slug: data.slug) do
+        nil -> Repo.insert!(data)
+        existing -> existing
+      end
+    Map.put(acc, data.slug, perm)
+  end)
+
+IO.puts("✅ Permissions table populated.")
+
+assign_perms = fn role_name, slugs ->
+  role = Repo.get_by(Role, name: role_name) |> Repo.preload(:permissions)
+  if role do
+    perms_to_add = Enum.map(slugs, fn s -> Map.get(permission_map, s) end)
+    role
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_assoc(:permissions, perms_to_add)
+    |> Repo.update!()
+    IO.puts("🔹 Assigned [#{Enum.join(slugs, ", ")}] to role: #{role_name}")
+  else
+    IO.puts("⚠️ Role '#{role_name}' not found. Skipping.")
+  end
+end
+
+assign_perms.("admin", ["delete_saved_streams", "stream-edit", "stream-delete", "user-ban", "user-mute", "user-warning", "manage_users", "manage_streams", "moderate_content", "view_analytics", "manage_roles", "access_sales_dashboard", "manage_conversations"])
+assign_perms.("moderator", ["stream-edit", "stream-delete", "user-warning"])
+assign_perms.("user", ["delete_saved_streams", "stream-edit"])
 
 IO.puts("Done!")

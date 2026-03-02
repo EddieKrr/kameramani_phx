@@ -25,7 +25,7 @@ defmodule KameramaniPhx.ThumbnailGenerator do
   end
 
   @impl true
-  def handle_info(:capture, %{stream_id: stream_id, in_progress?: true} = state) do
+  def handle_info(:capture, %{stream_id: _stream_id, in_progress?: true} = state) do
     schedule_next_capture()
     {:noreply, state}
   end

@@ -21,7 +21,7 @@ defmodule KameramaniPhx.Accounts.User do
     field :confirmed_at, :utc_datetime
     field :authenticated_at, :utc_datetime, virtual: true
     has_many :social_accounts, KameramaniPhx.Socials.SocialAccount
-
+    many_to_many :roles, KameramaniPhx.Accounts.Role, join_through: "user_roles", on_replace: :delete
     # People THIS user is following
     many_to_many :following, KameramaniPhx.Accounts.User,
       join_through: "follows",

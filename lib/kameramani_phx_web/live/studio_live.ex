@@ -56,6 +56,11 @@ defmodule KameramaniPhxWeb.StudioLive do
     end
   end
 
+  def handle_info({:new_message, message}, socket) do
+    send_update(KameramaniPhxWeb.ChatLiveComponent, id: "studio-chat-component", new_message: message)
+    {:noreply, socket}
+  end
+
   # handling the viewer count updates via Presence
   def handle_info(%Phoenix.Socket.Broadcast{event: "presence_diff"}, socket) do
     if stream = socket.assigns.current_stream do
