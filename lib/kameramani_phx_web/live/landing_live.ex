@@ -47,8 +47,6 @@ defmodule KameramaniPhxWeb.LandingLive do
           name: s.user.username,
           game: s.category || "Just Chatting",
           viewer_count: count,
-          
-
           src:
             if(s.user.profile_picture in [nil, ""],
               do: "https://ui-avatars.com/api/?name=#{s.user.username}&background=random",
@@ -149,7 +147,6 @@ defmodule KameramaniPhxWeb.LandingLive do
       streamer: s.user.username,
       category: s.category || "Just Chatting",
       tags: s.tags || [],
-
       viewer_count: count,
       avatar: avatar_url,
       is_live: s.is_live,

@@ -170,7 +170,7 @@ defmodule KameramaniPhxWeb.Layouts do
 
   def flash_group(assigns) do
     ~H"""
-    <div class="fixed top-6 right-6 z-[100] flex flex-col gap-3 pointer-events-none">
+    <div class="fixed top-0 left-0 z-50 flex flex-col gap-3 pointer-events-none">
       <.flash
         kind={:info}
         title="Success"

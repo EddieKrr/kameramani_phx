@@ -33,10 +33,14 @@ defmodule KameramaniPhxWeb.ProfileComponents do
             <h1 class="text-4xl font-bold">{@name}</h1>
             <%= if @is_live do %>
               <.icon name="hero-signal" class="h-5 w-5 text-red-500 animate-pulse" />
-              <span class="text-red-500 rounded-full bg-white/10 px-3 py-1 text-sm font-medium">Live</span>
-              <%else%>
-                  <span class="bg-gray-600 text-white px-3 py-1 rounded-full text-sm font-medium">Offline</span>
-             <% end %>
+              <span class="text-red-500 rounded-full bg-white/10 px-3 py-1 text-sm font-medium">
+                Live
+              </span>
+            <% else %>
+              <span class="bg-gray-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                Offline
+              </span>
+            <% end %>
           </div>
 
           <p class="text-xl text-gray-300 mb-4">@{@username}</p>
@@ -135,33 +139,34 @@ defmodule KameramaniPhxWeb.ProfileComponents do
 
   def profile_tab(assigns) do
     ~H"""
-      <.link
-        patch={@patch}
-        class={["px-4 py-2 rounded-lg",
-        if(@is_active, do: "bg-indigo-900 text-white", else: "text-gray-400 hover:text-gray-800")]}
-      >
+    <.link
+      patch={@patch}
+      class={[
+        "px-4 py-2 rounded-lg",
+        if(@is_active, do: "bg-indigo-900 text-white", else: "text-gray-400 hover:text-gray-800")
+      ]}
+    >
       {@label}
-      </.link>
+    </.link>
     """
   end
 
-
   attr :vods, :list, required: true
+
   def video_section(assigns) do
     ~H"""
-      <div :for={vod <- @vods} class="flex flex-row">
-
-        <.card
-          stream_name = {vod.title}
-          streamer = {vod.user.username}
-          category = {vod.category}
-          avatar = {vod.user.profile_picture}
-          viewer_count = {vod.vod_play_count}
-          id = {vod.id}
-          is_live = {false}
-          thumbnail_url = {"/thumbnails/#{vod.id}.jpg"}
-          />
-      </div>
+    <div :for={vod <- @vods} class="flex flex-row">
+      <.card
+        stream_name={vod.title}
+        streamer={vod.user.username}
+        category={vod.category}
+        avatar={vod.user.profile_picture}
+        viewer_count={vod.vod_play_count}
+        id={vod.id}
+        is_live={false}
+        thumbnail_url={"/thumbnails/#{vod.id}.jpg"}
+      />
+    </div>
     """
   end
 
