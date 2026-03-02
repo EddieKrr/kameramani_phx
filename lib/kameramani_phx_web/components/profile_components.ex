@@ -11,7 +11,7 @@ defmodule KameramaniPhxWeb.ProfileComponents do
 
   def profile_header(assigns) do
     ~H"""
-    <div class="bg-slate-900/80 backdrop-blur-sm border border-white/5 rounded-2xl p-8 mb-8 shadow-2xl">
+    <div class="glass-pane">
       <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
         <!-- Profile Picture -->
         <div class="shrink-0">

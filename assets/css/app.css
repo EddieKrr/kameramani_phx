@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .menu-item {
+    @apply flex items-center gap-2 px-4 py-2 text-white hover:bg-slate-600 transition-colors;
+  }
+  .glass-pane {
+    @apply bg-slate-800/30 backdrop-blur-sm rounded-3xl border border-slate-200/20 p-4 shadow-lg;
+  }
+  .glass{
+    @apply bg-slate-800/30 backdrop-blur-sm rounded-lg border border-slate-200/20 p-4 shadow-lg;
+  }
+}
+
 @layer base {
   .transition-primary {
     @apply transition-all duration-300 ease-in-out
