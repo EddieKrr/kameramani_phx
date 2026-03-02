@@ -37,7 +37,7 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
     def handle_init(opts), do: opts
 
     # 1. The Pipeline's SourceBin sends this message. We save its PID.
-    # CRITICAL FIX: Return state DIRECTLY, do not wrap in {:ok, state}
+
     @impl true
     def handle_info({:send_me_data, source_pid}, state) do
       Logger.info("✅ RTMP Handler successfully linked to Pipeline Source")
@@ -52,7 +52,6 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
     @impl true
     def handle_data_available(data, %{source_pid: source_pid} = state)
         when not is_nil(source_pid) do
-      # THE MAGIC FIX: Changed :rtmp_data to :data
       send(source_pid, {:data, data})
       state
     end

@@ -5,8 +5,7 @@ defmodule KameramaniPhx.Accounts do
 
   import Ecto.Query, warn: false
   alias KameramaniPhx.Repo
-  alias KameramaniPhx.Streaming
-  alias KameramaniPhx.Accounts.{User, UserToken, UserNotifier, Follow}
+  alias KameramaniPhx.Accounts.{User, UserToken, UserNotifier, Follow, Role, Permission}
 
   ## Database getters
 
@@ -37,6 +36,7 @@ defmodule KameramaniPhx.Accounts do
   def get_user_by_username(username) when is_binary(username) do
     Repo.get_by(User, username: username)
     |> Repo.preload(:social_accounts)
+    |> Repo.preload(:roles)
   end
 
   def get_user_by_email_and_password(email, password)
@@ -246,4 +246,111 @@ defmodule KameramaniPhx.Accounts do
       end
     end)
   end
+
+  #user roles and permissions
+
+  def get_roles do
+    Repo.all(Role) |> Repo.preload(:permissions)
+  end
+
+   def get_role_by_name(name) do
+    Repo.get_by(Role, name: name) |> Repo.preload(:permissions)
+   end
+
+   #giving users roles and permissions
+   def assign_role_to_user(user, role_name) when is_binary(role_name) do
+     case Repo.get_by(Role, name: role_name) do
+       nil -> {:error, :role_not_found}
+       role -> assign_role_to_user(user, role)
+     end
+   end
+
+   def assign_role_to_user(user, %Role{} = role) do
+     user = Repo.preload(user, :roles)
+     user
+     |> Ecto.Changeset.change()
+     |> Ecto.Changeset.put_assoc(:roles, Enum.uniq([role | user.roles]))
+     |> Repo.update()
+   end
+
+
+
+   #get users with roles
+   def get_role_by_name(name) do
+     Repo.get_by(Role, name: name)
+   end
+
+   #check if user has a role
+   def user_has_role?(user, role_name) when is_binary(role_name) do
+      user = Repo.preload(user, :roles)
+      Enum.any?(user.roles, fn role -> role.name == role_name end)
+   end
+
+
+   #list all the permissions
+   def list_permissions do
+     Repo.all(Permission)
+   end
+
+   #check is a user has permission
+   def has_permission?(user, permission_slug) when is_binary(permission_slug) do
+     user = Repo.preload(user, roles: :permissions)
+     Enum.any?(user.roles, fn role ->
+       Enum.any?(role.permissions, fn perm -> perm.slug == permission_slug end)
+     end)
+   end
+
+   #update user roles
+   def update_user_roles(user, role_name)  do
+      case Repo.get_by(Role, name: role_name) do
+        nil -> {:error, :role_not_found}
+        role ->
+          user = Repo.preload(user, :roles)
+          user
+          |> Ecto.Changeset.change()
+          |> Ecto.Changeset.put_assoc(:roles, Enum.uniq([role | user.roles]))
+          |> Repo.update()
+       end
+   end
+
+   #removing a role from a user
+   def remove_role_from_user(user, role_name) when is_binary(role_name) do
+     user = Repo.preload(user, :roles)
+
+     if !Enum.any?(user.roles, fn r -> r.name == role_name end) do
+       {:error, :user_does_not_have_that_role}
+     else
+       new_roles = Enum.reject(user.roles, fn r -> r.name == role_name end)
+
+       user
+       |> Ecto.Changeset.change()
+       |> Ecto.Changeset.put_assoc(:roles, new_roles)
+       |> Repo.update()
+     end
+   end
+
+   #get users with roles
+    def get_users_with_role(role_name) when is_binary(role_name) do
+      case Repo.get_by(Role, name: role_name) do
+        nil -> {:error, :role_not_found}
+        _ ->
+      from(u in User,
+        join: r in assoc(u, :roles),
+        where: r.name == ^role_name,
+        preload: [:roles]
+      )
+      |> Repo.all()
+    end
+  end
+
+  #get all users that have roles
+  def get_users_with_any_role do
+    from(u in User,
+      join: r in assoc(u, :roles),
+      preload: [:roles]
+    )
+    |> Repo.all()
+end
+
+
 end

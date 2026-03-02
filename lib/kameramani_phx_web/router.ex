@@ -106,6 +106,18 @@ defmodule KameramaniPhxWeb.Router do
       live "/studio", KameramaniPhxWeb.StudioLive
       live "/stream-settings", KameramaniPhxWeb.Streaming.Settings.StreamSettingsLive
     end
+
+    live_session :admin_only,
+      on_mount: [{KameramaniPhxWeb.UserAuth, :require_authenticated}, {KameramaniPhxWeb.UserAuth, {:require_role, "admin"}}],
+      layout: {KameramaniPhxWeb.Layouts, :app} do
+      live "/admin", KameramaniPhxWeb.AdminLive
+    end
+
+    live_session :moderator_only,
+      on_mount: [{KameramaniPhxWeb.UserAuth, :require_authenticated}, {KameramaniPhxWeb.UserAuth, {:require_role, "moderator"}}],
+      layout: {KameramaniPhxWeb.Layouts, :app} do
+      live "/moderator", KameramaniPhxWeb.ModeratorLive
+    end
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

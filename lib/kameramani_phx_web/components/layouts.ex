@@ -42,9 +42,13 @@ defmodule KameramaniPhxWeb.Layouts do
         other -> other
       end
 
-    assigns = assign(assigns, :current_user_obj, current_user)
     socket = Map.get(assigns, :socket)
     is_chat_page = socket && socket.view == KameramaniPhxWeb.ChatLive
+
+    assigns =
+      assigns
+      |> assign(:current_user_obj, current_user)
+      |> assign(:is_chat_page, is_chat_page)
 
     ~H"""
     <header class={"navbar sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-6 lg:px-8 #{if !is_chat_page, do: "mx-auto max-w-[1440px]"}"}>
