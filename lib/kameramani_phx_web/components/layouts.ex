@@ -101,6 +101,12 @@ defmodule KameramaniPhxWeb.Layouts do
                       <.svg variant="camera" class="w-5 h-5" /> Studio
                     </.link>
                     <.link
+                      navigate={~p"/directory"}
+                      class="flex items-center gap-2 px-4 py-2"
+                      >
+                      <.svg variant = "folder" class="h-5 w-5"/> Categories
+                    </.link>
+                    <.link
                       href={~p"/users/log-out"}
                       method="delete"
                       class="flex items-center gap-2 px-4 py-2 text-white hover:bg-slate-600 transition-colors"
