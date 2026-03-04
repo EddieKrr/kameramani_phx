@@ -108,13 +108,19 @@ defmodule KameramaniPhxWeb.Router do
     end
 
     live_session :admin_only,
-      on_mount: [{KameramaniPhxWeb.UserAuth, :require_authenticated}, {KameramaniPhxWeb.UserAuth, {:require_role, "admin"}}],
+      on_mount: [
+        {KameramaniPhxWeb.UserAuth, :require_authenticated},
+        {KameramaniPhxWeb.UserAuth, {:require_role, "admin"}}
+      ],
       layout: {KameramaniPhxWeb.Layouts, :app} do
       live "/admin", KameramaniPhxWeb.AdminLive
     end
 
     live_session :moderator_only,
-      on_mount: [{KameramaniPhxWeb.UserAuth, :require_authenticated}, {KameramaniPhxWeb.UserAuth, {:require_role, "moderator"}}],
+      on_mount: [
+        {KameramaniPhxWeb.UserAuth, :require_authenticated},
+        {KameramaniPhxWeb.UserAuth, {:require_role, "moderator"}}
+      ],
       layout: {KameramaniPhxWeb.Layouts, :app} do
       live "/moderator", KameramaniPhxWeb.ModeratorLive
     end

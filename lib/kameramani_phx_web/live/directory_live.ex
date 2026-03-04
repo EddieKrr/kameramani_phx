@@ -41,7 +41,12 @@ defmodule KameramaniPhxWeb.DirectoryLive do
 
     {:noreply,
      socket
-     |> assign(categories: categories, stream_results: stream_results, active_tab: active_tab)
+     |> assign(
+       categories: categories,
+       stream_results: stream_results,
+       active_tab: active_tab,
+       page_title: "Categories"
+     )
      |> assign(search_form: to_form(%{"query" => query}, as: :search))}
   end
 

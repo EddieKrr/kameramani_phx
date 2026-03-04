@@ -6,8 +6,6 @@ defmodule KameramaniPhxWeb.AdminLive do
     {:ok, socket}
   end
 
-
-
   @impl true
   def handle_event("some_admin_action", _value, socket) do
     # Handle admin-specific events here

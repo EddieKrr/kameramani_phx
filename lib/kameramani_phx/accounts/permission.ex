@@ -1,5 +1,4 @@
 defmodule KameramaniPhx.Accounts.Permission do
-
   use Ecto.Schema
   import Ecto.Changeset
 

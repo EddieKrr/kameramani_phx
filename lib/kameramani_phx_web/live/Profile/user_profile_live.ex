@@ -61,6 +61,7 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
           |> assign(follower_count: Accounts.get_followers_count(user))
           |> assign(following_count: Accounts.get_following_count(user))
           |> assign(is_live: !!active_stream)
+          |> assign(page_title: "Profile")
 
         {:noreply, socket}
     end

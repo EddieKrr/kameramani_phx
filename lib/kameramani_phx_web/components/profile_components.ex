@@ -105,25 +105,25 @@ defmodule KameramaniPhxWeb.ProfileComponents do
 
   def about_section(assigns) do
     ~H"""
-    <div class="bg-[#18181b] border border-white/5 rounded-2xl shadow-2xl mb-8">
+    <div class="glass-pane border border-white/5 rounded-2xl shadow-2xl mb-8">
       <div class="p-8">
         <h3 class="text-2xl font-bold text-white mb-6 capitalize">About {@username}</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="bg-white/5 rounded-lg p-6">
-            <h4 class="font-semibold font-title text-lg text-indigo-300 mb-2 uppercase tracking-wider">
+            <h4 class="font-semibold font-title text-lg text-indigo-200 mb-2 uppercase tracking-wider">
               Username
             </h4>
             <p class="text-white font-medium">{@username}</p>
           </div>
 
           <div class="bg-white/5 rounded-lg p-6">
-            <h4 class="text-lg font-title font-semibold text-indigo-300 mb-2 uppercase tracking-wider">
+            <h4 class="text-lg font-title font-semibold text-indigo-200 mb-2 uppercase tracking-wider">
               Member For
             </h4>
             <p class="text-white font-medium">{@member_since}</p>
           </div>
 
-          <div class="bg-white/5 rounded-xl p-6 text-indigo-300 mb-2">
+          <div class="bg-white/5 rounded-xl p-6 text-indigo-200 mb-2">
             <h4 class="font-title text-lg mb-2 uppercase tracking-wider">Biography</h4>
             <p class="font-medium">{@bio}</p>
           </div>

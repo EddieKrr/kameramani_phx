@@ -97,11 +97,13 @@ Enum.each(users, fn user_attrs ->
 end)
 
 roles_to_create = ["admin", "moderator", "user"]
+
 for role_name <- roles_to_create do
   case Repo.get_by(Role, name: role_name) do
     nil ->
       {:ok, _} = Repo.insert(%Role{name: role_name})
       IO.puts("🔹 Created role: #{role_name}")
+
     _ ->
       IO.puts("🔹 Role '#{role_name}' already exists. Skipping.")
   end
@@ -123,9 +125,8 @@ permissions_data = [
   %Permission{slug: "view_analytics", description: "View analytics"},
   %Permission{slug: "manage_roles", description: "Manage roles and permissions"},
   %Permission{slug: "access_sales_dashboard", description: "Access sales dashboard"},
-  %Permission{slug: "manage_conversations", description: "Manage conversations"},
+  %Permission{slug: "manage_conversations", description: "Manage conversations"}
 ]
-
 
 permission_map =
   Enum.reduce(permissions_data, %{}, fn data, acc ->
@@ -134,6 +135,7 @@ permission_map =
         nil -> Repo.insert!(data)
         existing -> existing
       end
+
     Map.put(acc, data.slug, perm)
   end)
 
@@ -141,19 +143,37 @@ IO.puts("✅ Permissions table populated.")
 
 assign_perms = fn role_name, slugs ->
   role = Repo.get_by(Role, name: role_name) |> Repo.preload(:permissions)
+
   if role do
     perms_to_add = Enum.map(slugs, fn s -> Map.get(permission_map, s) end)
+
     role
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_assoc(:permissions, perms_to_add)
     |> Repo.update!()
+
     IO.puts("🔹 Assigned [#{Enum.join(slugs, ", ")}] to role: #{role_name}")
   else
     IO.puts("⚠️ Role '#{role_name}' not found. Skipping.")
   end
 end
 
-assign_perms.("admin", ["delete_saved_streams", "stream-edit", "stream-delete", "user-ban", "user-mute", "user-warning", "manage_users", "manage_streams", "moderate_content", "view_analytics", "manage_roles", "access_sales_dashboard", "manage_conversations"])
+assign_perms.("admin", [
+  "delete_saved_streams",
+  "stream-edit",
+  "stream-delete",
+  "user-ban",
+  "user-mute",
+  "user-warning",
+  "manage_users",
+  "manage_streams",
+  "moderate_content",
+  "view_analytics",
+  "manage_roles",
+  "access_sales_dashboard",
+  "manage_conversations"
+])
+
 assign_perms.("moderator", ["stream-edit", "stream-delete", "user-warning"])
 assign_perms.("user", ["delete_saved_streams", "stream-edit"])
 

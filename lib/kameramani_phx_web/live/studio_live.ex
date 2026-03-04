@@ -57,7 +57,11 @@ defmodule KameramaniPhxWeb.StudioLive do
   end
 
   def handle_info({:new_message, message}, socket) do
-    send_update(KameramaniPhxWeb.ChatLiveComponent, id: "studio-chat-component", new_message: message)
+    send_update(KameramaniPhxWeb.ChatLiveComponent,
+      id: "studio-chat-component",
+      new_message: message
+    )
+
     {:noreply, socket}
   end
 

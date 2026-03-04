@@ -1,13 +1,15 @@
-<div class="flex h-screen w-full text-[#efeff1] overflow-none font-sans">
-  <aside class={"bg-[#18181b] border-r border-white/5 flex flex-col transition-all duration-300 ease-in-out " <> (if @left_sidebar_open, do: "w-64", else: "w-[50px] items-center")}>
+<div class="flex gap-4 overflow-hidden h-[calc(100vh-100px)] text-[#efeff1] font-sans">
+  <aside class={[
+    "glass-pane sticky top-0 h-[calc(100vh-115px)] shrink-0 border-r border-white/5 transition-all duration-300 ease-in-out overflow-y-auto",
+    if(@left_sidebar_open, do: "w-64", else: "w-[50px]")
+  ]}>
     <div class="flex items-center justify-between p-3 border-b border-white/5">
-      <span class={"text-[11px] font-bold text-[#adadb8] uppercase tracking-widest whitespace-nowrap " <> (if @left_sidebar_open, do: "block", else: "hidden")}>
+      <span class={"text-[11px] font-bold text-[#adadb8] uppercase tracking-widest whitespace-nowrap " <> if(@left_sidebar_open, do: "block", else: "hidden")}>
         For You
       </span>
       <button
         phx-click="toggle_left_sidebar"
         class="p-1 rounded hover:bg-white/10 text-[#adadb8] transition-colors"
-        title="Collapse"
       >
         <.svg
           variant={if @left_sidebar_open, do: "chevron-left", else: "chevron-right"}
@@ -16,7 +18,7 @@
       </button>
     </div>
 
-    <div class="flex-1 overflow-y-auto px-2 space-y-2 py-4 custom-scrollbar">
+    <div class="px-2 flex flex-col gap-2 py-4 custom-scrollbar">
       <.sidebar_item
         :for={stream <- @recommended_streams}
         name={stream.name}
@@ -30,7 +32,7 @@
     </div>
   </aside>
 
-  <main class="flex-1 flex flex-col min-w-0 overflow-y-auto relative">
+  <main class="flex-1 overflow-y-auto overflow-x-hidden flex flex-col gap-2 relative">
     <%= if !@chat_open do %>
       <div class="absolute top-4 right-4 z-50">
         <button
@@ -42,7 +44,7 @@
       </div>
     <% end %>
 
-    <div class="w-full aspect-video bg-black relative group shadow-2xl">
+    <div class="w-full aspect-video bg-black rounded-3xl relative group shadow-2xl">
       <%= if @is_live do %>
         <div id="video-container" phx-update="ignore" class="w-full h-full">
           <video
@@ -57,7 +59,7 @@
           </video>
         </div>
 
-        <div class="absolute top-4 left-4 flex items-center gap-2 pointer-events-none">
+        <div class="absolute top-4 left-4 flex items-center gap-2 pointer-events-none overflow-y-auto ">
           <span class="bg-[#eb0400] text-white text-[12px] font-bold px-2 py-0.5 rounded shadow-lg">
             LIVE
           </span>
@@ -77,7 +79,7 @@
           </span>
         </div>
       <% else %>
-        <div class="absolute inset-0 flex items-center justify-center bg-[#18181b]">
+        <div class="absolute inset-0 flex items-center justify-center glass rounded-3xl">
           <div class="text-center">
             <div class="relative inline-block mb-4">
               <.svg variant="camera-slash" class="h-10 w-10 text-gray-400 absolute bottom-0" />
@@ -93,7 +95,7 @@
       <% end %>
     </div>
 
-    <div class="p-5 md:p-8 shrink-0">
+    <div class="p-5 md:p-8 shrink-0 glass-pane">
       <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
         <div class="flex items-start gap-4">
           <.link navigate={~p"/users/profile/#{@streamer_name}"} class="relative shrink-0 group">
@@ -190,13 +192,21 @@
   </main>
 
   <%= if @chat_open do %>
-    <.live_component
-      module={KameramaniPhxWeb.ChatLiveComponent}
-      id="chat-component"
-      stream_id={@stream_id}
-      current_user={@current_user.user}
-      streamer_id={@streamer_id}
-      title="Stream Chat"
-    />
+    <div class="sticky top-0 h-screen shrink-0 w-[340px]">
+        <button
+         class="absolute z-50 left-1 top-2"
+         phx-click="toggle_chat">
+    <.svg variant="chevron-right" class="h-4 w-4" />
+  </button>
+      <.live_component
+        module={KameramaniPhxWeb.ChatLiveComponent}
+        id="chat-component"
+        stream_id={@stream_id}
+        current_user={@current_user.user}
+        streamer_id={@streamer_id}
+        title="Stream Chat"
+        show_button={true}
+      />
+    </div>
   <% end %>
 </div>

@@ -26,7 +26,12 @@ config :kameramani_phx, KameramaniPhxWeb.Endpoint,
   secret_key_base: "iBuhry8qaobpmK6IoRQxsT4Mo0ysmbQ57PoAgZnuUooHwElqYbCLZqR+Z5U4mNIi",
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:kameramani_phx, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:kameramani_phx, ~w(--watch)]}
+    tailwind: {Tailwind, :install_and_run, [:kameramani_phx, ~w(
+      --config=tailwind.config.js
+      --input=css/app.css
+      --output=priv/static/assets/app.css
+      --watch
+    )]}
   ]
 
 # ## SSL Support

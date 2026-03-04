@@ -162,4 +162,8 @@ defmodule KameramaniPhxWeb.AuthLive do
     </div>
     """
   end
+
+  def handle_params(_params, _uri, socket) do
+    {:noreply, assign(socket, page_title: "Authentication")}
+  end
 end

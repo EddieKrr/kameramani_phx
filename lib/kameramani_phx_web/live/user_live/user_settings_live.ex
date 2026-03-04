@@ -159,4 +159,8 @@ defmodule KameramaniPhxWeb.UserLive.UserSettingsLive do
   def handle_event("cancel-upload", %{"ref" => ref}, socket) do
     {:noreply, cancel_upload(socket, :profile_picture, ref)}
   end
+
+  def handle_params(_params, _uri, socket) do
+    {:noreply, assign(socket, page_title: "Settings")}
+  end
 end
