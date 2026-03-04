@@ -16,28 +16,30 @@ defmodule KameramaniPhxWeb.ChatLiveComponent do
   def mount(socket) do
     {:ok,
      socket
-     |> assign(form: to_form(@initial_state, as: :chat), subscribed: false)}
+     |> assign(form: to_form(@initial_state, as: :chat), subscribed: false)
+     |> stream(:messages, [])}
   end
 
   @impl true
   def update(assigns, socket) do
-    stream_id = assigns.stream_id
+    socket = assign(socket, Map.drop(assigns, [:new_message]))
+    stream_id = assigns[:stream_id] || socket.assigns[:stream_id]
 
     # If we received a new_message via send_update from parent LiveView
     socket =
       if message = assigns[:new_message] do
         stream_insert(socket, :messages, message)
       else
-        assign(socket, assigns)
+        socket
       end
 
     socket =
-      if !socket.assigns.subscribed do
+      if stream_id && !socket.assigns.subscribed do
         if connected?(socket), do: subscribe(stream_id)
         messages = Chat.list_messages_for_stream(stream_id)
 
         socket
-        |> stream(:messages, messages)
+        |> stream(:messages, messages, reset: true)
         |> assign(subscribed: true)
       else
         socket

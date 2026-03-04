@@ -14,9 +14,9 @@ defmodule KameramaniPhxWeb.CardComponents do
 
   def card(assigns) do
     ~H"""
-    <article>
+    <article class="">
       <.link navigate={~p"/watch/#{@streamer}"} class="group block">
-        <div class="relative aspect-video w-full bg-gradient-to-tl from-black to-slate-700 group-hover:scale-[1.03] group-hover:z-50 group-hover:shadow-2xl transition-all duration-300 ease-in-out rounded-lg overflow-hidden">
+        <div class="relative w-full bg-gradient-to-tl from-black to-slate-700 group-hover:scale-[1.03] group-hover:z-50 group-hover:shadow-2xl transition-all duration-300 ease-in-out rounded-lg overflow-hidden">
           <%= if @thumbnail_url do %>
             <img
               src={@thumbnail_url}
@@ -40,7 +40,7 @@ defmodule KameramaniPhxWeb.CardComponents do
           </div>
         </div>
       </.link>
-      <div class="flex flex-row gap-3 mt-3">
+      <div class="flex flex-row gap-3 mt-3 rounded-lg p-4">
         <img class="h-10 w-10 rounded-full" alt={@streamer} src={@avatar} />
         <div class="flex flex-col min-w-0">
           <div class="font-bold text-white truncate group-hover:text-blue-300 transition-colors">
