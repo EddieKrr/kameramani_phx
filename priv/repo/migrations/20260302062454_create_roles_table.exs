@@ -35,7 +35,9 @@ defmodule KameramaniPhx.Repo.Migrations.CreateRolesTable do
     create table(:role_permissions, primary_key: false) do
       add :id, :uuid, primary_key: true, default: fragment("gen_random_uuid()")
       add :role_id, references(:roles, type: :uuid, on_delete: :delete_all), null: false
-      add :permission_id, references(:permissions, type: :uuid, on_delete: :delete_all), null: false
+
+      add :permission_id, references(:permissions, type: :uuid, on_delete: :delete_all),
+        null: false
     end
 
     create index(:role_permissions, [:role_id])

@@ -18,7 +18,13 @@
     </script>
   </head>
 
-  <body class="bg-img bg-fixed bg-center bg-no-repeat bg-cover text-white">
+  <body
+    class="relative bg-fixed bg-cover text-white bg-opacity-50 backdrop-blur-sm"
+    style="background-image: url(/images/bg.jpg);"
+  >
+    <div class="hidden shrink-0 h-screen w-full absolute top-0 left-0 z-0">
+      <img src={~p"/images/bg.jpg"} alt="background" class="h-full w-full object-cover" />
+    </div>
     {@inner_content}
   </body>
 </html>

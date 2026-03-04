@@ -81,26 +81,26 @@
           </div>
 
           <%!-- Profile Details Form --%>
-          <div class="flex-1 w-full space-y-6">
+          <div class="w-full space-y-6">
             <.input
               field={@profile_form[:username]}
               label="Username"
               class="bg-slate-900/50 border-2 border-slate-700 text-white rounded-2xl focus:border-blue-500"
             />
 
-            <div class="flex-1 w-full space-y-6">
+            <div class="w-full space-y-6">
               <.input
                 field={@profile_form[:bio]}
                 type="textarea"
                 label="Biography"
                 placeholder="Let your fans know who you are..."
-                class="bg-slate-900/50 border-2 border-slate-700 text-white rounded-2xl min-h-[120px] focus:border-blue-500 focus:outline-none"
+                class="bg-slate-900/50 border-2 border-slate-700 text-white rounded-2xl min-h-[120px] focus:border-blue-500 focus:outline-none w-full"
               />
 
               <div class="flex justify-end">
                 <.button
                   phx-disable-with="Saving..."
-                  class="btn-primary rounded-xl px-10 py-3 font-bold uppercase tracking-wider shadow-lg shadow-blue-500/20"
+                  class="glass-button"
                 >
                   Update Profile
                 </.button>
@@ -113,7 +113,7 @@
 
     <%!-- EMAIL SECTION --%>
     <section class="glass-pane">
-      <h2 class="text-2xl font-title font-bold text-blue-400 mb-6 flex items-center gap-2">
+      <h2 class="spicy-head">
         <.svg variant="envelope" class="h-6 w-6" />Email Address
       </h2>
 
@@ -140,7 +140,7 @@
         <div class="flex justify-end">
           <.button
             phx-disable-with="Sending Link..."
-            class="rounded-xl px-8 py-3 bg-slate-700 hover:bg-slate-600 transition-colors"
+            class="glass-button"
           >
             Update Email
           </.button>
@@ -198,12 +198,20 @@
         <div class="flex justify-end">
           <.button
             phx-disable-with="Saving..."
-            class="rounded-xl px-8 py-3 bg-slate-700 hover:bg-slate-600"
+            class="glass-button"
           >
             Save Password
           </.button>
         </div>
       </.form>
+    </section>
+    <section class="glass-pane flex flex-col">
+      <h2 class="spicy-head">Stream Key Settings</h2>
+      <.link 
+        class="glass-button justify-end text-center"
+        navigate ={~p"/users/settings/stream-key"}
+        >Go To Key
+      </.link>
     </section>
   </div>
 </div>

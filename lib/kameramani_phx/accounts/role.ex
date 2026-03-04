@@ -4,10 +4,10 @@ defmodule KameramaniPhx.Accounts.Role do
   import Ecto.Changeset
 
   @permission_types [
-   :Delete_saved_streams,
-   :Ban_users,
-   :Cancel_streams,
-   :Warn_users,
+    :Delete_saved_streams,
+    :Ban_users,
+    :Cancel_streams,
+    :Warn_users,
     :Manage_users,
     :Manage_streams,
     :Moderate_content,
@@ -15,7 +15,7 @@ defmodule KameramaniPhx.Accounts.Role do
     :Manage_roles,
     :Access_sales_dashboard,
     :Manage_conversations,
-    :Manage_streams,
+    :Manage_streams
   ]
 
   def permission_types, do: @permission_types
@@ -26,7 +26,11 @@ defmodule KameramaniPhx.Accounts.Role do
     field :name, :string
 
     many_to_many :users, KameramaniPhx.Accounts.User, join_through: "user_roles"
-    many_to_many :permissions, KameramaniPhx.Accounts.Permission, join_through: "role_permissions", on_replace: :delete
+
+    many_to_many :permissions, KameramaniPhx.Accounts.Permission,
+      join_through: "role_permissions",
+      on_replace: :delete
+
     timestamps()
   end
 

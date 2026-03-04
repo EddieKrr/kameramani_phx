@@ -51,8 +51,11 @@ defmodule KameramaniPhxWeb.Layouts do
       |> assign(:is_chat_page, is_chat_page)
 
     ~H"""
-    <header class={"navbar sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-6 lg:px-8 #{if !is_chat_page, do: "mx-auto max-w-[1440px]"}"}>
-      <div class={"flex items-center gap-4 justify-between bg-slate-800/60 backdrop-blur-md px-4 sm:px-6 py-3 w-full #{if !is_chat_page, do: "rounded-xl bg-slate-800/60 backdrop-blur-sm border-2 border-slate-700"}"}>
+    <header
+      class={"navbar sticky top-0 left-0 right-0 z-50 flex items-center justify-between #{if @is_chat_page, do: "mx-auto w-full max-w-[1440px]", else: "px-4 sm:px-6 lg:px-8"}"}
+      style="width: 100%;"
+    >
+      <div class={"flex items-center gap-4 justify-between glass-pane px-4 w-full sm:px-6 py-3 mx-auto #{if @is_chat_page, do: "rounded-xl w-full"}"}>
         <div class="flex">
           <.link
             href="/"
@@ -107,8 +110,8 @@ defmodule KameramaniPhxWeb.Layouts do
                     <.link
                       navigate={~p"/directory"}
                       class="menu-item"
-                      >
-                      <.svg variant = "folder" class="h-5 w-5"/> Categories
+                    >
+                      <.svg variant="folder" class="h-5 w-5" /> Categories
                     </.link>
                     <.link
                       href={~p"/users/log-out"}
@@ -122,7 +125,7 @@ defmodule KameramaniPhxWeb.Layouts do
               </div>
             </div>
           </div>
-          <% else %>
+        <% else %>
           <.link
             navigate={~p"/auth"}
             class="hover:bg-blue-400 bg-transparent border-2 border-blue-500/60 text-white px-4 py-2 rounded-full transition-colors duration-300 ease-in-out"
@@ -162,7 +165,7 @@ defmodule KameramaniPhxWeb.Layouts do
 
   def auth(assigns) do
     ~H"""
-    <div class="min-h-screen bg-[#0e0e10] text-white flex flex-col items-center justify-center">
+    <div class="min-h-screen glass-pane text-white flex flex-col items-center justify-center">
       <%= if @inner_content do %>
         {@inner_content}
       <% else %>

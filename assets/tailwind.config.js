@@ -24,7 +24,7 @@ module.exports = {
         "surface": "#FFFFFF",
       },
       backgroundImage: {
-        "img": "url('/assets/static/images/bg.jpg')",
+        "img": "url('/images/bg.jpg')",
       },
     },
   },

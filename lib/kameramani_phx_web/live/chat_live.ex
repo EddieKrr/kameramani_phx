@@ -102,7 +102,8 @@ defmodule KameramaniPhxWeb.ChatLive do
               left_sidebar_open: true,
               chat_open: true,
               stream_started_at: stream.updated_at || DateTime.utc_now(),
-              recommended_streams: recommended_streams
+              recommended_streams: recommended_streams,
+              page_title: "#{user.username}'s Stream"
             }
 
             {:ok,
