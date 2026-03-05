@@ -1,6 +1,43 @@
 <div class="min-h-screen">
   <div class="max-w-7xl mx-auto px-4 py-8">
     <div class="aspect-video relative bg-black w-full rounded-2xl mb-8 border border-white/10">
+      
+      <%= if @is_live do %>
+    <%!-- THE LIVE PLAYER --%>
+    <div class="absolute inset-0 w-full h-full">
+      <%!-- You can use a custom component or an iframe/video tag here --%>
+      <div class="relative w-full h-full group">
+         <%!-- Mock Player or your HLS/WebRTC Component --%>
+          <video
+            id="video-player"
+            phx-hook="VideoPlayer"
+            data-hls-url={~p"/live/#{@stream_id}/index.m3u8"}
+            class="w-full h-full object-contain"
+            autoplay
+            muted
+            playsinline
+          >
+          </video>
+         
+         <%!-- Live Badge Overlay --%>
+         <div class="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded uppercase tracking-widest animate-pulse">
+           Live
+         </div>
+      </div>
+    </div>
+  <% else %>
+    <%!-- THE OFFLINE STATE --%>
+    <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
+      <div class="bg-slate-800/50 p-8 rounded-full mb-4 border border-white/5">
+         <.svg variant="digicam" class="h-16 w-16 text-slate-500" />
+      </div>
+      <h3 class="text-2xl font-title font-bold text-white uppercase tracking-tight">
+        {@user.username} is currently offline
+      </h3>
+      <p class="text-slate-400 mt-2">Check out their past VODs below!</p>
+    </div>
+  <% end %>
+
       <div class="absolute bottom-0 ml-4">
         <.profile_header
           username={@user.username}

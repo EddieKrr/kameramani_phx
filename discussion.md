@@ -13,3 +13,14 @@
 - Publish controls: support “store VODs” and “auto-publish” toggles plus excluded categories, with unpublished VODs requiring review before showing publicly.
 - Indexing/search: store metadata (title, category, tags, duration, thumbnail, streamer, start/end time) for discovery and filtering.
 - Storage backend: compatible with local disk or object storage (e.g., R2/S3) as long as manifests and segments are quickly accessible by the CDN.
+
+## 2026-03-04 Chat Crash Discussion
+
+- Reported runtime error: `KeyError key :stream_id not found` in `KameramaniPhxWeb.ChatLiveComponent.update/2`.
+- Cause: parent LiveViews (`ChatLive` and `StudioLive`) call `send_update/2` with partial assigns (`id`, `new_message`) while component update expected `assigns.stream_id` on every call.
+- Decision: keep `stream_id` as a required component state value, but do not require it in every incremental update payload.
+- Implemented approach:
+  - resolve stream id from `assigns[:stream_id] || socket.assigns[:stream_id]`
+  - initialize `:messages` stream at mount
+  - only subscribe/load initial history when stream id exists and component has not subscribed yet
+- Outcome: incremental chat updates no longer crash when `send_update/2` omits `stream_id`; compile passes.
