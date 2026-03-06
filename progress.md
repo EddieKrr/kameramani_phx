@@ -132,3 +132,25 @@
 
 ## Known Issues
 - `mix precommit` fails in this environment due to Mix PubSub socket permissions (`:eperm`).
+
+# Progress Log — 2026-03-04
+
+## Summary
+- Fixed LiveComponent crash in stream chat caused by `KeyError: key :stream_id not found` during `send_update/2`.
+- Made chat component updates resilient when partial assigns are sent (`id` + `new_message` only).
+
+## Changes by Area
+
+### Chat Reliability
+- `lib/kameramani_phx_web/components/chat_live_component.ex`
+  - Initialize chat stream in `mount/1` with `stream(:messages, [])`.
+  - In `update/2`, assign all incoming fields except `:new_message`, then resolve `stream_id` from `assigns[:stream_id] || socket.assigns[:stream_id]`.
+  - Insert incremental messages safely with `stream_insert/3` for `send_update` paths.
+  - Guard initial subscribe/history fetch behind `stream_id && !subscribed`.
+  - Load initial history with `stream(..., reset: true)` to avoid stale state.
+
+## Validation
+- `mix compile` passes after the patch.
+- `mix precommit` still fails due pre-existing warnings-as-errors unrelated to this change:
+  - duplicate `get_role_by_name/1` clause in `lib/kameramani_phx/accounts.ex`
+  - undefined `KameramaniPhx.Socials.create_social_account/1` in test fixtures

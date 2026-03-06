@@ -8,7 +8,11 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
   alias KameramaniPhx.Streaming
 
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, user: nil, is_live: false)}
+    if connected?(socket) do
+      Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "streams:all")
+    end
+
+    {:ok, assign(socket, user: nil, is_live: false, stream_id: nil, active_stream: nil)}
   end
 
   def handle_params(%{"username" => username} = params, _uri, socket) do
@@ -29,9 +33,15 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
 
         social_accounts = Socials.list_user_socials(user)
 
+        current_user =
+          case socket.assigns[:current_user] do
+            %{user: user} -> user
+            _ -> nil
+          end
+
         is_following =
-          if socket.assigns.current_user.user do
-            Accounts.is_following?(socket.assigns.current_user.user, user)
+          if current_user do
+            Accounts.is_following?(current_user, user)
           else
             false
           end
@@ -41,13 +51,7 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
 
         tab = Map.get(params, "tab", "home")
 
-        query =
-          from(v in KameramaniPhx.Streaming.Stream,
-            where: v.user_id == ^user.id and v.is_live == false,
-            preload: [:user]
-          )
-
-        vods = Repo.all(query)
+        vods = list_vods(user.id)
 
         socket =
           socket
@@ -61,9 +65,33 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
           |> assign(follower_count: Accounts.get_followers_count(user))
           |> assign(following_count: Accounts.get_following_count(user))
           |> assign(is_live: !!active_stream)
+          |> assign(stream_id: if(active_stream, do: active_stream.id, else: nil))
+          |> assign(active_stream: active_stream)
           |> assign(page_title: "Profile")
 
         {:noreply, socket}
+    end
+  end
+
+  def handle_info({:stream_status_updated, stream}, socket) do
+    profile_user = socket.assigns[:user]
+
+    if profile_user && profile_user.id == stream.user_id do
+      active_stream =
+        if stream.is_live do
+          stream
+        else
+          nil
+        end
+
+      {:noreply,
+       socket
+       |> assign(is_live: stream.is_live)
+       |> assign(stream_id: if(active_stream, do: active_stream.id, else: nil))
+       |> assign(active_stream: active_stream)
+       |> assign(vods: list_vods(profile_user.id))}
+    else
+      {:noreply, socket}
     end
   end
 
@@ -101,5 +129,15 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
        |> put_flash(:info, "Please log in to follow")
        |> push_navigate(to: ~p"/auth")}
     end
+  end
+
+  defp list_vods(user_id) do
+    query =
+      from(v in KameramaniPhx.Streaming.Stream,
+        where: v.user_id == ^user_id and v.is_live == false,
+        preload: [:user]
+      )
+
+    Repo.all(query)
   end
 end
