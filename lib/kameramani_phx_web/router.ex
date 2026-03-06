@@ -114,6 +114,7 @@ defmodule KameramaniPhxWeb.Router do
       ],
       layout: {KameramaniPhxWeb.Layouts, :app} do
       live "/admin", KameramaniPhxWeb.AdminLive
+      live "/admin/:tab", KameramaniPhxWeb.AdminLive
     end
 
     live_session :moderator_only,

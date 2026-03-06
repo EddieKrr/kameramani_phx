@@ -1,6 +1,30 @@
-<div>
-  <h1 class="text-2xl font-bold mb-4">Admin Dashboard</h1>
-  <p>
-    Welcome to the admin dashboard! Here you can manage users, view analytics, and perform administrative tasks.
-  </p>
+<% active_index = Enum.find_index(@menu_items, fn i -> i.id == @active_tab end) %>
+<div class="h-screen grid grid-cols-6 bg-blue-200">
+  <div class="bg-white col-start-1 col-span-1 text-black flex flex-col font-medium rounded-r-3xl">
+    <div class="flex items-center justify-center py-6 border-b-2 border-black mb-4">
+      <span class="font-bold">Admin Tools</span>
+    </div>
+    <%= for {item, index} <- Enum.with_index(@menu_items) do %>
+      <.sidebar_link
+        item={item}
+        active={index == active_index}
+        prev_active={index == active_index + 1}
+        next_active={index == active_index - 1}
+      />
+    <% end %>
+  </div>
+  <%= case @active_tab do %>
+      <% "users" -> %>
+        <.user_tab></.user_tab>
+      <% "categories" -> %>
+        <.category_tab></.category_tab>
+      <% "tags" -> %>
+        <.tag_tab></.tag_tab>
+      <% "access" -> %>
+        <.access_tab></.access_tab>
+      <% "settings" -> %>
+        <.settings_tab></.settings_tab>
+     <!-- <% "overview" -> %>
+        <.overview></.overview> -->
+    <% end %> 
 </div>
