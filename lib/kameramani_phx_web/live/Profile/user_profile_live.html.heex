@@ -1,86 +1,199 @@
-<div class="min-h-screen">
-  <div class="max-w-7xl mx-auto px-4 py-8">
-    <div class="aspect-video relative bg-black w-full rounded-2xl mb-8 border border-white/10">
-      
-      <%= if @is_live do %>
-    <%!-- THE LIVE PLAYER --%>
-    <div class="absolute inset-0 w-full h-full">
-      <%!-- You can use a custom component or an iframe/video tag here --%>
-      <div class="relative w-full h-full group">
-         <%!-- Mock Player or your HLS/WebRTC Component --%>
-          <video
-            id="video-player"
-            phx-hook="VideoPlayer"
-            data-hls-url={~p"/live/#{@stream_id}/index.m3u8"}
-            class="w-full h-full object-contain"
-            autoplay
-            muted
-            playsinline
-          >
-          </video>
-         
-         <%!-- Live Badge Overlay --%>
-         <div class="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded uppercase tracking-widest animate-pulse">
-           Live
-         </div>
+
+  <div class="min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      <div class="aspect-video relative bg-black w-full rounded-2xl mb-8 border border-white/10">
+        <%= if @is_live do %>
+          <%!-- THE LIVE PLAYER --%>
+          <div class="absolute inset-0 w-full h-full">
+            <div class="relative w-full h-full group">
+              <video
+                id="video-player"
+                phx-hook="VideoPlayer"
+                data-hls-url={~p"/live/#{@stream_id}/index.m3u8"}
+                class="w-full h-full object-contain"
+                autoplay
+                muted
+                playsinline
+              >
+              </video>
+
+              <div class="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded uppercase tracking-widest animate-pulse">
+                Live
+              </div>
+            </div>
+          </div>
+        <% else %>
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
+            <div class="bg-slate-800/50 p-8 rounded-full mb-4 border border-white/5">
+              <.svg variant="digicam" class="h-16 w-16 text-slate-500" />
+            </div>
+            <h3 class="text-2xl font-title font-bold text-white uppercase tracking-tight">
+              {@user.username} is currently offline
+            </h3>
+            <p class="text-slate-400 mt-2">Check out their past VODs below!</p>
+          </div>
+        <% end %>
+
+        <div class="absolute bottom-0 ml-4">
+          <.profile_header
+            username={@user.username}
+            name={@user.name}
+            avatar_url={@avatar_url}
+            is_live={@is_live}
+          />
+        </div>
+      </div>
+      <div class="flex">
+        <.profile_tab
+          patch={~p"/users/profile/#{@user.username}/home"}
+          label="Home"
+          is_active={@active_tab == "home"}
+        />
+        <.profile_tab
+          patch={~p"/users/profile/#{@user.username}/about"}
+          label="About"
+          is_active={@active_tab == "about"}
+        />
+        <.profile_tab
+          patch={~p"/users/profile/#{@user.username}/videos"}
+          label="Videos"
+          is_active={@active_tab == "videos"}
+        />
+      </div>
+
+      <div class="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+        <div class="flex flex-wrap items-center gap-2 text-xs">
+          <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[#d8d8dd]">
+            Followers: {@follower_count}
+          </span>
+          <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[#d8d8dd]">
+            Following: {@following_count}
+          </span>
+          <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[#d8d8dd]">
+            Subscribers: {@subscriber_count}
+          </span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <%= if @current_user.user && @current_user.user.id != @user.id do %>
+            <button
+              phx-click="toggle_follow"
+              class={"px-4 py-1.5 rounded font-bold text-sm transition-colors flex items-center gap-2 shadow " <>
+                if(@is_following, do: "bg-gray-700 hover:bg-gray-600 text-white", else: "bg-indigo-400 hover:bg-indigo-500 text-black")}
+            >
+              <%= if @is_following do %>
+                <.svg variant="heart-solid" class="w-4 h-4 text-red-500" /> Unfollow
+              <% else %>
+                <.svg variant="heart" class="w-4 h-4" /> Follow
+              <% end %>
+            </button>
+            <button
+              phx-click="open_subscribe_modal"
+              class={"px-4 py-1.5 rounded font-bold text-sm transition-colors flex items-center gap-2 shadow " <>
+                if(@is_subscribed, do: "bg-emerald-700 hover:bg-emerald-600 text-white", else: "bg-amber-400 hover:bg-amber-300 text-black")}
+            >
+              <.svg variant="heart" class="w-4 h-4" />
+              <%= if @is_subscribed do %>
+                Manage Sub
+              <% else %>
+                Subscribe
+              <% end %>
+            </button>
+          <% else %>
+            <%= if !@current_user.user do %>
+              <button
+                phx-click="toggle_follow"
+                class="bg-[#bf94ff] hover:bg-[#a970ff] text-black px-4 py-1.5 rounded font-bold text-sm transition-colors flex items-center gap-2 shadow"
+              >
+                <.svg variant="heart" class="w-4 h-4" /> Follow
+              </button>
+              <button
+                phx-click="open_subscribe_modal"
+                class="bg-amber-400 hover:bg-amber-300 text-black px-4 py-1.5 rounded font-bold text-sm transition-colors flex items-center gap-2 shadow"
+              >
+                <.svg variant="heart" class="w-4 h-4" /> Subscribe
+              </button>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="mt-8">
+        <%= case @active_tab do %>
+          <% "about" -> %>
+            <.about_section
+              username={@user.username}
+              email={@user.email}
+              member_since={@time}
+              bio={@user.bio}
+            />
+          <% "videos" -> %>
+            <h4 class="font-title text-3xl capitalize text-indigo-300">
+              Watch {@user.username}'s Past Streams
+            </h4>
+            <.video_section vods={@vods} />
+          <% "home" -> %>
+            <.home_section />
+        <% end %>
       </div>
     </div>
-  <% else %>
-    <%!-- THE OFFLINE STATE --%>
-    <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
-      <div class="bg-slate-800/50 p-8 rounded-full mb-4 border border-white/5">
-         <.svg variant="digicam" class="h-16 w-16 text-slate-500" />
+  </div>
+
+  <%= if @show_subscribe_modal do %>
+    <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4">
+      <div class="w-full max-w-xl rounded-2xl border border-white/10 bg-[#18181b] p-6 shadow-2xl">
+        <div class="mb-5 flex items-start justify-between">
+          <div>
+            <h3 class="text-xl font-bold text-white">Subscribe to {@user.username}</h3>
+            <p class="text-sm text-[#adadb8]">
+              Choose a renewal tier. We charge in USD and store converted KES.
+            </p>
+          </div>
+          <button phx-click="close_subscribe_modal" class="rounded-md p-1 text-[#adadb8] hover:bg-white/10">
+            <.svg variant="x" class="h-5 w-5" />
+          </button>
+        </div>
+
+        <div class="grid gap-3">
+          <button
+            :for={option <- @tier_options}
+            phx-click="select_tier"
+            phx-value-tier={option.tier}
+            class={[
+              "w-full rounded-xl border px-4 py-3 text-left transition-colors",
+              @selected_tier == option.tier && "border-amber-300 bg-amber-300/10",
+              @selected_tier != option.tier && "border-white/10 bg-white/5 hover:bg-white/10"
+            ]}
+          >
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="font-semibold text-white">{option.tier} month{if option.tier > 1, do: "s", else: ""}</p>
+                <p class="text-xs text-[#adadb8]">
+                  USD {option.amount_usd} • KES {option.amount_kes}
+                </p>
+              </div>
+              <%= if @selected_tier == option.tier do %>
+                <span class="rounded-full bg-amber-300 px-2 py-0.5 text-xs font-bold text-black">Selected</span>
+              <% end %>
+            </div>
+          </button>
+        </div>
+
+        <div class="mt-5 flex justify-end gap-2">
+          <button
+            phx-click="close_subscribe_modal"
+            class="rounded-lg border border-white/10 px-4 py-2 text-sm font-semibold text-[#d2d2da] hover:bg-white/5"
+          >
+            Cancel
+          </button>
+          <button
+            phx-click="subscribe_to_tier"
+            class="rounded-lg bg-amber-400 px-4 py-2 text-sm font-bold text-black hover:bg-amber-300"
+          >
+            Confirm Subscription
+          </button>
+        </div>
       </div>
-      <h3 class="text-2xl font-title font-bold text-white uppercase tracking-tight">
-        {@user.username} is currently offline
-      </h3>
-      <p class="text-slate-400 mt-2">Check out their past VODs below!</p>
     </div>
   <% end %>
 
-      <div class="absolute bottom-0 ml-4">
-        <.profile_header
-          username={@user.username}
-          name={@user.name}
-          avatar_url={@avatar_url}
-          is_live={@is_live}
-        />
-      </div>
-    </div>
-    <div class="flex">
-      <.profile_tab
-        patch={~p"/users/profile/#{@user.username}/home"}
-        label="Home"
-        is_active={@active_tab == "home"}
-      />
-      <.profile_tab
-        patch={~p"/users/profile/#{@user.username}/about"}
-        label="About"
-        is_active={@active_tab == "about"}
-      />
-      <.profile_tab
-        patch={~p"/users/profile/#{@user.username}/videos"}
-        label="Videos"
-        is_active={@active_tab == "videos"}
-      />
-    </div>
-    <div class="mt-8">
-      <%= case @active_tab do %>
-        <% "about" -> %>
-          <.about_section
-            username={@user.username}
-            email={@user.email}
-            member_since={@time}
-            bio={@user.bio}
-          />
-        <% "videos" -> %>
-          <h4 class="font-title text-3xl capitalize text-indigo-300">
-            Watch {@user.username}'s Past Streams
-          </h4>
-          <.video_section vods={@vods} />
-        <% "home" -> %>
-          <.home_section />
-      <% end %>
-    </div>
-  </div>
-</div>

@@ -36,6 +36,10 @@ defmodule KameramaniPhx.Accounts.User do
       join_through: "follows",
       join_keys: [followed_id: :id, follower_id: :id]
 
+    many_to_many :subscribers, KameramaniPhx.Accounts.User,
+      join_through: "subscriptions",
+      join_keys: [streamer_id: :id, subscriber_id: :id]
+
     timestamps(type: :utc_datetime)
   end
 

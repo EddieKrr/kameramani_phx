@@ -6,11 +6,12 @@ defmodule KameramaniPhx.Accounts do
   import Ecto.Query, warn: false
   alias KameramaniPhx.Repo
   alias KameramaniPhx.Accounts.{User, UserToken, UserNotifier, Follow, Role, Permission}
+  alias KameramaniPhx.Subscriptions
 
   ## Database getters
 
   def get_all_users do
-    Repo.all(User) |> Repo.preload(:social_accounts)
+    Repo.all(User) |> Repo.preload(:social_accounts) |> Repo.preload(:roles)
   end
 
   # list users on nav
@@ -143,7 +144,7 @@ defmodule KameramaniPhx.Accounts do
     |> Repo.update()
   end
 
-  # lets make the user followable by adding a followers and following association
+  # make the user followable by adding a followers and following assoc
   def follow_user(follower, following) do
     follower_id = if is_map(follower), do: follower.id, else: follower
     followed_id = if is_map(following), do: following.id, else: following
@@ -198,6 +199,11 @@ defmodule KameramaniPhx.Accounts do
     query = from f in Follow, where: f.follower_id == ^user_id
     Repo.aggregate(query, :count)
   end
+
+  def subscribe_to_streamer(streamer_id, user_id, tier) when is_integer(tier) do
+    Subscriptions.subscribe_to_streamer(user_id, streamer_id, tier)
+  end
+
 
   def deliver_user_update_email_instructions(%User{} = user, current_email, update_email_url_fun)
       when is_function(update_email_url_fun, 1) do
