@@ -224,11 +224,12 @@
 
   <%= if @chat_open do %>
     <div class="sticky top-0 h-screen shrink-0 w-[340px]">
-        <button
-         class="absolute z-50 left-1 top-2"
-         phx-click="toggle_chat">
-    <.svg variant="chevron-right" class="h-4 w-4" />
-  </button>
+      <button
+        class="absolute z-50 left-1 top-2"
+        phx-click="toggle_chat"
+      >
+        <.svg variant="chevron-right" class="h-4 w-4" />
+      </button>
       <.live_component
         module={KameramaniPhxWeb.ChatLiveComponent}
         id="chat-component"
