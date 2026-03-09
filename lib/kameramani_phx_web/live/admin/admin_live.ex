@@ -8,7 +8,9 @@ defmodule KameramaniPhxWeb.AdminLive do
       Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "streams:all")
     end
 
-    menu_items = [
+    current_user = socket.assigns.current_user.user
+
+    all_menu_items = [
       %{id: "users", label: "Users", path: ~p"/admin/users"},
       %{id: "categories", label: "Categories", path: ~p"/admin/categories"},
       %{id: "tags", label: "Tags", path: ~p"/admin/tags"},
@@ -16,7 +18,17 @@ defmodule KameramaniPhxWeb.AdminLive do
       %{id: "settings", label: "Settings", path: ~p"/admin/settings"}
     ]
 
+    is_moderator = KameramaniPhx.Accounts.user_has_role?(current_user, "moderator")
+
+    menu_items =
+      if is_moderator do
+        Enum.reject(all_menu_items, &(&1.id in ["access", "settings"]))
+      else
+        all_menu_items
+      end
+
     active_tab = "users"
+
 
     users = KameramaniPhx.Accounts.get_all_users()
 
@@ -43,6 +55,8 @@ defmodule KameramaniPhxWeb.AdminLive do
 
   @impl true
   def handle_params(_, _, socket) do
+    current_user = socket.assigns.current_user
+
     {:noreply, assign(socket, active_tab: "users")}
   end
 

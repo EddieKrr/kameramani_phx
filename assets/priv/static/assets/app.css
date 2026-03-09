@@ -4877,11 +4877,6 @@ select {
   border-color: rgb(124 246 255 / var(--tw-border-opacity));
 }
 
-.border-amber-300 {
-  --tw-border-opacity: 1;
-  border-color: rgb(252 211 77 / var(--tw-border-opacity));
-}
-
 .border-base-200 {
   border-color: var(--color-base-200);
 }
@@ -5054,11 +5049,6 @@ select {
   background-color: rgb(21 19 26 / var(--tw-bg-opacity));
 }
 
-.bg-\[\#18181b\] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(24 24 27 / var(--tw-bg-opacity));
-}
-
 .bg-\[\#18181b\]\/80 {
   background-color: rgb(24 24 27 / 0.8);
 }
@@ -5101,20 +5091,6 @@ select {
 .bg-amber-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(254 243 199 / var(--tw-bg-opacity));
-}
-
-.bg-amber-300 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(252 211 77 / var(--tw-bg-opacity));
-}
-
-.bg-amber-300\/10 {
-  background-color: rgb(252 211 77 / 0.1);
-}
-
-.bg-amber-400 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(251 191 36 / var(--tw-bg-opacity));
 }
 
 .bg-amber-50 {
@@ -6520,11 +6496,6 @@ select {
 .hover\:bg-\[\#a970ff\]:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(169 112 255 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-amber-300:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(252 211 77 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-base-200:hover {
