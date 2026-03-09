@@ -4,6 +4,8 @@ defmodule KameramaniPhx.Streaming do
   """
 
   import Ecto.Query, warn: false
+  alias KameramaniPhx.Accounts
+  alias KameramaniPhx.Notifications
   alias KameramaniPhx.Repo
 
   alias KameramaniPhx.Streaming.Stream
@@ -163,6 +165,13 @@ defmodule KameramaniPhx.Streaming do
          |> Stream.changeset(attrs)
          |> Repo.update() do
       {:ok, updated_stream} ->
+        if !stream.is_live && updated_stream.is_live do
+          Notifications.notify_stream_went_live(
+            Accounts.get_user!(updated_stream.user_id),
+            updated_stream
+          )
+        end
+
         Phoenix.PubSub.broadcast(
           KameramaniPhx.PubSub,
           "streams:#{updated_stream.id}",

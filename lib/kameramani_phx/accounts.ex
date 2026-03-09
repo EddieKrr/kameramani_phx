@@ -6,19 +6,17 @@ defmodule KameramaniPhx.Accounts do
   import Ecto.Query, warn: false
   alias KameramaniPhx.Repo
   alias KameramaniPhx.Accounts.{User, UserToken, UserNotifier, Follow, Role, Permission}
+  alias KameramaniPhx.Notifications
+  alias KameramaniPhx.Subscriptions.Subscription
   alias KameramaniPhx.Subscriptions
   alias KameramaniPhx.Streaming.Stream
 
   ## Database getters
 
   def get_all_users do
-    query =
-      from u in User,
-        left_join: s in Stream,
-        on: s.user_id == u.id,
-        select_merge: %{is_live: coalesce(s.is_live, false)}
-
-    Repo.all(query)
+    User
+    |> with_user_data()
+    |> Repo.all()
     |> Repo.preload(:social_accounts)
     |> Repo.preload(:roles)
   end
@@ -35,27 +33,35 @@ defmodule KameramaniPhx.Accounts do
         order_by: [asc: u.username],
         limit: 8
       )
+      |> with_user_data()
       |> Repo.all()
+      |> Repo.preload(:social_accounts)
+      |> Repo.preload(:roles)
     end
   end
 
   def get_user_by_email(email) when is_binary(email) do
     Repo.get_by(User, email: email)
+    |> populate_user_data()
   end
 
   def get_user_by_username(username) when is_binary(username) do
     Repo.get_by(User, username: username)
     |> Repo.preload(:social_accounts)
     |> Repo.preload(:roles)
+    |> populate_user_data()
   end
 
   def get_user_by_email_and_password(email, password)
       when is_binary(email) and is_binary(password) do
     user = Repo.get_by(User, email: email)
-    if user && User.valid_password?(user, password), do: user
+    if user && User.valid_password?(user, password), do: populate_user_data(user)
   end
 
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do
+    Repo.get!(User, id)
+    |> populate_user_data()
+  end
 
   ## User registration
 
@@ -100,13 +106,20 @@ defmodule KameramaniPhx.Accounts do
 
   def get_user_by_session_token(token) do
     {:ok, query} = UserToken.verify_session_token_query(token)
-    Repo.one(query)
+
+    case Repo.one(query) do
+      {%User{} = user, token_inserted_at} ->
+        {populate_user_data(user), token_inserted_at}
+
+      other ->
+        other
+    end
   end
 
   def get_user_by_magic_link_token(token) do
     with {:ok, query} <- UserToken.verify_magic_link_token_query(token),
          {user, _token} <- Repo.one(query) do
-      user
+      populate_user_data(user)
     else
       _ -> nil
     end
@@ -160,7 +173,8 @@ defmodule KameramaniPhx.Accounts do
 
     now = DateTime.utc_now() |> DateTime.truncate(:second)
 
-    Repo.insert_all(
+    {count, _} =
+      Repo.insert_all(
       Follow,
       [
         [
@@ -172,6 +186,10 @@ defmodule KameramaniPhx.Accounts do
       ],
       on_conflict: :nothing
     )
+
+    if count > 0 and follower_id != followed_id do
+      Notifications.notify_new_follower(get_user!(follower_id), get_user!(followed_id))
+    end
   end
 
   # unfollow a user
@@ -311,6 +329,60 @@ defmodule KameramaniPhx.Accounts do
     Enum.any?(user.roles, fn role ->
       Enum.any?(role.permissions, fn perm -> perm.slug == permission_slug end)
     end)
+  end
+
+  defp with_user_data(query) do
+    follower_counts =
+      from(f in Follow,
+        group_by: f.followed_id,
+        select: %{user_id: f.followed_id, follower_count: count(f.id)}
+      )
+
+    following_counts =
+      from(f in Follow,
+        group_by: f.follower_id,
+        select: %{user_id: f.follower_id, following_count: count(f.id)}
+      )
+
+    subscriber_counts =
+      from(s in Subscription,
+        where: s.status == "active",
+        group_by: s.streamer_id,
+        select: %{user_id: s.streamer_id, subscriber_count: count(s.id)}
+      )
+
+    from(u in query,
+      left_join: live_stream in Stream,
+      on: live_stream.user_id == u.id,
+      left_join: follower_count in subquery(follower_counts),
+      on: follower_count.user_id == u.id,
+      left_join: following_count in subquery(following_counts),
+      on: following_count.user_id == u.id,
+      left_join: subscriber_count in subquery(subscriber_counts),
+      on: subscriber_count.user_id == u.id,
+      select_merge: %{
+        is_live: coalesce(live_stream.is_live, false),
+        follower_count: coalesce(follower_count.follower_count, 0),
+        following_count: coalesce(following_count.following_count, 0),
+        subscriber_count: coalesce(subscriber_count.subscriber_count, 0)
+      }
+    )
+  end
+
+  defp populate_user_data(nil), do: nil
+
+  defp populate_user_data(%User{} = user) do
+    metrics_user =
+      from(u in User, where: u.id == ^user.id)
+      |> with_user_data()
+      |> Repo.one()
+
+    struct(user, %{
+      is_live: metrics_user.is_live,
+      follower_count: metrics_user.follower_count,
+      following_count: metrics_user.following_count,
+      subscriber_count: metrics_user.subscriber_count
+    })
   end
 
   # update user roles

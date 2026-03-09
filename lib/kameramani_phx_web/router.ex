@@ -92,8 +92,6 @@ defmodule KameramaniPhxWeb.Router do
     live_session :require_authenticated_user,
       on_mount: [{KameramaniPhxWeb.UserAuth, :require_authenticated}],
       layout: {KameramaniPhxWeb.Layouts, :app} do
-      # I moved ChatLive here assuming you want chatting to be private.
-      # If you want it public, move it back to the top scope!
       live "/users/profile/:username", KameramaniPhxWeb.Profile.UserProfileLive, :show
       live "/users/profile/:username/:tab", KameramaniPhxWeb.Profile.UserProfileLive
       live "/users/settings", KameramaniPhxWeb.UserLive.UserSettingsLive
@@ -107,10 +105,10 @@ defmodule KameramaniPhxWeb.Router do
       live "/stream-settings", KameramaniPhxWeb.Streaming.Settings.StreamSettingsLive
     end
 
-    live_session :admin_only,
+    live_session :admin_session,
       on_mount: [
         {KameramaniPhxWeb.UserAuth, :require_authenticated},
-        {KameramaniPhxWeb.UserAuth, {:require_role, "admin"}}
+        {KameramaniPhxWeb.UserAuth, {:require_any_role, ["admin", "moderator"]}}
       ],
       layout: {KameramaniPhxWeb.Layouts, :app} do
       live "/admin", KameramaniPhxWeb.AdminLive

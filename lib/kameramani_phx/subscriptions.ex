@@ -7,6 +7,8 @@ defmodule KameramaniPhx.Subscriptions do
   import Ecto.Query, warn: false
   alias KameramaniPhx.Repo
 
+  alias KameramaniPhx.Accounts
+  alias KameramaniPhx.Notifications
   alias KameramaniPhx.Subscriptions.Subscription
   @default_fx_provider_url "https://open.er-api.com/v6/latest/USD"
   @default_fx_timeout_ms 4_000
@@ -115,12 +117,36 @@ defmodule KameramaniPhx.Subscriptions do
 
       case Repo.get_by(Subscription, subscriber_id: subscriber_id, streamer_id: streamer_id) do
         nil ->
-          create_subscription(attrs)
+          case create_subscription(attrs) do
+            {:ok, subscription} = result ->
+              Notifications.notify_new_subscription(
+                Accounts.get_user!(subscriber_id),
+                Accounts.get_user!(streamer_id),
+                subscription
+              )
+
+              result
+
+            error ->
+              error
+          end
 
         existing_sub ->
-          existing_sub
-          |> Subscription.changeset(attrs)
-          |> Repo.update()
+          case existing_sub
+               |> Subscription.changeset(attrs)
+               |> Repo.update() do
+            {:ok, subscription} = result ->
+              Notifications.notify_new_subscription(
+                Accounts.get_user!(subscriber_id),
+                Accounts.get_user!(streamer_id),
+                subscription
+              )
+
+              result
+
+            error ->
+              error
+          end
       end
     end
   end

@@ -37,6 +37,7 @@ defmodule KameramaniPhxWeb.AdminLive do
        page_bg_class: "bg-blue-200",
        layout_type: :admin,
        active_tab: active_tab,
+       allowed_tabs: Enum.map(menu_items, & &1.id),
        users: users,
        menu_items: menu_items
      )}
@@ -50,7 +51,16 @@ defmodule KameramaniPhxWeb.AdminLive do
 
   @impl true
   def handle_params(%{"tab" => current_tab}, _uri, socket) do
-    {:noreply, assign(socket, active_tab: current_tab)}
+    if current_tab in socket.assigns.allowed_tabs do
+      {:noreply, assign(socket, active_tab: current_tab)}
+    else
+      fallback_tab = hd(socket.assigns.allowed_tabs)
+
+      {:noreply,
+       socket
+       |> put_flash(:error, "You do not have access to that admin section.")
+       |> push_patch(to: ~p"/admin/#{fallback_tab}")}
+    end
   end
 
   @impl true

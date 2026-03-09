@@ -270,6 +270,23 @@ defmodule KameramaniPhxWeb.UserAuth do
     end
   end
 
+  def on_mount({:require_any_role, role_names}, _params, session, socket)
+      when is_list(role_names) do
+    socket = mount_current_user(socket, session)
+    user = socket.assigns.current_user.user
+
+    if user && Enum.any?(role_names, &Accounts.user_has_role?(user, &1)) do
+      {:cont, socket}
+    else
+      socket =
+        socket
+        |> Phoenix.LiveView.put_flash(:error, "You do not have permission to access this page.")
+        |> Phoenix.LiveView.redirect(to: ~p"/")
+
+      {:halt, socket}
+    end
+  end
+
   defp mount_current_user(socket, session) do
     Phoenix.Component.assign_new(socket, :current_user, fn ->
       {user, _} =

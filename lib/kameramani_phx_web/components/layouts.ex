@@ -51,6 +51,7 @@ defmodule KameramaniPhxWeb.Layouts do
       assigns
       |> assign(:current_user_obj, current_user)
       |> assign(:is_chat_page, is_chat_page)
+      |> assign(:live_socket, socket)
 
     ~H"""
     <div class={@page_bg_class}>
@@ -75,6 +76,12 @@ defmodule KameramaniPhxWeb.Layouts do
             <div>
               <div class="flex items-center gap-6">
                 <div class="flex items-center gap-3">
+                  <%= if @live_socket do %>
+                    <%= Phoenix.Component.live_render(@live_socket, KameramaniPhxWeb.NotificationsLive,
+                      id: "admin-navbar-notifications",
+                      session: %{"current_user_id" => @current_user_obj.id}
+                    ) %>
+                  <% end %>
                   <span class="text-black">
                     Welcome,
                     <span class="font-semibold text-blue-400 capitalize">
@@ -152,6 +159,12 @@ defmodule KameramaniPhxWeb.Layouts do
                     current_user={@current_user}
                   />
                   <div class="flex items-center gap-3">
+                    <%= if @live_socket do %>
+                      <%= Phoenix.Component.live_render(@live_socket, KameramaniPhxWeb.NotificationsLive,
+                        id: "navbar-notifications",
+                        session: %{"current_user_id" => @current_user_obj.id}
+                      ) %>
+                    <% end %>
                     <span class="text-white">
                       Welcome,
                       <span class="font-semibold text-blue-400 capitalize">
