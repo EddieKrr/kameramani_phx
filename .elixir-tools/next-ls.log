@@ -157635,3 +157635,57 @@ PATH=/home/eddie/.local/share/mise/installs/elixir/1.19.5-otp-28/bin:/home/eddie
 11:41:56.190 [debug] handled notification client -> server $/cancelRequest in 417µs
 
 11:42:11.548 id=734 [debug] handled request client -> server textDocument/hover in 1004ms
+
+11:44:23.933 [debug] handled notification client -> server $/cancelRequest in 481µs
+
+11:44:24.587 [debug] handled notification client -> server $/cancelRequest in 381µs
+
+11:44:25.329 id=737 [debug] handled request client -> server textDocument/codeAction in 1ms
+
+11:44:25.688 id=738 [debug] handled request client -> server textDocument/codeAction in 1ms
+
+11:44:26.164 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+11:44:26.269 id=739 [debug] handled request client -> server textDocument/documentSymbol in 4ms
+
+11:44:26.270 id=740 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+11:44:27.003 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+11:44:27.005 id=741 [debug] handled request client -> server textDocument/codeAction in 568µs
+
+11:44:27.109 id=742 [debug] handled request client -> server textDocument/documentSymbol in 5ms
+
+11:44:27.111 id=743 [debug] handled request client -> server textDocument/documentSymbol in 5ms
+
+11:44:27.769 [debug] handled notification client -> server textDocument/didSave in 1ms
+
+11:44:28.136 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 636µs
+
+11:44:31.553 id=744 [debug] handled request client -> server textDocument/codeAction in 418µs
+
+11:44:31.828 id=745 [debug] handled request client -> server textDocument/codeAction in 1ms
+
+11:44:31.866 id=746 [debug] handled request client -> server textDocument/documentSymbol in 9ms
+
+11:44:34.410 id=747 [debug] handled request client -> server textDocument/codeAction in 782µs
+
+11:44:41.389 id=748 [debug] handled request client -> server textDocument/codeAction in 436µs
+
+11:44:41.749 id=749 [debug] handled request client -> server textDocument/codeAction in 396µs
+
+11:44:42.412 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+11:44:42.520 id=751 [debug] handled request client -> server textDocument/documentSymbol in 4ms
+
+11:44:42.520 id=750 [debug] handled request client -> server textDocument/documentSymbol in 4ms
+
+11:44:42.841 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+11:44:42.942 id=752 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+11:44:42.942 id=753 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+11:44:43.600 [debug] handled notification client -> server textDocument/didSave in 2ms
+
+11:44:43.977 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 506µs

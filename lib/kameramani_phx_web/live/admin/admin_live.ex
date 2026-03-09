@@ -55,7 +55,6 @@ defmodule KameramaniPhxWeb.AdminLive do
 
   @impl true
   def handle_params(_, _, socket) do
-    current_user = socket.assigns.current_user
 
     {:noreply, assign(socket, active_tab: "users")}
   end

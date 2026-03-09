@@ -117,14 +117,6 @@ defmodule KameramaniPhxWeb.Router do
       live "/admin/:tab", KameramaniPhxWeb.AdminLive
     end
 
-    live_session :moderator_only,
-      on_mount: [
-        {KameramaniPhxWeb.UserAuth, :require_authenticated},
-        {KameramaniPhxWeb.UserAuth, {:require_role, "moderator"}}
-      ],
-      layout: {KameramaniPhxWeb.Layouts, :app} do
-      live "/moderator", KameramaniPhxWeb.ModeratorLive
-    end
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
