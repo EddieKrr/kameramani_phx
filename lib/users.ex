@@ -10,6 +10,7 @@ defmodule KameramaniPhx.Users do
     field :password, :integer
     field :bio, :string
     field :profile_picture, :string
+    field :is_live, :boolean, virtual: true, default: false
     timestamps()
   end
 

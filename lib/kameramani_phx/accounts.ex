@@ -10,7 +10,7 @@ defmodule KameramaniPhx.Accounts do
   ## Database getters
 
   def get_all_users do
-    Repo.all(User) |> Repo.preload(:social_accounts)
+    Repo.all(User) |> Repo.preload(:social_accounts) |> Repo.preload(:roles)
   end
 
   # list users on nav

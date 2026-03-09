@@ -2,6 +2,8 @@ defmodule KameramaniPhxWeb.AdminLive do
   use KameramaniPhxWeb, :live_view
   import KameramaniPhxWeb.AdminComponents
 
+
+
   @impl true
   def mount(_params, _session, socket) do
     menu_items = [
@@ -14,11 +16,14 @@ defmodule KameramaniPhxWeb.AdminLive do
 
     active_tab = :categories
 
+    users = KameramaniPhx.Accounts.get_all_users()
+
     {:ok,
      assign(socket,
        page_bg_class: "bg-blue-200",
        layout_type: :admin,
        active_tab: active_tab,
+       users: users,
        menu_items: menu_items
      )}
   end
