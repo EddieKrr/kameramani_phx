@@ -203,7 +203,7 @@ defmodule KameramaniPhx.Subscriptions do
     Subscription.changeset(subscription, attrs)
   end
 
-  #if already subbed  or expired
+  # if already subbed  or expired
   def is_subscribed?(nil, _streamer_id), do: false
 
   def is_subscribed?(%Subscription{expires_at: expires_at, status: status}, _streamer_id) do

@@ -13,18 +13,18 @@
       />
     <% end %>
   </div>
-      <%= case @active_tab do %>
-      <% "users" -> %>
-        <.user_tab users={@users} />
-      <% "categories" -> %>
-        <.category_tab></.category_tab>
-      <% "tags" -> %>
-        <.tag_tab></.tag_tab>
-      <% "access" -> %>
-        <.access_tab></.access_tab>
-      <% "settings" -> %>
-        <.settings_tab></.settings_tab>
-     <!-- <% "overview" -> %>
+  <%= case @active_tab do %>
+    <% "users" -> %>
+      <.user_tab users={@users} />
+    <% "categories" -> %>
+      <.category_tab></.category_tab>
+    <% "tags" -> %>
+      <.tag_tab></.tag_tab>
+    <% "access" -> %>
+      <.access_tab></.access_tab>
+    <% "settings" -> %>
+      <.settings_tab></.settings_tab>
+      <!-- <% "overview" -> %>
         <.overview></.overview> -->
-    <% end %> 
+  <% end %>
 </div>
