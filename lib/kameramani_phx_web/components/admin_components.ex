@@ -2,7 +2,6 @@ defmodule KameramaniPhxWeb.AdminComponents do
   use Phoenix.Component
   import KameramaniPhxWeb.CoreComponents
 
-
 attr :item, :map, required: true
 attr :active, :boolean, default: false
 attr :prev_active, :boolean, default: false
@@ -55,6 +54,7 @@ def sidebar_link(assigns) do
   """
 end
 
+  attr :users, :list, required: true
   def user_tab(assigns) do
   ~H"""
   <div class="bg-white rounded-3xl shadow-sm border border-white/50 p-8 min-h-full col-span-5 overflow-y-auto h-screen">
@@ -118,11 +118,11 @@ end
             </td>
 
             <td class="py-4 px-6">
-                    <%!-- <%= if users[:is_live] do %>
+                    <%= if Map.get(users, :is_live) do %>
                       <span class="rounded-full bg-green-400 border-2 border-green-200 uppercase animate-pulse">live</span>
                     <%else%>
                       <span class="rounded-full bg-red-500 border-2 border-red-200 uppercase">offline</span>
-                    <%end %> --%>
+                    <%end %>
             </td>
 
             <td class="py-4 px-6 text-sm text-slate-500">{Calendar.strftime(users.inserted_at, "%B, %d, %Y")}</td>
