@@ -16,7 +16,7 @@
     @apply text-2xl font-title font-bold text-blue-400 mb-6 flex items-center gap-2
   }
   .glass-button{
-    @apply glass rounded-xl px-10 py-3 font-bold uppercase tracking-wider border border-slate-200/20 text-white hover:bg-blue-600 transition-colors
+    @apply glass rounded-xl px-5 py-3 font-bold capitalize tracking-tight border border-slate-200/20 text-white hover:bg-blue-600 transition-colors
   }
 }
 
