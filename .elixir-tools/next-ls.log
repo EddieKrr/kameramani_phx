@@ -157689,3 +157689,147 @@ PATH=/home/eddie/.local/share/mise/installs/elixir/1.19.5-otp-28/bin:/home/eddie
 11:44:43.600 [debug] handled notification client -> server textDocument/didSave in 2ms
 
 11:44:43.977 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 506µs
+
+11:46:43.816 id=754 [debug] handled request client -> server textDocument/codeAction in 463µs
+
+11:46:44.079 id=755 [debug] handled request client -> server textDocument/codeAction in 733µs
+
+11:46:44.115 id=756 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+11:47:11.110 [debug] handled notification client -> server $/cancelRequest in 358µs
+
+11:47:11.364 id=760 [debug] handled request client -> server textDocument/codeAction in 658µs
+
+11:47:12.018 [error] ** (Protocol.UndefinedError) protocol Enumerable not implemented for %GenLSP.ErrorResponse{message: "Timeout", code: -32603, data: nil} of type GenLSP.ErrorResponse (a struct). This protocol is implemented for the following type(s): DBConnection.PrepareStream, DBConnection.Stream, Date.Range, Exqlite.Stream, File.Stream, Function, GenEvent.Stream, HashDict, HashSet, IO.Stream, Jason.OrderedObject, List, Map, MapSet, Range, Stream
+    (elixir 1.17.3) lib/enum.ex:1: Enumerable.impl_for!/1
+    (elixir 1.17.3) lib/enum.ex:166: Enumerable.reduce/3
+    (elixir 1.17.3) lib/enum.ex:4423: Enum.reject/2
+    (next_ls 0.23.4) lib/next_ls.ex:241: NextLS.handle_request/2
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:372: anonymous fn/2 in GenLSP.loop/3
+    (telemetry 1.3.0) /Users/runner/work/next-ls/next-ls/deps/telemetry/src/telemetry.erl:324: :telemetry.span/3
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:371: anonymous fn/5 in GenLSP.loop/3
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:601: anonymous fn/4 in GenLSP.attempt/4
+
+
+11:47:12.018 [debug] sent notification server -> client window/logMessage
+
+11:47:12.222 [error] ** (Protocol.UndefinedError) protocol Enumerable not implemented for %GenLSP.ErrorResponse{message: "Timeout", code: -32603, data: nil} of type GenLSP.ErrorResponse (a struct). This protocol is implemented for the following type(s): DBConnection.PrepareStream, DBConnection.Stream, Date.Range, Exqlite.Stream, File.Stream, Function, GenEvent.Stream, HashDict, HashSet, IO.Stream, Jason.OrderedObject, List, Map, MapSet, Range, Stream
+    (elixir 1.17.3) lib/enum.ex:1: Enumerable.impl_for!/1
+    (elixir 1.17.3) lib/enum.ex:166: Enumerable.reduce/3
+    (elixir 1.17.3) lib/enum.ex:4423: Enum.reject/2
+    (next_ls 0.23.4) lib/next_ls.ex:241: NextLS.handle_request/2
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:372: anonymous fn/2 in GenLSP.loop/3
+    (telemetry 1.3.0) /Users/runner/work/next-ls/next-ls/deps/telemetry/src/telemetry.erl:324: :telemetry.span/3
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:371: anonymous fn/5 in GenLSP.loop/3
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:601: anonymous fn/4 in GenLSP.attempt/4
+
+
+11:47:12.222 [debug] sent notification server -> client window/logMessage
+
+11:47:12.285 [debug] handled notification client -> server textDocument/didOpen in 1ms
+
+11:47:12.294 id=761 [debug] handled request client -> server textDocument/codeAction in 670µs
+
+11:47:12.308 id=762 [debug] handled request client -> server textDocument/documentSymbol in 14ms
+
+11:47:12.608 id=764 [debug] handled request client -> server textDocument/codeAction in 1ms
+
+11:47:12.617 id=763 [debug] handled request client -> server textDocument/documentSymbol in 12ms
+
+11:47:15.699 [debug] handled notification client -> server textDocument/didClose in 252µs
+
+11:47:15.708 id=765 [debug] handled request client -> server textDocument/codeAction in 384µs
+
+11:47:15.966 id=766 [debug] handled request client -> server textDocument/codeAction in 571µs
+
+11:47:16.007 id=767 [debug] handled request client -> server textDocument/documentSymbol in 4ms
+
+11:47:16.434 [debug] handled notification client -> server $/cancelRequest in 399µs
+
+11:47:16.650 [debug] handled notification client -> server $/cancelRequest in 347µs
+
+11:47:17.109 [debug] handled notification client -> server $/cancelRequest in 475µs
+
+11:47:17.363 id=773 [debug] handled request client -> server textDocument/codeAction in 955µs
+
+11:47:17.810 [error] ** (Protocol.UndefinedError) protocol Enumerable not implemented for %GenLSP.ErrorResponse{message: "Timeout", code: -32603, data: nil} of type GenLSP.ErrorResponse (a struct). This protocol is implemented for the following type(s): DBConnection.PrepareStream, DBConnection.Stream, Date.Range, Exqlite.Stream, File.Stream, Function, GenEvent.Stream, HashDict, HashSet, IO.Stream, Jason.OrderedObject, List, Map, MapSet, Range, Stream
+    (elixir 1.17.3) lib/enum.ex:1: Enumerable.impl_for!/1
+    (elixir 1.17.3) lib/enum.ex:166: Enumerable.reduce/3
+    (elixir 1.17.3) lib/enum.ex:4423: Enum.reject/2
+    (next_ls 0.23.4) lib/next_ls.ex:241: NextLS.handle_request/2
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:372: anonymous fn/2 in GenLSP.loop/3
+    (telemetry 1.3.0) /Users/runner/work/next-ls/next-ls/deps/telemetry/src/telemetry.erl:324: :telemetry.span/3
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:371: anonymous fn/5 in GenLSP.loop/3
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:601: anonymous fn/4 in GenLSP.attempt/4
+
+
+11:47:17.810 [debug] sent notification server -> client window/logMessage
+
+11:47:18.212 [error] ** (Protocol.UndefinedError) protocol Enumerable not implemented for %GenLSP.ErrorResponse{message: "Timeout", code: -32603, data: nil} of type GenLSP.ErrorResponse (a struct). This protocol is implemented for the following type(s): DBConnection.PrepareStream, DBConnection.Stream, Date.Range, Exqlite.Stream, File.Stream, Function, GenEvent.Stream, HashDict, HashSet, IO.Stream, Jason.OrderedObject, List, Map, MapSet, Range, Stream
+    (elixir 1.17.3) lib/enum.ex:1: Enumerable.impl_for!/1
+    (elixir 1.17.3) lib/enum.ex:166: Enumerable.reduce/3
+    (elixir 1.17.3) lib/enum.ex:4423: Enum.reject/2
+    (next_ls 0.23.4) lib/next_ls.ex:241: NextLS.handle_request/2
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:372: anonymous fn/2 in GenLSP.loop/3
+    (telemetry 1.3.0) /Users/runner/work/next-ls/next-ls/deps/telemetry/src/telemetry.erl:324: :telemetry.span/3
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:371: anonymous fn/5 in GenLSP.loop/3
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:601: anonymous fn/4 in GenLSP.attempt/4
+
+
+11:47:18.212 [debug] sent notification server -> client window/logMessage
+
+11:47:18.268 [debug] handled notification client -> server textDocument/didOpen in 1ms
+
+11:47:18.276 id=774 [debug] handled request client -> server textDocument/codeAction in 815µs
+
+11:47:18.286 id=775 [debug] handled request client -> server textDocument/documentSymbol in 10ms
+
+11:47:18.576 id=776 [debug] handled request client -> server textDocument/documentSymbol in 7ms
+
+11:47:18.590 id=777 [debug] handled request client -> server textDocument/codeAction in 621µs
+
+11:47:27.774 [debug] handled notification client -> server textDocument/didClose in 413µs
+
+11:47:27.782 id=778 [debug] handled request client -> server textDocument/codeAction in 561µs
+
+11:47:28.040 id=779 [debug] handled request client -> server textDocument/codeAction in 403µs
+
+11:47:28.082 id=780 [debug] handled request client -> server textDocument/documentSymbol in 4ms
+
+11:49:06.171 id=781 [debug] handled request client -> server textDocument/codeAction in 753µs
+
+11:49:06.180 id=782 [debug] handled request client -> server textDocument/documentSymbol in 8ms
+
+11:49:06.435 id=783 [debug] handled request client -> server textDocument/codeAction in 412µs
+
+11:49:06.471 id=784 [debug] handled request client -> server textDocument/documentSymbol in 6ms
+
+11:49:38.628 [debug] handled notification client -> server $/cancelRequest in 442µs
+
+11:49:39.001 [debug] handled notification client -> server $/cancelRequest in 373µs
+
+11:49:39.252 id=787 [debug] handled request client -> server textDocument/codeAction in 415µs
+
+11:49:41.146 id=788 [debug] handled request client -> server textDocument/codeAction in 449µs
+
+11:49:44.089 id=789 [debug] handled request client -> server textDocument/codeAction in 626µs
+
+11:49:46.680 id=790 [debug] handled request client -> server textDocument/codeAction in 1ms
+
+11:49:47.647 id=791 [debug] handled request client -> server textDocument/codeAction in 945µs
+
+11:49:48.198 id=792 [debug] handled request client -> server textDocument/codeAction in 552µs
+
+11:49:48.897 id=793 [debug] handled request client -> server textDocument/codeAction in 851µs
+
+11:49:49.463 id=794 [debug] handled request client -> server textDocument/codeAction in 776µs
+
+11:49:55.548 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+11:49:55.650 id=795 [debug] handled request client -> server textDocument/documentSymbol in 9ms
+
+11:49:55.759 id=796 [debug] handled request client -> server textDocument/documentSymbol in 8ms
+
+11:49:56.308 [debug] handled notification client -> server textDocument/didSave in 1ms
+
+11:49:56.673 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
