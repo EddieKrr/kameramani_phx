@@ -90,6 +90,7 @@ end
             <th class="py-4 px-6 border-b border-gray-200">User</th>
             <th class="py-4 px-6 border-b border-gray-200">Role</th>
             <th class="py-4 px-6 border-b border-gray-200">Status</th>
+            <th class="py-4 px-6 border-b border-gray-200">Community</th>
             <th class="py-4 px-6 border-b border-gray-200">Joined</th>
             <th class="py-4 px-6 border-b border-gray-200 text-right">Actions</th>
           </tr>
@@ -123,6 +124,20 @@ end
                     <%else%>
                       <span class="rounded-full bg-red-500 border-2 border-red-200 uppercase">offline</span>
                     <%end %>
+            </td>
+
+            <td class="py-4 px-6">
+              <div class="flex flex-wrap gap-2 text-xs font-semibold">
+                <span class="rounded-full bg-amber-100 px-3 py-1 text-amber-700">
+                  Subs {users.subscriber_count}
+                </span>
+                <span class="rounded-full bg-sky-100 px-3 py-1 text-sky-700">
+                  Following {users.following_count}
+                </span>
+                <span class="rounded-full bg-emerald-100 px-3 py-1 text-emerald-700">
+                  Followers {users.follower_count}
+                </span>
+              </div>
             </td>
 
             <td class="py-4 px-6 text-sm text-slate-500">{Calendar.strftime(users.inserted_at, "%B, %d, %Y")}</td>

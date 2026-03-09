@@ -23,6 +23,8 @@ config :kameramani_phx, KameramaniPhxWeb.Endpoint,
   secret_key_base: "NErFiUAwC3nvOCvXh//+b+5ExbfYNFGQRW77aAhS9umcr6yTlL40rVfT5AYTng52",
   server: false
 
+config :kameramani_phx, :start_rtmp_listener, false
+
 # In test we don't send emails
 config :kameramani_phx, KameramaniPhx.Mailer, adapter: Swoosh.Adapters.Test
 

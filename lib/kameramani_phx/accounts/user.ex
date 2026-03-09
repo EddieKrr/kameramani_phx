@@ -21,6 +21,9 @@ defmodule KameramaniPhx.Accounts.User do
     field :confirmed_at, :utc_datetime
     field :authenticated_at, :utc_datetime, virtual: true
     field :is_live, :boolean, virtual: true, default: false
+    field :subscriber_count, :integer, virtual: true, default: 0
+    field :following_count, :integer, virtual: true, default: 0
+    field :follower_count, :integer, virtual: true, default: 0
     has_many :social_accounts, KameramaniPhx.Socials.SocialAccount
 
     many_to_many :roles, KameramaniPhx.Accounts.Role,

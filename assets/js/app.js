@@ -130,8 +130,11 @@ Hooks.UptimeTimer = {
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 const liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
-  params: { _csrf_token: csrfToken },
-    hooks: {...colocatedHooks, ...Hooks}, // Merge your custom Hooks here
+  params: () => ({
+    _csrf_token: csrfToken,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "Etc/UTC",
+  }),
+  hooks: {...colocatedHooks, ...Hooks}, // Merge your custom Hooks here
 })
 // Show progress bar on live navigation and form submits
 topbar.config({ barColors: { 0: "#29d" }, shadowColor: "rgba(0, 0, 0, .3)" })
