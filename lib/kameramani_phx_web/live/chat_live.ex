@@ -4,6 +4,7 @@ defmodule KameramaniPhxWeb.ChatLive do
   import KameramaniPhxWeb.SidebarComponents
 
   alias KameramaniPhx.Accounts
+  alias KameramaniPhx.Subscriptions
 
   alias KameramaniPhx.Accounts.Scope
   alias KameramaniPhxWeb.Presence
@@ -59,6 +60,13 @@ defmodule KameramaniPhxWeb.ChatLive do
             is_following =
               if current_user, do: Accounts.is_following?(current_user, user), else: false
 
+            is_subscribed =
+              if current_user do
+                Subscriptions.subscribed_to_streamer?(current_user.id, user.id)
+              else
+                false
+              end
+
             # Fetch recommended streamers for the sidebar (similar to LandingLive)
             recommended_streams =
               KameramaniPhx.Repo.all(
@@ -99,6 +107,12 @@ defmodule KameramaniPhxWeb.ChatLive do
               tags: stream.tags || [],
               is_live: stream.is_live,
               is_following: is_following,
+              is_subscribed: is_subscribed,
+              follower_count: Accounts.get_followers_count(user),
+              subscriber_count: Subscriptions.subscriber_count(user.id),
+              show_subscribe_modal: false,
+              selected_tier: 1,
+              tier_options: Subscriptions.tier_options(),
               left_sidebar_open: true,
               chat_open: true,
               stream_started_at: stream.updated_at || DateTime.utc_now(),
@@ -135,10 +149,18 @@ defmodule KameramaniPhxWeb.ChatLive do
       else
         if socket.assigns.is_following do
           Accounts.unfollow_user(current_user, streamer_id)
-          {:noreply, assign(socket, is_following: false)}
+
+          {:noreply,
+           socket
+           |> assign(is_following: false)
+           |> assign(follower_count: max(socket.assigns.follower_count - 1, 0))}
         else
           Accounts.follow_user(current_user, streamer_id)
-          {:noreply, assign(socket, is_following: true)}
+
+          {:noreply,
+           socket
+           |> assign(is_following: true)
+           |> assign(follower_count: socket.assigns.follower_count + 1)}
         end
       end
     else
@@ -146,6 +168,74 @@ defmodule KameramaniPhxWeb.ChatLive do
        socket
        |> put_flash(:info, "Please log in to follow")
        |> push_navigate(to: ~p"/auth")}
+    end
+  end
+
+  def handle_event("open_subscribe_modal", _params, socket) do
+    current_user =
+      if socket.assigns.current_user, do: socket.assigns.current_user.user, else: nil
+
+    streamer_id = socket.assigns.streamer_id
+
+    cond do
+      is_nil(current_user) ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Please log in to subscribe")
+         |> push_navigate(to: ~p"/auth")}
+
+      current_user.id == streamer_id ->
+        {:noreply, put_flash(socket, :error, "You cannot subscribe to yourself")}
+
+      true ->
+        {:noreply, assign(socket, show_subscribe_modal: true)}
+    end
+  end
+
+  def handle_event("close_subscribe_modal", _params, socket) do
+    {:noreply, assign(socket, show_subscribe_modal: false)}
+  end
+
+  def handle_event("select_tier", %{"tier" => tier}, socket) do
+    case Integer.parse(tier) do
+      {tier_int, ""} when tier_int in [1, 3, 6] ->
+        {:noreply, assign(socket, selected_tier: tier_int)}
+
+      _ ->
+        {:noreply, put_flash(socket, :error, "Invalid subscription tier")}
+    end
+  end
+
+  def handle_event("subscribe_to_tier", _params, socket) do
+    current_user =
+      if socket.assigns.current_user, do: socket.assigns.current_user.user, else: nil
+
+    if current_user do
+      streamer_id = socket.assigns.streamer_id
+      tier = socket.assigns.selected_tier
+      was_subscribed = socket.assigns.is_subscribed
+
+      case Subscriptions.subscribe_to_streamer(current_user.id, streamer_id, tier) do
+        {:ok, _subscription} ->
+          subscriber_count =
+            if was_subscribed do
+              socket.assigns.subscriber_count
+            else
+              socket.assigns.subscriber_count + 1
+            end
+
+          {:noreply,
+           socket
+           |> assign(is_subscribed: true)
+           |> assign(subscriber_count: subscriber_count)
+           |> assign(show_subscribe_modal: false)
+           |> put_flash(:info, "Subscription updated")}
+
+        {:error, _reason} ->
+          {:noreply, put_flash(socket, :error, "Could not subscribe right now")}
+      end
+    else
+      {:noreply, put_flash(socket, :error, "Please log in to subscribe")}
     end
   end
 

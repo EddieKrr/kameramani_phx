@@ -24,6 +24,11 @@ config :kameramani_phx,
   ecto_repos: [KameramaniPhx.Repo],
   generators: [timestamp_type: :utc_datetime]
 
+config :kameramani_phx, :fx,
+  provider_url: "https://open.er-api.com/v6/latest/USD",
+  usd_kes_fallback_rate: "130.0",
+  timeout_ms: 4_000
+
 # Configure the endpoint
 config :kameramani_phx, KameramaniPhxWeb.Endpoint,
   url: [host: "localhost"],
