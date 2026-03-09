@@ -50,7 +50,7 @@ defmodule KameramaniPhxWeb.AdminComponents do
           </div>
       <% end %>
     </div>
-<<<<<<< HEAD
+
 
   """
 end
@@ -737,104 +737,6 @@ end
 end
   def overview(assigns)do
     ~H"""
-=======
->>>>>>> f76bb630125110b12738298f7015a72140314583
-    """
-  end
-
-  attr :users, :list, required: true
-
-  def user_tab(assigns) do
-    ~H"""
-    <div class="bg-white rounded-3xl shadow-sm border border-white/50 p-8 min-h-full col-span-5 overflow-y-auto h-screen">
-      <div class="flex justify-between items-center mb-8">
-        <div>
-          <h2 class="text-3xl font-bold text-slate-800 tracking-tight">User Management</h2>
-          <p class="text-slate-500 mt-1">View and manage Kameramani accounts.</p>
-        </div>
-        <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-full transition-colors shadow-lg">
-          + Add User
-        </button>
-      </div>
-
-      <div class="flex gap-4 mb-6">
-        <div class="relative flex-1 max-w-md">
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-            <.svg variant="search" class="w-5 h-5" />
-          </div>
-          <input
-            type="text"
-            placeholder="Search by username or email..."
-            class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-700"
-          />
-        </div>
-      </div>
-
-      <div class="overflow-x-auto rounded-xl border border-gray-200">
-        <table class="w-full text-left border-collapse">
-          <thead class="bg-gray-50 text-slate-500 text-sm font-semibold uppercase tracking-wider">
-            <tr>
-              <th class="py-4 px-6 border-b border-gray-200">User</th>
-              <th class="py-4 px-6 border-b border-gray-200">Role</th>
-              <th class="py-4 px-6 border-b border-gray-200">Status</th>
-              <th class="py-4 px-6 border-b border-gray-200">Joined</th>
-              <th class="py-4 px-6 border-b border-gray-200 text-right">Actions</th>
-            </tr>
-          </thead>
-
-          <tbody class="divide-y divide-gray-200 text-slate-700">
-            <%= for users <- @users do %>
-              <tr class="hover:bg-blue-50/50 transition-colors group">
-                <td class="py-4 px-6 flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold shadow-sm">
-                    {String.first(users.username) |> String.upcase()}
-                  </div>
-                  <div>
-                    <div class="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-                      {users.email}
-                    </div>
-                  </div>
-                </td>
-
-                <td class="py-4 px-6">
-                  <span
-                    :for={role <- users.roles}
-                    class="bg-purple-100 text-purple-700 py-1 px-3 rounded-full text-xs font-bold border border-purple-200"
-                  >
-                    {role.name}
-                  </span>
-                </td>
-
-                <td class="py-4 px-6">
-                  <%= if Map.get(users, :is_live) do %>
-                    <span class="rounded-full bg-green-300 border-2 border-green-400 uppercase text-xs p-1 animate-pulse">
-                      live
-                    </span>
-                  <% else %>
-                    <span class="rounded-full bg-gray-200 border-2  uppercase text-xs p-1">
-                      offline
-                    </span>
-                  <% end %>
-                </td>
-
-                <td class="py-4 px-6 text-sm text-slate-500">
-                  {Calendar.strftime(users.inserted_at, "%B, %d, %Y")}
-                </td>
-
-                <td class="py-4 px-6 text-right">
-                  <button class="text-slate-400 hover:text-blue-500 font-medium text-sm mr-4 transition-colors">
-                    Edit
-                  </button>
-                  <button class="text-slate-400 hover:text-red-500 font-medium text-sm transition-colors">
-                    Ban
-                  </button>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    </div>
     """
   end
 
@@ -1360,7 +1262,7 @@ end
           </div>
         </div>
 
-        
+
 
         <div class="border border-gray-200 bg-white rounded-2xl p-6 relative overflow-hidden hover:shadow-md transition-shadow">
           <div class="absolute top-0 left-0 w-1 h-full bg-gray-400"></div>
