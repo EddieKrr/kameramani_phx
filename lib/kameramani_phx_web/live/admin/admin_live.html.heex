@@ -1,7 +1,7 @@
 <% active_index = Enum.find_index(@menu_items, fn i -> i.id == @active_tab end) %>
-<div class="h-screen grid grid-cols-6 bg-blue-200">
-  <div class="bg-white col-start-1 col-span-1 text-black flex flex-col font-medium rounded-r-3xl">
-    <div class="flex items-center justify-center py-6 border-b-2 border-black mb-4">
+<div class="h-screen grid grid-cols-6 gap-2 bg-blue-200 overflow-hidden relative">
+  <div class="bg-white col-start-1 col-span-1 text-black flex flex-col font-medium rounded-r-3xl sticky top-0 left-0">
+    <div class="flex items-center justify-center py-6 border-b-2 border-black mb-4 ">
       <span class="font-bold">Admin Tools</span>
     </div>
     <%= for {item, index} <- Enum.with_index(@menu_items) do %>
@@ -15,7 +15,7 @@
   </div>
   <%= case @active_tab do %>
       <% "users" -> %>
-        <.user_tab></.user_tab>
+        <.user_tab users = {@users}></.user_tab>
       <% "categories" -> %>
         <.category_tab></.category_tab>
       <% "tags" -> %>

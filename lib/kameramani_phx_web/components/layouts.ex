@@ -235,10 +235,12 @@ defmodule KameramaniPhxWeb.Layouts do
   """
   attr :flash, :map, required: true, doc: "the map of flash messages"
   attr :inner_content, :any, default: nil
+  attr :page_bg_class, :string, default: "bg-img bg-cover bg-fixed bg-center min-h-screen"
   slot :inner_block
 
   def auth(assigns) do
     ~H"""
+    <div class={@page_bg_class}>
     <div class="min-h-screen glass-pane text-white flex flex-col items-center justify-center">
       <%= if @inner_content do %>
         {@inner_content}
@@ -247,6 +249,7 @@ defmodule KameramaniPhxWeb.Layouts do
       <% end %>
     </div>
     <.flash_group flash={@flash} />
+    </div>
     """
   end
 
@@ -257,7 +260,7 @@ defmodule KameramaniPhxWeb.Layouts do
 
   def flash_group(assigns) do
     ~H"""
-    <div class="fixed top-0 left-0 z-50 flex flex-col gap-3 pointer-events-none">
+    <div class="fixed top-2 right-0 z-50 flex flex-col gap-3 pointer-events-none">
       <.flash
         kind={:info}
         title="Success"
