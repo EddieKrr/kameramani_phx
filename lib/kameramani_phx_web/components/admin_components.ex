@@ -119,9 +119,9 @@ end
 
             <td class="py-4 px-6">
                     <%= if Map.get(users, :is_live) do %>
-                      <span class="rounded-full bg-green-400 border-2 border-green-200 uppercase animate-pulse">live</span>
+                      <span class="rounded-full bg-green-300 border-2 border-green-400 uppercase text-xs p-1 animate-pulse">live</span>
                     <%else%>
-                      <span class="rounded-full bg-red-500 border-2 border-red-200 uppercase">offline</span>
+                      <span class="rounded-full bg-gray-200 border-2  uppercase text-xs p-1">offline</span>
                     <%end %>
             </td>
 
