@@ -13,9 +13,9 @@
       />
     <% end %>
   </div>
-  <%= case @active_tab do %>
+      <%= case @active_tab do %>
       <% "users" -> %>
-        <.user_tab users = {@users}></.user_tab>
+        <.user_tab users={@users} />
       <% "categories" -> %>
         <.category_tab></.category_tab>
       <% "tags" -> %>

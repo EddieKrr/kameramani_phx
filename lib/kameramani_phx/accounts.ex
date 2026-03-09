@@ -7,11 +7,20 @@ defmodule KameramaniPhx.Accounts do
   alias KameramaniPhx.Repo
   alias KameramaniPhx.Accounts.{User, UserToken, UserNotifier, Follow, Role, Permission}
   alias KameramaniPhx.Subscriptions
+  alias KameramaniPhx.Streaming.Stream
 
   ## Database getters
 
   def get_all_users do
-    Repo.all(User) |> Repo.preload(:social_accounts) |> Repo.preload(:roles)
+    query =
+      from u in User,
+        left_join: s in Stream,
+        on: s.user_id == u.id,
+        select_merge: %{is_live: coalesce(s.is_live, false)}
+
+    Repo.all(query)
+    |> Repo.preload(:social_accounts)
+    |> Repo.preload(:roles)
   end
 
   # list users on nav

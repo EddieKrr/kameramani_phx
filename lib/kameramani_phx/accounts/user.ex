@@ -20,6 +20,7 @@ defmodule KameramaniPhx.Accounts.User do
     field :hashed_password, :string, redact: true
     field :confirmed_at, :utc_datetime
     field :authenticated_at, :utc_datetime, virtual: true
+    field :is_live, :boolean, virtual: true, default: false
     has_many :social_accounts, KameramaniPhx.Socials.SocialAccount
 
     many_to_many :roles, KameramaniPhx.Accounts.Role,

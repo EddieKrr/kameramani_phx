@@ -2,10 +2,12 @@ defmodule KameramaniPhxWeb.AdminLive do
   use KameramaniPhxWeb, :live_view
   import KameramaniPhxWeb.AdminComponents
 
-
-
   @impl true
   def mount(_params, _session, socket) do
+    if connected?(socket) do
+      Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "streams:all")
+    end
+
     menu_items = [
       %{id: "users", label: "Users", path: ~p"/admin/users"},
       %{id: "categories", label: "Categories", path: ~p"/admin/categories"},
@@ -14,7 +16,7 @@ defmodule KameramaniPhxWeb.AdminLive do
       %{id: "settings", label: "Settings", path: ~p"/admin/settings"}
     ]
 
-    active_tab = :categories
+    active_tab = "users"
 
     users = KameramaniPhx.Accounts.get_all_users()
 
@@ -34,12 +36,27 @@ defmodule KameramaniPhxWeb.AdminLive do
     {:noreply, socket}
   end
 
+  @impl true
   def handle_params(%{"tab" => current_tab}, _uri, socket) do
-
     {:noreply, assign(socket, active_tab: current_tab)}
   end
 
+  @impl true
   def handle_params(_, _, socket) do
     {:noreply, assign(socket, active_tab: "users")}
+  end
+
+  @impl true
+  def handle_info({:stream_status_updated, updated_stream}, socket) do
+    users =
+      Enum.map(socket.assigns.users, fn user ->
+        if user.id == updated_stream.user_id do
+          %{user | is_live: updated_stream.is_live}
+        else
+          user
+        end
+      end)
+
+    {:noreply, assign(socket, users: users)}
   end
 end
