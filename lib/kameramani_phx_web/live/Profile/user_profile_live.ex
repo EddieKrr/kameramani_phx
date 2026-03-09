@@ -198,7 +198,11 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
     if current_user do
       was_subscribed = socket.assigns.is_subscribed
 
-      case Subscriptions.subscribe_to_streamer(current_user.id, profile_user.id, socket.assigns.selected_tier) do
+      case Subscriptions.subscribe_to_streamer(
+             current_user.id,
+             profile_user.id,
+             socket.assigns.selected_tier
+           ) do
         {:ok, _subscription} ->
           subscriber_count =
             if was_subscribed do

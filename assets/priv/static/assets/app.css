@@ -3749,13 +3749,13 @@ select {
   border-radius: 0.75rem;
   border-width: 1px;
   border-color: rgb(226 232 240 / 0.2);
-  padding-left: 2.5rem;
-  padding-right: 2.5rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  text-transform: capitalize;
+  letter-spacing: -0.025em;
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
@@ -4900,6 +4900,11 @@ select {
   border-color: rgb(191 219 254 / var(--tw-border-opacity));
 }
 
+.border-blue-300 {
+  --tw-border-opacity: 1;
+  border-color: rgb(147 197 253 / var(--tw-border-opacity));
+}
+
 .border-blue-500\/60 {
   border-color: rgb(59 130 246 / 0.6);
 }
@@ -4932,9 +4937,9 @@ select {
   border-color: rgb(55 65 81 / var(--tw-border-opacity));
 }
 
-.border-green-200 {
+.border-green-400 {
   --tw-border-opacity: 1;
-  border-color: rgb(187 247 208 / var(--tw-border-opacity));
+  border-color: rgb(74 222 128 / var(--tw-border-opacity));
 }
 
 .border-indigo-500 {
@@ -5022,11 +5027,6 @@ select {
 
 .border-white\/50 {
   border-color: rgb(255 255 255 / 0.5);
-}
-
-.border-green-400 {
-  --tw-border-opacity: 1;
-  border-color: rgb(74 222 128 / var(--tw-border-opacity));
 }
 
 .border-r-slate-700 {
@@ -5175,6 +5175,10 @@ select {
   background-color: rgb(147 197 253 / var(--tw-bg-opacity));
 }
 
+.bg-blue-300\/10 {
+  background-color: rgb(147 197 253 / 0.1);
+}
+
 .bg-blue-400 {
   --tw-bg-opacity: 1;
   background-color: rgb(96 165 250 / var(--tw-bg-opacity));
@@ -5251,9 +5255,9 @@ select {
   background-color: rgb(55 65 81 / 0.5);
 }
 
-.bg-green-400 {
+.bg-green-300 {
   --tw-bg-opacity: 1;
-  background-color: rgb(74 222 128 / var(--tw-bg-opacity));
+  background-color: rgb(134 239 172 / var(--tw-bg-opacity));
 }
 
 .bg-indigo-200 {
@@ -5429,16 +5433,6 @@ select {
 
 .bg-white\/5 {
   background-color: rgb(255 255 255 / 0.05);
-}
-
-.bg-green-200 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(187 247 208 / var(--tw-bg-opacity));
-}
-
-.bg-green-300 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(134 239 172 / var(--tw-bg-opacity));
 }
 
 .bg-gradient-to-b {

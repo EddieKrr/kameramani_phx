@@ -64,7 +64,11 @@ defmodule KameramaniPhxWeb.Layouts do
               <sub class="self-end">ADMIN</sub>
             </div>
             <div>
-              <.link navigate={~p"/admin/overview"} ><span class="bg-blue-200 p-3 rounded-full text-blue-900 font-bold px-4">Overview</span></.link>
+              <.link navigate={~p"/admin/overview"}>
+                <span class="bg-blue-200 p-3 rounded-full text-blue-900 font-bold px-4">
+                  Overview
+                </span>
+              </.link>
               <span class="p-3 bg-blue-200 rounded-full px-4">Live Streaming</span>
               <span class="bg-blue-200 p-3 rounded-full  px-4">Analytics</span>
             </div>
@@ -241,14 +245,14 @@ defmodule KameramaniPhxWeb.Layouts do
   def auth(assigns) do
     ~H"""
     <div class={@page_bg_class}>
-    <div class="min-h-screen glass-pane text-white flex flex-col items-center justify-center">
-      <%= if @inner_content do %>
-        {@inner_content}
-      <% else %>
-        {render_slot(@inner_block)}
-      <% end %>
-    </div>
-    <.flash_group flash={@flash} />
+      <div class="min-h-screen glass-pane text-white flex flex-col items-center justify-center">
+        <%= if @inner_content do %>
+          {@inner_content}
+        <% else %>
+          {render_slot(@inner_block)}
+        <% end %>
+      </div>
+      <.flash_group flash={@flash} />
     </div>
     """
   end

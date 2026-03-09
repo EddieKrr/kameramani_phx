@@ -1,4 +1,4 @@
-  <div class="flex gap-4 overflow-hidden h-[calc(100vh-100px)] text-[#efeff1] font-sans">
+<div class="flex gap-4 overflow-hidden h-[calc(100vh-100px)] text-[#efeff1] font-sans">
   <aside class={[
     "glass-pane sticky top-0 h-[calc(100vh-115px)] shrink-0 border-r border-white/5 transition-all duration-300 ease-in-out overflow-y-auto",
     if(@left_sidebar_open, do: "w-64", else: "w-[50px]")
@@ -181,16 +181,16 @@
                   if(@is_following, do: "bg-gray-700 hover:bg-gray-600 text-white", else: "bg-indigo-400 hover:bg-indigo-500 text-black")}
               >
                 <%= if @is_following do %>
-                  <.svg variant="heart-solid" class="w-4 h-4 text-red-500" /> Unfollow
+                  <.svg variant="check" class="w-4 h-4 text-blue-500" /> Unfollow
                 <% else %>
-                  <.svg variant="heart" class="w-4 h-4" /> Follow
+                  <.svg variant="plus" class="w-4 h-4" /> Follow
                 <% end %>
               </button>
 
               <button
                 phx-click="open_subscribe_modal"
                 class={"px-4 py-1.5 rounded font-bold text-sm transition-colors flex items-center gap-2 shadow " <>
-                  if(@is_subscribed, do: "bg-emerald-700 hover:bg-emerald-600 text-white", else: "bg-amber-400 hover:bg-amber-300 text-black")}
+                  if(@is_subscribed, do: "bg-emerald-700 hover:bg-emerald-600 text-white", else: "glass-button")}
               >
                 <.svg variant="heart" class="w-4 h-4" />
                 <%= if @is_subscribed do %>
@@ -210,7 +210,7 @@
               </button>
               <button
                 phx-click="open_subscribe_modal"
-                class="bg-amber-400 hover:bg-amber-300 text-black px-4 py-1.5 rounded font-bold text-sm transition-colors flex items-center gap-2 shadow"
+                class="glass-button"
               >
                 <.svg variant="heart" class="w-4 h-4" /> Subscribe
               </button>
@@ -240,62 +240,69 @@
       />
     </div>
   <% end %>
-  </div>
+</div>
 
-  <%= if @show_subscribe_modal do %>
-    <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4">
-      <div class="w-full max-w-xl rounded-2xl border border-white/10 bg-[#18181b] p-6 shadow-2xl">
-        <div class="mb-5 flex items-start justify-between">
-          <div>
-            <h3 class="text-xl font-bold text-white">Subscribe to {@streamer_name}</h3>
-            <p class="text-sm text-[#adadb8]">
-              Choose a renewal tier. We charge in USD and store converted KES.
-            </p>
-          </div>
-          <button phx-click="close_subscribe_modal" class="rounded-md p-1 text-[#adadb8] hover:bg-white/10">
-            <.svg variant="x" class="h-5 w-5" />
-          </button>
+<%= if @show_subscribe_modal do %>
+  <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4">
+    <div class="w-full max-w-xl rounded-2xl border border-white/10 glass-pane p-6 shadow-2xl">
+      <div class="mb-5 flex items-start justify-between">
+        <div>
+          <h3 class="text-xl font-bold text-white">Subscribe to {@streamer_name}</h3>
+          <p class="text-sm text-[#adadb8]">
+            Choose a renewal tier.
+          </p>
         </div>
+        <button
+          phx-click="close_subscribe_modal"
+          class="rounded-md p-1 text-[#adadb8] hover:bg-white/10"
+        >
+          <.svg variant="x" class="h-5 w-5" />
+        </button>
+      </div>
 
-        <div class="grid gap-3">
-          <button
-            :for={option <- @tier_options}
-            phx-click="select_tier"
-            phx-value-tier={option.tier}
-            class={[
-              "w-full rounded-xl border px-4 py-3 text-left transition-colors",
-              @selected_tier == option.tier && "border-amber-300 bg-amber-300/10",
-              @selected_tier != option.tier && "border-white/10 bg-white/5 hover:bg-white/10"
-            ]}
-          >
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-semibold text-white">{option.tier} month{if option.tier > 1, do: "s", else: ""}</p>
-                <p class="text-xs text-[#adadb8]">
-                  USD {option.amount_usd} • KES {option.amount_kes}
-                </p>
-              </div>
-              <%= if @selected_tier == option.tier do %>
-                <span class="rounded-full bg-amber-300 px-2 py-0.5 text-xs font-bold text-black">Selected</span>
-              <% end %>
+      <div class="grid gap-3">
+        <button
+          :for={option <- @tier_options}
+          phx-click="select_tier"
+          phx-value-tier={option.tier}
+          class={[
+            "w-full rounded-xl border px-4 py-3 text-left transition-colors",
+            @selected_tier == option.tier && "border-blue-300 bg-blue-300/10",
+            @selected_tier != option.tier && "border-white/10 bg-white/5 hover:bg-white/10"
+          ]}
+        >
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="font-semibold text-white">
+                {option.tier} month{if option.tier > 1, do: "s", else: ""}
+              </p>
+              <p class="text-xs text-[#adadb8]">
+                USD {option.amount_usd} • KES {option.amount_kes}
+              </p>
             </div>
-          </button>
-        </div>
+            <%= if @selected_tier == option.tier do %>
+              <span class="rounded-full bg-blue-300 px-2 py-0.5 text-xs font-bold text-black">
+                Selected
+              </span>
+            <% end %>
+          </div>
+        </button>
+      </div>
 
-        <div class="mt-5 flex justify-end gap-2">
-          <button
-            phx-click="close_subscribe_modal"
-            class="rounded-lg border border-white/10 px-4 py-2 text-sm font-semibold text-[#d2d2da] hover:bg-white/5"
-          >
-            Cancel
-          </button>
-          <button
-            phx-click="subscribe_to_tier"
-            class="rounded-lg bg-amber-400 px-4 py-2 text-sm font-bold text-black hover:bg-amber-300"
-          >
-            Confirm Subscription
-          </button>
-        </div>
+      <div class="mt-5 flex justify-end gap-2">
+        <button
+          phx-click="close_subscribe_modal"
+          class="rounded-lg border border-white/10 px-4 py-2 text-sm font-semibold text-[#d2d2da] hover:bg-white/5"
+        >
+          Cancel
+        </button>
+        <button
+          phx-click="subscribe_to_tier"
+          class="glass-button"
+        >
+          Confirm Subscription
+        </button>
       </div>
     </div>
-  <% end %>
+  </div>
+<% end %>

@@ -47,7 +47,9 @@ defmodule KameramaniPhx.SubscriptionsTest do
         streamer_id: streamer.id
       }
 
-      assert {:ok, %Subscription{} = subscription} = Subscriptions.create_subscription(valid_attrs)
+      assert {:ok, %Subscription{} = subscription} =
+               Subscriptions.create_subscription(valid_attrs)
+
       assert subscription.status == "active"
       assert subscription.tier == 3
       assert subscription.amount_usd == Decimal.new("5.37")
@@ -75,7 +77,9 @@ defmodule KameramaniPhx.SubscriptionsTest do
         expires_at: ~U[2026-09-06 07:45:00Z]
       }
 
-      assert {:ok, %Subscription{} = subscription} = Subscriptions.update_subscription(subscription, update_attrs)
+      assert {:ok, %Subscription{} = subscription} =
+               Subscriptions.update_subscription(subscription, update_attrs)
+
       assert subscription.status == "active"
       assert subscription.tier == 6
       assert subscription.amount_usd == Decimal.new("10.15")
@@ -87,7 +91,10 @@ defmodule KameramaniPhx.SubscriptionsTest do
 
     test "update_subscription/2 with invalid data returns error changeset" do
       subscription = subscription_fixture()
-      assert {:error, %Ecto.Changeset{}} = Subscriptions.update_subscription(subscription, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Subscriptions.update_subscription(subscription, @invalid_attrs)
+
       assert subscription == Subscriptions.get_subscription!(subscription.id)
     end
 

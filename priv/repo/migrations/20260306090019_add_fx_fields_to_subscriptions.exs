@@ -21,7 +21,9 @@ defmodule KameramaniPhx.Repo.Migrations.AddFxFieldsToSubscriptions do
              check: "amount_kes > 0"
            )
 
-    create constraint(:subscriptions, :subscriptions_fx_rate_must_be_positive, check: "fx_rate > 0")
+    create constraint(:subscriptions, :subscriptions_fx_rate_must_be_positive,
+             check: "fx_rate > 0"
+           )
 
     alter table(:subscriptions) do
       modify :amount_kes, :decimal, precision: 12, scale: 2, null: false, default: nil

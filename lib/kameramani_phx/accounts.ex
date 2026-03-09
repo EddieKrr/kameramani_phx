@@ -213,7 +213,6 @@ defmodule KameramaniPhx.Accounts do
     Subscriptions.subscribe_to_streamer(user_id, streamer_id, tier)
   end
 
-
   def deliver_user_update_email_instructions(%User{} = user, current_email, update_email_url_fun)
       when is_function(update_email_url_fun, 1) do
     {encoded_token, user_token} = UserToken.build_email_token(user, "change:" <> current_email)
