@@ -5181,6 +5181,11 @@ select {
   border-color: rgb(255 255 255 / 0.5);
 }
 
+.border-green-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(74 222 128 / var(--tw-border-opacity));
+}
+
 .border-r-slate-700 {
   --tw-border-opacity: 1;
   border-right-color: rgb(51 65 85 / var(--tw-border-opacity));
@@ -5607,6 +5612,11 @@ select {
 
 .bg-white\/70 {
   background-color: rgb(255 255 255 / 0.7);
+}
+
+.bg-green-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(134 239 172 / var(--tw-bg-opacity));
 }
 
 .bg-gradient-to-b {
