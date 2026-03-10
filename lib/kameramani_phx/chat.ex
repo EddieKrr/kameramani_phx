@@ -95,17 +95,17 @@ defmodule KameramaniPhx.Chat do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_message(%Scope{} = user, attrs) do
-    attrs = Map.put(attrs, :user_id, user.user.id)
+  # def create_message(%Scope{} = user, attrs) do
+  #   attrs = Map.put(attrs, :user_id, user.user.id)
 
-    with {:ok, message = %Message{}} <-
-           %Message{}
-           |> Message.changeset(attrs)
-           |> Repo.insert() do
-      broadcast_message(user, {:created, message})
-      {:ok, message}
-    end
-  end
+  #   with {:ok, message = %Message{}} <-
+  #          %Message{}
+  #          |> Message.changeset(attrs)
+  #          |> Repo.insert() do
+  #     broadcast_message(user, {:created, message})
+  #     {:ok, message}
+  #   end
+  # end
 
   @doc """
   Updates a message.

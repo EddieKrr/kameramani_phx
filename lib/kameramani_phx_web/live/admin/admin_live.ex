@@ -2,6 +2,12 @@ defmodule KameramaniPhxWeb.AdminLive do
   use KameramaniPhxWeb, :live_view
   import KameramaniPhxWeb.AdminComponents
 
+  alias KameramaniPhx.Accounts
+  alias KameramaniPhx.Streaming
+
+  @users_page_size 6
+  @streams_page_size 6
+
   @impl true
   def mount(_params, _session, socket) do
     if connected?(socket) do
@@ -30,7 +36,8 @@ defmodule KameramaniPhxWeb.AdminLive do
     active_tab = "users"
 
 
-    users = KameramaniPhx.Accounts.get_all_users()
+    users_page = Accounts.get_all_users(page: 1, page_size: @users_page_size)
+    live_streams_page = Streaming.list_live_streams(page: 1, page_size: @streams_page_size)
 
     {:ok,
      assign(socket,
@@ -38,7 +45,8 @@ defmodule KameramaniPhxWeb.AdminLive do
        layout_type: :admin,
        active_tab: active_tab,
        allowed_tabs: Enum.map(menu_items, & &1.id),
-       users: users,
+       users_page: users_page,
+       live_streams_page: live_streams_page,
        menu_items: menu_items
      )}
   end
@@ -47,6 +55,26 @@ defmodule KameramaniPhxWeb.AdminLive do
   def handle_event("some_admin_action", _value, socket) do
     # Handle admin-specific events here
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("paginate_users", %{"page" => page}, socket) do
+    page_number = page_param(page, socket.assigns.users_page.page_number)
+
+    users_page =
+      Accounts.get_all_users(page: page_number, page_size: @users_page_size)
+
+    {:noreply, assign(socket, users_page: users_page)}
+  end
+
+  @impl true
+  def handle_event("paginate_streams", %{"page" => page}, socket) do
+    page_number = page_param(page, socket.assigns.live_streams_page.page_number)
+
+    live_streams_page =
+      Streaming.list_live_streams(page: page_number, page_size: @streams_page_size)
+
+    {:noreply, assign(socket, live_streams_page: live_streams_page)}
   end
 
   @impl true
@@ -71,8 +99,8 @@ defmodule KameramaniPhxWeb.AdminLive do
 
   @impl true
   def handle_info({:stream_status_updated, updated_stream}, socket) do
-    users =
-      Enum.map(socket.assigns.users, fn user ->
+    entries =
+      Enum.map(socket.assigns.users_page.entries, fn user ->
         if user.id == updated_stream.user_id do
           %{user | is_live: updated_stream.is_live}
         else
@@ -80,6 +108,27 @@ defmodule KameramaniPhxWeb.AdminLive do
         end
       end)
 
-    {:noreply, assign(socket, users: users)}
+    live_streams_page =
+      Streaming.list_live_streams(
+        page: socket.assigns.live_streams_page.page_number,
+        page_size: @streams_page_size
+      )
+
+    {:noreply,
+     socket
+     |> assign(
+       users_page: %{socket.assigns.users_page | entries: entries},
+       live_streams_page: live_streams_page
+     )}
+  end
+
+  defp page_param(value, default) do
+    case Integer.parse(to_string(value || "")) do
+      {int, ""} when int >= 1 ->
+        int
+
+      _ ->
+        default || 1
+    end
   end
 end

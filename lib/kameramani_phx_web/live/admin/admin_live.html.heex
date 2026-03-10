@@ -15,7 +15,7 @@
   </div>
   <%= case @active_tab do %>
     <% "users" -> %>
-      <.user_tab users={@users} />
+      <.user_tab users_page={@users_page} live_streams_page={@live_streams_page} />
     <% "categories" -> %>
       <.category_tab></.category_tab>
     <% "tags" -> %>

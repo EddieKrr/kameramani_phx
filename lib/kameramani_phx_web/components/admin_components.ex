@@ -2,10 +2,14 @@ defmodule KameramaniPhxWeb.AdminComponents do
   use Phoenix.Component
   import KameramaniPhxWeb.CoreComponents
 
+  alias KameramaniPhxWeb.Presence
+
   attr :item, :map, required: true
   attr :active, :boolean, default: false
   attr :prev_active, :boolean, default: false
   attr :next_active, :boolean, default: false
+  attr :users_page, :map, required: true
+  attr :live_streams_page, :map, required: true
 
   def sidebar_link(assigns) do
     ~H"""
@@ -55,12 +59,11 @@ defmodule KameramaniPhxWeb.AdminComponents do
   """
 end
 
-  attr :users, :list, required: true
   def user_tab(assigns) do
   ~H"""
   <div class="bg-white rounded-3xl shadow-sm border border-white/50 p-8 min-h-full col-span-5 overflow-y-auto h-screen">
 
-    <div class="flex justify-between items-center mb-8">
+    <div class="flex justify-between items-center mb-4">
       <div>
         <h2 class="text-3xl font-bold text-slate-800 tracking-tight">User Management</h2>
         <p class="text-slate-500 mt-1">View and manage Kameramani accounts.</p>
@@ -98,50 +101,50 @@ end
         </thead>
 
         <tbody class="divide-y divide-gray-200 text-slate-700">
-          <%= for users <- @users do %>
+          <%= for user <- @users_page.entries do %>
           <tr class="hover:bg-blue-50/50 transition-colors group">
 
             <td class="py-4 px-6 flex items-center gap-3">
               <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold shadow-sm">
-                {String.first(users.username)|> String.upcase()}
+                {String.first(user.username) |> String.upcase()}
               </div>
               <div>
                 <div class="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-                  {users.email}
+                  {user.email}
                 </div>
 
               </div>
             </td>
 
             <td class="py-4 px-6">
-              <span :for={role <- users.roles} class="bg-purple-100 text-purple-700 py-1 px-3 rounded-full text-xs font-bold border border-purple-200">
+              <span :for={role <- user.roles} class="bg-purple-100 text-purple-700 py-1 px-3 rounded-full text-xs font-bold border border-purple-200">
                 {role.name}
               </span>
             </td>
 
             <td class="py-4 px-6">
-                    <%= if Map.get(users, :is_live) do %>
-                      <span class="rounded-full bg-green-400 border-2 border-green-200 uppercase animate-pulse">live</span>
-                    <%else%>
-                      <span class="rounded-full bg-red-500 border-2 border-red-200 uppercase">offline</span>
-                    <%end %>
+              <%= if Map.get(user, :is_live) do %>
+                <span class="rounded-full bg-green-400 border-2 border-green-200 uppercase animate-pulse px-3 py-1">live</span>
+              <% else %>
+                <span class="rounded-full bg-red-500 border-2 border-red-200 uppercase px-3 py-1">offline</span>
+              <% end %>
             </td>
 
             <td class="py-4 px-6">
               <div class="flex flex-wrap gap-2 text-xs font-semibold">
                 <span class="rounded-full bg-amber-100 px-3 py-1 text-amber-700">
-                  Subs {users.subscriber_count}
+                  Subs {user.subscriber_count}
                 </span>
                 <span class="rounded-full bg-sky-100 px-3 py-1 text-sky-700">
-                  Following {users.following_count}
+                  Following {user.following_count}
                 </span>
                 <span class="rounded-full bg-emerald-100 px-3 py-1 text-emerald-700">
-                  Followers {users.follower_count}
+                  Followers {user.follower_count}
                 </span>
               </div>
             </td>
 
-            <td class="py-4 px-6 text-sm text-slate-500">{Calendar.strftime(users.inserted_at, "%B, %d, %Y")}</td>
+            <td class="py-4 px-6 text-sm text-slate-500">{Calendar.strftime(user.inserted_at, "%B, %d, %Y")}</td>
 
             <td class="py-4 px-6 text-right">
               <button class="text-slate-400 hover:text-blue-500 font-medium text-sm mr-4 transition-colors">Edit</button>
@@ -154,9 +157,98 @@ end
       </table>
     </div>
 
+    <div class="mt-6 flex items-center justify-between text-sm text-slate-500">
+      <p>
+        Page {@users_page.page_number} of {@users_page.total_pages} · {@users_page.total_entries} users
+      </p>
+      <div class="flex gap-2">
+        <button
+          class="px-3 py-1 rounded-xl border border-gray-200 hover:bg-blue-50 transition-colors disabled:opacity-40"
+          phx-click="paginate_users"
+          phx-value-page={@users_page.page_number - 1}
+          disabled={@users_page.page_number <= 1}
+        >
+          Previous
+        </button>
+        <button
+          class="px-3 py-1 rounded-xl border border-gray-200 hover:bg-blue-50 transition-colors disabled:opacity-40"
+          phx-click="paginate_users"
+          phx-value-page={@users_page.page_number + 1}
+          disabled={@users_page.page_number >= @users_page.total_pages}
+        >
+          Next
+        </button>
+      </div>
+    </div>
+
+    <div class="mt-10 bg-slate-50 rounded-3xl border border-slate-100 shadow-sm p-6">
+      <div class="flex items-center justify-between mb-5">
+        <div>
+          <h3 class="text-xl font-semibold text-slate-800">Live streams currently on air</h3>
+          <p class="text-sm text-slate-500">
+            Showing page {@live_streams_page.page_number} of {@live_streams_page.total_pages}
+          </p>
+        </div>
+        <div class="flex gap-2">
+          <button
+            class="px-3 py-1 rounded-xl border border-gray-200 hover:bg-slate-100 transition-colors disabled:opacity-40"
+            phx-click="paginate_streams"
+            phx-value-page={@live_streams_page.page_number - 1}
+            disabled={@live_streams_page.page_number <= 1}
+          >
+            Previous
+          </button>
+          <button
+            class="px-3 py-1 rounded-xl border border-gray-200 hover:bg-slate-100 transition-colors disabled:opacity-40"
+            phx-click="paginate_streams"
+            phx-value-page={@live_streams_page.page_number + 1}
+            disabled={@live_streams_page.page_number >= @live_streams_page.total_pages}
+          >
+            Next
+          </button>
+        </div>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-2">
+        <%= if @live_streams_page.entries == [] do %>
+          <div class="col-span-full rounded-2xl border border-dashed border-slate-200 bg-white/70 py-8 text-center text-sm text-slate-500">
+            No streams are live right now.
+          </div>
+        <% else %>
+          <%= for stream <- @live_streams_page.entries do %>
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-col gap-3">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <p class="text-xs uppercase tracking-wide text-slate-500">
+                    {stream.category || "Just Chatting"}
+                  </p>
+                  <h3 class="text-lg font-semibold text-slate-900">
+                    {stream.title || "Untitled session"}
+                  </h3>
+                  <p class="text-sm text-slate-500">by {stream.user.username}</p>
+                </div>
+                <span class="text-xs font-semibold text-emerald-600">
+                  {stream_viewer_count(stream.id)} viewers
+                </span>
+              </div>
+              <div class="flex items-center justify-between text-xs text-slate-500">
+                <span>Started {Calendar.strftime(stream.inserted_at, "%b %d, %H:%M")}</span>
+                <span class="uppercase tracking-wider text-emerald-600">Live</span>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
   </div>
   """
 end
+
+  defp stream_viewer_count(stream_id) do
+    Presence.list("stream_viewers:#{stream_id}")
+    |> map_size()
+  end
   def category_tab(assigns) do
   ~H"""
   <div class="col-span-5 bg-white rounded-3xl shadow-sm border border-white/50 p-8 min-h-full">

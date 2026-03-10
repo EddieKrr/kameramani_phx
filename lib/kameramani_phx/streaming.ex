@@ -43,13 +43,17 @@ defmodule KameramaniPhx.Streaming do
     Repo.all(from s in Stream, preload: [:user])
   end
 
-  def list_live_streams do
-    Repo.all(
+  def list_live_streams(opts \\ []) do
+    query =
       from s in Stream,
         where: s.is_live == true,
         order_by: [desc: s.inserted_at],
         preload: [:user]
-    )
+
+    case opts do
+      [] -> Repo.all(query)
+      _ -> Repo.paginate(query, opts)
+    end
   end
 
   @doc """
