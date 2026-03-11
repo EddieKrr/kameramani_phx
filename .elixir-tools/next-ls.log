@@ -162255,3 +162255,7 @@ PATH=/home/eddie/.local/share/mise/installs/elixir/1.19.5-otp-28/bin:/home/eddie
 14:23:20.385 id=1108 [debug] handled request client -> server textDocument/documentSymbol in 6ms
 
 14:23:20.477 id=1109 [debug] handled request client -> server textDocument/documentSymbol in 5ms
+
+14:24:16.370 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 675µs
+
+14:24:21.121 [debug] handled notification client -> server $/setTrace in 586µs
