@@ -25,7 +25,7 @@ defmodule KameramaniPhx.RTMPIngestPipeline do
         options: [
           encoding: :H264,
           # take 4s captures for each segment
-          segment_duration: Membrane.Time.seconds(4)
+          segment_duration: Membrane.Time.seconds(2)
         ]
       )
       |> get_child(:sink),
@@ -34,7 +34,7 @@ defmodule KameramaniPhx.RTMPIngestPipeline do
       |> via_in(Pad.ref(:input, :audio),
         options: [
           encoding: :AAC,
-          segment_duration: Membrane.Time.seconds(4)
+          segment_duration: Membrane.Time.seconds(2)
         ]
       )
       |> get_child(:sink)
