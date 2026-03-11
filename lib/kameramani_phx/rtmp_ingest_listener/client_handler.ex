@@ -36,7 +36,7 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
     @impl true
     def handle_init(opts), do: opts
 
-    # 1. The Pipeline's SourceBin sends this message. We save its PID.
+    #The Pipeline's SourceBin sends this message. We save its PID.
 
     @impl true
     def handle_info({:send_me_data, source_pid}, state) do
@@ -47,8 +47,8 @@ defmodule KameramaniPhx.RTMPIngestListener.ClientHandler do
     @impl true
     def handle_info(_message, state), do: state
 
-    # 2. OBS sends video/audio data. We forward it to the saved Pipeline PID.
-    # CRITICAL FIX: Return state DIRECTLY
+    #OBS sends video/audio data. We forward it to the saved Pipeline PID.
+
     @impl true
     def handle_data_available(data, %{source_pid: source_pid} = state)
         when not is_nil(source_pid) do
