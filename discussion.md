@@ -14,6 +14,13 @@
 - Indexing/search: store metadata (title, category, tags, duration, thumbnail, streamer, start/end time) for discovery and filtering.
 - Storage backend: compatible with local disk or object storage (e.g., R2/S3) as long as manifests and segments are quickly accessible by the CDN.
 
+## 2026-03-10 Streaming Capacity Discussion
+
+- We mapped the overall capacity to RTMP ingest/encoding per streamer vs. HLS delivery per viewer; the Phoenix nodes saturate when each fan pulls segments directly, so unbounded viewers can bite.
+- The simplest throttles are presence-based caps (count viewers per stream) or per-IP limits before handing out the stream URLs; without them a busy show could exhaust your origin bandwidth.
+- Adding a Presence hook for `{stream_id, ip}` lets you reject joins once an IP exceeds its quota without a separate GenServer, and you can still issue CDN URLs for approved viewers.
+- Offloading the heavy bytes to a CDN (Cloudflare Stream/R2, Fastly, etc.) is the scalable step—Phoenix handles authentication/metadata while the CDN handles millions of viewers.
+- We are still just exploring these guardrails; no code was changed yet, so you can pick whether to enforce caps in Presence, add per-IP tracking, or adopt a CDN first.
 ## 2026-03-04 Chat Crash Discussion
 
 - Reported runtime error: `KeyError key :stream_id not found` in `KameramaniPhxWeb.ChatLiveComponent.update/2`.
@@ -24,3 +31,17 @@
   - initialize `:messages` stream at mount
   - only subscribe/load initial history when stream id exists and component has not subscribed yet
 - Outcome: incremental chat updates no longer crash when `send_update/2` omits `stream_id`; compile passes.
+
+## 2026-03-10 ChatLive per-IP guardrails
+
+- `ChatLive` now fetches the streamer record before branching, records the viewer IP from `connect_info`, and enforces a `@per_ip_limit` guard against repeated joins. Presence metadata includes the IP so the guard can count existing watchers for the same address before tracking a new one.
+- `ChatLive` and `StudioLive` include `stream_id` when calling `send_update/2`, which removes the earlier KeyError from `ChatLiveComponent.update/2` and keeps the chat history scoped to the correct stream.
+- The `attr :users` declaration in `AdminComponents.user_tab/1` moved ahead of any function clause so LiveView can compile it; this clears the compile-time complaint that attributes must be defined before functions.
+- Added a `@total_viewer_limit` guard so the stream will stop accepting new connections once Presence already reports that viewer ceiling, even when the new viewers come from unique IPs.
+
+## 2026-03-14 Admin pagination
+
+- `Accounts.get_all_users/1` now accepts pagination options (`page` and `page_size`) and returns a `Scrivener.Page` if those opts are supplied, otherwise it keeps returning the full list for callers that don’t pass pagination.
+- `Streaming.list_live_streams/1` mirrors the same optional pagination pattern, making it easy to drive both the user table and the “Live streams currently on air” list from page structs.
+- `AdminLive` stores `users_page` and `live_streams_page` in the socket, handles `paginate_users`/`paginate_streams` events, and forwards those pages to `AdminComponents.user_tab`, which renders the table plus pagination controls and a paged stream grid.
+- Added the explicit `:scrivener` dependency so `Scrivener.Config`/`Repo.paginate/2` resolve once dependencies are recompiled.

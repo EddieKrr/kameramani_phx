@@ -59,6 +59,7 @@ defmodule KameramaniPhxWeb.StudioLive do
   def handle_info({:new_message, message}, socket) do
     send_update(KameramaniPhxWeb.ChatLiveComponent,
       id: "studio-chat-component",
+      stream_id: socket.assigns.current_stream && socket.assigns.current_stream.id,
       new_message: message
     )
 

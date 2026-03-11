@@ -13,12 +13,23 @@ defmodule KameramaniPhx.Accounts do
 
   ## Database getters
 
-  def get_all_users do
-    User
-    |> with_user_data()
-    |> Repo.all()
-    |> Repo.preload(:social_accounts)
-    |> Repo.preload(:roles)
+  def get_all_users(opts \\ []) do
+    query =
+      User
+      |> order_by([u], desc: u.inserted_at)
+      |> preload([:social_accounts, :roles])
+
+    case opts do
+      [] ->
+        query
+        |> Repo.all()
+        |> apply_data()
+
+      _ ->
+        query
+        |> Repo.paginate(opts)
+        |> Map.update!(:entries, &apply_data/1)
+    end
   end
 
   # list users on nav
@@ -33,34 +44,33 @@ defmodule KameramaniPhx.Accounts do
         order_by: [asc: u.username],
         limit: 8
       )
-      |> with_user_data()
       |> Repo.all()
-      |> Repo.preload(:social_accounts)
-      |> Repo.preload(:roles)
+
+      |> apply_data()
     end
   end
 
   def get_user_by_email(email) when is_binary(email) do
     Repo.get_by(User, email: email)
-    |> populate_user_data()
+    |> apply_data_single()
   end
 
   def get_user_by_username(username) when is_binary(username) do
     Repo.get_by(User, username: username)
     |> Repo.preload(:social_accounts)
     |> Repo.preload(:roles)
-    |> populate_user_data()
+    |> apply_data_single()
   end
 
   def get_user_by_email_and_password(email, password)
       when is_binary(email) and is_binary(password) do
     user = Repo.get_by(User, email: email)
-    if user && User.valid_password?(user, password), do: populate_user_data(user)
+    if user && User.valid_password?(user, password), do: apply_data_single(user)
   end
 
   def get_user!(id) do
     Repo.get!(User, id)
-    |> populate_user_data()
+    |> apply_data_single()
   end
 
   ## User registration
@@ -109,7 +119,7 @@ defmodule KameramaniPhx.Accounts do
 
     case Repo.one(query) do
       {%User{} = user, token_inserted_at} ->
-        {populate_user_data(user), token_inserted_at}
+        {apply_data_single(user), token_inserted_at}
 
       other ->
         other
@@ -119,7 +129,7 @@ defmodule KameramaniPhx.Accounts do
   def get_user_by_magic_link_token(token) do
     with {:ok, query} <- UserToken.verify_magic_link_token_query(token),
          {user, _token} <- Repo.one(query) do
-      populate_user_data(user)
+      apply_data_single(user)
     else
       _ -> nil
     end
@@ -331,57 +341,81 @@ defmodule KameramaniPhx.Accounts do
     end)
   end
 
-  defp with_user_data(query) do
+  defp apply_data(users) do
+    ids = Enum.map(users, & &1.id)
+    data = fetch_user_data(ids)
+
+    Enum.map(users, fn user ->
+      merge_user_data(user, Map.get(data, user.id, %{}))
+    end)
+  end
+
+  defp apply_data_single(nil), do: nil
+
+  defp apply_data_single(%User{} = user) do
+    data =
+      [user.id]
+      |> fetch_user_data()
+      |> Map.get(user.id, %{})
+
+    merge_user_data(user, data)
+  end
+
+  defp fetch_user_data([]), do: %{}
+
+  defp fetch_user_data(user_ids) do
     follower_counts =
       from(f in Follow,
+        where: f.followed_id in ^user_ids,
         group_by: f.followed_id,
-        select: %{user_id: f.followed_id, follower_count: count(f.id)}
+        select: {f.followed_id, count(f.id)}
       )
+      |> Repo.all()
+      |> Enum.into(%{}, fn {id, count} -> {id, %{follower_count: count}} end)
 
     following_counts =
       from(f in Follow,
+        where: f.follower_id in ^user_ids,
         group_by: f.follower_id,
-        select: %{user_id: f.follower_id, following_count: count(f.id)}
+        select: {f.follower_id, count(f.id)}
       )
+      |> Repo.all()
+      |> Enum.into(%{}, fn {id, count} -> {id, %{following_count: count}} end)
 
     subscriber_counts =
       from(s in Subscription,
-        where: s.status == "active",
+        where: s.streamer_id in ^user_ids and s.status == "active",
         group_by: s.streamer_id,
-        select: %{user_id: s.streamer_id, subscriber_count: count(s.id)}
+        select: {s.streamer_id, count(s.id)}
       )
+      |> Repo.all()
+      |> Enum.into(%{}, fn {id, count} -> {id, %{subscriber_count: count}} end)
 
-    from(u in query,
-      left_join: live_stream in Stream,
-      on: live_stream.user_id == u.id,
-      left_join: follower_count in subquery(follower_counts),
-      on: follower_count.user_id == u.id,
-      left_join: following_count in subquery(following_counts),
-      on: following_count.user_id == u.id,
-      left_join: subscriber_count in subquery(subscriber_counts),
-      on: subscriber_count.user_id == u.id,
-      select_merge: %{
-        is_live: coalesce(live_stream.is_live, false),
-        follower_count: coalesce(follower_count.follower_count, 0),
-        following_count: coalesce(following_count.following_count, 0),
-        subscriber_count: coalesce(subscriber_count.subscriber_count, 0)
-      }
-    )
+    live_users =
+      from(s in Stream,
+        where: s.user_id in ^user_ids and s.is_live == true,
+        distinct: true,
+        select: s.user_id
+      )
+      |> Repo.all()
+
+    Enum.into(user_ids, %{}, fn id ->
+      data =
+        %{is_live: id in live_users}
+        |> Map.merge(follower_counts[id] || %{})
+        |> Map.merge(following_counts[id] || %{})
+        |> Map.merge(subscriber_counts[id] || %{})
+
+      {id, data}
+    end)
   end
 
-  defp populate_user_data(nil), do: nil
-
-  defp populate_user_data(%User{} = user) do
-    metrics_user =
-      from(u in User, where: u.id == ^user.id)
-      |> with_user_data()
-      |> Repo.one()
-
+  defp merge_user_data(user, data) do
     struct(user, %{
-      is_live: metrics_user.is_live,
-      follower_count: metrics_user.follower_count,
-      following_count: metrics_user.following_count,
-      subscriber_count: metrics_user.subscriber_count
+      is_live: Map.get(data, :is_live, false),
+      follower_count: Map.get(data, :follower_count, 0),
+      following_count: Map.get(data, :following_count, 0),
+      subscriber_count: Map.get(data, :subscriber_count, 0)
     })
   end
 

@@ -82,7 +82,9 @@ defmodule KameramaniPhx.MixProject do
       {:membrane_h264_plugin, "~> 0.9.0"},
       {:membrane_aac_plugin, "~> 0.19.0"},
       {:membrane_file_plugin, "~> 0.17.0"},
-      {:membrane_http_adaptive_stream_plugin, "~> 0.18.4"}
+      {:membrane_http_adaptive_stream_plugin, "~> 0.18.4"},
+      {:scrivener, "~> 2.7"},
+      {:scrivener_ecto, "~> 3.1"}
     ]
   end
 
