@@ -4029,6 +4029,14 @@ select {
   z-index: 70;
 }
 
+.z-\[60\] {
+  z-index: 60;
+}
+
+.z-\[110\] {
+  z-index: 110;
+}
+
 .col-span-1 {
   grid-column: span 1 / span 1;
 }
@@ -4582,6 +4590,10 @@ select {
 
 .max-w-xl {
   max-width: 36rem;
+}
+
+.max-w-lg {
+  max-width: 32rem;
 }
 
 .flex-1 {
