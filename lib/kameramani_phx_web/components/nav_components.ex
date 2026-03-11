@@ -1,4 +1,4 @@
-defmodule KameramaniPhxWeb.NavComponents do
+  defmodule KameramaniPhxWeb.NavComponents do
   use KameramaniPhxWeb, :html
 
   attr :current_user, :any, required: true
