@@ -69,7 +69,7 @@ end
         <p class="text-slate-500 mt-1">View and manage Kameramani accounts.</p>
       </div>
         <button
-          phx-click={JS.dispatch("open-add-user-modal")}
+          
           class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-full transition-colors shadow-lg"
           >
           + Add User
