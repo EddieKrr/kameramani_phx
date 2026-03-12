@@ -24,6 +24,20 @@
  - Added a `@total_viewer_limit` guard for `ChatLive` so the stream rejects new connections when Presence already reports the configured viewer ceiling (currently 500).
 - Added Scivener-driven pagination for the admin dashboard by reusing `Accounts.get_all_users(page:...)` and `Streaming.list_live_streams(page:...)`, showing pagination controls, and rendering a paged live-streams card list in the `user_tab`.
 - Added the `:scrivener` dependency so `use Scrivener` in `Repo` and `Repo.paginate/2` resolve cleanly once `mix deps.get` runs again.
+- Implemented User Verification and Social Accounts integration.
+  - Created `VerificationRequest` and `SocialAccount` schemas/migrations.
+  - Added "Get Verified" button and modal for profile owners.
+  - Implemented social account linking with platform-specific URL prefixing (YouTube, X, Instagram, Twitch, TikTok, Discord).
+  - Added verified badge next to usernames in profile headers.
+  - Integrated social icons into the profile "About" section.
+  - Added a library of social and utility SVG icons to `CoreComponents`.
+
+## In Progress / Next Steps
+- **Distributed Storage Migration:** Resolve the issue where viewers on Machine A cannot watch streams originating from Machine B.
+  - Research `Membrane.HTTPAdaptiveStream.Storages.S3Storage` for centralized HLS segment storage.
+  - Implement S3/R2 storage backend in `pipeline.ex`.
+  - Update `VideoPlayer` hook to resolve the correct HLS manifest URL from the shared storage provider.
+  - Move thumbnail storage from `priv/static/thumbnails` to centralized storage.
 
 ## Validation
 - `mix compile` currently fails because Mix.PubSub cannot open a TCP socket (`:eperm`) inside the sandboxed environment. This is unrelated to the recent code changes.

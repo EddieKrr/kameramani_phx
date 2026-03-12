@@ -10,7 +10,7 @@ defmodule KameramaniPhx.Accounts do
   alias KameramaniPhx.Subscriptions.Subscription
   alias KameramaniPhx.Subscriptions
   alias KameramaniPhx.Streaming.Stream
-
+  alias KameramaniPhx.Accounts.VerificationRequest
   ## Database getters
 
   def get_all_users(opts \\ []) do
@@ -45,7 +45,6 @@ defmodule KameramaniPhx.Accounts do
         limit: 8
       )
       |> Repo.all()
-
       |> apply_data()
     end
   end
@@ -185,17 +184,17 @@ defmodule KameramaniPhx.Accounts do
 
     {count, _} =
       Repo.insert_all(
-      Follow,
-      [
+        Follow,
         [
-          follower_id: follower_id,
-          followed_id: followed_id,
-          inserted_at: now,
-          updated_at: now
-        ]
-      ],
-      on_conflict: :nothing
-    )
+          [
+            follower_id: follower_id,
+            followed_id: followed_id,
+            inserted_at: now,
+            updated_at: now
+          ]
+        ],
+        on_conflict: :nothing
+      )
 
     if count > 0 and follower_id != followed_id do
       Notifications.notify_new_follower(get_user!(follower_id), get_user!(followed_id))
@@ -314,11 +313,6 @@ defmodule KameramaniPhx.Accounts do
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_assoc(:roles, Enum.uniq([role | user.roles]))
     |> Repo.update()
-  end
-
-  # get users with roles
-  def get_role_by_name(name) do
-    Repo.get_by(Role, name: name)
   end
 
   # check if user has a role
@@ -474,5 +468,110 @@ defmodule KameramaniPhx.Accounts do
       preload: [:roles]
     )
     |> Repo.all()
+  end
+
+  # user wants to get verified
+  def get_verified(%User{} = user, attrs \\ %{}) do
+    if Repo.exists?(
+         from vr in VerificationRequest, where: vr.user_id == ^user.id and vr.status == "pending"
+       ) do
+      {:error, :already_requested}
+    else
+      create_verification_request(user, attrs)
+    end
+  end
+
+  defp create_verification_request(user, attrs) do
+    user = Repo.preload(user, :social_accounts)
+
+    fetch_socials =
+      Enum.map(user.social_accounts, & &1.url)
+
+    attrs =
+      attrs
+      |> Map.put("user_id", user.id)
+      |> Map.put_new("social_links", fetch_socials)
+
+    case %VerificationRequest{}
+         |> VerificationRequest.changeset(attrs)
+         |> Repo.insert() do
+      {:ok, request} ->
+        Notifications.notify_verification_submitted(user, request.id)
+        {:ok, request}
+
+      error ->
+        error
+    end
+  end
+
+  def list_verification_requests do
+    Repo.all(VerificationRequest)
+    |> Repo.preload(:user)
+  end
+
+  def list_pending_verification_requests do
+    from(vr in VerificationRequest,
+      where: vr.status == "pending",
+      order_by: [desc: vr.inserted_at],
+      preload: [:user]
+    )
+    |> Repo.all()
+  end
+
+  def get_verification_request!(id) do
+    Repo.get!(VerificationRequest, id)
+    |> Repo.preload(:user)
+  end
+
+  # check request status
+  def check_verification_status(%User{} = user) do
+    Repo.get_by(VerificationRequest, user_id: user.id, status: "pending")
+  end
+
+  def get_latest_verification_request(%User{} = user) do
+    from(vr in VerificationRequest,
+      where: vr.user_id == ^user.id,
+      order_by: [desc: vr.inserted_at],
+      limit: 1
+    )
+    |> Repo.one()
+  end
+
+  def get_latest_verification_request(_), do: nil
+
+  # admin approves or rejects a verification request
+  def approve_verification_request(%VerificationRequest{} = request) do
+    request_changeset = VerificationRequest.changeset(request, %{"status" => "approved"})
+    user = get_user!(request.user_id)
+    user_changeset = User.admin_changeset(user, %{"is_verified" => true})
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:approved_request, request_changeset)
+      |> Ecto.Multi.update(:verify_user, user_changeset)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{approved_request: request}} ->
+        Notifications.notify_verification_approved(user, request.id)
+        {:ok, result}
+
+      error ->
+        error
+    end
+  end
+
+  def reject_verification_request(%VerificationRequest{} = request) do
+    case request
+         |> VerificationRequest.changeset(%{"status" => "rejected"})
+         |> Repo.update() do
+      {:ok, request} ->
+        user = get_user!(request.user_id)
+        Notifications.notify_verification_rejected(user, request.id)
+        {:ok, request}
+
+      error ->
+        error
+    end
   end
 end

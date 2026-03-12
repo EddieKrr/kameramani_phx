@@ -7,6 +7,7 @@ defmodule KameramaniPhxWeb.ProfileComponents do
   attr :name, :string, required: true
   attr :avatar_url, :string, required: true
   attr :is_live, :boolean, default: false
+  attr :is_verified, :boolean, default: false
   attr :can_follow, :boolean, default: false
 
   def profile_header(assigns) do
@@ -29,8 +30,13 @@ defmodule KameramaniPhxWeb.ProfileComponents do
         </div>
 
         <div class="flex-1 text-center md:text-left">
-          <div class="flex items-center gap-3 mb-2">
+          <div class="flex items-center gap-3 mb-2 justify-center md:justify-start">
             <h1 class="text-4xl font-bold">{@name}</h1>
+            <%= if @is_verified do %>
+              <div class="tooltip tooltip-right" data-tip="Verified Creator">
+                <.svg variant="check-badge" class="h-6 w-6 text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.5)]" />
+              </div>
+            <% end %>
             <%= if @is_live do %>
               <.icon name="hero-signal" class="h-5 w-5 text-red-500 animate-pulse" />
               <span class="text-red-500 rounded-full bg-white/10 px-3 py-1 text-sm font-medium">
@@ -102,6 +108,7 @@ defmodule KameramaniPhxWeb.ProfileComponents do
   attr :member_since, :string, default: "Unknown"
   attr :email, :string, required: true
   attr :username, :string, required: true
+  attr :social_accounts, :list, default: []
 
   def about_section(assigns) do
     ~H"""
@@ -126,6 +133,28 @@ defmodule KameramaniPhxWeb.ProfileComponents do
           <div class="bg-white/5 rounded-xl p-6 text-indigo-200 mb-2">
             <h4 class="font-title text-lg mb-2 uppercase tracking-wider">Biography</h4>
             <p class="font-medium">{@bio}</p>
+          </div>
+
+          <div class="bg-white/5 rounded-xl p-6 text-indigo-200 mb-2">
+            <h4 class="font-title text-lg mb-4 uppercase tracking-wider">Socials</h4>
+            <div class="flex flex-wrap gap-4">
+              <%= if Enum.empty?(@social_accounts) do %>
+                <p class="text-slate-500 italic text-sm">No social accounts linked</p>
+              <% else %>
+                <a
+                  :for={social <- @social_accounts}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="group relative flex items-center justify-center w-12 h-12 rounded-xl bg-black/40 border border-white/5 hover:border-blue-500/50 hover:bg-blue-500/10 transition-all duration-300"
+                >
+                  <.svg variant={social.platform} class="w-6 h-6 text-slate-400 group-hover:text-blue-400 group-hover:scale-110 transition-all" />
+                  <span class="absolute -top-10 scale-0 group-hover:scale-100 bg-slate-800 text-white text-[10px] px-2 py-1 rounded font-bold uppercase tracking-widest whitespace-nowrap transition-all shadow-xl">
+                    {social.username}
+                  </span>
+                </a>
+              <% end %>
+            </div>
           </div>
         </div>
       </div>

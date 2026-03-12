@@ -26,7 +26,19 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
        is_subscribed: false,
        show_subscribe_modal: false,
        selected_tier: 1,
-       tier_options: Subscriptions.tier_options()
+       tier_options: Subscriptions.tier_options(),
+       show_verification_modal: false,
+       verification_request: nil,
+       social_platforms: [
+         %{id: "youtube", name: "YouTube", icon: "youtube", prefix: "https://youtube.com/@"},
+         %{id: "instagram", name: "Instagram", icon: "instagram", prefix: "https://instagram.com/"},
+         %{id: "x", name: "X", icon: "x-brand", prefix: "https://x.com/"},
+         %{id: "twitch", name: "Twitch", icon: "twitch", prefix: "https://twitch.tv/"},
+         %{id: "tiktok", name: "TikTok", icon: "tiktok", prefix: "https://tiktok.com/@"},
+         %{id: "discord", name: "Discord", icon: "discord", prefix: "https://discord.com/users/"}
+       ],
+       selected_platform: "youtube",
+       social_username: ""
      )}
   end
 
@@ -48,22 +60,29 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
 
         social_accounts = Socials.list_user_socials(user)
 
-        current_user =
+        current_user_data =
           case socket.assigns[:current_user] do
-            %{user: user} -> user
+            %{user: u} -> u
             _ -> nil
           end
 
+        verification_request =
+          if current_user_data && current_user_data.id == user.id do
+            Accounts.get_latest_verification_request(current_user_data)
+          else
+            nil
+          end
+
         is_following =
-          if current_user do
-            Accounts.is_following?(current_user, user)
+          if current_user_data do
+            Accounts.is_following?(current_user_data, user)
           else
             false
           end
 
         is_subscribed =
-          if current_user do
-            Subscriptions.subscribed_to_streamer?(current_user.id, user.id)
+          if current_user_data do
+            Subscriptions.subscribed_to_streamer?(current_user_data.id, user.id)
           else
             false
           end
@@ -94,6 +113,7 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
           |> assign(is_live: !!active_stream)
           |> assign(stream_id: if(active_stream, do: active_stream.id, else: nil))
           |> assign(active_stream: active_stream)
+          |> assign(verification_request: verification_request)
           |> assign(page_title: "Profile")
 
         {:noreply, socket}
@@ -234,5 +254,112 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
       )
 
     Repo.all(query)
+  end
+
+  def handle_event("open_verification_modal", _params, socket) do
+    {:noreply, assign(socket, show_verification_modal: true)}
+  end
+
+  def handle_event("close_verification_modal", _params, socket) do
+    {:noreply, assign(socket, show_verification_modal: false)}
+  end
+
+  def handle_event("select_platform", %{"platform" => platform}, socket) do
+    {:noreply, assign(socket, selected_platform: platform)}
+  end
+
+  def handle_event("update_social_username", %{"username" => username}, socket) do
+    {:noreply, assign(socket, social_username: username)}
+  end
+
+  def handle_event("add_social_account", _params, socket) do
+    current_user = socket.assigns.current_user.user
+    platform_id = socket.assigns.selected_platform
+    username = socket.assigns.social_username
+
+    if username == "" do
+      {:noreply, put_flash(socket, :error, "Username cannot be empty")}
+    else
+      platform = Enum.find(socket.assigns.social_platforms, &(&1.id == platform_id))
+      url = platform.prefix <> username
+
+      attrs = %{
+        platform: platform_id,
+        username: username,
+        url: url,
+        user_id: current_user.id
+      }
+
+      case Socials.add_social_account(current_user, attrs) do
+        {:ok, _social} ->
+          social_accounts = Socials.list_user_socials(socket.assigns.user)
+
+          {:noreply,
+           socket
+           |> assign(social_accounts: social_accounts)
+           |> assign(social_username: "")
+           |> put_flash(:info, "Social account added")}
+
+        {:error, changeset} ->
+          error_msg =
+            case changeset.errors[:user_id] do
+              {msg, _} -> "Error: #{msg}"
+              _ -> "Could not add social account"
+            end
+
+          {:noreply, put_flash(socket, :error, error_msg)}
+      end
+    end
+  end
+
+  def handle_event("remove_social_account", %{"id" => id}, socket) do
+    social = Socials.get_social_account!(id)
+
+    case Socials.delete_social_account(social) do
+      {:ok, _} ->
+        social_accounts = Socials.list_user_socials(socket.assigns.user)
+        {:noreply, assign(socket, social_accounts: social_accounts)}
+
+      {:error, _} ->
+        {:noreply, put_flash(socket, :error, "Could not remove social account")}
+    end
+  end
+
+  # user wants to get verified
+  def handle_event("request_verification", _params, socket) do
+    current_user = if socket.assigns.current_user, do: socket.assigns.current_user.user, else: nil
+
+    cond do
+      is_nil(current_user) ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Please log in to request verification")
+         |> push_navigate(to: ~p"/auth")}
+
+      current_user.is_verified == true ->
+        {:noreply, put_flash(socket, :error, "You are already a verified user")}
+
+      Accounts.check_verification_status(current_user) ->
+        {:noreply, put_flash(socket, :error, "You already have a pending verification request")}
+
+      Enum.empty?(socket.assigns.social_accounts) ->
+        {:noreply, put_flash(socket, :error, "Please add at least one social account first")}
+
+      true ->
+        case Accounts.get_verified(current_user) do
+          {:ok, request} ->
+            {:noreply,
+             socket
+             |> assign(verification_request: request)
+             |> assign(show_verification_modal: false)
+             |> put_flash(:info, "Verification request submitted")}
+
+          {:error, :already_requested} ->
+            {:noreply, put_flash(socket, :error, "Verification already requested")}
+
+          {:error, _reason} ->
+            {:noreply, put_flash(socket, :error, "Could not submit verification request")}
+        end
+    end
   end
 end

@@ -16,6 +16,8 @@
   <%= case @active_tab do %>
     <% "users" -> %>
       <.user_tab users_page={@users_page} live_streams_page={@live_streams_page} />
+    <% "verification" -> %>
+      <.verification_tab requests={@verification_requests} />
     <% "categories" -> %>
       <.category_tab></.category_tab>
     <% "tags" -> %>
