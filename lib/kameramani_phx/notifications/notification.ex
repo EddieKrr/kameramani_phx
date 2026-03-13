@@ -10,7 +10,7 @@ defmodule KameramaniPhx.Notifications.Notification do
   schema "notifications" do
     field :type, Ecto.Enum, values: @types
     field :entity_type, :string
-    field :entity_id, :binary_id
+    field :entity_id, :string
     field :metadata, :map, default: %{}
     field :read_at, :utc_datetime
 

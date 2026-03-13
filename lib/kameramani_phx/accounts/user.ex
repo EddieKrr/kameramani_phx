@@ -56,10 +56,18 @@ defmodule KameramaniPhx.Accounts.User do
   def registration_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:name, :username, :email, :age, :password, :chat_color])
-    |> validate_required([:name, :username, :email, :age, :password])
+    |> validate_required([:name, :username, :email, :age])
     |> validate_email(opts)
-    |> validate_password(opts)
+    |> validate_password_if_present(opts)
     |> maybe_put_chat_color()
+  end
+
+  defp validate_password_if_present(changeset, opts) do
+    if get_field(changeset, :password) do
+      validate_password(changeset, opts)
+    else
+      changeset
+    end
   end
 
   defp maybe_put_chat_color(changeset) do
@@ -70,6 +78,8 @@ defmodule KameramaniPhx.Accounts.User do
     end
   end
 
+  @allowed_domains ~w(gmail.com yahoo.com outlook.com hotmail.com icloud.com protonmail.com aol.com mail.com)
+
   defp validate_email(changeset, opts) do
     changeset =
       changeset
@@ -79,12 +89,36 @@ defmodule KameramaniPhx.Accounts.User do
       )
       |> validate_length(:email, max: 160)
 
+    # Only validate domain if format is valid so far
+    changeset =
+      if changeset.valid? do
+        validate_allowed_domain(changeset)
+      else
+        changeset
+      end
+
     if Keyword.get(opts, :validate_unique, true) do
       changeset
       |> unsafe_validate_unique(:email, KameramaniPhx.Repo)
       |> unique_constraint(:email)
     else
       changeset
+    end
+  end
+
+  defp validate_allowed_domain(changeset) do
+    case get_field(changeset, :email) do
+      nil ->
+        changeset
+
+      email ->
+        domain = email |> String.split("@") |> List.last() |> String.downcase()
+
+        if domain in @allowed_domains do
+          changeset
+        else
+          add_error(changeset, :email, "must be from a supported provider (Gmail, Yahoo, etc.)")
+        end
     end
   end
 
@@ -102,7 +136,7 @@ defmodule KameramaniPhx.Accounts.User do
     user
     |> cast(attrs, [:password, :password_confirmation])
     |> validate_required([:password])
-    |> validate_length(:password, min: 6, max: 72)
+    |> validate_length(:password, min: 12, max: 72)
     |> validate_confirmation(:password, message: "does not match password")
     |> case do
       %{changes: %{password: _}} = changeset ->
@@ -160,7 +194,7 @@ defmodule KameramaniPhx.Accounts.User do
   # update user stream profile
   def profile_changeset(user, attr) do
     user
-    |> cast(attr, [:username, :bio, :profile_picture, :mobile_number, :verification ])
+    |> cast(attr, [:username, :bio, :profile_picture, :mobile_number])
     |> validate_required([:username])
     |> validate_length(:username, min: 3, max: 20)
     |> validate_length(:bio, max: 160)
@@ -186,7 +220,7 @@ defmodule KameramaniPhx.Accounts.User do
   Confirms the account by setting `confirmed_at`.
   """
   def confirm_changeset(user) do
-    now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+    now = DateTime.utc_now() |> DateTime.truncate(:second)
     change(user, confirmed_at: now)
   end
 

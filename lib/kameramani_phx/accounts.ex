@@ -68,6 +68,10 @@ defmodule KameramaniPhx.Accounts do
   end
 
   def get_user!(id) do
+    if Ecto.UUID.cast(id) == :error do
+      raise Ecto.NoResultsError, queryable: User
+    end
+
     Repo.get!(User, id)
     |> apply_data_single()
   end
@@ -78,11 +82,42 @@ defmodule KameramaniPhx.Accounts do
     %User{}
     |> User.registration_changeset(attrs)
     |> Repo.insert()
+    |> case do
+      {:ok, user} ->
+        UserNotifier.deliver_welcome_email(user)
+        {:ok, user}
+
+      error ->
+        error
+    end
   end
 
   def validate_registration(attrs) do
     %User{}
     |> User.registration_changeset(attrs, validate_unique: false)
+  end
+
+  @doc """
+  Bans a user and sends an email.
+  """
+  def ban_user(user, reason) do
+    # In a real app, you would also set a flag in the database
+    # for now we only send the email as requested.
+    UserNotifier.deliver_user_banned(user, reason)
+  end
+
+  @doc """
+  Warns a user and sends an email.
+  """
+  def warn_user(user, message) do
+    UserNotifier.deliver_user_warned(user, message)
+  end
+
+  @doc """
+  Sends a system update email to a user.
+  """
+  def send_system_update(user, update_message) do
+    UserNotifier.deliver_system_update(user, update_message)
   end
 
   ## Settings
@@ -155,11 +190,34 @@ defmodule KameramaniPhx.Accounts do
     end
   end
 
-  def change_user_email(%User{} = user, attrs, opts \\ []) do
+  def change_user_email(%User{} = user, attrs \\ %{}, opts \\ []) do
     User.email_changeset(user, attrs, opts)
   end
 
-  def update_user_email(%User{} = user, attrs) do
+  def update_user_email(%User{} = user, token) do
+    context = "change:" <> user.email
+
+    case UserToken.verify_change_email_token_query(token, context) do
+      {:ok, query} ->
+        Repo.transact(fn ->
+          case Repo.one(query) do
+            %{sent_to: email} = user_token ->
+              with {:ok, user} <- Repo.update(User.email_changeset(user, %{email: email})),
+                   {_count, _} <- Repo.delete_all(UserToken.user_and_contexts_query(user, [context])) do
+                {:ok, user}
+              end
+
+            nil ->
+              {:error, :transaction_aborted}
+          end
+        end)
+
+      :error ->
+        {:error, :transaction_aborted}
+    end
+  end
+
+  def update_user_email_simple(%User{} = user, attrs) do
     user
     |> User.email_changeset(attrs)
     |> Repo.update()

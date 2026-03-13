@@ -26,6 +26,8 @@
 - Added the `:scrivener` dependency so `use Scrivener` in `Repo` and `Repo.paginate/2` resolve cleanly once `mix deps.get` runs again.
 - Implemented User Verification and Social Accounts integration.
   - Created `VerificationRequest` and `SocialAccount` schemas/migrations.
+  - Added real-time notifications and email alerts for verification approval/rejection.
+  - Configured notification navigation to link directly to the user's verified profile.
   - Added "Get Verified" button and modal for profile owners.
   - Implemented social account linking with platform-specific URL prefixing (YouTube, X, Instagram, Twitch, TikTok, Discord).
   - Added verified badge next to usernames in profile headers.

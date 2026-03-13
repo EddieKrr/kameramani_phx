@@ -5,7 +5,7 @@ defmodule KameramaniPhx.Notifications do
 
   import Ecto.Query, warn: false
 
-  alias KameramaniPhx.Accounts.{Follow, Scope, User}
+  alias KameramaniPhx.Accounts.{Follow, Scope, User, UserNotifier}
   alias KameramaniPhx.Notifications.Notification
   alias KameramaniPhx.Repo
   alias KameramaniPhx.Streaming.Stream
@@ -129,6 +129,21 @@ defmodule KameramaniPhx.Notifications do
     end
   end
 
+
+  #clearing notifications
+  def clear_notifications(current_user) do
+    recipient_id = recipient_id_for(current_user)
+
+    from(n in Notification,
+      where: n.recipient_id == ^recipient_id
+    )
+    |> Repo.delete_all()
+
+    broadcast_refresh(recipient_id)
+    :ok
+  end
+
+  
   def notify_verification_submitted(%User{} = user, verification_id) do
     # Get all admins/mods to notify them
     admin_ids =
@@ -149,7 +164,7 @@ defmodule KameramaniPhx.Notifications do
           actor_id: user.id,
           type: :verification_submitted,
           entity_type: "verification_request",
-          entity_id: verification_id,
+          entity_id: to_string(verification_id),
           metadata: %{
             "actor_username" => user.username
           },
@@ -160,34 +175,57 @@ defmodule KameramaniPhx.Notifications do
 
     Repo.insert_all(Notification, entries)
     Enum.each(admin_ids, &broadcast_refresh/1)
-    
+
+    # Send email to the user
+    UserNotifier.deliver_verification_submitted(user)
+
     # Also broadcast specifically for the admin panel real-time list
     Phoenix.PubSub.broadcast(KameramaniPhx.PubSub, "admin:verifications", :verification_request_submitted)
     :ok
   end
 
   def notify_verification_approved(%User{} = user, verification_id) do
-    create_notification(%{
-      recipient_id: user.id,
-      type: :verification_approved,
-      entity_type: "verification_request",
-      entity_id: verification_id,
-      metadata: %{
-        "message" => "Congratulations! Your account has been verified."
-      }
-    })
+    UserNotifier.deliver_verification_approved(user)
+
+    case create_notification(%{
+           recipient_id: user.id,
+           type: :verification_approved,
+           entity_type: "verification_request",
+           entity_id: to_string(verification_id),
+           metadata: %{
+             "message" => "Congratulations! Your account has been verified.",
+             "actor_username" => user.username
+           }
+         }) do
+      {:ok, notification} ->
+        broadcast_verification_status(user.id, :approved)
+        {:ok, notification}
+
+      error ->
+        error
+    end
   end
 
   def notify_verification_rejected(%User{} = user, verification_id) do
-    create_notification(%{
-      recipient_id: user.id,
-      type: :verification_rejected,
-      entity_type: "verification_request",
-      entity_id: verification_id,
-      metadata: %{
-        "message" => "Your verification request was not approved at this time."
-      }
-    })
+    UserNotifier.deliver_verification_rejected(user)
+
+    case create_notification(%{
+           recipient_id: user.id,
+           type: :verification_rejected,
+           entity_type: "verification_request",
+           entity_id: to_string(verification_id),
+           metadata: %{
+             "message" => "Your verification request was not approved at this time.",
+             "actor_username" => user.username
+           }
+         }) do
+      {:ok, notification} ->
+        broadcast_verification_status(user.id, :rejected)
+        {:ok, notification}
+
+      error ->
+        error
+    end
   end
 
   defp create_notification(attrs) do
@@ -211,6 +249,13 @@ defmodule KameramaniPhx.Notifications do
   defp broadcast_refresh(recipient_id) do
     Phoenix.PubSub.broadcast(KameramaniPhx.PubSub, topic(recipient_id), :notifications_updated)
   end
+
+  defp broadcast_verification_status(recipient_id, status) do
+    Phoenix.PubSub.broadcast(KameramaniPhx.PubSub, verification_topic(recipient_id), {:verification_status_updated, status})
+  end
+
+  def verification_topic(recipient_id),
+    do: "verifications:user:#{recipient_id}"
 
   defp topic(recipient_id), do: "notifications:user:#{recipient_id}"
 end

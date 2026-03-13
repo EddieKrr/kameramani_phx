@@ -1,7 +1,9 @@
 defmodule KameramaniPhxWeb.Profile.UserProfileLive do
   use KameramaniPhxWeb, :live_view
   alias KameramaniPhx.Accounts
+  alias KameramaniPhx.Accounts.Scope
   alias KameramaniPhx.Subscriptions
+  alias KameramaniPhx.Notifications
   import KameramaniPhxWeb.ProfileComponents
   import Ecto.Query
   alias KameramaniPhx.Repo
@@ -11,6 +13,13 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
   def mount(_params, _session, socket) do
     if connected?(socket) do
       Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "streams:all")
+      case socket.assigns[:current_user] do
+        %{user: %{id: user_id}} ->
+          Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, Notifications.verification_topic(user_id))
+
+        _ ->
+          :ok
+      end
     end
 
     {:ok,
@@ -139,6 +148,36 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
        |> assign(vods: list_vods(profile_user.id))}
     else
       {:noreply, socket}
+    end
+  end
+
+  def handle_info({:verification_status_updated, status}, socket) do
+    scope = socket.assigns[:current_user]
+    current_user = scope && scope.user
+    profile_user = socket.assigns[:user]
+
+    cond do
+      is_nil(current_user) or is_nil(profile_user) or current_user.id != profile_user.id ->
+        {:noreply, socket}
+
+      true ->
+        updated_user = Accounts.get_user!(profile_user.id)
+        verification_request = Accounts.get_latest_verification_request(updated_user)
+        updated_scope = Scope.for_user(updated_user)
+
+        socket =
+          socket
+          |> assign(user: updated_user)
+          |> assign(verification_request: verification_request)
+          |> assign(current_user: updated_scope)
+
+        socket =
+          case verification_flash(status) do
+            {kind, message} -> put_flash(socket, kind, message)
+            nil -> socket
+          end
+
+        {:noreply, socket}
     end
   end
 
@@ -272,6 +311,10 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
     {:noreply, assign(socket, social_username: username)}
   end
 
+  def handle_event("update_social_username", %{"value" => value}, socket) do
+    {:noreply, assign(socket, social_username: value)}
+  end
+
   def handle_event("add_social_account", _params, socket) do
     current_user = socket.assigns.current_user.user
     platform_id = socket.assigns.selected_platform
@@ -362,4 +405,8 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
         end
     end
   end
+
+  defp verification_flash(:approved), do: {:info, "Verification approved! You're now verified."}
+  defp verification_flash(:rejected), do: {:error, "Verification request rejected. Please check your inbox for details."}
+  defp verification_flash(_), do: nil
 end
