@@ -252,6 +252,90 @@ end
     Presence.list("stream_viewers:#{stream_id}")
     |> map_size()
   end
+  def verification_tab(assigns) do
+    ~H"""
+    <div class="col-span-5 bg-white rounded-3xl shadow-sm border border-white/50 p-8 min-h-full overflow-y-auto h-screen">
+      <div class="flex justify-between items-center mb-8">
+        <div>
+          <h2 class="text-3xl font-bold text-slate-800 tracking-tight">Verification Requests</h2>
+          <p class="text-slate-500 mt-1">Review and approve user verification requests.</p>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto w-full rounded-xl border border-gray-200">
+        <table class="w-full text-left border-collapse bg-white">
+          <thead class="bg-gray-50 text-slate-500 text-xs font-bold uppercase tracking-wider">
+            <tr>
+              <th class="py-4 px-6 border-b border-gray-200">User</th>
+              <th class="py-4 px-6 border-b border-gray-200">Social Links</th>
+              <th class="py-4 px-6 border-b border-gray-200">Submitted</th>
+              <th class="py-4 px-6 border-b border-gray-200 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100 text-slate-700">
+            <%= if Enum.empty?(@requests) do %>
+              <tr>
+                <td colspan="4" class="py-8 text-center text-slate-500 italic">
+                  No pending verification requests.
+                </td>
+              </tr>
+            <% else %>
+              <%= for request <- @requests do %>
+                <tr class="hover:bg-blue-50/50 transition-colors group">
+                  <td class="py-4 px-6 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold shadow-sm">
+                      {String.first(request.user.username) |> String.upcase()}
+                    </div>
+                    <div>
+                      <div class="font-bold text-slate-900">{request.user.username}</div>
+                      <div class="text-xs text-slate-500">{request.user.email}</div>
+                    </div>
+                  </td>
+                  <td class="py-4 px-6">
+                    <div class="flex flex-wrap gap-2">
+                      <%= for link <- request.social_links do %>
+                        <a
+                          href={link}
+                          target="_blank"
+                          class="bg-slate-100 hover:bg-slate-200 text-slate-600 py-1 px-3 rounded-full text-[10px] font-bold border border-slate-200 transition-colors flex items-center gap-1"
+                        >
+                          <.svg variant="link" class="w-3 h-3" />
+                          {URI.parse(link).host || "Link"}
+                        </a>
+                      <% end %>
+                    </div>
+                  </td>
+                  <td class="py-4 px-6 text-sm text-slate-500">
+                    {Calendar.strftime(request.inserted_at, "%b %d, %Y at %H:%M")}
+                  </td>
+                  <td class="py-4 px-6 text-right">
+                    <div class="flex justify-end gap-2">
+                      <button
+                        phx-click="approve_verification"
+                        phx-value-id={request.id}
+                        class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-1.5 px-4 rounded-lg text-xs transition-all shadow-sm hover:shadow-emerald-500/20"
+                      >
+                        Approve
+                      </button>
+                      <button
+                        phx-click="reject_verification"
+                        phx-value-id={request.id}
+                        class="bg-rose-500 hover:bg-rose-600 text-white font-bold py-1.5 px-4 rounded-lg text-xs transition-all shadow-sm hover:shadow-rose-500/20"
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    """
+  end
+
   def category_tab(assigns) do
   ~H"""
   <div class="col-span-5 bg-white rounded-3xl shadow-sm border border-white/50 p-8 min-h-full">

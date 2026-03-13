@@ -14,6 +14,22 @@
 - Indexing/search: store metadata (title, category, tags, duration, thumbnail, streamer, start/end time) for discovery and filtering.
 - Storage backend: compatible with local disk or object storage (e.g., R2/S3) as long as manifests and segments are quickly accessible by the CDN.
 
+## 2026-03-12 Distributed Storage & Plug.Conn.NotSentError
+
+- **The Issue:** When running the application on multiple machines (e.g., Machine A and Machine B) connected to a shared Neon Postgres DB, users can see all active streams on the landing page, but can only watch streams that originated on the same machine they are currently connected to.
+- **Root Cause:** 
+    - The `pipeline.ex` uses `FileStorage`, which writes HLS segments (`.m3u8` and `.ts` files) to the local disk of the machine running the pipeline.
+    - When a viewer on Machine A tries to watch a stream hosted on Machine B, Machine A's `Plug.Static` fails to find the files locally.
+    - This leads to a `500 Internal Server Error` and a `Plug.Conn.NotSentError` because the request "falls through" the router without being handled.
+- **Identified Symptoms:** 
+    - Thumbnails and video segments are "black" or missing for cross-machine streams.
+    - Browser console shows `GET ... 500 (Internal Server Error)` for `.m3u8` files.
+    - Server logs show `Bandit.Pipeline.commit_response!/1` crashing due to unhandled requests.
+- **Proposed Solution:** Move from **Local Storage** to **Centralized Object Storage** (e.g., S3/R2).
+    - Update `Membrane.Pipeline` to use `Membrane.HTTPAdaptiveStream.Storages.S3Storage`.
+    - Configure the HLS player (e.g., `hls.js`) to point directly to the public S3/R2 URL instead of a local Phoenix path.
+    - Ensure CORS is configured on the storage bucket to allow the application domain to fetch segments.
+
 ## 2026-03-10 Streaming Capacity Discussion
 
 - We mapped the overall capacity to RTMP ingest/encoding per streamer vs. HLS delivery per viewer; the Phoenix nodes saturate when each fan pulls segments directly, so unbounded viewers can bite.

@@ -21,11 +21,12 @@ defmodule KameramaniPhx.Accounts.User do
     field :confirmed_at, :utc_datetime
     field :authenticated_at, :utc_datetime, virtual: true
     field :is_live, :boolean, virtual: true, default: false
+    field :is_verified, :boolean, default: false
     field :subscriber_count, :integer, virtual: true, default: 0
     field :following_count, :integer, virtual: true, default: 0
     field :follower_count, :integer, virtual: true, default: 0
     has_many :social_accounts, KameramaniPhx.Socials.SocialAccount
-
+    has_many :verification_requests, KameramaniPhx.Accounts.VerificationRequest
     many_to_many :roles, KameramaniPhx.Accounts.Role,
       join_through: "user_roles",
       on_replace: :delete
@@ -159,7 +160,7 @@ defmodule KameramaniPhx.Accounts.User do
   # update user stream profile
   def profile_changeset(user, attr) do
     user
-    |> cast(attr, [:username, :bio, :profile_picture, :mobile_number])
+    |> cast(attr, [:username, :bio, :profile_picture, :mobile_number, :verification ])
     |> validate_required([:username])
     |> validate_length(:username, min: 3, max: 20)
     |> validate_length(:bio, max: 160)
@@ -187,5 +188,10 @@ defmodule KameramaniPhx.Accounts.User do
   def confirm_changeset(user) do
     now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
     change(user, confirmed_at: now)
+  end
+
+  #admin verification changeset
+  def admin_changeset(user, attrs) do
+    user |> cast(attrs, [:is_verified])
   end
 end

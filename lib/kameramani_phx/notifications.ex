@@ -129,6 +129,67 @@ defmodule KameramaniPhx.Notifications do
     end
   end
 
+  def notify_verification_submitted(%User{} = user, verification_id) do
+    # Get all admins/mods to notify them
+    admin_ids =
+      from(u in User,
+        join: r in assoc(u, :roles),
+        where: r.name in ["admin", "moderator"],
+        select: u.id
+      )
+      |> Repo.all()
+
+    now = DateTime.utc_now() |> DateTime.truncate(:second)
+
+    entries =
+      Enum.map(admin_ids, fn admin_id ->
+        %{
+          id: Ecto.UUID.generate(),
+          recipient_id: admin_id,
+          actor_id: user.id,
+          type: :verification_submitted,
+          entity_type: "verification_request",
+          entity_id: verification_id,
+          metadata: %{
+            "actor_username" => user.username
+          },
+          inserted_at: now,
+          updated_at: now
+        }
+      end)
+
+    Repo.insert_all(Notification, entries)
+    Enum.each(admin_ids, &broadcast_refresh/1)
+    
+    # Also broadcast specifically for the admin panel real-time list
+    Phoenix.PubSub.broadcast(KameramaniPhx.PubSub, "admin:verifications", :verification_request_submitted)
+    :ok
+  end
+
+  def notify_verification_approved(%User{} = user, verification_id) do
+    create_notification(%{
+      recipient_id: user.id,
+      type: :verification_approved,
+      entity_type: "verification_request",
+      entity_id: verification_id,
+      metadata: %{
+        "message" => "Congratulations! Your account has been verified."
+      }
+    })
+  end
+
+  def notify_verification_rejected(%User{} = user, verification_id) do
+    create_notification(%{
+      recipient_id: user.id,
+      type: :verification_rejected,
+      entity_type: "verification_request",
+      entity_id: verification_id,
+      metadata: %{
+        "message" => "Your verification request was not approved at this time."
+      }
+    })
+  end
+
   defp create_notification(attrs) do
     case %Notification{}
          |> Notification.changeset(attrs)

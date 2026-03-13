@@ -5,7 +5,7 @@ defmodule KameramaniPhx.Notifications.Notification do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
 
-  @types [:stream_went_live, :new_follower, :new_subscription]
+  @types [:stream_went_live, :new_follower, :new_subscription, :verification_submitted, :verification_approved, :verification_rejected]
 
   schema "notifications" do
     field :type, Ecto.Enum, values: @types

@@ -12,12 +12,14 @@ defmodule KameramaniPhxWeb.AdminLive do
   def mount(_params, _session, socket) do
     if connected?(socket) do
       Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "streams:all")
+      Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "admin:verifications")
     end
 
     current_user = socket.assigns.current_user.user
 
     all_menu_items = [
       %{id: "users", label: "Users", path: ~p"/admin/users"},
+      %{id: "verification", label: "Verification", path: ~p"/admin/verification"},
       %{id: "categories", label: "Categories", path: ~p"/admin/categories"},
       %{id: "tags", label: "Tags", path: ~p"/admin/tags"},
       %{id: "access", label: "Access Control", path: ~p"/admin/access"},
@@ -39,22 +41,48 @@ defmodule KameramaniPhxWeb.AdminLive do
     users_page = Accounts.get_all_users(page: 1, page_size: @users_page_size)
     live_streams_page = Streaming.list_live_streams(page: 1, page_size: @streams_page_size)
 
-    {:ok,
-     assign(socket,
-       page_bg_class: "bg-blue-200",
+    {:ok, assign(socket,
        layout_type: :admin,
        active_tab: active_tab,
        allowed_tabs: Enum.map(menu_items, & &1.id),
        users_page: users_page,
        live_streams_page: live_streams_page,
-       menu_items: menu_items
+       verification_requests: [],
+       menu_items: menu_items,
+       page_bg_class: "bg-blue-200"
      )}
   end
 
   @impl true
-  def handle_event("some_admin_action", _value, socket) do
-    # Handle admin-specific events here
-    {:noreply, socket}
+  def handle_event("approve_verification", %{"id" => id}, socket) do
+    request = Accounts.get_verification_request!(id)
+
+    case Accounts.approve_verification_request(request) do
+      {:ok, _} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "User verified successfully")
+         |> assign(verification_requests: Accounts.list_pending_verification_requests())}
+
+      {:error, _, _, _} ->
+        {:noreply, put_flash(socket, :error, "Could not verify user")}
+    end
+  end
+
+  @impl true
+  def handle_event("reject_verification", %{"id" => id}, socket) do
+    request = Accounts.get_verification_request!(id)
+
+    case Accounts.reject_verification_request(request) do
+      {:ok, _} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Verification request rejected")
+         |> assign(verification_requests: Accounts.list_pending_verification_requests())}
+
+      {:error, _} ->
+        {:noreply, put_flash(socket, :error, "Could not reject request")}
+    end
   end
 
   @impl true
@@ -80,6 +108,13 @@ defmodule KameramaniPhxWeb.AdminLive do
   @impl true
   def handle_params(%{"tab" => current_tab}, _uri, socket) do
     if current_tab in socket.assigns.allowed_tabs do
+      socket =
+        if current_tab == "verification" do
+          assign(socket, verification_requests: Accounts.list_pending_verification_requests())
+        else
+          socket
+        end
+
       {:noreply, assign(socket, active_tab: current_tab)}
     else
       fallback_tab = hd(socket.assigns.allowed_tabs)
@@ -95,6 +130,18 @@ defmodule KameramaniPhxWeb.AdminLive do
   def handle_params(_, _, socket) do
 
     {:noreply, assign(socket, active_tab: "users")}
+  end
+
+  @impl true
+  def handle_info(:verification_request_submitted, socket) do
+    socket =
+      if socket.assigns.active_tab == "verification" do
+        assign(socket, verification_requests: Accounts.list_pending_verification_requests())
+      else
+        socket
+      end
+
+    {:noreply, put_flash(socket, :info, "New verification request submitted!")}
   end
 
   @impl true

@@ -39,6 +39,7 @@
           name={@user.name}
           avatar_url={@avatar_url}
           is_live={@is_live}
+          is_verified={@user.is_verified}
         />
       </div>
     </div>
@@ -74,6 +75,23 @@
       </div>
 
       <div class="flex items-center gap-2">
+        <%= if @current_user.user && @current_user.user.id == @user.id && !@user.is_verified do %>
+          <%= if @verification_request && @verification_request.status == "pending" do %>
+            <div class="flex items-center gap-2 px-4 py-1.5 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20 text-sm font-bold shadow-sm">
+              <.svg variant="clock" class="w-4 h-4" />
+              Verification Pending
+            </div>
+          <% else %>
+            <button
+              phx-click="open_verification_modal"
+              class="flex items-center gap-2 px-4 py-1.5 rounded bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold transition-all shadow-lg hover:shadow-blue-500/25"
+            >
+              <.svg variant="check-badge" class="w-4 h-4" />
+              Get Verified
+            </button>
+          <% end %>
+        <% end %>
+
         <%= if @current_user.user && @current_user.user.id != @user.id do %>
           <button
             phx-click="toggle_follow"
@@ -125,6 +143,7 @@
             email={@user.email}
             member_since={@time}
             bio={@user.bio}
+            social_accounts={@social_accounts}
           />
         <% "videos" -> %>
           <h4 class="font-title text-3xl capitalize text-indigo-300">
@@ -198,6 +217,128 @@
         >
           Confirm Subscription
         </button>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<%= if @show_verification_modal do %>
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+    <div class="w-full max-w-2xl rounded-2xl border border-white/10 bg-slate-900 p-8 shadow-2xl relative overflow-hidden">
+      <!-- Background glow -->
+      <div class="absolute -top-24 -left-24 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl"></div>
+      
+      <div class="relative z-10">
+        <div class="flex items-start justify-between mb-8">
+          <div>
+            <h3 class="text-3xl font-title font-extrabold text-white uppercase tracking-tight italic">
+              Verification Request
+            </h3>
+            <p class="text-slate-400 mt-2">
+              Link your social accounts and submit for verification.
+            </p>
+          </div>
+          <button
+            phx-click="close_verification_modal"
+            class="p-2 hover:bg-white/5 rounded-full text-slate-400 transition-colors"
+          >
+            <.svg variant="x" class="h-6 w-6" />
+          </button>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8">
+          <!-- Social Link Form -->
+          <div class="space-y-6">
+            <h4 class="text-sm font-bold text-blue-400 uppercase tracking-widest">Add Social Account</h4>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Platform</label>
+                <div class="grid grid-cols-3 gap-2">
+                  <button
+                    :for={platform <- @social_platforms}
+                    phx-click="select_platform"
+                    phx-value-platform={platform.id}
+                    class={[
+                      "flex flex-col items-center gap-2 p-3 rounded-xl border transition-all",
+                      @selected_platform == platform.id && "bg-blue-600/20 border-blue-500 text-blue-400",
+                      @selected_platform != platform.id && "bg-white/5 border-white/5 text-slate-400 hover:bg-white/10"
+                    ]}
+                  >
+                    <.svg variant={platform.icon} class="h-6 w-6" />
+                    <span class="text-[10px] font-bold uppercase tracking-tighter">{platform.name}</span>
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Username</label>
+                <div class="relative group">
+                  <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-mono text-sm">
+                    {Enum.find(@social_platforms, &(&1.id == @selected_platform)).prefix}
+                  </div>
+                  <input
+                    type="text"
+                    phx-keyup="update_social_username"
+                    value={@social_username}
+                    placeholder="username"
+                    class="w-full bg-black/40 border border-white/10 rounded-xl py-3 pr-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
+                    style={"padding-left: #{String.length(Enum.find(@social_platforms, &(&1.id == @selected_platform)).prefix) * 0.5 + 1}rem"}
+                  />
+                </div>
+              </div>
+
+              <button
+                phx-click="add_social_account"
+                class="w-full py-3 rounded-xl bg-white text-black font-bold uppercase tracking-wider hover:bg-slate-200 transition-all flex items-center justify-center gap-2"
+              >
+                <.svg variant="plus" class="h-5 w-5" />
+                Add Link
+              </button>
+            </div>
+          </div>
+
+          <!-- Linked Accounts List -->
+          <div class="flex flex-col h-full">
+            <h4 class="text-sm font-bold text-blue-400 uppercase tracking-widest mb-6">Linked Accounts</h4>
+            <div class="flex-1 space-y-3 overflow-y-auto max-h-64 pr-2 custom-scrollbar">
+              <%= if Enum.empty?(@social_accounts) do %>
+                <div class="h-full flex flex-col items-center justify-center text-center opacity-50 grayscale">
+                  <.svg variant="link" class="h-12 w-12 text-slate-600 mb-2" />
+                  <p class="text-xs text-slate-500 uppercase font-bold">No accounts linked yet</p>
+                </div>
+              <% else %>
+                <div :for={social <- @social_accounts} class="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 group">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-black/40 flex items-center justify-center">
+                      <.svg variant={social.platform} class="h-4 w-4 text-blue-400" />
+                    </div>
+                    <div>
+                      <p class="text-xs font-bold text-white uppercase tracking-tighter">{social.platform}</p>
+                      <p class="text-[10px] text-slate-500 truncate max-w-[120px]">@{social.username}</p>
+                    </div>
+                  </div>
+                  <button
+                    phx-click="remove_social_account"
+                    phx-value-id={social.id}
+                    class="p-2 text-slate-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                  >
+                    <.svg variant="trash" class="h-4 w-4" />
+                  </button>
+                </div>
+              <% end %>
+            </div>
+            
+            <div class="mt-8 pt-6 border-t border-white/5">
+              <button
+                phx-click="request_verification"
+                disabled={Enum.empty?(@social_accounts)}
+                class="w-full py-4 rounded-xl bg-blue-600 disabled:bg-slate-800 disabled:text-slate-500 text-white font-title font-extrabold uppercase italic tracking-tighter text-xl hover:bg-blue-500 transition-all shadow-xl shadow-blue-900/20"
+              >
+                Submit Request
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
