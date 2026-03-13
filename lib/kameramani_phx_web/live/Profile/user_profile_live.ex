@@ -285,16 +285,6 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
     end
   end
 
-  defp list_vods(user_id) do
-    query =
-      from(v in KameramaniPhx.Streaming.Stream,
-        where: v.user_id == ^user_id and v.is_live == false,
-        preload: [:user]
-      )
-
-    Repo.all(query)
-  end
-
   def handle_event("open_verification_modal", _params, socket) do
     {:noreply, assign(socket, show_verification_modal: true)}
   end
@@ -409,4 +399,14 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
   defp verification_flash(:approved), do: {:info, "Verification approved! You're now verified."}
   defp verification_flash(:rejected), do: {:error, "Verification request rejected. Please check your inbox for details."}
   defp verification_flash(_), do: nil
+
+  defp list_vods(user_id) do
+    query =
+      from(v in KameramaniPhx.Streaming.Stream,
+        where: v.user_id == ^user_id and v.is_live == false,
+        preload: [:user]
+      )
+
+    Repo.all(query)
+  end
 end

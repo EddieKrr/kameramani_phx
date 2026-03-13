@@ -8,8 +8,6 @@ defmodule KameramaniPhxWeb.AdminComponents do
   attr :active, :boolean, default: false
   attr :prev_active, :boolean, default: false
   attr :next_active, :boolean, default: false
-  attr :users_page, :map, required: true
-  attr :live_streams_page, :map, required: true
 
   def sidebar_link(assigns) do
     ~H"""
@@ -59,6 +57,8 @@ defmodule KameramaniPhxWeb.AdminComponents do
   """
 end
 
+  attr :users_page, :map, required: true
+  attr :live_streams_page, :map, required: true
   def user_tab(assigns) do
   ~H"""
   <div class="bg-white rounded-3xl shadow-sm border border-white/50 pl-8 pt-8 pb-8 min-h-full col-span-5 overflow-y-auto h-screen">

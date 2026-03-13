@@ -160,6 +160,7 @@ defmodule KameramaniPhxWeb.UserLive.UserSettingsLive do
     {:noreply, cancel_upload(socket, :profile_picture, ref)}
   end
 
+  @impl true
   def handle_params(_params, _uri, socket) do
     {:noreply, assign(socket, page_title: "Settings")}
   end
