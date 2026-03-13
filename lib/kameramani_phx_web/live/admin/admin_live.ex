@@ -4,6 +4,7 @@ defmodule KameramaniPhxWeb.AdminLive do
 
   alias KameramaniPhx.Accounts
   alias KameramaniPhx.Streaming
+  alias KameramaniPhx.Content
 
   @users_page_size 6
   @streams_page_size 6
@@ -42,15 +43,97 @@ defmodule KameramaniPhxWeb.AdminLive do
     live_streams_page = Streaming.list_live_streams(page: 1, page_size: @streams_page_size)
 
     {:ok, assign(socket,
-       layout_type: :admin,
-       active_tab: active_tab,
-       allowed_tabs: Enum.map(menu_items, & &1.id),
-       users_page: users_page,
-       live_streams_page: live_streams_page,
-       verification_requests: [],
-       menu_items: menu_items,
-       page_bg_class: "bg-blue-200"
-     )}
+        layout_type: :admin,
+        active_tab: active_tab,
+        allowed_tabs: Enum.map(menu_items, & &1.id),
+        users_page: users_page,
+        live_streams_page: live_streams_page,
+        verification_requests: [],
+        menu_items: menu_items,
+        page_bg_class: "bg-blue-200",
+        show_add_user_modal: false,
+        add_user_form: to_form(Accounts.validate_registration(%{})),
+        show_add_category_modal: false,
+        add_category_form: to_form(Content.change_category(%KameramaniPhx.Content.Category{}))
+      )}
+  end
+
+  @impl true
+  def handle_event("open_add_user_modal", _params, socket) do
+    {:noreply,
+     socket
+     |> assign(show_add_user_modal: true)}
+  end
+
+  @impl true
+  def handle_event("close_add_user_modal", _params, socket) do
+    {:noreply, assign(socket, show_add_user_modal: false)}
+  end
+
+  @impl true
+  def handle_event("validate_user", %{"user" => user_params}, socket) do
+    form =
+      Accounts.validate_registration(user_params)
+      |> to_form(action: :validate)
+
+    {:noreply, assign(socket, add_user_form: form)}
+  end
+
+  @impl true
+  def handle_event("save_user", %{"user" => user_params}, socket) do
+    case Accounts.register_user(user_params) do
+      {:ok, _user} ->
+        users_page = Accounts.get_all_users(page: 1, page_size: @users_page_size)
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "User created successfully")
+         |> assign(
+           show_add_user_modal: false,
+           add_user_form: to_form(Accounts.validate_registration(%{})),
+           users_page: users_page
+         )}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, add_user_form: to_form(changeset))}
+    end
+  end
+
+  @impl true
+  def handle_event("open_add_category_modal", _params, socket) do
+    {:noreply, assign(socket, show_add_category_modal: true)}
+  end
+
+  @impl true
+  def handle_event("close_add_category_modal", _params, socket) do
+    {:noreply, assign(socket, show_add_category_modal: false)}
+  end
+
+  @impl true
+  def handle_event("validate_category", %{"category" => category_params}, socket) do
+    form =
+      %KameramaniPhx.Content.Category{}
+      |> Content.change_category(category_params)
+      |> to_form(action: :validate)
+
+    {:noreply, assign(socket, add_category_form: form)}
+  end
+
+  @impl true
+  def handle_event("save_category", %{"category" => category_params}, socket) do
+    case Content.create_category(category_params) do
+      {:ok, _category} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Category created successfully")
+         |> assign(
+           show_add_category_modal: false,
+           add_category_form: to_form(Content.change_category(%KameramaniPhx.Content.Category{}))
+         )}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, add_category_form: to_form(changeset))}
+    end
   end
 
   @impl true

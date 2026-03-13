@@ -68,14 +68,13 @@ end
         <h2 class="text-3xl font-bold text-slate-800 tracking-tight">User Management</h2>
         <p class="text-slate-500 mt-1">View and manage Kameramani accounts.</p>
       </div>
-        <button
-          
+      <button
+          phx-click="open_add_user_modal"
           class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-full transition-colors shadow-lg"
           >
           + Add User
         </button>
     </div>
-
     <div class="flex gap-4 mb-6">
       <div class="relative flex-1 max-w-md">
         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -361,7 +360,10 @@ end
         <h2 class="text-3xl font-bold text-slate-800 tracking-tight">Stream Categories</h2>
         <p class="text-slate-500 mt-1">Manage and organize the content classifications for Kameramani.</p>
       </div>
-      <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-full transition-colors shadow-sm">
+      <button
+        phx-click="open_add_category_modal"
+        class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-full transition-colors shadow-sm"
+      >
         + New Category
       </button>
     </div>

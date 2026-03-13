@@ -12,7 +12,8 @@ defmodule KameramaniPhxWeb.StudioLive do
   def mount(_params, _session, socket) do
     user = socket.assigns.current_user.user
     changeset = Streaming.change_stream(%Streaming.Stream{}, %{user_id: user.id})
-    categories = Content.list_categories()
+    raw_games = KameramaniPhxWeb.Igdb.get_games()
+    categories = format_igdb_games(raw_games)
     stream = Streaming.get_stream_for_user(user.id)
 
     # Subscribe to stream updates for this user
@@ -161,4 +162,21 @@ defmodule KameramaniPhxWeb.StudioLive do
      socket
      |> assign(page_title: "Creator Studio")}
   end
+
+   defp format_igdb_games(raw_games) do
+  Enum.map(raw_games, fn game ->
+    cover_url =
+      if game["cover"] do
+        "https:#{game["cover"]["url"]}" |> String.replace("t_thumb", "t_cover_big")
+      else
+        "https://placehold.co/400x533/4c1d95/ffffff?text=No+Cover"
+      end
+
+    %{
+      name: game["name"],
+      slug: String.downcase(String.replace(game["name"], " ", "-")),
+      thumbnail_url: cover_url
+    }
+  end)
+end
 end

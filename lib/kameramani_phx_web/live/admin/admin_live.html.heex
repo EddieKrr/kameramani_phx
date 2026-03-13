@@ -30,30 +30,97 @@
         <.overview></.overview> -->
   <% end %>
 </div>
-<!-- <div
-        x-data="{show: false}"
-        >
 
-         <div
-          x-show="show"
-          x-transition:enter="transition-opacity ease-out duration-300"
-          x-transition:enter-start="opacity-0"
-          x-transition:enter-end="opacity-100"
-          class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"
-        >
-        </div>
-        <div
-        @open-add-user-modal.window="show = true"
-        x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0 scale-90"
-        x-transition:enter-end="opacity-100 scale-100"
-        x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100 scale-100"
-        x-transition:leave-end="opacity-0 scale-90"
-        class="fixed inset-0 glass-pane"
-        >
-        <p>I am a liquid box!</p>
-        <button @click="show = false">Close</button>
-      </div>
+<.modal
+  :if={@show_add_user_modal}
+  id="add-user-modal"
+  show={true}
+  on_cancel={JS.push("close_add_user_modal")}
+>
+  <div class="mb-6">
+    <h3 class="text-2xl font-bold text-white uppercase tracking-tight italic font-title">
+      Create New User
+    </h3>
+    <p class="text-slate-400 text-sm">Register a new account manually.</p>
+  </div>
+
+  <.form
+    for={@add_user_form}
+    id="add-user-form"
+    phx-submit="save_user"
+    phx-change="validate_user"
+    class="space-y-4"
+  >
+    <div class="grid grid-cols-2 gap-4">
+      <.input field={@add_user_form[:name]} type="text" label="Full Name" placeholder="e.g. John Doe" required />
+      <.input field={@add_user_form[:username]} type="text" label="Username" placeholder="johndoe" required />
     </div>
-  -->
+
+    <.input field={@add_user_form[:email]} type="email" label="Email Address" placeholder="john@example.com" required />
+    
+    <div class="grid grid-cols-2 gap-4">
+      <.input field={@add_user_form[:age]} type="number" label="Age" placeholder="18" required />
+      <.input field={@add_user_form[:password]} type="password" label="Password" required />
+    </div>
+
+    <div class="pt-4 flex justify-end gap-3 border-t border-slate-700/50 mt-6">
+      <button
+        type="button"
+        phx-click="close_add_user_modal"
+        class="px-6 py-2 rounded-full text-slate-300 hover:bg-white/5 transition-colors font-semibold"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        phx-disable-with="Creating..."
+        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-8 rounded-full transition-all shadow-lg shadow-blue-500/20"
+      >
+        Create User
+      </button>
+    </div>
+  </.form>
+</.modal>
+
+<.modal
+  :if={@show_add_category_modal}
+  id="add-category-modal"
+  show={true}
+  on_cancel={JS.push("close_add_category_modal")}
+>
+  <div class="mb-6">
+    <h3 class="text-2xl font-bold text-white uppercase tracking-tight italic font-title">
+      Create New Category
+    </h3>
+    <p class="text-slate-400 text-sm">Add a new stream category to Kameramani.</p>
+  </div>
+
+  <.form
+    for={@add_category_form}
+    id="add-category-form"
+    phx-submit="save_category"
+    phx-change="validate_category"
+    class="space-y-4"
+  >
+    <.input field={@add_category_form[:name]} type="text" label="Category Name" placeholder="e.g. Just Chatting" required />
+    <.input field={@add_category_form[:slug]} type="text" label="Slug" placeholder="just-chatting" required />
+    <.input field={@add_category_form[:thumbnail_url]} type="text" label="Thumbnail URL" placeholder="https://example.com/image.jpg" required />
+
+    <div class="pt-4 flex justify-end gap-3 border-t border-slate-700/50 mt-6">
+      <button
+        type="button"
+        phx-click="close_add_category_modal"
+        class="px-6 py-2 rounded-full text-slate-300 hover:bg-white/5 transition-colors font-semibold"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        phx-disable-with="Creating..."
+        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-8 rounded-full transition-all shadow-lg shadow-blue-500/20"
+      >
+        Create Category
+      </button>
+    </div>
+  </.form>
+</.modal>

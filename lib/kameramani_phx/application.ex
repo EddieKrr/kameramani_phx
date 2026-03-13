@@ -7,6 +7,8 @@ defmodule KameramaniPhx.Application do
 
   @impl true
   def start(_type, _args) do
+    :ets.new(:fx_cache, [:set, :public, :named_table])
+
     children =
       [
         KameramaniPhxWeb.Telemetry,

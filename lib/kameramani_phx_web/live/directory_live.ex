@@ -3,7 +3,6 @@ defmodule KameramaniPhxWeb.DirectoryLive do
   alias KameramaniPhx.Streaming
   alias KameramaniPhxWeb.Presence
   alias KameramaniPhx.Content
-  alias KameramaniPhx.Content
   use KameramaniPhxWeb, :live_view
 
   import CardComponents
@@ -18,7 +17,8 @@ defmodule KameramaniPhxWeb.DirectoryLive do
   # end
 
   def mount(params, _session, socket) do
-    categories = Content.list_categories()
+    raw_games = KameramaniPhxWeb.Igdb.get_games()
+    categories = format_igdb_games(raw_games)
     query = search_query_from_params(params)
     {categories, stream_results} = search_results_for_query(categories, query)
     active_tab = if query == "", do: "categories", else: "live"
@@ -145,4 +145,21 @@ defmodule KameramaniPhxWeb.DirectoryLive do
       }
     end)
   end
+
+  defp format_igdb_games(raw_games) do
+  Enum.map(raw_games, fn game ->
+    cover_url =
+      if game["cover"] do
+        "https:#{game["cover"]["url"]}" |> String.replace("t_thumb", "t_cover_big")
+      else
+        "https://placehold.co/400x533/4c1d95/ffffff?text=No+Cover"
+      end
+
+    %{
+      name: game["name"],
+      slug: String.downcase(String.replace(game["name"], " ", "-")),
+      thumbnail_url: cover_url
+    }
+  end)
+end
 end
