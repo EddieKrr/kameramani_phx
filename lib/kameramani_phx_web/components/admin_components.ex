@@ -112,10 +112,18 @@ end
                 {String.first(user.username) |> String.upcase()}
               </div>
               <div>
-                <div class="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                <div class="flex items-center gap-1.5 font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                  {user.username}
+                  <%= if user.is_verified do %>
+                    <.svg
+                      variant="check-badge"
+                      class="h-4 w-4 text-blue-400 drop-shadow-[0_0_4px_rgba(96,165,250,0.3)]"
+                    />
+                  <% end %>
+                </div>
+                <div class="text-xs text-slate-500">
                   {user.email}
                 </div>
-
               </div>
             </td>
 
@@ -287,7 +295,15 @@ end
                       {String.first(request.user.username) |> String.upcase()}
                     </div>
                     <div>
-                      <div class="font-bold text-slate-900">{request.user.username}</div>
+                      <div class="flex items-center gap-1.5 font-bold text-slate-900">
+                        {request.user.username}
+                        <%= if request.user.is_verified do %>
+                          <.svg
+                            variant="check-badge"
+                            class="h-4 w-4 text-blue-400 drop-shadow-[0_0_4px_rgba(96,165,250,0.3)]"
+                          />
+                        <% end %>
+                      </div>
                       <div class="text-xs text-slate-500">{request.user.email}</div>
                     </div>
                   </td>

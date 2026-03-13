@@ -25,26 +25,40 @@
       <%= if msg.user_id == @streamer_id do %>
         <div class="p-2 rounded-lg bg-blue-900/50 border border-blue-700/50">
           <span class="text-blue-400 font-bold text-xs uppercase tracking-wider">Streamer</span>
-          <div class="flex items-baseline">
+          <div class="flex items-baseline gap-1">
             <span
               class="font-bold cursor-pointer hover:underline"
               style={"color: #{msg.user.chat_color || "#6366f1"}"}
             >
               {msg.user.username}
             </span>
+            <%= if msg.user.is_verified do %>
+              <.svg
+                variant="check-badge"
+                class="h-3 w-3 text-blue-400 drop-shadow-[0_0_4px_rgba(96,165,250,0.3)] shrink-0 self-center"
+              />
+            <% end %>
             <span class="text-white">:</span>
             <span class="text-[#efeff1] ml-1">{msg.body}</span>
           </div>
         </div>
       <% else %>
-        <span
-          class="font-bold cursor-pointer hover:underline"
-          style={"color: #{msg.user.chat_color || "#6366f1"}"}
-        >
-          {msg.user.username}
-        </span>
-        <span class="text-white">:</span>
-        <span class="text-[#efeff1] ml-1">{msg.body}</span>
+        <div class="flex items-baseline gap-1">
+          <span
+            class="font-bold cursor-pointer hover:underline"
+            style={"color: #{msg.user.chat_color || "#6366f1"}"}
+          >
+            {msg.user.username}
+          </span>
+          <%= if msg.user.is_verified do %>
+            <.svg
+              variant="check-badge"
+              class="h-3 w-3 text-blue-400 drop-shadow-[0_0_4px_rgba(96,165,250,0.3)] shrink-0 self-center"
+            />
+          <% end %>
+          <span class="text-white">:</span>
+          <span class="text-[#efeff1] ml-1">{msg.body}</span>
+        </div>
       <% end %>
     </div>
   </div>

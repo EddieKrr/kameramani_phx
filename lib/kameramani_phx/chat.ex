@@ -28,6 +28,10 @@ defmodule KameramaniPhx.Chat do
     %Message{}
     |> Message.changeset(attrs)
     |> Repo.insert()
+    |> case do
+      {:ok, message} -> {:ok, Repo.preload(message, :user)}
+      error -> error
+    end
   end
 
   @doc """
