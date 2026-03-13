@@ -140,6 +140,7 @@ defmodule KameramaniPhxWeb.DirectoryLive do
             else: s.user.profile_picture
           ),
         is_live: s.is_live,
+        is_verified: s.user.is_verified,
         thumbnail_url: "/thumbnails/#{s.id}.jpg"
       }
     end)

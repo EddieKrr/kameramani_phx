@@ -78,7 +78,6 @@ defmodule KameramaniPhxWeb.ChatLiveComponent do
 
         case Chat.create_stream_message(attrs) do
           {:ok, message} ->
-            message = Map.put(message, :user, current_user)
             broadcast(socket.assigns.stream_id, {:new_message, message})
             {:noreply, assign(socket, form: to_form(@initial_state, as: :chat))}
 

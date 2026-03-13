@@ -36,6 +36,12 @@ defmodule KameramaniPhxWeb.NotificationsLive do
   end
 
   @impl true
+  def handle_event("clear_notifications", _, socket) do
+    :ok = Notifications.clear_notifications(socket.assigns.current_user)
+    {:noreply, assign_notifications(socket, socket.assigns.current_user)}
+  end
+
+  @impl true
   def handle_event("open_notification", %{"id" => notification_id}, socket) do
     :ok = Notifications.mark_as_read(socket.assigns.current_user, notification_id)
 
@@ -134,15 +140,27 @@ defmodule KameramaniPhxWeb.NotificationsLive do
               Live feed
             </div>
           </div>
-          <button
-            :if={@unread_count > 0}
-            id="navbar-notifications-mark-all"
-            type="button"
-            phx-click="mark_all_read"
-            class="relative mt-3 inline-flex items-center rounded-full border border-[#39d0ff]/20 bg-[#39d0ff]/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#7ddfff] transition hover:border-[#39d0ff]/40 hover:bg-[#39d0ff]/15 hover:text-white"
-          >
-            Mark all read
-          </button>
+          <div class="mt-3 flex flex-wrap gap-3">
+            <button
+              :if={@unread_count > 0}
+              id="navbar-notifications-mark-all"
+              type="button"
+              phx-click="mark_all_read"
+              class="relative inline-flex items-center rounded-full border border-[#39d0ff]/20 bg-[#39d0ff]/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#7ddfff] transition hover:border-[#39d0ff]/40 hover:bg-[#39d0ff]/15 hover:text-white"
+            >
+              Mark all read
+            </button>
+
+            <button
+              :if={@notifications != []}
+              id="navbar-notifications-clear-all"
+              type="button"
+              phx-click="clear_notifications"
+              class="relative inline-flex items-center rounded-full border border-[#ff6d99]/20 bg-[#ff6d99]/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#ff9ac6] transition hover:border-[#ff6d99]/40 hover:bg-[#ff6d99]/15 hover:text-white"
+            >
+              Clear all
+            </button>
+          </div>
         </div>
 
         <div
@@ -229,8 +247,8 @@ defmodule KameramaniPhxWeb.NotificationsLive do
     do: ~p"/watch/#{username}"
 
   defp notification_path(%{type: type, metadata: %{"actor_username" => username}})
-       when type in [:new_follower, :new_subscription],
-       do: ~p"/users/profile/#{username}"
+       when type in [:new_follower, :new_subscription, :verification_approved, :verification_rejected],
+    do: ~p"/users/profile/#{username}"
 
   defp notification_path(_), do: ~p"/"
 
@@ -251,17 +269,38 @@ defmodule KameramaniPhxWeb.NotificationsLive do
     "#{username} subscribed at tier #{tier}."
   end
 
+  defp notification_text(%{type: :verification_submitted, metadata: metadata}) do
+    username = Map.get(metadata, "actor_username", "Someone")
+    "#{username} submitted a verification request."
+  end
+
+  defp notification_text(%{type: :verification_approved, metadata: metadata}) do
+    Map.get(metadata, "message", "Your verification request has been approved!")
+  end
+
+  defp notification_text(%{type: :verification_rejected, metadata: metadata}) do
+    Map.get(metadata, "message", "Your verification request has been rejected.")
+  end
   defp notification_icon(:stream_went_live), do: "hero-signal"
   defp notification_icon(:new_follower), do: "hero-heart"
   defp notification_icon(:new_subscription), do: "hero-star"
+  defp notification_icon(:verification_submitted), do: "hero-document-text"
+  defp notification_icon(:verification_approved), do: "hero-check-circle"
+  defp notification_icon(:verification_rejected), do: "hero-x-circle"
 
   defp notification_label(:stream_went_live), do: "Live now"
   defp notification_label(:new_follower), do: "New follower"
   defp notification_label(:new_subscription), do: "New sub"
+  defp notification_label(:verification_submitted), do: "Verification request"
+  defp notification_label(:verification_approved), do: "Verification approved"
+  defp notification_label(:verification_rejected), do: "Verification rejected"
 
   defp notification_subtext(%{type: :stream_went_live}), do: "Jump in and join the stream."
   defp notification_subtext(%{type: :new_follower}), do: "They are now part of your audience."
   defp notification_subtext(%{type: :new_subscription}), do: "Support landed on your channel."
+  defp notification_subtext(%{type: :verification_submitted}), do: "Review and approve the request."
+  defp notification_subtext(%{type: :verification_approved}), do: "Your account is now verified!"
+  defp notification_subtext(%{type: :verification_rejected}), do: "Check the requirements and try again."
 
   defp notification_icon_container(:stream_went_live),
     do: "border-[#ff6a88]/20 bg-linear-to-br from-[#52273d] to-[#25131d] text-[#ff9eb4]"
@@ -271,6 +310,15 @@ defmodule KameramaniPhxWeb.NotificationsLive do
 
   defp notification_icon_container(:new_subscription),
     do: "border-[#f8c35d]/20 bg-linear-to-br from-[#47361b] to-[#1f1911] text-[#ffd47e]"
+
+  defp notification_icon_container(:verification_submitted),
+    do: "border-[#8b5cf6]/20 bg-linear-to-br from-[#4c1d95] to-[#2e1065] text-[#a78bfa]"
+
+  defp notification_icon_container(:verification_approved),
+    do: "border-[#10b981]/20 bg-linear-to-br from-[#064e3b] to-[#022c22] text-[#34d399]"
+
+  defp notification_icon_container(:verification_rejected),
+    do: "border-[#ef4444]/20 bg-linear-to-br from-[#7f1d1d] to-[#450a0a] text-[#f87171]"
 
   defp format_timestamp(%DateTime{} = timestamp, timezone) when is_binary(timezone) do
     case DateTime.shift_zone(timestamp, timezone) do

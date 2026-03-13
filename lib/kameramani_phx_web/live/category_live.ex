@@ -48,6 +48,7 @@ defmodule KameramaniPhxWeb.CategoryLive do
             else: stream.user.profile_picture
           ),
         is_live: stream.is_live,
+        is_verified: stream.user.is_verified,
         thumbnail_url: "/thumbnails/#{stream.id}.jpg"
       }
     end)

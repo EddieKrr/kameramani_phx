@@ -8,8 +8,6 @@ defmodule KameramaniPhxWeb.AdminComponents do
   attr :active, :boolean, default: false
   attr :prev_active, :boolean, default: false
   attr :next_active, :boolean, default: false
-  attr :users_page, :map, required: true
-  attr :live_streams_page, :map, required: true
 
   def sidebar_link(assigns) do
     ~H"""
@@ -59,6 +57,8 @@ defmodule KameramaniPhxWeb.AdminComponents do
   """
 end
 
+  attr :users_page, :map, required: true
+  attr :live_streams_page, :map, required: true
   def user_tab(assigns) do
   ~H"""
   <div class="bg-white rounded-3xl shadow-sm border border-white/50 pl-8 pt-8 pb-8 min-h-full col-span-5 overflow-y-auto h-screen">
@@ -111,10 +111,18 @@ end
                 {String.first(user.username) |> String.upcase()}
               </div>
               <div>
-                <div class="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                <div class="flex items-center gap-1.5 font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                  {user.username}
+                  <%= if user.is_verified do %>
+                    <.svg
+                      variant="check-badge"
+                      class="h-4 w-4 text-blue-400 drop-shadow-[0_0_4px_rgba(96,165,250,0.3)]"
+                    />
+                  <% end %>
+                </div>
+                <div class="text-xs text-slate-500">
                   {user.email}
                 </div>
-
               </div>
             </td>
 
@@ -286,7 +294,15 @@ end
                       {String.first(request.user.username) |> String.upcase()}
                     </div>
                     <div>
-                      <div class="font-bold text-slate-900">{request.user.username}</div>
+                      <div class="flex items-center gap-1.5 font-bold text-slate-900">
+                        {request.user.username}
+                        <%= if request.user.is_verified do %>
+                          <.svg
+                            variant="check-badge"
+                            class="h-4 w-4 text-blue-400 drop-shadow-[0_0_4px_rgba(96,165,250,0.3)]"
+                          />
+                        <% end %>
+                      </div>
                       <div class="text-xs text-slate-500">{request.user.email}</div>
                     </div>
                   </td>

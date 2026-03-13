@@ -10,6 +10,7 @@ defmodule KameramaniPhxWeb.CardComponents do
   attr :avatar, :string, default: "https://ui-avatars.com/api/?background=random"
   attr :id, :any, required: true
   attr :is_live, :boolean, default: false
+  attr :is_verified, :boolean, default: false
   attr :thumbnail_url, :string, default: nil
 
   def card(assigns) do
@@ -47,7 +48,15 @@ defmodule KameramaniPhxWeb.CardComponents do
             {@stream_name}
           </div>
 
-          <div class="text-gray-400 text-sm">{@streamer}</div>
+          <div class="flex items-center gap-1.5">
+            <div class="text-gray-400 text-sm">{@streamer}</div>
+            <%= if @is_verified do %>
+              <.svg
+                variant="check-badge"
+                class="h-3.5 w-3.5 text-blue-400 drop-shadow-[0_0_4px_rgba(96,165,250,0.3)]"
+              />
+            <% end %>
+          </div>
           <.link
             navigate={~p"/directory/#{resolve_category_slug(@category_slug, @category)}"}
             class="self-start"

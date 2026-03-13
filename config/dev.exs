@@ -97,8 +97,15 @@ config :phoenix_live_view,
   # Enable helpful, but potentially expensive runtime checks
   enable_expensive_runtime_checks: false
 
-# Disable swoosh api client as it is only required for production adapters.
-config :swoosh, :api_client, false
+# Enable swoosh api client for Resend or other production adapters.
+config :swoosh, :api_client, Swoosh.ApiClient.Req
+
+# Configure Resend adapter if API key is present
+if resend_api_key = System.get_env("RESEND_API_KEY") do
+  config :kameramani_phx, KameramaniPhx.Mailer,
+    adapter: Swoosh.Adapters.Resend,
+    api_key: resend_api_key
+end
 
 # Import local overrides
 if File.exists?("config/dev.local.exs") do

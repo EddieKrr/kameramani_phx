@@ -64,21 +64,28 @@ defmodule KameramaniPhxWeb.UserLive.UserSettingsLive do
 
   def handle_event("update_email", %{"user" => user_params}, socket) do
     user = socket.assigns.current_user.user
-    true = Accounts.sudo_mode?(user)
 
-    case Accounts.change_user_email(user, user_params) do
-      %{valid?: true} = changeset ->
-        Accounts.deliver_user_update_email_instructions(
-          Ecto.Changeset.apply_action!(changeset, :insert),
-          user.email,
-          &url(~p"/users/settings/confirm-email/#{&1}")
-        )
+    if Accounts.sudo_mode?(user) do
+      case Accounts.change_user_email(user, user_params) do
+        %{valid?: true} = changeset ->
+          Accounts.deliver_user_update_email_instructions(
+            Ecto.Changeset.apply_action!(changeset, :insert),
+            user.email,
+            &url(~p"/users/settings/confirm-email/#{&1}")
+          )
 
-        info = "A link to confirm your email change has been sent to the new address."
-        {:noreply, socket |> put_flash(:info, info)}
+          socket =
+            socket
+            |> put_flash(:info, "A confirmation email has been sent to your new address.")
+            |> assign(:email_form, to_form(Accounts.change_user_email(user, %{})))
 
-      changeset ->
-        {:noreply, assign(socket, :email_form, to_form(changeset, action: :insert))}
+          {:noreply, socket}
+
+        %{valid?: false} = changeset ->
+          {:noreply, assign(socket, email_form: to_form(changeset))}
+      end
+    else
+      {:noreply, put_flash(socket, :error, "You must enter your current password to make changes")}
     end
   end
 
@@ -94,14 +101,17 @@ defmodule KameramaniPhxWeb.UserLive.UserSettingsLive do
 
   def handle_event("update_password", %{"user" => user_params}, socket) do
     user = socket.assigns.current_user.user
-    true = Accounts.sudo_mode?(user)
 
-    case Accounts.change_user_password(user, user_params) do
-      %{valid?: true} = changeset ->
-        {:noreply, assign(socket, trigger_submit: true, password_form: to_form(changeset))}
+    if Accounts.sudo_mode?(user) do
+      case Accounts.change_user_password(user, user_params) do
+        %{valid?: true} = changeset ->
+          {:noreply, assign(socket, trigger_submit: true, password_form: to_form(changeset))}
 
-      changeset ->
-        {:noreply, assign(socket, password_form: to_form(changeset, action: :insert))}
+        changeset ->
+          {:noreply, assign(socket, password_form: to_form(changeset, action: :insert))}
+      end
+    else
+      {:noreply, put_flash(socket, :error, "You must enter your current password to make changes")}
     end
   end
 
@@ -160,6 +170,7 @@ defmodule KameramaniPhxWeb.UserLive.UserSettingsLive do
     {:noreply, cancel_upload(socket, :profile_picture, ref)}
   end
 
+  @impl true
   def handle_params(_params, _uri, socket) do
     {:noreply, assign(socket, page_title: "Settings")}
   end

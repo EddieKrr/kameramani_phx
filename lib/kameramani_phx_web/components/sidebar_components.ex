@@ -1,11 +1,13 @@
 defmodule KameramaniPhxWeb.SidebarComponents do
   use Phoenix.Component
+  import KameramaniPhxWeb.CoreComponents
 
   attr :name, :string, required: true
   attr :game, :string
   attr :viewer_count, :string
   attr :src, :string, default: "https://i.pravatar.cc/150?img=1"
   attr :active, :boolean, default: false
+  attr :is_verified, :boolean, default: false
   attr :show_details, :boolean, default: true
   attr :navigate, :string, required: true
 
@@ -27,7 +29,15 @@ defmodule KameramaniPhxWeb.SidebarComponents do
 
         <%= if @show_details do %>
           <div class="flex flex-col flex-1 min-w-0 mx-3">
-            <div class="text-sm font-bold text-[#efeff1] truncate">{@name}</div>
+            <div class="flex items-center gap-1.5 min-w-0">
+              <div class="text-sm font-bold text-[#efeff1] truncate">{@name}</div>
+              <%= if @is_verified do %>
+                <.svg
+                  variant="check-badge"
+                  class="h-3 w-3 text-blue-400 drop-shadow-[0_0_4px_rgba(96,165,250,0.3)] shrink-0"
+                />
+              <% end %>
+            </div>
             <div class="text-[11px] text-[#adadb8] truncate">{@game}</div>
           </div>
 

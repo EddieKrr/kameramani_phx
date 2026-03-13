@@ -89,7 +89,15 @@ defmodule KameramaniPhxWeb.NavbarSearchComponent do
                   </div>
                 <% end %>
                 <div class="flex flex-col leading-tight">
-                  <span class="font-semibold">{user.username}</span>
+                  <div class="flex items-center gap-1">
+                    <span class="font-semibold">{user.username}</span>
+                    <%= if user.is_verified do %>
+                      <.svg
+                        variant="check-badge"
+                        class="h-3 w-3 text-blue-400 drop-shadow-[0_0_4px_rgba(96,165,250,0.3)]"
+                      />
+                    <% end %>
+                  </div>
                   <span class="text-xs text-slate-300 truncate max-w-[14rem]">{user.bio}</span>
                 </div>
                 <%= if MapSet.member?(@live_user_ids, user.id) do %>
