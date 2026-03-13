@@ -234,20 +234,38 @@ defmodule KameramaniPhx.Subscriptions do
   end
 
   defp usd_kes_rate do
+    case :ets.lookup(:fx_cache, :usd_kes_rate) do
+      [{:usd_kes_rate, rate, expiry}] ->
+        if DateTime.compare(DateTime.utc_now(), expiry) == :lt do
+          {:ok, rate}
+        else
+          fetch_and_cache_rate()
+        end
+
+      [] ->
+        fetch_and_cache_rate()
+    end
+  end
+
+  defp fetch_and_cache_rate do
     fx_config = Application.get_env(:kameramani_phx, :fx, [])
     provider_url = Keyword.get(fx_config, :provider_url, @default_fx_provider_url)
     timeout = Keyword.get(fx_config, :timeout_ms, @default_fx_timeout_ms)
 
-    with {:ok, _fallback_rate} <- fallback_rate(fx_config),
-         {:ok, fetched_rate} <- fetch_rate(provider_url, timeout),
-         :gt <- Decimal.compare(fetched_rate, Decimal.new(0)) do
-      {:ok, fetched_rate}
-    else
-      _ ->
-        {:ok, fallback_rate} = fallback_rate(fx_config)
-        Logger.warning("Using fallback USD/KES FX rate for subscriptions")
-        {:ok, fallback_rate}
-    end
+    rate = 
+      with {:ok, fetched_rate} <- fetch_rate(provider_url, timeout),
+           :gt <- Decimal.compare(fetched_rate, Decimal.new(0)) do
+        fetched_rate
+      else
+        _ ->
+          {:ok, fallback} = fallback_rate(fx_config)
+          Logger.warning("Using fallback USD/KES FX rate for subscriptions")
+          fallback
+      end
+
+    expiry = DateTime.add(DateTime.utc_now(), 3600, :second)
+    :ets.insert(:fx_cache, {:usd_kes_rate, rate, expiry})
+    {:ok, rate}
   end
 
   defp fetch_rate(provider_url, timeout) do

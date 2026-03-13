@@ -537,4 +537,93 @@ defmodule KameramaniPhxWeb.CoreComponents do
   attr(:class, :string, default: nil)
 
   def svg(assigns)
+
+  @doc """
+  Renders a modal.
+
+  ## Examples
+
+      <.modal id="confirm-modal">
+        This is a modal!
+      </.modal>
+
+  JS commands may be passed to the `:on_cancel` to customize
+  the closing experience, for example to push an event or return to a URL.
+  """
+  attr :id, :string, required: true
+  attr :show, :boolean, default: false
+  attr :on_cancel, JS, default: %JS{}
+  slot :inner_block, required: true
+
+  def modal(assigns) do
+    ~H"""
+    <div
+      id={@id}
+      phx-mounted={@show && show_modal(@id)}
+      phx-remove={hide_modal(@id)}
+      data-cancel={JS.exec(@on_cancel, "phx-remove")}
+      class="relative z-50 hidden"
+    >
+      <div id={"#{@id}-bg"} class="bg-slate-900/60 backdrop-blur-sm fixed inset-0 transition-opacity" aria-hidden="true" />
+      <div
+        class="fixed inset-0 overflow-y-auto"
+        aria-labelledby={"#{@id}-title"}
+        aria-describedby={"#{@id}-description"}
+        role="dialog"
+        aria-modal="true"
+        tabindex="-1"
+      >
+        <div class="flex min-h-full items-center justify-center p-4 text-black">
+          <div
+            id={"#{@id}-container"}
+            phx-click-away={JS.exec("data-cancel", to: "##{@id}")}
+            phx-window-keydown={JS.exec("data-cancel", to: "##{@id}")}
+            phx-key="escape"
+            class="hidden relative w-full max-w-lg transition-all transform"
+          >
+            <div class="glass-pane w-1/2 mx-auto bg-slate-800/90 border-2 border-slate-700/50 rounded-3xl shadow-2xl overflow-hidden">
+              <div class="absolute top-4 right-4">
+                <button
+                  phx-click={JS.exec("data-cancel", to: "##{@id}")}
+                  type="button"
+                  class="p-2 text-slate-400 hover:text-white transition-colors"
+                  aria-label={gettext("close")}
+                >
+                  <.svg variant="x" class="size-5" />
+                </button>
+              </div>
+              <div id={"#{@id}-content"} class="p-8">
+                {render_slot(@inner_block)}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    """
+  end
+
+  def show_modal(js \\ %JS{}, id) when is_binary(id) do
+    js
+    |> JS.show(to: "##{id}")
+    |> JS.show(
+      to: "##{id}-bg",
+      transition: {"transition-all transform ease-out duration-300", "opacity-0", "opacity-100"}
+    )
+    |> show("##{id}-container")
+    |> JS.add_class("overflow-hidden", to: "body")
+    |> JS.focus_first(to: "##{id}-content")
+  end
+
+  def hide_modal(js \\ %JS{}, id) do
+    js
+    |> JS.hide(
+      to: "##{id}-bg",
+      transition: {"transition-all transform ease-in duration-200", "opacity-100", "opacity-0"}
+    )
+    |> hide("##{id}-container")
+    |> JS.hide(to: "##{id}", transition: {"block", "block", "hidden"})
+    |> JS.remove_class("overflow-hidden", to: "body")
+    |> JS.pop_focus()
+  end
 end

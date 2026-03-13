@@ -89,13 +89,13 @@ defmodule KameramaniPhxWeb.CardComponents do
         <div class="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
         </div>
         <div class="absolute bottom-2 left-2 right-2 flex items-center justify-between">
-          <span class="rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-white/90 border border-white/10">
+          <span class="rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-white/90 border border-white/10 truncate">
             {@slug}
           </span>
         </div>
       </div>
       <div class="mt-3">
-        <div class="text-sm font-semibold text-white group-hover:text-[#7cf6ff] transition-colors">
+        <div class="text-sm font-semibold text-white group-hover:text-[#7cf6ff] transition-colors truncate">
           {@name}
         </div>
       </div>

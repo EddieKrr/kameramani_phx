@@ -160,7 +160,7 @@ defmodule KameramaniPhx.Accounts.User do
   # update user stream profile
   def profile_changeset(user, attr) do
     user
-    |> cast(attr, [:username, :bio, :profile_picture, :mobile_number, :verification ])
+    |> cast(attr, [:username, :bio, :profile_picture, :mobile_number ])
     |> validate_required([:username])
     |> validate_length(:username, min: 3, max: 20)
     |> validate_length(:bio, max: 160)

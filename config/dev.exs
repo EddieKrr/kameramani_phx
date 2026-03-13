@@ -76,6 +76,9 @@ config :kameramani_phx, KameramaniPhxWeb.Endpoint,
 # Enable dev routes for dashboard and mailbox
 config :kameramani_phx, dev_routes: true
 
+# RTMP listener configuration
+config :kameramani_phx, :start_rtmp_listener, true
+
 # Do not include metadata nor timestamps in development logs
 config :logger, :default_formatter, format: "[$level] $message\n"
 
@@ -89,10 +92,10 @@ config :phoenix, :plug_init_mode, :runtime
 config :phoenix_live_view,
   # Include debug annotations and locations in rendered markup.
   # Changing this configuration will require mix clean and a full recompile.
-  debug_heex_annotations: true,
-  debug_attributes: true,
+  debug_heex_annotations: false,
+  debug_attributes: false,
   # Enable helpful, but potentially expensive runtime checks
-  enable_expensive_runtime_checks: true
+  enable_expensive_runtime_checks: false
 
 # Disable swoosh api client as it is only required for production adapters.
 config :swoosh, :api_client, false
