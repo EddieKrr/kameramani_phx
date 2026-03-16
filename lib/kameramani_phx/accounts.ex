@@ -331,6 +331,22 @@ defmodule KameramaniPhx.Accounts do
     Repo.update(changeset)
   end
 
+  @doc """
+  Updates a user.
+  """
+  def update_user(%User{} = user, attrs) do
+    user
+    |> User.admin_update_changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Returns a changeset for changing a user.
+  """
+  def change_user(%User{} = user, attrs \\ %{}) do
+    User.admin_update_changeset(user, attrs)
+  end
+
   def delete_user_session_token(token) do
     Repo.delete_all(from(UserToken, where: [token: ^token, context: "session"]))
     :ok

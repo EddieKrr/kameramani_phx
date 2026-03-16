@@ -157,8 +157,18 @@ end
             <td class="py-4 px-6 text-sm text-slate-500">{Calendar.strftime(user.inserted_at, "%B, %d, %Y")}</td>
 
             <td class="py-4 flex px-6 text-right">
-              <button class="text-slate-400 hover:text-blue-500 font-medium text-sm mr-4 transition-colors">Edit</button>
-              <button class="text-slate-400 hover:text-red-500 font-medium text-sm transition-colors">Ban</button>
+              <button
+                phx-click="edit_user"
+                phx-value-id={user.id}
+                class="text-slate-400 hover:text-blue-500 font-medium text-sm mr-4 transition-colors"
+              >
+                Edit
+              </button>
+              <button
+                class="text-slate-400 hover:text-red-500 font-medium text-sm transition-colors"
+              >
+                Ban
+              </button>
             </td>
           </tr>
 

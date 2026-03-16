@@ -573,7 +573,7 @@ defmodule KameramaniPhxWeb.CoreComponents do
         aria-modal="true"
         tabindex="-1"
       >
-        <div class="flex min-h-full items-center justify-center p-4 text-black">
+        <div class="flex min-h-full items-center justify-center p-4 text-black w-full">
           <div
             id={"#{@id}-container"}
             phx-click-away={JS.exec("data-cancel", to: "##{@id}")}
@@ -581,7 +581,7 @@ defmodule KameramaniPhxWeb.CoreComponents do
             phx-key="escape"
             class="hidden relative w-full max-w-lg transition-all transform"
           >
-            <div class="glass-pane w-1/2 mx-auto bg-slate-800/90 border-2 border-slate-700/50 rounded-3xl shadow-2xl overflow-hidden">
+            <div class="bg-white w-full mx-auto border-2 border-slate-700/50 rounded-3xl shadow-2xl overflow-hidden">
               <div class="absolute top-4 right-4">
                 <button
                   phx-click={JS.exec("data-cancel", to: "##{@id}")}

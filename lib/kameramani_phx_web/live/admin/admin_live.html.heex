@@ -38,10 +38,12 @@
   on_cancel={JS.push("close_add_user_modal")}
 >
   <div class="mb-6">
-    <h3 class="text-2xl font-bold text-white uppercase tracking-tight italic font-title">
-      Create New User
+    <h3 class="text-2xl font-bold uppercase tracking-tight italic font-title">
+      {if @user_to_edit, do: "Update User", else: "Create New User"}
     </h3>
-    <p class="text-slate-400 text-sm">Register a new account manually.</p>
+    <p class="text-slate-400 text-sm">
+      {if @user_to_edit, do: "Modify account details.", else: "Register a new account manually."}
+    </p>
   </div>
 
   <.form
@@ -60,23 +62,25 @@
     
     <div class="grid grid-cols-2 gap-4">
       <.input field={@add_user_form[:age]} type="number" label="Age" placeholder="18" required />
-      <.input field={@add_user_form[:password]} type="password" label="Password" required />
+      <%= if is_nil(@user_to_edit) do %>
+        <.input field={@add_user_form[:password]} type="password" label="Password" required />
+      <% end %>
     </div>
 
     <div class="pt-4 flex justify-end gap-3 border-t border-slate-700/50 mt-6">
       <button
         type="button"
         phx-click="close_add_user_modal"
-        class="px-6 py-2 rounded-full text-slate-300 hover:bg-white/5 transition-colors font-semibold"
+        class="px-6 py-2 rounded-full text-slate-300 hover:text-red-400 transition-colors font-semibold"
       >
         Cancel
       </button>
       <button
         type="submit"
-        phx-disable-with="Creating..."
+        phx-disable-with="Saving..."
         class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-8 rounded-full transition-all shadow-lg shadow-blue-500/20"
       >
-        Create User
+        {if @user_to_edit, do: "Update User", else: "Create User"}
       </button>
     </div>
   </.form>

@@ -228,4 +228,16 @@ defmodule KameramaniPhx.Accounts.User do
   def admin_changeset(user, attrs) do
     user |> cast(attrs, [:is_verified])
   end
+
+  @doc """
+  A user changeset for admin updates.
+  """
+  def admin_update_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:name, :username, :email, :age])
+    |> validate_required([:name, :username, :email, :age])
+    |> validate_email([])
+    |> unsafe_validate_unique(:username, KameramaniPhx.Repo)
+    |> unique_constraint(:username)
+  end
 end
