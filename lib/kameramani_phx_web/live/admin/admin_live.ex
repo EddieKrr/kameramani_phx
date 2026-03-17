@@ -1,0 +1,264 @@
+defmodule KameramaniPhxWeb.AdminLive do
+  use KameramaniPhxWeb, :live_view
+  import KameramaniPhxWeb.AdminComponents
+
+  alias KameramaniPhx.Accounts
+  alias KameramaniPhx.Streaming
+  alias KameramaniPhx.Content
+
+  @users_page_size 6
+  @streams_page_size 6
+
+  @impl true
+  def mount(_params, _session, socket) do
+    if connected?(socket) do
+      Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "streams:all")
+      Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "admin:verifications")
+    end
+
+    current_user = socket.assigns.current_user.user
+
+    all_menu_items = [
+      %{id: "users", label: "Users", path: ~p"/admin/users"},
+      %{id: "verification", label: "Verification", path: ~p"/admin/verification"},
+      %{id: "categories", label: "Categories", path: ~p"/admin/categories"},
+      %{id: "tags", label: "Tags", path: ~p"/admin/tags"},
+      %{id: "access", label: "Access Control", path: ~p"/admin/access"},
+      %{id: "settings", label: "Settings", path: ~p"/admin/settings"}
+    ]
+
+    is_moderator = KameramaniPhx.Accounts.user_has_role?(current_user, "moderator")
+
+    menu_items =
+      if is_moderator do
+        Enum.reject(all_menu_items, &(&1.id in ["access", "settings"]))
+      else
+        all_menu_items
+      end
+
+    active_tab = "users"
+
+
+    users_page = Accounts.get_all_users(page: 1, page_size: @users_page_size)
+    live_streams_page = Streaming.list_live_streams(page: 1, page_size: @streams_page_size)
+
+    {:ok, assign(socket,
+        layout_type: :admin,
+        active_tab: active_tab,
+        allowed_tabs: Enum.map(menu_items, & &1.id),
+        users_page: users_page,
+        live_streams_page: live_streams_page,
+        verification_requests: [],
+        menu_items: menu_items,
+        page_bg_class: "bg-blue-200",
+        show_add_user_modal: false,
+        add_user_form: to_form(Accounts.validate_registration(%{})),
+        show_add_category_modal: false,
+        add_category_form: to_form(Content.change_category(%KameramaniPhx.Content.Category{}))
+      )}
+  end
+
+  @impl true
+  def handle_event("open_add_user_modal", _params, socket) do
+    {:noreply,
+     socket
+     |> assign(show_add_user_modal: true)}
+  end
+
+  @impl true
+  def handle_event("close_add_user_modal", _params, socket) do
+    {:noreply, assign(socket, show_add_user_modal: false)}
+  end
+
+  @impl true
+  def handle_event("validate_user", %{"user" => user_params}, socket) do
+    form =
+      Accounts.validate_registration(user_params)
+      |> to_form(action: :validate)
+
+    {:noreply, assign(socket, add_user_form: form)}
+  end
+
+  @impl true
+  def handle_event("save_user", %{"user" => user_params}, socket) do
+    case Accounts.register_user(user_params) do
+      {:ok, _user} ->
+        users_page = Accounts.get_all_users(page: 1, page_size: @users_page_size)
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "User created successfully")
+         |> assign(
+           show_add_user_modal: false,
+           add_user_form: to_form(Accounts.validate_registration(%{})),
+           users_page: users_page
+         )}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, add_user_form: to_form(changeset))}
+    end
+  end
+
+  @impl true
+  def handle_event("open_add_category_modal", _params, socket) do
+    {:noreply, assign(socket, show_add_category_modal: true)}
+  end
+
+  @impl true
+  def handle_event("close_add_category_modal", _params, socket) do
+    {:noreply, assign(socket, show_add_category_modal: false)}
+  end
+
+  @impl true
+  def handle_event("validate_category", %{"category" => category_params}, socket) do
+    form =
+      %KameramaniPhx.Content.Category{}
+      |> Content.change_category(category_params)
+      |> to_form(action: :validate)
+
+    {:noreply, assign(socket, add_category_form: form)}
+  end
+
+  @impl true
+  def handle_event("save_category", %{"category" => category_params}, socket) do
+    case Content.create_category(category_params) do
+      {:ok, _category} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Category created successfully")
+         |> assign(
+           show_add_category_modal: false,
+           add_category_form: to_form(Content.change_category(%KameramaniPhx.Content.Category{}))
+         )}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, add_category_form: to_form(changeset))}
+    end
+  end
+
+  @impl true
+  def handle_event("approve_verification", %{"id" => id}, socket) do
+    request = Accounts.get_verification_request!(id)
+
+    case Accounts.approve_verification_request(request) do
+      {:ok, _} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "User verified successfully")
+         |> assign(verification_requests: Accounts.list_pending_verification_requests())}
+
+      {:error, _, _, _} ->
+        {:noreply, put_flash(socket, :error, "Could not verify user")}
+    end
+  end
+
+  @impl true
+  def handle_event("reject_verification", %{"id" => id}, socket) do
+    request = Accounts.get_verification_request!(id)
+
+    case Accounts.reject_verification_request(request) do
+      {:ok, _} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Verification request rejected")
+         |> assign(verification_requests: Accounts.list_pending_verification_requests())}
+
+      {:error, _} ->
+        {:noreply, put_flash(socket, :error, "Could not reject request")}
+    end
+  end
+
+  @impl true
+  def handle_event("paginate_users", %{"page" => page}, socket) do
+    page_number = page_param(page, socket.assigns.users_page.page_number)
+
+    users_page =
+      Accounts.get_all_users(page: page_number, page_size: @users_page_size)
+
+    {:noreply, assign(socket, users_page: users_page)}
+  end
+
+  @impl true
+  def handle_event("paginate_streams", %{"page" => page}, socket) do
+    page_number = page_param(page, socket.assigns.live_streams_page.page_number)
+
+    live_streams_page =
+      Streaming.list_live_streams(page: page_number, page_size: @streams_page_size)
+
+    {:noreply, assign(socket, live_streams_page: live_streams_page)}
+  end
+
+  @impl true
+  def handle_params(%{"tab" => current_tab}, _uri, socket) do
+    if current_tab in socket.assigns.allowed_tabs do
+      socket =
+        if current_tab == "verification" do
+          assign(socket, verification_requests: Accounts.list_pending_verification_requests())
+        else
+          socket
+        end
+
+      {:noreply, assign(socket, active_tab: current_tab)}
+    else
+      fallback_tab = hd(socket.assigns.allowed_tabs)
+
+      {:noreply,
+       socket
+       |> put_flash(:error, "You do not have access to that admin section.")
+       |> push_patch(to: ~p"/admin/#{fallback_tab}")}
+    end
+  end
+
+  @impl true
+  def handle_params(_, _, socket) do
+
+    {:noreply, assign(socket, active_tab: "users")}
+  end
+
+  @impl true
+  def handle_info(:verification_request_submitted, socket) do
+    socket =
+      if socket.assigns.active_tab == "verification" do
+        assign(socket, verification_requests: Accounts.list_pending_verification_requests())
+      else
+        socket
+      end
+
+    {:noreply, put_flash(socket, :info, "New verification request submitted!")}
+  end
+
+  @impl true
+  def handle_info({:stream_status_updated, updated_stream}, socket) do
+    entries =
+      Enum.map(socket.assigns.users_page.entries, fn user ->
+        if user.id == updated_stream.user_id do
+          %{user | is_live: updated_stream.is_live}
+        else
+          user
+        end
+      end)
+
+    live_streams_page =
+      Streaming.list_live_streams(
+        page: socket.assigns.live_streams_page.page_number,
+        page_size: @streams_page_size
+      )
+
+    {:noreply,
+     socket
+     |> assign(
+       users_page: %{socket.assigns.users_page | entries: entries},
+       live_streams_page: live_streams_page
+     )}
+  end
+
+  defp page_param(value, default) do
+    case Integer.parse(to_string(value || "")) do
+      {int, ""} when int >= 1 ->
+        int
+
+      _ ->
+        default || 1
+    end
+  end
+end

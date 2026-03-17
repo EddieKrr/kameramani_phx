@@ -1,0 +1,136 @@
+<div class="text-white px-6 py-8 min-h-screen w-3/4 mx-auto glass-pane">
+  <div class="mx-auto">
+    <div class="mb-6 flex items-center justify-between">
+      <div>
+        <h1 class="text-4xl font-title tracking-tight text-blue-400">Browse</h1>
+        <p class="text-sm text-[#b9b3c6]">Explore categories and live channels</p>
+      </div>
+    </div>
+
+    <div class="mb-6 flex flex-wrap gap-2" id="directory-pill-row">
+      <span class="px-3 py-1.5 rounded-full border-2 border-red-500 bg-indigo-500 text-white text-xs font-semibold tracking-wide">
+        Games
+      </span>
+      <span class="px-3 py-1.5 rounded-full bg-[#3b82f6] text-white text-xs font-semibold tracking-wide">
+        IRL
+      </span>
+      <span class="px-3 py-1.5 rounded-full bg-[#22c55e] text-white text-xs font-semibold tracking-wide">
+        Music & DJs
+      </span>
+      <span class="px-3 py-1.5 rounded-full bg-[#f97316] text-white text-xs font-semibold tracking-wide">
+        Creative
+      </span>
+      <span class="px-3 py-1.5 rounded-full bg-[#eab308] text-white text-xs font-semibold tracking-wide">
+        Esports
+      </span>
+    </div>
+
+    <div class="mb-6 flex items-center gap-6 border-b border-white/10">
+      <button
+        id="directory-tab-categories"
+        phx-click="set_directory_tab"
+        phx-value-tab="categories"
+        class={[
+          "pb-3 text-sm font-semibold border-b-2 transition-colors",
+          if(@active_tab == "categories",
+            do: "text-white border-[#7cf6ff]",
+            else: "text-[#b9b3c6] border-transparent hover:text-white"
+          )
+        ]}
+      >
+        Categories
+      </button>
+      <button
+        id="directory-tab-live"
+        phx-click="set_directory_tab"
+        phx-value-tab="live"
+        class={[
+          "pb-3 text-sm font-semibold border-b-2 transition-colors",
+          if(@active_tab == "live",
+            do: "text-white border-[#7cf6ff]",
+            else: "text-[#b9b3c6] border-transparent hover:text-white"
+          )
+        ]}
+      >
+        Live Channels
+      </button>
+    </div>
+
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-8">
+      <div class="max-w-xl w-full">
+        <.form
+          for={@search_form}
+          id="directory-search-form"
+          phx-change="search_directory"
+          phx-submit="search_directory"
+        >
+          <.input
+            field={@search_form[:query]}
+            type="text"
+            placeholder="Search categories or tags..."
+            autocomplete="off"
+            class="w-full rounded-lg bg-[#0e0e10] border border-white/10 px-4 py-2 text-sm text-white placeholder:text-[#7d768a] focus:border-[#7cf6ff]/60 focus:ring-0"
+          />
+        </.form>
+      </div>
+      <div class="flex items-center gap-2 text-sm text-[#b9b3c6]">
+        <span class="font-semibold">Sort by</span>
+        <select
+          id="directory-sort"
+          class="rounded-lg bg-[#12111a] border border-white/10 px-3 py-2 text-sm text-white"
+        >
+          <option>Recommended For You</option>
+          <option>Most Viewers</option>
+          <option>Newly Added</option>
+        </select>
+      </div>
+    </div>
+
+    <%= if @active_tab == "live" do %>
+      <div class="mb-10">
+        <h2 class="text-xs font-semibold uppercase tracking-wider text-[#b9b3c6] mb-4">
+          Live Channels
+        </h2>
+        <%= if @stream_results == [] do %>
+          <div class="rounded-xl border border-white/10 bg-[#121018] p-8 text-center text-sm text-[#b9b3c6]">
+            No live channels yet. Try a tag or category search.
+          </div>
+        <% else %>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+            <.card
+              :for={card <- @stream_results}
+              id={card.id}
+              stream_name={card.stream_name}
+              streamer={card.streamer}
+              category={card.category}
+              tags={card.tags}
+              viewer_count={card.viewer_count}
+              avatar={card.avatar}
+              is_live={card.is_live}
+              is_verified={card.is_verified}
+              thumbnail_url={card.thumbnail_url}
+            />
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div
+        id="directory-category-grid"
+        class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4"
+      >
+        <.link
+          :for={category_card <- @categories}
+          id={"directory-category-#{category_card.slug}"}
+          navigate={~p"/directory/#{category_card.slug}"}
+          class="text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7cf6ff]/70 rounded-xl"
+        >
+          <.category_card
+            name={category_card.name}
+            slug={category_card.slug}
+            thumbnail_url={category_card.thumbnail_url}
+          />
+        </.link>
+      </div>
+    <% end %>
+  </div>
+</div>

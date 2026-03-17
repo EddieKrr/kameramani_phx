@@ -1,0 +1,182 @@
+defmodule KameramaniPhxWeb.StudioLive do
+  alias KameramaniPhx.Streaming
+  alias KameramaniPhx.Content
+  alias KameramaniPhxWeb.Presence
+  require Logger
+
+  use KameramaniPhxWeb, :live_view
+
+  on_mount {KameramaniPhxWeb.UserAuth, :mount_current_user}
+  import KameramaniPhxWeb.CoreComponents
+
+  def mount(_params, _session, socket) do
+    user = socket.assigns.current_user.user
+    changeset = Streaming.change_stream(%Streaming.Stream{}, %{user_id: user.id})
+    raw_games = KameramaniPhxWeb.Igdb.get_games()
+    categories = format_igdb_games(raw_games)
+    stream = Streaming.get_stream_for_user(user.id)
+
+    # Subscribe to stream updates for this user
+    viewer_count =
+      if stream do
+        Logger.info("Studio Live: Subscribing to stream updates for stream_id=#{stream.id}")
+        Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "streams:#{stream.id}")
+
+        topic = "stream_viewers:#{stream.id}"
+
+        if connected?(socket) do
+          KameramaniPhxWeb.Endpoint.subscribe(topic)
+        end
+
+        Presence.list(topic) |> map_size()
+      else
+        0
+      end
+
+    {:ok,
+     socket
+     |> assign(page_title: "Creator Studio")
+     |> assign(:stream_form, to_form(changeset))
+     |> assign(:categories, categories)
+     |> assign(:current_stream, stream)
+     |> assign(:stream_is_live, stream && stream.is_live)
+     |> assign(:viewer_count, viewer_count)
+     |> assign(selected_category_name: nil)}
+  end
+
+  def handle_info({:stream_status_updated, %Streaming.Stream{} = updated_stream}, socket) do
+    Logger.info("Studio Live: Stream status updated - is_live=#{updated_stream.is_live}")
+
+    if socket.assigns.current_stream && socket.assigns.current_stream.id == updated_stream.id do
+      {:noreply,
+       socket
+       |> assign(:current_stream, updated_stream)
+       |> assign(:stream_is_live, updated_stream.is_live)}
+    else
+      {:noreply, socket}
+    end
+  end
+
+  def handle_info({:new_message, message}, socket) do
+    send_update(KameramaniPhxWeb.ChatLiveComponent,
+      id: "studio-chat-component",
+      stream_id: socket.assigns.current_stream && socket.assigns.current_stream.id,
+      new_message: message
+    )
+
+    {:noreply, socket}
+  end
+
+  # handling the viewer count updates via Presence
+  def handle_info(%Phoenix.Socket.Broadcast{event: "presence_diff"}, socket) do
+    if stream = socket.assigns.current_stream do
+      topic = "stream_viewers:#{stream.id}"
+      new_count = Presence.list(topic) |> map_size()
+      {:noreply, assign(socket, viewer_count: new_count)}
+    else
+      {:noreply, socket}
+    end
+  end
+
+  def handle_event("validate", %{"stream" => params}, socket) do
+    changeset =
+      %Streaming.Stream{}
+      |> Streaming.change_stream(Map.put(params, "user_id", socket.assigns.current_user.user.id))
+      |> Map.put(:action, :validate)
+
+    {:noreply, assign(socket, stream_form: to_form(changeset))}
+  end
+
+  def handle_event("create_stream", %{"stream" => stream_params}, socket) do
+    user = socket.assigns.current_user.user
+
+    stream_params =
+      case Map.get(stream_params, "tags") do
+        tags_str when is_binary(tags_str) ->
+          Map.put(stream_params, "tags", String.split(tags_str, ",", trim: true))
+
+        _ ->
+          stream_params
+      end
+
+    attrs = Map.put(stream_params, "user_id", user.id)
+
+    case Streaming.create_stream(attrs) do
+      {:ok, stream = %Streaming.Stream{id: stream_id}} ->
+        # Subscribe to viewer count updates for the new stream
+        topic = "stream_viewers:#{stream_id}"
+
+        if connected?(socket) do
+          KameramaniPhxWeb.Endpoint.subscribe(topic)
+        end
+
+        socket =
+          socket
+          |> put_flash(:info, "Stream setup complete! Get your stream key to start broadcasting.")
+          |> assign(:current_stream, stream)
+          |> assign(:viewer_count, 0)
+          # Reset form
+          |> assign(
+            :stream_form,
+            to_form(Streaming.change_stream(%Streaming.Stream{}, %{user_id: user.id}))
+          )
+          |> push_navigate(to: "/users/settings/stream-key")
+
+        {:noreply, socket}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        socket =
+          socket
+          |> put_flash(:error, "Failed to create stream.")
+          |> assign(:stream_form, to_form(changeset))
+
+        {:noreply, socket}
+    end
+  end
+
+  def handle_event("select_category", %{"category_name" => category_name}, socket) do
+    {:noreply, assign(socket, selected_category_name: category_name)}
+  end
+
+  def handle_event("reset_stream", _params, socket) do
+    user = socket.assigns.current_user.user
+    current_stream = socket.assigns.current_stream
+
+    if current_stream && !current_stream.is_live do
+      # Delete the old stream entry so they can start fresh
+      Streaming.delete_stream(current_stream)
+    end
+
+    changeset = Streaming.change_stream(%Streaming.Stream{}, %{user_id: user.id})
+
+    {:noreply,
+     socket
+     |> assign(:current_stream, nil)
+     |> assign(:stream_is_live, false)
+     |> assign(:stream_form, to_form(changeset))
+     |> assign(:selected_category_name, nil)}
+  end
+
+  def handle_params(_params, _url, socket) do
+    {:noreply,
+     socket
+     |> assign(page_title: "Creator Studio")}
+  end
+
+   defp format_igdb_games(raw_games) do
+  Enum.map(raw_games, fn game ->
+    cover_url =
+      if game["cover"] do
+        "https:#{game["cover"]["url"]}" |> String.replace("t_thumb", "t_cover_big")
+      else
+        "https://placehold.co/400x533/4c1d95/ffffff?text=No+Cover"
+      end
+
+    %{
+      name: game["name"],
+      slug: String.downcase(String.replace(game["name"], " ", "-")),
+      thumbnail_url: cover_url
+    }
+  end)
+end
+end

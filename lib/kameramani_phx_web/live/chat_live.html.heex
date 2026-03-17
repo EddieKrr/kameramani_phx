@@ -1,0 +1,308 @@
+<div class="flex gap-4 overflow-hidden h-[calc(100vh-100px)] text-[#efeff1] font-sans">
+  <aside class={[
+    "glass-pane sticky top-0 h-[calc(100vh-115px)] shrink-0 border-r border-white/5 transition-all duration-300 ease-in-out overflow-y-auto",
+    if(@left_sidebar_open, do: "w-64", else: "w-[50px]")
+  ]}>
+    <div class="flex items-center justify-between p-3 border-b border-white/5">
+      <span class={"text-[11px] font-bold text-[#adadb8] uppercase tracking-widest whitespace-nowrap " <> if(@left_sidebar_open, do: "block", else: "hidden")}>
+        For You
+      </span>
+      <button
+        phx-click="toggle_left_sidebar"
+        class="p-1 rounded hover:bg-white/10 text-[#adadb8] transition-colors"
+      >
+        <.svg
+          variant={if @left_sidebar_open, do: "chevron-left", else: "chevron-right"}
+          class="w-4 h-4"
+        />
+      </button>
+    </div>
+
+    <div class="px-2 flex flex-col gap-2 py-4 custom-scrollbar">
+      <.sidebar_item
+        :for={stream <- @recommended_streams}
+        name={stream.name}
+        game={stream.game}
+        viewer_count={to_string(stream.viewer_count)}
+        src={stream.src}
+        active={stream.name == @streamer_name}
+        show_details={@left_sidebar_open}
+        navigate={~p"/watch/#{stream.name}"}
+      />
+    </div>
+  </aside>
+
+  <main class="flex-1 overflow-y-auto overflow-x-hidden flex flex-col gap-2 relative">
+    <%= if !@chat_open do %>
+      <div class="absolute top-4 right-4 z-50">
+        <button
+          phx-click="toggle_chat"
+          class="p-2 bg-[#18181b]/80 backdrop-blur rounded hover:bg-[#18181b] border border-white/5 text-[#efeff1] shadow-lg flex items-center gap-2 group transition-all"
+        >
+          <.svg variant="chat-bubble-left" class="w-5 h-5 text-[#adadb8] group-hover:text-white" />
+        </button>
+      </div>
+    <% end %>
+
+    <div class="w-full aspect-video bg-black rounded-3xl relative group shadow-2xl">
+      <%= if @is_live do %>
+        <div id="video-container" phx-update="ignore" class="w-full h-full">
+          <video
+            id="video-player"
+            phx-hook="VideoPlayer"
+            data-hls-url={~p"/live/#{@stream_id}/index.m3u8"}
+            class="w-full h-full object-contain"
+            autoplay
+            muted
+            playsinline
+          >
+          </video>
+        </div>
+
+        <div class="absolute top-4 left-4 flex items-center gap-2 pointer-events-none overflow-y-auto ">
+          <span class="bg-[#eb0400] text-white text-[12px] font-bold px-2 py-0.5 rounded shadow-lg">
+            LIVE
+          </span>
+          <span class="bg-black/60 backdrop-blur-md text-white text-[12px] font-bold px-2 py-0.5 rounded flex items-center gap-1.5">
+            <.svg variant="user" class="h-3 w-3 text-[#eb0400]" />
+            <span id="video-viewer-count" phx-hook="AnimateCount">{@viewer_count}</span>
+          </span>
+          <span
+            class="bg-black/60 backdrop-blur-md text-white text-[12px] font-bold px-2 py-0.5 rounded"
+            id="video-uptime"
+            phx-update="ignore"
+            phx-hook="UptimeTimer"
+            data-start={@stream_started_at}
+            data-is-live={to_string(@is_live)}
+          >
+            0:00:00
+          </span>
+        </div>
+      <% else %>
+        <div class="absolute inset-0 flex items-center justify-center glass rounded-3xl">
+          <div class="text-center">
+            <div class="relative inline-block mb-4">
+              <.svg variant="camera-slash" class="h-10 w-10 text-gray-400 absolute bottom-0" />
+              <div class="w-20 h-20 bg-indigo-500 blur-3xl rounded-full flex items-center justify-center animate-pulse">
+              </div>
+            </div>
+            <p class="text-[#adadb8] font-medium tracking-tight">
+              <span class="text-[#efeff1] font-bold capitalize">{@streamer_name}</span>
+              is currently offline.
+            </p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="p-5 md:p-8 shrink-0 glass-pane">
+      <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
+        <div class="flex items-start gap-4">
+          <.link navigate={~p"/users/profile/#{@streamer_name}"} class="relative shrink-0 group">
+            <div class={"w-16 h-16 rounded-full p-0.5 transition-transform group-hover:scale-105 " <> (if @is_live, do: "bg-[#eb0400]", else: "bg-white/10")}>
+              <img
+                class="w-full h-full rounded-full object-cover border-2 border-[#0e0e10]"
+                src={@streamer_profile_picture}
+                alt={@streamer_name}
+              />
+            </div>
+            <%= if @is_live do %>
+              <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#eb0400] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-sm border-2 border-[#0e0e10] leading-none tracking-wide">
+                LIVE
+              </div>
+            <% end %>
+          </.link>
+
+          <div class="flex flex-col">
+            <div class="flex items-center gap-2 mb-1">
+              <.link
+                navigate={~p"/users/profile/#{@streamer_name}"}
+                class="text-xl font-bold text-[#efeff1] tracking-tight hover:text-[#bf94ff] transition-colors"
+              >
+                {@streamer_name}
+              </.link>
+            </div>
+            <h2 class="text-[15px] font-medium text-[#efeff1] tracking-tight mb-2 truncate max-w-2xl">
+              {@stream_name}
+            </h2>
+
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-[#bf94ff] hover:underline cursor-pointer font-semibold text-sm">
+                {@category_name}
+              </span>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-1.5">
+              <%= for tag <- @tags do %>
+                <.link
+                  navigate={~p"/directory?query=#{tag}"}
+                  class="bg-[#26262c] hover:bg-[#323239] transition-colors cursor-pointer text-[#adadb8] font-semibold text-[12px] px-3 py-0.5 rounded-full"
+                >
+                  {tag}
+                </.link>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col items-end gap-4">
+          <div class="flex items-center gap-6 text-[#eb0400] font-bold text-sm">
+            <div class="flex items-center gap-1.5">
+              <.svg variant="user" class="w-4 h-4" />
+              <span id="profile-viewer-count" phx-hook="AnimateCount">{@viewer_count}</span>
+            </div>
+            <div
+              class="text-[#adadb8] font-medium flex items-center gap-1.5"
+              id="profile-uptime"
+              phx-update="ignore"
+              phx-hook="UptimeTimer"
+              data-start={@stream_started_at}
+              data-is-live={to_string(@is_live)}
+            >
+              <.svg variant="clock" class="w-4 h-4" />
+              <span>0:00:00</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 text-xs">
+            <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[#d8d8dd]">
+              Followers: {@follower_count}
+            </span>
+            <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[#d8d8dd]">
+              Subscribers: {@subscriber_count}
+            </span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <%= if @current_user.user && @current_user.user.id != @streamer_id do %>
+              <button
+                phx-click="toggle_follow"
+                class={"px-4 py-1.5 rounded font-bold text-sm transition-colors flex items-center gap-2 shadow " <>
+                  if(@is_following, do: "bg-gray-700 hover:bg-gray-600 text-white", else: "bg-indigo-400 hover:bg-indigo-500 text-black")}
+              >
+                <%= if @is_following do %>
+                  <.svg variant="check" class="w-4 h-4 text-blue-500" /> Unfollow
+                <% else %>
+                  <.svg variant="plus" class="w-4 h-4" /> Follow
+                <% end %>
+              </button>
+
+              <button
+                phx-click="open_subscribe_modal"
+                class={"px-4 py-1.5 rounded font-bold text-sm transition-colors flex items-center gap-2 shadow " <>
+                  if(@is_subscribed, do: "bg-emerald-700 hover:bg-emerald-600 text-white", else: "glass-button")}
+              >
+                <.svg variant="heart" class="w-4 h-4" />
+                <%= if @is_subscribed do %>
+                  Manage Sub
+                <% else %>
+                  Subscribe
+                <% end %>
+              </button>
+            <% end %>
+
+            <%= if !@current_user.user do %>
+              <button
+                phx-click="toggle_follow"
+                class="bg-[#bf94ff] hover:bg-[#a970ff] text-black px-4 py-1.5 rounded font-bold text-sm transition-colors flex items-center gap-2 shadow"
+              >
+                <.svg variant="heart" class="w-4 h-4" /> Follow
+              </button>
+              <button
+                phx-click="open_subscribe_modal"
+                class="glass-button"
+              >
+                <.svg variant="heart" class="w-4 h-4" /> Subscribe
+              </button>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <%= if @chat_open do %>
+    <div class="sticky top-0 h-screen shrink-0 w-[340px]">
+      <button
+        class="absolute z-50 left-1 top-2"
+        phx-click="toggle_chat"
+      >
+        <.svg variant="chevron-right" class="h-4 w-4" />
+      </button>
+      <.live_component
+        module={KameramaniPhxWeb.ChatLiveComponent}
+        id="chat-component"
+        stream_id={@stream_id}
+        current_user={@current_user.user}
+        streamer_id={@streamer_id}
+        title="Stream Chat"
+        show_button={true}
+      />
+    </div>
+  <% end %>
+</div>
+
+<%= if @show_subscribe_modal do %>
+  <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4">
+    <div class="w-full max-w-xl rounded-2xl border border-white/10 glass-pane p-6 shadow-2xl">
+      <div class="mb-5 flex items-start justify-between">
+        <div>
+          <h3 class="text-xl font-bold text-white">Subscribe to {@streamer_name}</h3>
+          <p class="text-sm text-[#adadb8]">
+            Choose a renewal tier.
+          </p>
+        </div>
+        <button
+          phx-click="close_subscribe_modal"
+          class="rounded-md p-1 text-[#adadb8] hover:bg-white/10"
+        >
+          <.svg variant="x" class="h-5 w-5" />
+        </button>
+      </div>
+
+      <div class="grid gap-3">
+        <button
+          :for={option <- @tier_options}
+          phx-click="select_tier"
+          phx-value-tier={option.tier}
+          class={[
+            "w-full rounded-xl border px-4 py-3 text-left transition-colors",
+            @selected_tier == option.tier && "border-blue-300 bg-blue-300/10",
+            @selected_tier != option.tier && "border-white/10 bg-white/5 hover:bg-white/10"
+          ]}
+        >
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="font-semibold text-white">
+                {option.tier} month{if option.tier > 1, do: "s", else: ""}
+              </p>
+              <p class="text-xs text-[#adadb8]">
+                USD {option.amount_usd} • KES {option.amount_kes}
+              </p>
+            </div>
+            <%= if @selected_tier == option.tier do %>
+              <span class="rounded-full bg-blue-300 px-2 py-0.5 text-xs font-bold text-black">
+                Selected
+              </span>
+            <% end %>
+          </div>
+        </button>
+      </div>
+
+      <div class="mt-5 flex justify-end gap-2">
+        <button
+          phx-click="close_subscribe_modal"
+          class="rounded-lg border border-white/10 px-4 py-2 text-sm font-semibold text-[#d2d2da] hover:bg-white/5"
+        >
+          Cancel
+        </button>
+        <button
+          phx-click="subscribe_to_tier"
+          class="glass-button"
+        >
+          Confirm Subscription
+        </button>
+      </div>
+    </div>
+  </div>
+<% end %>

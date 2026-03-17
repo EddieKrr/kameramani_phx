@@ -1,0 +1,111 @@
+<aside
+  style="height: calc(100vh - 115px); overflow: none;"
+  class="w-80 glass-pane border-l border-white/5 flex flex-col shadow-[-10px_0_30px_rgba(0,0,0,0.5)] z-20 transition-all duration-300"
+>
+  <div class="h-12 flex items-center justify-between px-3 border-b border-white/5 shrink-0">
+    <span class="text-[12px] font-bold uppercase tracking-wider text-[#efeff1]">
+      {@title}
+    </span>
+    <div class="flex items-center gap-1 text-[#adadb8]">
+      <.svg variant="user" class="h-4 w-4" />
+    </div>
+  </div>
+
+  <div
+    class="flex-1 overflow-y-auto p-3 space-y-1.5 custom-scrollbar"
+    id="chat-messages"
+    phx-update="stream"
+    phx-hook="ChatScroll"
+  >
+    <div
+      :for={{dom_id, msg} <- @streams.messages}
+      id={dom_id}
+      class="group text-[13px] leading-relaxed break-words"
+    >
+      <%= if msg.user_id == @streamer_id do %>
+        <div class="p-2 rounded-lg bg-blue-900/50 border border-blue-700/50">
+          <span class="text-blue-400 font-bold text-xs uppercase tracking-wider">Streamer</span>
+          <div class="flex items-baseline gap-1">
+            <span
+              class="font-bold cursor-pointer hover:underline"
+              style={"color: #{msg.user.chat_color || "#6366f1"}"}
+            >
+              {msg.user.username}
+            </span>
+            <%= if msg.user.is_verified do %>
+              <.svg
+                variant="check-badge"
+                class="h-3 w-3 text-blue-400 drop-shadow-[0_0_4px_rgba(96,165,250,0.3)] shrink-0 self-center"
+              />
+            <% end %>
+            <span class="text-white">:</span>
+            <span class="text-[#efeff1] ml-1">{msg.body}</span>
+          </div>
+        </div>
+      <% else %>
+        <div class="flex items-baseline gap-1">
+          <span
+            class="font-bold cursor-pointer hover:underline"
+            style={"color: #{msg.user.chat_color || "#6366f1"}"}
+          >
+            {msg.user.username}
+          </span>
+          <%= if msg.user.is_verified do %>
+            <.svg
+              variant="check-badge"
+              class="h-3 w-3 text-blue-400 drop-shadow-[0_0_4px_rgba(96,165,250,0.3)] shrink-0 self-center"
+            />
+          <% end %>
+          <span class="text-white">:</span>
+          <span class="text-[#efeff1] ml-1">{msg.body}</span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="p-4 glass-pane border-t border-white/5 shrink-0">
+    <.form
+      for={@form}
+      phx-change="validate"
+      phx-submit="send_message"
+      phx-target={@myself}
+      class="space-y-3"
+    >
+      <div class="border-2 border-transparent rounded-lg p-2 transition-colors">
+        <.input
+          field={@form[:ch_message]}
+          placeholder="Send a message..."
+          autocomplete="off"
+          class="w-full bg-transparent border-none focus:ring-0 text-white text-sm p-0 mb-2 resize-none"
+        />
+        <%= if is_nil(@current_user) do %>
+          <div class="text-[11px] text-[#adadb8] mb-2" id="chat-login-hint">
+            <.link
+              navigate={~p"/auth"}
+              class="text-[#bf94ff] hover:text-[#a970ff] transition-colors font-semibold"
+            >
+              Log in to chat
+            </.link>
+            <span class="text-[#adadb8]"> — guests can watch only.</span>
+          </div>
+        <% end %>
+        <div class="flex justify-between items-center mt-2">
+          <div class="flex items-center gap-2">
+            <div class="w-3 h-3 rounded-full shadow-sm" style={"background-color: #{@user_color}"}>
+            </div>
+            <span class="text-[11px] font-bold text-[#adadb8] truncate max-w-[100px]">
+              {@username}
+            </span>
+          </div>
+          <button
+            type="submit"
+            class="bg-indigo-600 hover:bg-[#a970ff] text-black text-[12px] font-bold py-1.5 px-4 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={String.trim(@form[:ch_message].value || "") == ""}
+          >
+            Chat
+          </button>
+        </div>
+      </div>
+    </.form>
+  </div>
+</aside>
