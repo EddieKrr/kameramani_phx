@@ -53,7 +53,7 @@ defmodule KameramaniPhxWeb.ConnCase do
       |> Map.take([:token_authenticated_at])
       |> Enum.into([])
 
-    %{conn: log_in_user(conn, user, opts), user: user, user: user}
+    %{conn: log_in_user(conn, user, opts), user: user}
   end
 
   @doc """

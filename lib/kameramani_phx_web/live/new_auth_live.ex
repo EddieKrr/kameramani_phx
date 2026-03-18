@@ -45,7 +45,11 @@ defmodule KameramaniPhxWeb.NewAuthLive do
   end
 
   def handle_event("validate_reg", %{"reg" => user_params}, socket) do
-    changeset = Accounts.validate_registration(user_params)
+    changeset =
+      user_params
+      |> Accounts.validate_registration()
+      |> Map.put(:action, :validate)
+
     {:noreply, assign(socket, reg_form: to_form(changeset, as: "reg"))}
   end
 

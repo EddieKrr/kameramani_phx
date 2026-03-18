@@ -5,7 +5,14 @@ defmodule KameramaniPhx.Notifications.Notification do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
 
-  @types [:stream_went_live, :new_follower, :new_subscription, :verification_submitted, :verification_approved, :verification_rejected]
+  @types [
+    :stream_went_live,
+    :new_follower,
+    :new_subscription,
+    :verification_submitted,
+    :verification_approved,
+    :verification_rejected
+  ]
 
   schema "notifications" do
     field :type, Ecto.Enum, values: @types
@@ -22,7 +29,15 @@ defmodule KameramaniPhx.Notifications.Notification do
 
   def changeset(notification, attrs) do
     notification
-    |> cast(attrs, [:type, :entity_type, :entity_id, :metadata, :read_at, :recipient_id, :actor_id])
+    |> cast(attrs, [
+      :type,
+      :entity_type,
+      :entity_id,
+      :metadata,
+      :read_at,
+      :recipient_id,
+      :actor_id
+    ])
     |> validate_required([:type, :recipient_id])
   end
 end

@@ -2,7 +2,6 @@ defmodule KameramaniPhxWeb.DirectoryLive do
   alias KameramaniPhxWeb.CardComponents
   alias KameramaniPhx.Streaming
   alias KameramaniPhxWeb.Presence
-  alias KameramaniPhx.Content
   use KameramaniPhxWeb, :live_view
 
   import CardComponents
@@ -147,19 +146,19 @@ defmodule KameramaniPhxWeb.DirectoryLive do
   end
 
   defp format_igdb_games(raw_games) do
-  Enum.map(raw_games, fn game ->
-    cover_url =
-      if game["cover"] do
-        "https:#{game["cover"]["url"]}" |> String.replace("t_thumb", "t_cover_big")
-      else
-        "https://placehold.co/400x533/4c1d95/ffffff?text=No+Cover"
-      end
+    Enum.map(raw_games, fn game ->
+      cover_url =
+        if game["cover"] do
+          "https:#{game["cover"]["url"]}" |> String.replace("t_thumb", "t_cover_big")
+        else
+          "https://placehold.co/400x533/4c1d95/ffffff?text=No+Cover"
+        end
 
-    %{
-      name: game["name"],
-      slug: String.downcase(String.replace(game["name"], " ", "-")),
-      thumbnail_url: cover_url
-    }
-  end)
-end
+      %{
+        name: game["name"],
+        slug: String.downcase(String.replace(game["name"], " ", "-")),
+        thumbnail_url: cover_url
+      }
+    end)
+  end
 end

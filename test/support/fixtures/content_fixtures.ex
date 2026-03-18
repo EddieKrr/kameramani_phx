@@ -17,7 +17,8 @@ defmodule KameramaniPhx.ContentFixtures do
       attrs
       |> Enum.into(%{
         name: "some name",
-        slug: unique_category_slug()
+        slug: unique_category_slug(),
+        thumbnail_url: "some thumbnail_url"
       })
       |> KameramaniPhx.Content.create_category()
 

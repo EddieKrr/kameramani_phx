@@ -7,12 +7,13 @@ defmodule KameramaniPhx.SocialsTest do
     alias KameramaniPhx.Socials.SocialAccount
 
     import KameramaniPhx.SocialsFixtures
+    import KameramaniPhx.AccountsFixtures, only: [user_fixture: 0]
 
     @invalid_attrs %{url: nil, username: nil, platform: nil}
 
-    test "list_social_accounts/0 returns all social_accounts" do
-      social_account = social_account_fixture()
-      assert Socials.list_social_accounts() == [social_account]
+    test "list_social_accounts/1 returns all social_accounts for a username" do
+      social_account = social_account_fixture(%{username: "test_user"})
+      assert Socials.list_social_accounts("test_user") == [social_account]
     end
 
     test "get_social_account!/1 returns the social_account with given id" do
@@ -20,17 +21,22 @@ defmodule KameramaniPhx.SocialsTest do
       assert Socials.get_social_account!(social_account.id) == social_account
     end
 
-    test "create_social_account/1 with valid data creates a social_account" do
-      valid_attrs = %{url: "some url", username: "some username", platform: "some platform"}
+    test "add_social_account/2 with valid data adds a social_account" do
+      user = user_fixture()
+      valid_attrs = %{url: "some url", username: "some username", platform: "youtube"}
 
-      assert {:ok, %SocialAccount{} = social_account} = Socials.create_social_account(valid_attrs)
+      assert {:ok, %SocialAccount{} = social_account} =
+               Socials.add_social_account(user, valid_attrs)
+
       assert social_account.url == "some url"
       assert social_account.username == "some username"
-      assert social_account.platform == "some platform"
+      assert social_account.platform == "youtube"
+      assert social_account.user_id == user.id
     end
 
-    test "create_social_account/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Socials.create_social_account(@invalid_attrs)
+    test "add_social_account/2 with invalid data returns error changeset" do
+      user = user_fixture()
+      assert {:error, %Ecto.Changeset{}} = Socials.add_social_account(user, @invalid_attrs)
     end
 
     test "update_social_account/2 with valid data updates the social_account" do
@@ -39,7 +45,7 @@ defmodule KameramaniPhx.SocialsTest do
       update_attrs = %{
         url: "some updated url",
         username: "some updated username",
-        platform: "some updated platform"
+        platform: "instagram"
       }
 
       assert {:ok, %SocialAccount{} = social_account} =
@@ -47,7 +53,7 @@ defmodule KameramaniPhx.SocialsTest do
 
       assert social_account.url == "some updated url"
       assert social_account.username == "some updated username"
-      assert social_account.platform == "some updated platform"
+      assert social_account.platform == "instagram"
     end
 
     test "update_social_account/2 with invalid data returns error changeset" do

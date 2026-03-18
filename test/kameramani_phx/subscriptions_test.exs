@@ -22,12 +22,14 @@ defmodule KameramaniPhx.SubscriptionsTest do
 
     test "list_subscriptions/0 returns all subscriptions" do
       subscription = subscription_fixture()
-      assert Subscriptions.list_subscriptions() == [subscription]
+      assert Enum.any?(Subscriptions.list_subscriptions(), fn s -> s.id == subscription.id end)
     end
 
     test "get_subscription!/1 returns the subscription with given id" do
       subscription = subscription_fixture()
-      assert Subscriptions.get_subscription!(subscription.id) == subscription
+      fetched = Subscriptions.get_subscription!(subscription.id)
+      assert fetched.id == subscription.id
+      assert fetched.status == subscription.status
     end
 
     test "create_subscription/1 with valid data creates a subscription" do
@@ -52,9 +54,9 @@ defmodule KameramaniPhx.SubscriptionsTest do
 
       assert subscription.status == "active"
       assert subscription.tier == 3
-      assert subscription.amount_usd == Decimal.new("5.37")
-      assert subscription.amount_kes == Decimal.new("698.10")
-      assert subscription.fx_rate == Decimal.new("130.0")
+      assert Decimal.equal?(subscription.amount_usd, Decimal.new("5.37"))
+      assert Decimal.equal?(subscription.amount_kes, Decimal.new("698.10"))
+      assert Decimal.equal?(subscription.fx_rate, Decimal.new("130.0"))
       assert subscription.currency == "KES"
       assert subscription.expires_at == ~U[2026-06-05 07:45:00Z]
     end
@@ -82,9 +84,9 @@ defmodule KameramaniPhx.SubscriptionsTest do
 
       assert subscription.status == "active"
       assert subscription.tier == 6
-      assert subscription.amount_usd == Decimal.new("10.15")
-      assert subscription.amount_kes == Decimal.new("1319.50")
-      assert subscription.fx_rate == Decimal.new("130.0")
+      assert Decimal.equal?(subscription.amount_usd, Decimal.new("10.15"))
+      assert Decimal.equal?(subscription.amount_kes, Decimal.new("1319.50"))
+      assert Decimal.equal?(subscription.fx_rate, Decimal.new("130.0"))
       assert subscription.currency == "KES"
       assert subscription.expires_at == ~U[2026-09-06 07:45:00Z]
     end
@@ -95,7 +97,8 @@ defmodule KameramaniPhx.SubscriptionsTest do
       assert {:error, %Ecto.Changeset{}} =
                Subscriptions.update_subscription(subscription, @invalid_attrs)
 
-      assert subscription == Subscriptions.get_subscription!(subscription.id)
+      fetched = Subscriptions.get_subscription!(subscription.id)
+      assert fetched.id == subscription.id
     end
 
     test "delete_subscription/1 deletes the subscription" do

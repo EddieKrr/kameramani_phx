@@ -107,7 +107,8 @@ defmodule KameramaniPhx.Streaming do
     # If we have a user_id, add the generated stream_key to the attributes
     attrs =
       if user_id do
-        Map.put_new(attrs, "stream_key", generate_stream_key(user_id))
+        key = if Map.has_key?(attrs, :user_id), do: :stream_key, else: "stream_key"
+        Map.put_new(attrs, key, generate_stream_key(user_id))
       else
         attrs
       end

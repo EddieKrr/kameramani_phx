@@ -77,10 +77,10 @@ defmodule KameramaniPhxWeb.Layouts do
               <div class="flex items-center gap-6">
                 <div class="flex items-center gap-3">
                   <%= if @live_socket do %>
-                    <%= Phoenix.Component.live_render(@live_socket, KameramaniPhxWeb.NotificationsLive,
+                    {Phoenix.Component.live_render(@live_socket, KameramaniPhxWeb.NotificationsLive,
                       id: "admin-navbar-notifications",
                       session: %{"current_user_id" => @current_user_obj.id}
-                    ) %>
+                    )}
                   <% end %>
                   <span class="text-black">
                     Welcome,
@@ -166,10 +166,10 @@ defmodule KameramaniPhxWeb.Layouts do
                   />
                   <div class="flex items-center gap-3">
                     <%= if @live_socket do %>
-                      <%= Phoenix.Component.live_render(@live_socket, KameramaniPhxWeb.NotificationsLive,
+                      {Phoenix.Component.live_render(@live_socket, KameramaniPhxWeb.NotificationsLive,
                         id: "navbar-notifications",
                         session: %{"current_user_id" => @current_user_obj.id}
-                      ) %>
+                      )}
                     <% end %>
                     <span class="text-white">
                       Welcome,

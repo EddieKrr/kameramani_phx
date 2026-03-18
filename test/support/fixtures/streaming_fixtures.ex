@@ -13,6 +13,21 @@ defmodule KameramaniPhx.StreamingFixtures do
   Generate a stream.
   """
   def stream_fixture(attrs \\ %{}) do
+    attrs =
+      if Map.has_key?(attrs, :user_id) or Map.has_key?(attrs, "user_id") do
+        attrs
+      else
+        user_or_scope = KameramaniPhx.AccountsFixtures.user_user_fixture()
+
+        user_id =
+          case user_or_scope do
+            %KameramaniPhx.Accounts.Scope{user: user} -> user.id
+            user -> user.id
+          end
+
+        Map.put(attrs, :user_id, user_id)
+      end
+
     {:ok, stream} =
       attrs
       |> Enum.into(%{

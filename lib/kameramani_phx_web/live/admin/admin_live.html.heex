@@ -52,12 +52,30 @@
     class="space-y-4"
   >
     <div class="grid grid-cols-2 gap-4">
-      <.input field={@add_user_form[:name]} type="text" label="Full Name" placeholder="e.g. John Doe" required />
-      <.input field={@add_user_form[:username]} type="text" label="Username" placeholder="johndoe" required />
+      <.input
+        field={@add_user_form[:name]}
+        type="text"
+        label="Full Name"
+        placeholder="e.g. John Doe"
+        required
+      />
+      <.input
+        field={@add_user_form[:username]}
+        type="text"
+        label="Username"
+        placeholder="johndoe"
+        required
+      />
     </div>
 
-    <.input field={@add_user_form[:email]} type="email" label="Email Address" placeholder="john@example.com" required />
-    
+    <.input
+      field={@add_user_form[:email]}
+      type="email"
+      label="Email Address"
+      placeholder="john@example.com"
+      required
+    />
+
     <div class="grid grid-cols-2 gap-4">
       <.input field={@add_user_form[:age]} type="number" label="Age" placeholder="18" required />
       <.input field={@add_user_form[:password]} type="password" label="Password" required />
@@ -102,9 +120,27 @@
     phx-change="validate_category"
     class="space-y-4"
   >
-    <.input field={@add_category_form[:name]} type="text" label="Category Name" placeholder="e.g. Just Chatting" required />
-    <.input field={@add_category_form[:slug]} type="text" label="Slug" placeholder="just-chatting" required />
-    <.input field={@add_category_form[:thumbnail_url]} type="text" label="Thumbnail URL" placeholder="https://example.com/image.jpg" required />
+    <.input
+      field={@add_category_form[:name]}
+      type="text"
+      label="Category Name"
+      placeholder="e.g. Just Chatting"
+      required
+    />
+    <.input
+      field={@add_category_form[:slug]}
+      type="text"
+      label="Slug"
+      placeholder="just-chatting"
+      required
+    />
+    <.input
+      field={@add_category_form[:thumbnail_url]}
+      type="text"
+      label="Thumbnail URL"
+      placeholder="https://example.com/image.jpg"
+      required
+    />
 
     <div class="pt-4 flex justify-end gap-3 border-t border-slate-700/50 mt-6">
       <button

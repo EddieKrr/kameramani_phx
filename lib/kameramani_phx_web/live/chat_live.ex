@@ -10,7 +10,6 @@ defmodule KameramaniPhxWeb.ChatLive do
   alias KameramaniPhx.Accounts.Scope
   alias KameramaniPhxWeb.Presence
 
-
   defp subscribe(stream_id) do
     Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "stream_state:#{stream_id}")
   end
@@ -51,16 +50,21 @@ defmodule KameramaniPhxWeb.ChatLive do
               per_ip_limit_reached?(stream.id, client_ip) ->
                 {:ok,
                  socket
-                 |> put_flash(:error, "Too many connections from your IP. Please try again later.")
+                 |> put_flash(
+                   :error,
+                   "Too many connections from your IP. Please try again later."
+                 )
                  |> push_navigate(to: ~p"/")}
 
               true ->
                 if connected?(socket) do
                   KameramaniPhxWeb.Endpoint.subscribe(topic)
+
                   Presence.track(self(), topic, user_id, %{
                     joined_at: System.system_time(:second),
                     ip: client_ip
                   })
+
                   subscribe(stream.id)
                 end
 
@@ -99,7 +103,8 @@ defmodule KameramaniPhxWeb.ChatLive do
                       viewer_count: count,
                       src:
                         if(s.user.profile_picture in [nil, ""],
-                          do: "https://ui-avatars.com/api/?name=#{s.user.username}&background=random",
+                          do:
+                            "https://ui-avatars.com/api/?name=#{s.user.username}&background=random",
                           else: s.user.profile_picture
                         )
                     }
@@ -272,6 +277,7 @@ defmodule KameramaniPhxWeb.ChatLive do
       stream_id: socket.assigns.stream_id,
       new_message: message
     )
+
     {:noreply, socket}
   end
 

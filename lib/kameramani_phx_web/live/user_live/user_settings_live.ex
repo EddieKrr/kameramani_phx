@@ -82,10 +82,11 @@ defmodule KameramaniPhxWeb.UserLive.UserSettingsLive do
           {:noreply, socket}
 
         %{valid?: false} = changeset ->
-          {:noreply, assign(socket, email_form: to_form(changeset))}
+          {:noreply, assign(socket, email_form: to_form(changeset, action: :insert))}
       end
     else
-      {:noreply, put_flash(socket, :error, "You must enter your current password to make changes")}
+      {:noreply,
+       put_flash(socket, :error, "You must enter your current password to make changes")}
     end
   end
 
@@ -111,7 +112,8 @@ defmodule KameramaniPhxWeb.UserLive.UserSettingsLive do
           {:noreply, assign(socket, password_form: to_form(changeset, action: :insert))}
       end
     else
-      {:noreply, put_flash(socket, :error, "You must enter your current password to make changes")}
+      {:noreply,
+       put_flash(socket, :error, "You must enter your current password to make changes")}
     end
   end
 

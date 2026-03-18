@@ -56,7 +56,7 @@ defmodule KameramaniPhx.ThumbnailGenerator do
   end
 
   defp capture_interval_ms do
-    Application.get_env(:kameramani_phx, :thumbnail_capture_interval_ms, 15_000)
+    Application.get_env(:kameramani_phx, :thumbnail_capture_interval_ms, 10_000)
   end
 
   defp capture_thumbnail(stream_id) do

@@ -38,24 +38,24 @@ defmodule KameramaniPhxWeb.AdminLive do
 
     active_tab = "users"
 
-
     users_page = Accounts.get_all_users(page: 1, page_size: @users_page_size)
     live_streams_page = Streaming.list_live_streams(page: 1, page_size: @streams_page_size)
 
-    {:ok, assign(socket,
-        layout_type: :admin,
-        active_tab: active_tab,
-        allowed_tabs: Enum.map(menu_items, & &1.id),
-        users_page: users_page,
-        live_streams_page: live_streams_page,
-        verification_requests: [],
-        menu_items: menu_items,
-        page_bg_class: "bg-blue-200",
-        show_add_user_modal: false,
-        add_user_form: to_form(Accounts.validate_registration(%{})),
-        show_add_category_modal: false,
-        add_category_form: to_form(Content.change_category(%KameramaniPhx.Content.Category{}))
-      )}
+    {:ok,
+     assign(socket,
+       layout_type: :admin,
+       active_tab: active_tab,
+       allowed_tabs: Enum.map(menu_items, & &1.id),
+       users_page: users_page,
+       live_streams_page: live_streams_page,
+       verification_requests: [],
+       menu_items: menu_items,
+       page_bg_class: "bg-blue-200",
+       show_add_user_modal: false,
+       add_user_form: to_form(Accounts.validate_registration(%{})),
+       show_add_category_modal: false,
+       add_category_form: to_form(Content.change_category(%KameramaniPhx.Content.Category{}))
+     )}
   end
 
   @impl true
@@ -211,7 +211,6 @@ defmodule KameramaniPhxWeb.AdminLive do
 
   @impl true
   def handle_params(_, _, socket) do
-
     {:noreply, assign(socket, active_tab: "users")}
   end
 

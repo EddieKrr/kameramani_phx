@@ -203,7 +203,8 @@ defmodule KameramaniPhx.Accounts do
           case Repo.one(query) do
             %{sent_to: email} = _user_token ->
               with {:ok, user} <- Repo.update(User.email_changeset(user, %{email: email})),
-                   {_count, _} <- Repo.delete_all(UserToken.user_and_contexts_query(user, [context])) do
+                   {_count, _} <-
+                     Repo.delete_all(UserToken.user_and_contexts_query(user, [context])) do
                 {:ok, user}
               end
 

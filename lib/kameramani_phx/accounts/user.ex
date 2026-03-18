@@ -27,6 +27,7 @@ defmodule KameramaniPhx.Accounts.User do
     field :follower_count, :integer, virtual: true, default: 0
     has_many :social_accounts, KameramaniPhx.Socials.SocialAccount
     has_many :verification_requests, KameramaniPhx.Accounts.VerificationRequest
+
     many_to_many :roles, KameramaniPhx.Accounts.Role,
       join_through: "user_roles",
       on_replace: :delete
@@ -194,7 +195,7 @@ defmodule KameramaniPhx.Accounts.User do
   # update user stream profile
   def profile_changeset(user, attr) do
     user
-    |> cast(attr, [:username, :bio, :profile_picture, :mobile_number ])
+    |> cast(attr, [:username, :bio, :profile_picture, :mobile_number])
     |> validate_required([:username])
     |> validate_length(:username, min: 3, max: 20)
     |> validate_length(:bio, max: 160)
@@ -224,7 +225,7 @@ defmodule KameramaniPhx.Accounts.User do
     change(user, confirmed_at: now)
   end
 
-  #admin verification changeset
+  # admin verification changeset
   def admin_changeset(user, attrs) do
     user |> cast(attrs, [:is_verified])
   end

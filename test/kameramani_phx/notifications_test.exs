@@ -29,7 +29,9 @@ defmodule KameramaniPhx.NotificationsTest do
 
     Notifications.subscribe(streamer.id)
 
-    assert {:ok, subscription} = Subscriptions.subscribe_to_streamer(subscriber.id, streamer.id, 3)
+    assert {:ok, subscription} =
+             Subscriptions.subscribe_to_streamer(subscriber.id, streamer.id, 3)
+
     assert_receive :notifications_updated
 
     [notification] = Notifications.list_notifications(streamer)

@@ -4,90 +4,111 @@ defmodule KameramaniPhx.ChatTest do
   alias KameramaniPhx.Chat
 
   describe "messages" do
-    alias KameramaniPhx.Chat.Message
+    alias KameramaniPhx.Chat.LiveChat, as: Message
 
     import KameramaniPhx.AccountsFixtures, only: [user_user_fixture: 0]
+    import KameramaniPhx.StreamingFixtures
     import KameramaniPhx.ChatFixtures
 
-    @invalid_attrs %{body: nil, room_id: nil}
+    @invalid_attrs %{body: nil, stream_id: nil, user_id: nil}
+
+    defp strip_preloads(message) when is_list(message) do
+      Enum.map(message, &strip_preloads/1)
+    end
+
+    defp strip_preloads(%Message{} = message) do
+      %{message | user: %Ecto.Association.NotLoaded{}, stream: %Ecto.Association.NotLoaded{}}
+    end
 
     test "list_messages/1 returns all userd messages" do
-      user = user_user_fixture()
-      other_user = user_user_fixture()
-      message = message_fixture(user)
-      other_message = message_fixture(other_user)
-      assert Chat.list_messages(user) == [message]
-      assert Chat.list_messages(other_user) == [other_message]
+      user_scope = user_user_fixture()
+      other_user_scope = user_user_fixture()
+      stream = stream_fixture(%{user_id: user_scope.user.id})
+      message = message_fixture(user_scope.user, stream.id)
+      other_message = message_fixture(other_user_scope.user, stream.id)
+
+      assert strip_preloads(Chat.list_messages(user_scope)) == strip_preloads([message])
+
+      assert strip_preloads(Chat.list_messages(other_user_scope)) ==
+               strip_preloads([other_message])
     end
 
     test "get_message!/2 returns the message with given id" do
-      user = user_user_fixture()
-      message = message_fixture(user)
-      other_user = user_user_fixture()
-      assert Chat.get_message!(user, message.id) == message
-      assert_raise Ecto.NoResultsError, fn -> Chat.get_message!(other_user, message.id) end
+      user_scope = user_user_fixture()
+      stream = stream_fixture(%{user_id: user_scope.user.id})
+      message = message_fixture(user_scope.user, stream.id)
+      other_user_scope = user_user_fixture()
+
+      assert strip_preloads(Chat.get_message!(user_scope, message.id)) == strip_preloads(message)
+      assert_raise Ecto.NoResultsError, fn -> Chat.get_message!(other_user_scope, message.id) end
     end
 
-    test "create_message/2 with valid data creates a message" do
-      valid_attrs = %{body: "some body", room_id: "some room_id"}
-      user = user_user_fixture()
+    test "create_stream_message/1 with valid data creates a message" do
+      user_scope = user_user_fixture()
+      user = user_scope.user
+      stream = stream_fixture(%{user_id: user.id})
+      valid_attrs = %{body: "some body", stream_id: stream.id, user_id: user.id}
 
-      assert {:ok, %Message{} = message} = Chat.create_message(user, valid_attrs)
+      assert {:ok, %Message{} = message} = Chat.create_stream_message(valid_attrs)
       assert message.body == "some body"
-      assert message.room_id == "some room_id"
-      assert message.user_id == user.user.id
+      assert message.stream_id == stream.id
+      assert message.user_id == user.id
     end
 
-    test "create_message/2 with invalid data returns error changeset" do
-      user = user_user_fixture()
-      assert {:error, %Ecto.Changeset{}} = Chat.create_message(user, @invalid_attrs)
+    test "create_stream_message/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Chat.create_stream_message(@invalid_attrs)
     end
 
     test "update_message/3 with valid data updates the message" do
-      user = user_user_fixture()
-      message = message_fixture(user)
-      update_attrs = %{body: "some updated body", room_id: "some updated room_id"}
+      user_scope = user_user_fixture()
+      stream = stream_fixture(%{user_id: user_scope.user.id})
+      message = message_fixture(user_scope.user, stream.id)
+      update_attrs = %{body: "some updated body"}
 
-      assert {:ok, %Message{} = message} = Chat.update_message(user, message, update_attrs)
+      assert {:ok, %Message{} = message} = Chat.update_message(user_scope, message, update_attrs)
       assert message.body == "some updated body"
-      assert message.room_id == "some updated room_id"
     end
 
     test "update_message/3 with invalid user raises" do
-      user = user_user_fixture()
-      other_user = user_user_fixture()
-      message = message_fixture(user)
+      user_scope = user_user_fixture()
+      other_user_scope = user_user_fixture()
+      stream = stream_fixture(%{user_id: user_scope.user.id})
+      message = message_fixture(user_scope.user, stream.id)
 
       assert_raise MatchError, fn ->
-        Chat.update_message(other_user, message, %{})
+        Chat.update_message(other_user_scope, message, %{})
       end
     end
 
     test "update_message/3 with invalid data returns error changeset" do
-      user = user_user_fixture()
-      message = message_fixture(user)
-      assert {:error, %Ecto.Changeset{}} = Chat.update_message(user, message, @invalid_attrs)
-      assert message == Chat.get_message!(user, message.id)
+      user_scope = user_user_fixture()
+      stream = stream_fixture(%{user_id: user_scope.user.id})
+      message = message_fixture(user_scope.user, stream.id)
+      assert {:error, %Ecto.Changeset{}} = Chat.update_message(user_scope, message, %{body: nil})
+      assert strip_preloads(message) == strip_preloads(Chat.get_message!(user_scope, message.id))
     end
 
     test "delete_message/2 deletes the message" do
-      user = user_user_fixture()
-      message = message_fixture(user)
-      assert {:ok, %Message{}} = Chat.delete_message(user, message)
-      assert_raise Ecto.NoResultsError, fn -> Chat.get_message!(user, message.id) end
+      user_scope = user_user_fixture()
+      stream = stream_fixture(%{user_id: user_scope.user.id})
+      message = message_fixture(user_scope.user, stream.id)
+      assert {:ok, %Message{}} = Chat.delete_message(user_scope, message)
+      assert_raise Ecto.NoResultsError, fn -> Chat.get_message!(user_scope, message.id) end
     end
 
     test "delete_message/2 with invalid user raises" do
-      user = user_user_fixture()
-      other_user = user_user_fixture()
-      message = message_fixture(user)
-      assert_raise MatchError, fn -> Chat.delete_message(other_user, message) end
+      user_scope = user_user_fixture()
+      other_user_scope = user_user_fixture()
+      stream = stream_fixture(%{user_id: user_scope.user.id})
+      message = message_fixture(user_scope.user, stream.id)
+      assert_raise MatchError, fn -> Chat.delete_message(other_user_scope, message) end
     end
 
     test "change_message/2 returns a message changeset" do
-      user = user_user_fixture()
-      message = message_fixture(user)
-      assert %Ecto.Changeset{} = Chat.change_message(user, message)
+      user_scope = user_user_fixture()
+      stream = stream_fixture(%{user_id: user_scope.user.id})
+      message = message_fixture(user_scope.user, stream.id)
+      assert %Ecto.Changeset{} = Chat.change_message(user_scope, message)
     end
   end
 end

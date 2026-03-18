@@ -13,9 +13,13 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
   def mount(_params, _session, socket) do
     if connected?(socket) do
       Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, "streams:all")
+
       case socket.assigns[:current_user] do
         %{user: %{id: user_id}} ->
-          Phoenix.PubSub.subscribe(KameramaniPhx.PubSub, Notifications.verification_topic(user_id))
+          Phoenix.PubSub.subscribe(
+            KameramaniPhx.PubSub,
+            Notifications.verification_topic(user_id)
+          )
 
         _ ->
           :ok
@@ -40,7 +44,12 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
        verification_request: nil,
        social_platforms: [
          %{id: "youtube", name: "YouTube", icon: "youtube", prefix: "https://youtube.com/@"},
-         %{id: "instagram", name: "Instagram", icon: "instagram", prefix: "https://instagram.com/"},
+         %{
+           id: "instagram",
+           name: "Instagram",
+           icon: "instagram",
+           prefix: "https://instagram.com/"
+         },
          %{id: "x", name: "X", icon: "x-brand", prefix: "https://x.com/"},
          %{id: "twitch", name: "Twitch", icon: "twitch", prefix: "https://twitch.tv/"},
          %{id: "tiktok", name: "TikTok", icon: "tiktok", prefix: "https://tiktok.com/@"},
@@ -397,7 +406,10 @@ defmodule KameramaniPhxWeb.Profile.UserProfileLive do
   end
 
   defp verification_flash(:approved), do: {:info, "Verification approved! You're now verified."}
-  defp verification_flash(:rejected), do: {:error, "Verification request rejected. Please check your inbox for details."}
+
+  defp verification_flash(:rejected),
+    do: {:error, "Verification request rejected. Please check your inbox for details."}
+
   defp verification_flash(_), do: nil
 
   defp list_vods(user_id) do
