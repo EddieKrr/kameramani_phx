@@ -121,8 +121,8 @@ defmodule KameramaniPhxWeb.NotificationsLive do
       <div
         :if={@dropdown_open}
         id="navbar-notifications-panel"
-        class="absolute glass-pane right-0 z-50 mt-3 w-[24rem] overflow-hidden rounded-[28px] ]">
-        <div class="relative overflow-hidden border-b border-white/8 bg-linear-to-r from-[#111827] via-[#0f1724] to-[#14121d] px-5 py-4">
+        class="absolute bg-slate-700 right-0 z-50 mt-3 w-[24rem] overflow-hidden rounded-[28px] border border-white/10 shadow-2xl">
+        <div class="relative overflow-hidden border-b border-white/8 bg-slate-800 px-5 py-4">
           <div class="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#39d0ff]/10 blur-2xl" />
           <div class="absolute -left-6 bottom-0 h-16 w-16 rounded-full bg-[#ff6a88]/10 blur-2xl" />
           <div class="relative flex items-start justify-between gap-4">
