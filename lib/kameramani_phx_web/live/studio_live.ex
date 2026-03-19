@@ -1,6 +1,5 @@
 defmodule KameramaniPhxWeb.StudioLive do
   alias KameramaniPhx.Streaming
-  alias KameramaniPhx.Content
   alias KameramaniPhxWeb.Presence
   require Logger
 
@@ -163,20 +162,25 @@ defmodule KameramaniPhxWeb.StudioLive do
      |> assign(page_title: "Creator Studio")}
   end
 
-   defp format_igdb_games(raw_games) do
-  Enum.map(raw_games, fn game ->
-    cover_url =
-      if game["cover"] do
-        "https:#{game["cover"]["url"]}" |> String.replace("t_thumb", "t_cover_big")
-      else
-        "https://placehold.co/400x533/4c1d95/ffffff?text=No+Cover"
-      end
+  defp format_igdb_games(raw_games) when is_list(raw_games) do
+    raw_games
+    |> Enum.filter(&is_map/1)
+    |> Enum.filter(fn game -> is_binary(game["name"]) and game["name"] != "" end)
+    |> Enum.map(fn game ->
+      cover_url =
+        if is_map(game["cover"]) and is_binary(game["cover"]["url"]) do
+          "https:#{game["cover"]["url"]}" |> String.replace("t_thumb", "t_cover_big")
+        else
+          "https://placehold.co/400x533/4c1d95/ffffff?text=No+Cover"
+        end
 
-    %{
-      name: game["name"],
-      slug: String.downcase(String.replace(game["name"], " ", "-")),
-      thumbnail_url: cover_url
-    }
-  end)
-end
+      %{
+        name: game["name"],
+        slug: String.downcase(String.replace(game["name"], " ", "-")),
+        thumbnail_url: cover_url
+      }
+    end)
+  end
+
+  defp format_igdb_games(_), do: []
 end

@@ -4151,12 +4151,12 @@ select {
   position: sticky;
 }
 
-.inset-0 {
-  inset: 0px;
-}
-
 .-inset-2 {
   inset: -0.5rem;
+}
+
+.inset-0 {
+  inset: 0px;
 }
 
 .inset-x-0 {
@@ -4313,6 +4313,10 @@ select {
   z-index: 20;
 }
 
+.z-30 {
+  z-index: 30;
+}
+
 .z-50 {
   z-index: 50;
 }
@@ -4323,10 +4327,6 @@ select {
 
 .z-\[70\] {
   z-index: 70;
-}
-
-.z-30 {
-  z-index: 30;
 }
 
 .col-span-1 {
@@ -4935,13 +4935,13 @@ select {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
-.translate-y-4 {
-  --tw-translate-y: 1rem;
+.translate-y-2 {
+  --tw-translate-y: 0.5rem;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
-.translate-y-2 {
-  --tw-translate-y: 0.5rem;
+.translate-y-4 {
+  --tw-translate-y: 1rem;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
@@ -4951,15 +4951,15 @@ select {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
-.scale-\[0\.98\] {
-  --tw-scale-x: 0.98;
-  --tw-scale-y: 0.98;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
 .scale-75 {
   --tw-scale-x: .75;
   --tw-scale-y: .75;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.scale-\[0\.98\] {
+  --tw-scale-x: 0.98;
+  --tw-scale-y: 0.98;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
@@ -5556,16 +5556,16 @@ select {
   border-color: rgb(255 255 255 / 0.15);
 }
 
+.border-white\/20 {
+  border-color: rgb(255 255 255 / 0.2);
+}
+
 .border-white\/5 {
   border-color: rgb(255 255 255 / 0.05);
 }
 
 .border-white\/50 {
   border-color: rgb(255 255 255 / 0.5);
-}
-
-.border-white\/20 {
-  border-color: rgb(255 255 255 / 0.2);
 }
 
 .border-r-slate-700 {
@@ -5746,6 +5746,10 @@ select {
 
 .bg-blue-500\/10 {
   background-color: rgb(59 130 246 / 0.1);
+}
+
+.bg-blue-500\/20 {
+  background-color: rgb(59 130 246 / 0.2);
 }
 
 .bg-blue-600 {
@@ -5998,10 +6002,6 @@ select {
   background-color: rgb(30 41 59 / 0.5);
 }
 
-.bg-slate-800\/90 {
-  background-color: rgb(30 41 59 / 0.9);
-}
-
 .bg-slate-800\/95 {
   background-color: rgb(30 41 59 / 0.95);
 }
@@ -6011,12 +6011,20 @@ select {
   background-color: rgb(15 23 42 / var(--tw-bg-opacity));
 }
 
+.bg-slate-900\/40 {
+  background-color: rgb(15 23 42 / 0.4);
+}
+
 .bg-slate-900\/50 {
   background-color: rgb(15 23 42 / 0.5);
 }
 
 .bg-slate-900\/60 {
   background-color: rgb(15 23 42 / 0.6);
+}
+
+.bg-slate-900\/80 {
+  background-color: rgb(15 23 42 / 0.8);
 }
 
 .bg-transparent {
@@ -6038,18 +6046,6 @@ select {
 
 .bg-white\/70 {
   background-color: rgb(255 255 255 / 0.7);
-}
-
-.bg-blue-500\/20 {
-  background-color: rgb(59 130 246 / 0.2);
-}
-
-.bg-slate-900\/40 {
-  background-color: rgb(15 23 42 / 0.4);
-}
-
-.bg-slate-900\/80 {
-  background-color: rgb(15 23 42 / 0.8);
 }
 
 .bg-gradient-to-b {
@@ -7012,16 +7008,16 @@ select {
   color: rgb(255 255 255 / 0.4);
 }
 
+.text-white\/60 {
+  color: rgb(255 255 255 / 0.6);
+}
+
 .text-white\/70 {
   color: rgb(255 255 255 / 0.7);
 }
 
 .text-white\/90 {
   color: rgb(255 255 255 / 0.9);
-}
-
-.text-white\/60 {
-  color: rgb(255 255 255 / 0.6);
 }
 
 .placeholder-slate-400::-moz-placeholder {
@@ -7156,13 +7152,13 @@ select {
   --tw-shadow: var(--tw-shadow-colored);
 }
 
-.shadow-indigo-500\/20 {
-  --tw-shadow-color: rgb(99 102 241 / 0.2);
+.shadow-indigo-500\/10 {
+  --tw-shadow-color: rgb(99 102 241 / 0.1);
   --tw-shadow: var(--tw-shadow-colored);
 }
 
-.shadow-indigo-500\/10 {
-  --tw-shadow-color: rgb(99 102 241 / 0.1);
+.shadow-indigo-500\/20 {
+  --tw-shadow-color: rgb(99 102 241 / 0.2);
   --tw-shadow: var(--tw-shadow-colored);
 }
 
@@ -7641,6 +7637,11 @@ select {
   color: rgb(147 197 253 / var(--tw-text-opacity));
 }
 
+.hover\:text-blue-400:hover {
+  --tw-text-opacity: 1;
+  color: rgb(96 165 250 / var(--tw-text-opacity));
+}
+
 .hover\:text-blue-500:hover {
   --tw-text-opacity: 1;
   color: rgb(59 130 246 / var(--tw-text-opacity));
@@ -7654,6 +7655,11 @@ select {
 .hover\:text-gray-800:hover {
   --tw-text-opacity: 1;
   color: rgb(31 41 55 / var(--tw-text-opacity));
+}
+
+.hover\:text-red-400:hover {
+  --tw-text-opacity: 1;
+  color: rgb(248 113 113 / var(--tw-text-opacity));
 }
 
 .hover\:text-red-500:hover {
@@ -7674,16 +7680,6 @@ select {
 .hover\:text-white:hover {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.hover\:text-blue-400:hover {
-  --tw-text-opacity: 1;
-  color: rgb(96 165 250 / var(--tw-text-opacity));
-}
-
-.hover\:text-red-400:hover {
-  --tw-text-opacity: 1;
-  color: rgb(248 113 113 / var(--tw-text-opacity));
 }
 
 .hover\:underline:hover {

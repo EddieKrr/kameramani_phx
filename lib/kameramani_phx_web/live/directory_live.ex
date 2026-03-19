@@ -2,7 +2,6 @@ defmodule KameramaniPhxWeb.DirectoryLive do
   alias KameramaniPhxWeb.CardComponents
   alias KameramaniPhx.Streaming
   alias KameramaniPhxWeb.Presence
-  alias KameramaniPhx.Content
   use KameramaniPhxWeb, :live_view
 
   import CardComponents
