@@ -1,5 +1,6 @@
 defmodule KameramaniPhxWeb.DirectoryLive do
   alias KameramaniPhxWeb.CardComponents
+  alias KameramaniPhx.Content
   alias KameramaniPhx.Streaming
   alias KameramaniPhxWeb.Presence
   use KameramaniPhxWeb, :live_view
@@ -16,8 +17,10 @@ defmodule KameramaniPhxWeb.DirectoryLive do
   # end
 
   def mount(params, _session, socket) do
+    db_categories = list_db_categories()
     raw_games = KameramaniPhxWeb.Igdb.get_games()
-    categories = format_igdb_games(raw_games)
+    igdb_categories = format_igdb_games(raw_games)
+    categories = merge_categories(db_categories, igdb_categories)
     query = search_query_from_params(params)
     {categories, stream_results} = search_results_for_query(categories, query)
     active_tab = if query == "", do: "categories", else: "live"
@@ -119,7 +122,10 @@ defmodule KameramaniPhxWeb.DirectoryLive do
 
       category_slug =
         if s.category do
-          KameramaniPhx.Content.get_category_by_name(s.category).slug
+          case Content.get_category_by_name(s.category) do
+            %{slug: slug} -> slug
+            _ -> slugify(s.category)
+          end
         else
           # Default slug
           "just-chatting"
@@ -145,20 +151,53 @@ defmodule KameramaniPhxWeb.DirectoryLive do
     end)
   end
 
-  defp format_igdb_games(raw_games) do
-  Enum.map(raw_games, fn game ->
-    cover_url =
-      if game["cover"] do
-        "https:#{game["cover"]["url"]}" |> String.replace("t_thumb", "t_cover_big")
-      else
-        "https://placehold.co/400x533/4c1d95/ffffff?text=No+Cover"
-      end
+  defp format_igdb_games(raw_games) when is_list(raw_games) do
+    raw_games
+    |> Enum.filter(&is_map/1)
+    |> Enum.filter(fn game -> is_binary(game["name"]) and game["name"] != "" end)
+    |> Enum.map(fn game ->
+      cover_url =
+        if is_map(game["cover"]) and is_binary(game["cover"]["url"]) do
+          "https:#{game["cover"]["url"]}" |> String.replace("t_thumb", "t_cover_big")
+        else
+          "https://placehold.co/400x533/4c1d95/ffffff?text=No+Cover"
+        end
 
-    %{
-      name: game["name"],
-      slug: String.downcase(String.replace(game["name"], " ", "-")),
-      thumbnail_url: cover_url
-    }
-  end)
-end
+      %{
+        name: game["name"],
+        slug: slugify(game["name"]),
+        thumbnail_url: cover_url
+      }
+    end)
+  end
+
+  defp format_igdb_games(_), do: []
+
+  defp list_db_categories do
+    Content.list_categories()
+    |> Enum.map(fn category ->
+      %{
+        name: category.name,
+        slug: category.slug,
+        thumbnail_url: category.thumbnail_url
+      }
+    end)
+  end
+
+  defp merge_categories(db_categories, igdb_categories) do
+    db_by_slug = Map.new(db_categories, &{&1.slug, &1})
+
+    igdb_only =
+      igdb_categories
+      |> Enum.reject(fn category -> Map.has_key?(db_by_slug, category.slug) end)
+
+    db_categories ++ igdb_only
+  end
+
+  defp slugify(name) when is_binary(name) do
+    name
+    |> String.downcase()
+    |> String.replace(~r/[^a-z0-9\\s-]/u, "")
+    |> String.replace(~r/\\s+/, "-")
+  end
 end

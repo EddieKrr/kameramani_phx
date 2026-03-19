@@ -1,4 +1,5 @@
 defmodule KameramaniPhxWeb.StudioLive do
+  alias KameramaniPhx.Content
   alias KameramaniPhx.Streaming
   alias KameramaniPhxWeb.Presence
   require Logger
@@ -11,8 +12,10 @@ defmodule KameramaniPhxWeb.StudioLive do
   def mount(_params, _session, socket) do
     user = socket.assigns.current_user.user
     changeset = Streaming.change_stream(%Streaming.Stream{}, %{user_id: user.id})
+    db_categories = list_db_categories()
     raw_games = KameramaniPhxWeb.Igdb.get_games()
-    categories = format_igdb_games(raw_games)
+    igdb_categories = format_igdb_games(raw_games)
+    categories = merge_categories(db_categories, igdb_categories)
     stream = Streaming.get_stream_for_user(user.id)
 
     # Subscribe to stream updates for this user
@@ -176,11 +179,39 @@ defmodule KameramaniPhxWeb.StudioLive do
 
       %{
         name: game["name"],
-        slug: String.downcase(String.replace(game["name"], " ", "-")),
+        slug: slugify(game["name"]),
         thumbnail_url: cover_url
       }
     end)
   end
 
   defp format_igdb_games(_), do: []
+
+  defp list_db_categories do
+    Content.list_categories()
+    |> Enum.map(fn category ->
+      %{
+        name: category.name,
+        slug: category.slug,
+        thumbnail_url: category.thumbnail_url
+      }
+    end)
+  end
+
+  defp merge_categories(db_categories, igdb_categories) do
+    db_by_slug = Map.new(db_categories, &{&1.slug, &1})
+
+    igdb_only =
+      igdb_categories
+      |> Enum.reject(fn category -> Map.has_key?(db_by_slug, category.slug) end)
+
+    db_categories ++ igdb_only
+  end
+
+  defp slugify(name) when is_binary(name) do
+    name
+    |> String.downcase()
+    |> String.replace(~r/[^a-z0-9\\s-]/u, "")
+    |> String.replace(~r/\\s+/, "-")
+  end
 end
