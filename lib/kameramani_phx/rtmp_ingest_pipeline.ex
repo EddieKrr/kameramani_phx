@@ -24,7 +24,7 @@ defmodule KameramaniPhx.RTMPIngestPipeline do
       |> via_in(Pad.ref(:input, :video),
         options: [
           encoding: :H264,
-          # take 4s captures for each segment
+          # take 2s captures for each segment
           segment_duration: Membrane.Time.seconds(2)
         ]
       )

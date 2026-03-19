@@ -58,9 +58,13 @@ defmodule KameramaniPhxWeb.NotificationsLive do
   @impl true
   def handle_info(:notifications_updated, socket) do
     previous_notification_id = socket.assigns.last_notification_id
-    latest_notifications = Notifications.list_notifications(socket.assigns.current_user, limit: 12)
+
+    latest_notifications =
+      Notifications.list_notifications(socket.assigns.current_user, limit: 12)
+
     latest_unread_count = Notifications.unread_count(socket.assigns.current_user)
-    latest_notification = List.first(latest_notifications) #new notification huko juu
+    # new notification huko juu
+    latest_notification = List.first(latest_notifications)
 
     socket =
       socket
@@ -106,7 +110,10 @@ defmodule KameramaniPhxWeb.NotificationsLive do
         ]}
       >
         <div class="absolute inset-0 bg-linear-to-br from-[#39d0ff]/0 via-[#39d0ff]/0 to-[#ff6a88]/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-hover:from-[#39d0ff]/10 group-hover:to-[#ff6a88]/10" />
-        <.icon name="hero-bell" class="relative h-5 w-5 transition-transform duration-300 group-hover:-translate-y-0.5" />
+        <.icon
+          name="hero-bell"
+          class="relative h-5 w-5 transition-transform duration-300 group-hover:-translate-y-0.5"
+        />
 
         <span
           :if={@unread_count > 0}
@@ -121,8 +128,9 @@ defmodule KameramaniPhxWeb.NotificationsLive do
       <div
         :if={@dropdown_open}
         id="navbar-notifications-panel"
-        class="absolute bg-slate-700 right-0 z-50 mt-3 w-[24rem] overflow-hidden rounded-[28px] border border-white/10 shadow-2xl">
-        <div class="relative overflow-hidden border-b border-white/8 bg-slate-800 px-5 py-4">
+        class="absolute glass-pane right-0 z-50 mt-3 w-[24rem] overflow-hidden rounded-[28px] ]"
+      >
+        <div class="relative overflow-hidden border-b border-white/8 bg-linear-to-r from-[#111827] via-[#0f1724] to-[#14121d] px-5 py-4">
           <div class="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#39d0ff]/10 blur-2xl" />
           <div class="absolute -left-6 bottom-0 h-16 w-16 rounded-full bg-[#ff6a88]/10 blur-2xl" />
           <div class="relative flex items-start justify-between gap-4">
@@ -131,9 +139,8 @@ defmodule KameramaniPhxWeb.NotificationsLive do
                 Notifications
               </p>
               <p class="mt-1 text-sm text-[#e7edf7]">
-                You have
-                <span class="font-bold text-white">{@unread_count}</span>
-                unread update<%= if @unread_count != 1, do: "s" %>.
+                You have <span class="font-bold text-white">{@unread_count}</span>
+                unread update{if @unread_count != 1, do: "s"}.
               </p>
             </div>
             <div class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#a5b4c7]">
@@ -247,8 +254,13 @@ defmodule KameramaniPhxWeb.NotificationsLive do
     do: ~p"/watch/#{username}"
 
   defp notification_path(%{type: type, metadata: %{"actor_username" => username}})
-       when type in [:new_follower, :new_subscription, :verification_approved, :verification_rejected],
-    do: ~p"/users/profile/#{username}"
+       when type in [
+              :new_follower,
+              :new_subscription,
+              :verification_approved,
+              :verification_rejected
+            ],
+       do: ~p"/users/profile/#{username}"
 
   defp notification_path(_), do: ~p"/"
 
@@ -281,6 +293,7 @@ defmodule KameramaniPhxWeb.NotificationsLive do
   defp notification_text(%{type: :verification_rejected, metadata: metadata}) do
     Map.get(metadata, "message", "Your verification request has been rejected.")
   end
+
   defp notification_icon(:stream_went_live), do: "hero-signal"
   defp notification_icon(:new_follower), do: "hero-heart"
   defp notification_icon(:new_subscription), do: "hero-star"
@@ -298,9 +311,14 @@ defmodule KameramaniPhxWeb.NotificationsLive do
   defp notification_subtext(%{type: :stream_went_live}), do: "Jump in and join the stream."
   defp notification_subtext(%{type: :new_follower}), do: "They are now part of your audience."
   defp notification_subtext(%{type: :new_subscription}), do: "Support landed on your channel."
-  defp notification_subtext(%{type: :verification_submitted}), do: "Review and approve the request."
+
+  defp notification_subtext(%{type: :verification_submitted}),
+    do: "Review and approve the request."
+
   defp notification_subtext(%{type: :verification_approved}), do: "Your account is now verified!"
-  defp notification_subtext(%{type: :verification_rejected}), do: "Check the requirements and try again."
+
+  defp notification_subtext(%{type: :verification_rejected}),
+    do: "Check the requirements and try again."
 
   defp notification_icon_container(:stream_went_live),
     do: "border-[#ff6a88]/20 bg-linear-to-br from-[#52273d] to-[#25131d] text-[#ff9eb4]"

@@ -252,7 +252,7 @@ defmodule KameramaniPhx.Subscriptions do
     provider_url = Keyword.get(fx_config, :provider_url, @default_fx_provider_url)
     timeout = Keyword.get(fx_config, :timeout_ms, @default_fx_timeout_ms)
 
-    rate = 
+    rate =
       with {:ok, fetched_rate} <- fetch_rate(provider_url, timeout),
            :gt <- Decimal.compare(fetched_rate, Decimal.new(0)) do
         fetched_rate

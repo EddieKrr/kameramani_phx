@@ -166610,6 +166610,8 @@ PATH=/home/eddie/.local/share/mise/installs/elixir/1.19.5-otp-28/bin:/home/eddie
 16:16:16.883 [debug] handled notification client -> server $/cancelRequest in 1ms
 
 16:16:39.090 [debug] handled notification client -> server $/cancelRequest in 1ms
+<<<<<<< HEAD
+=======
 
 16:22:04.107 id=1325 [debug] handled request client -> server textDocument/codeAction in 1ms
 
@@ -167795,3 +167797,4 @@ PATH=/home/eddie/.local/share/mise/installs/elixir/1.19.5-otp-28/bin:/home/eddie
 11:21:30.248 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 840µs
 
 11:21:37.380 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 977µs
+>>>>>>> origin/ui-ux

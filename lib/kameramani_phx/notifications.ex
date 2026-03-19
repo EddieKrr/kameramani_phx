@@ -78,7 +78,11 @@ defmodule KameramaniPhx.Notifications do
     })
   end
 
-  def notify_new_subscription(%User{} = subscriber, %User{} = streamer, %Subscription{} = subscription) do
+  def notify_new_subscription(
+        %User{} = subscriber,
+        %User{} = streamer,
+        %Subscription{} = subscription
+      ) do
     create_notification(%{
       recipient_id: streamer.id,
       actor_id: subscriber.id,
@@ -129,8 +133,7 @@ defmodule KameramaniPhx.Notifications do
     end
   end
 
-
-  #clearing notifications
+  # clearing notifications
   def clear_notifications(current_user) do
     recipient_id = recipient_id_for(current_user)
 
@@ -143,7 +146,6 @@ defmodule KameramaniPhx.Notifications do
     :ok
   end
 
-  
   def notify_verification_submitted(%User{} = user, verification_id) do
     # Get all admins/mods to notify them
     admin_ids =
@@ -180,7 +182,12 @@ defmodule KameramaniPhx.Notifications do
     UserNotifier.deliver_verification_submitted(user)
 
     # Also broadcast specifically for the admin panel real-time list
-    Phoenix.PubSub.broadcast(KameramaniPhx.PubSub, "admin:verifications", :verification_request_submitted)
+    Phoenix.PubSub.broadcast(
+      KameramaniPhx.PubSub,
+      "admin:verifications",
+      :verification_request_submitted
+    )
+
     :ok
   end
 
@@ -251,7 +258,11 @@ defmodule KameramaniPhx.Notifications do
   end
 
   defp broadcast_verification_status(recipient_id, status) do
-    Phoenix.PubSub.broadcast(KameramaniPhx.PubSub, verification_topic(recipient_id), {:verification_status_updated, status})
+    Phoenix.PubSub.broadcast(
+      KameramaniPhx.PubSub,
+      verification_topic(recipient_id),
+      {:verification_status_updated, status}
+    )
   end
 
   def verification_topic(recipient_id),

@@ -7,14 +7,15 @@ defmodule KameramaniPhx.ChatFixtures do
   @doc """
   Generate a message.
   """
-  def message_fixture(user, attrs \\ %{}) do
+  def message_fixture(user, stream_id, attrs \\ %{}) do
     attrs =
       Enum.into(attrs, %{
         body: "some body",
-        room_id: "some room_id"
+        user_id: user.id,
+        stream_id: stream_id
       })
 
-    {:ok, message} = KameramaniPhx.Chat.create_message(user, attrs)
+    {:ok, message} = KameramaniPhx.Chat.create_stream_message(attrs)
     message
   end
 end

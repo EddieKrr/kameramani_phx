@@ -1,84 +1,110 @@
 defmodule KameramaniPhx.Accounts.User do
   use Ecto.Schema
-  @primary_key {:id, :binary_id, autogenerate: true}
   import Ecto.Changeset
-  alias KameramaniPhx.Repo
+
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
+
+  @allowed_domains ~w(gmail.com yahoo.com outlook.com hotmail.com icloud.com protonmail.com aol.com mail.com)
 
   schema "users" do
     field :name, :string
     field :username, :string
     field :age, :integer
     field :email, :string
-    field :password, :string, virtual: true, redact: true
-
-    field :password_confirmation, :string, virtual: true, redact: true
-
+    field :hashed_password, :string
+    field :confirmed_at, :utc_datetime
     field :bio, :string
     field :profile_picture, :string
     field :chat_color, :string
     field :mobile_number, :string
-    field :hashed_password, :string, redact: true
-    field :confirmed_at, :utc_datetime
-    field :authenticated_at, :utc_datetime, virtual: true
-    field :is_live, :boolean, virtual: true, default: false
+    field :accounts, {:array, :map}, default: []
     field :is_verified, :boolean, default: false
-    field :subscriber_count, :integer, virtual: true, default: 0
-    field :following_count, :integer, virtual: true, default: 0
+
+    field :password, :string, virtual: true, redact: true
+    field :password_confirmation, :string, virtual: true
+    field :current_password, :string, virtual: true, redact: true
+    field :authenticated_at, :utc_datetime, virtual: true
+
+    field :is_live, :boolean, virtual: true, default: false
     field :follower_count, :integer, virtual: true, default: 0
+    field :following_count, :integer, virtual: true, default: 0
+    field :subscriber_count, :integer, virtual: true, default: 0
+
     has_many :social_accounts, KameramaniPhx.Socials.SocialAccount
     has_many :verification_requests, KameramaniPhx.Accounts.VerificationRequest
-    many_to_many :roles, KameramaniPhx.Accounts.Role,
-      join_through: "user_roles",
-      on_replace: :delete
+    has_many :followers, KameramaniPhx.Accounts.Follow, foreign_key: :followed_id
+    has_many :following, KameramaniPhx.Accounts.Follow, foreign_key: :follower_id
+    has_many :subscribers, KameramaniPhx.Subscriptions.Subscription, foreign_key: :streamer_id
+    has_many :subscriptions, KameramaniPhx.Subscriptions.Subscription, foreign_key: :subscriber_id
 
-    # People THIS user is following
-    many_to_many :following, KameramaniPhx.Accounts.User,
-      join_through: "follows",
-      join_keys: [follower_id: :id, followed_id: :id]
-
-    # People FOLLOWING this user
-    many_to_many :followers, KameramaniPhx.Accounts.User,
-      join_through: "follows",
-      join_keys: [followed_id: :id, follower_id: :id]
-
-    many_to_many :subscribers, KameramaniPhx.Accounts.User,
-      join_through: "subscriptions",
-      join_keys: [streamer_id: :id, subscriber_id: :id]
+    many_to_many :roles, KameramaniPhx.Accounts.Role, join_through: "user_roles"
 
     timestamps(type: :utc_datetime)
   end
 
-  @chat_colors ~w(#3b82f6 #ef4444 #f97316 #eab308 #ec4899 #a855f7 #22c55e #84cc16)
-
-  @doc """
-  A user changeset for registration.
-  """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:name, :username, :email, :age, :password, :chat_color])
-    |> validate_required([:name, :username, :email, :age])
+    |> cast(attrs, [:name, :username, :age, :email, :password, :chat_color])
+    |> validate_required([:name, :username, :age, :email, :password])
+    |> validate_length(:password, min: 12, max: 72)
     |> validate_email(opts)
-    |> validate_password_if_present(opts)
     |> maybe_put_chat_color()
+    |> maybe_hash_password(opts)
   end
 
-  defp validate_password_if_present(changeset, opts) do
-    if get_field(changeset, :password) do
-      validate_password(changeset, opts)
-    else
-      changeset
+  def profile_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:username, :bio, :profile_picture])
+  end
+
+  def email_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:email])
+    |> validate_email(opts)
+    |> case do
+      %{changes: %{email: _}} = changeset -> changeset
+      %{} = changeset -> add_error(changeset, :email, "did not change")
     end
   end
 
-  defp maybe_put_chat_color(changeset) do
-    if get_field(changeset, :chat_color) do
-      changeset
-    else
-      put_change(changeset, :chat_color, Enum.random(@chat_colors))
+  def password_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:password, :password_confirmation])
+    |> validate_required([:password])
+    |> validate_length(:password, min: 12, max: 72)
+    |> validate_confirmation(:password, message: "does not match password")
+    |> case do
+      %{changes: %{password: _}} = changeset ->
+        if Keyword.get(opts, :hash_password, true) do
+          maybe_hash_password(changeset, opts)
+        else
+          changeset
+        end
+
+      %{} = changeset ->
+        changeset
     end
   end
 
-  @allowed_domains ~w(gmail.com yahoo.com outlook.com hotmail.com icloud.com protonmail.com aol.com mail.com)
+  def confirm_changeset(user) do
+    change(user, confirmed_at: DateTime.utc_now(:second))
+  end
+
+  def admin_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:is_verified])
+  end
+
+  def valid_password?(%__MODULE__{hashed_password: hashed_password}, password)
+      when is_binary(hashed_password) and byte_size(password) > 0 do
+    Bcrypt.verify_pass(password, hashed_password)
+  end
+
+  def valid_password?(_user, _password) do
+    Bcrypt.no_user_verify()
+    false
+  end
 
   defp validate_email(changeset, opts) do
     changeset =
@@ -89,7 +115,6 @@ defmodule KameramaniPhx.Accounts.User do
       )
       |> validate_length(:email, max: 160)
 
-    # Only validate domain if format is valid so far
     changeset =
       if changeset.valid? do
         validate_allowed_domain(changeset)
@@ -122,122 +147,29 @@ defmodule KameramaniPhx.Accounts.User do
     end
   end
 
-  def email_changeset(user, attrs, opts \\ []) do
-    user
-    |> cast(attrs, [:email])
-    |> validate_email(opts)
-    |> case do
-      %{changes: %{email: _}} = changeset -> changeset
-      %{} = changeset -> add_error(changeset, :email, "did not change")
-    end
-  end
-
-  def password_changeset(user, attrs, opts \\ []) do
-    user
-    |> cast(attrs, [:password, :password_confirmation])
-    |> validate_required([:password])
-    |> validate_length(:password, min: 12, max: 72)
-    |> validate_confirmation(:password, message: "does not match password")
-    |> case do
-      %{changes: %{password: _}} = changeset ->
-        if Keyword.get(opts, :hash_password, true) do
-          maybe_hash_password(changeset)
-        else
-          changeset
-        end
-
-      %{} = changeset ->
-        changeset
-    end
-  end
-
-  defp validate_password(changeset, opts) do
-    changeset =
-      changeset
-      |> validate_required([:password])
-      |> validate_length(:password, min: 6, max: 72)
-
-    if Keyword.get(opts, :hash_password, true) do
-      changeset
-      |> maybe_hash_password()
-    else
-      changeset
-    end
-  end
-
-  defp maybe_hash_password(changeset) do
-    password = get_change(changeset, :password)
-
-    if password && changeset.valid? do
+  defp maybe_hash_password(changeset, opts) do
+    if password = get_change(changeset, :password) do
       changeset
       |> put_change(:hashed_password, Bcrypt.hash_pwd_salt(password))
-      |> delete_change(:password)
+      |> maybe_validate_password_hash(opts)
     else
       changeset
     end
   end
 
-  def update_user_password(user, new_password) do
-    changeset =
-      change(user, password: new_password)
-      |> validate_password([])
-
-    case Repo.update(changeset) do
-      {:ok, updated_user} ->
-        {:noreply, updated_user}
-
-      {:error, changeset} ->
-        {:error, changeset}
+  defp maybe_validate_password_hash(changeset, opts) do
+    if Keyword.get(opts, :validate_password_hash, true) do
+      changeset
+    else
+      changeset
     end
   end
 
-  # update user stream profile
-  def profile_changeset(user, attr) do
-    user
-    |> cast(attr, [:username, :bio, :profile_picture, :mobile_number ])
-    |> validate_required([:username])
-    |> validate_length(:username, min: 3, max: 20)
-    |> validate_length(:bio, max: 160)
-    |> unsafe_validate_unique(:username, KameramaniPhx.Repo)
-    |> unique_constraint(:username)
-    |> unique_constraint(:mobile_number)
-  end
-
-  @doc """
-  Verifies the password.
-  """
-  def valid_password?(%KameramaniPhx.Accounts.User{hashed_password: hashed_password}, password)
-      when is_binary(hashed_password) and byte_size(password) > 0 do
-    Bcrypt.verify_pass(password, hashed_password)
-  end
-
-  def valid_password?(_, _) do
-    Bcrypt.no_user_verify()
-    false
-  end
-
-  @doc """
-  Confirms the account by setting `confirmed_at`.
-  """
-  def confirm_changeset(user) do
-    now = DateTime.utc_now() |> DateTime.truncate(:second)
-    change(user, confirmed_at: now)
-  end
-
-  #admin verification changeset
-  def admin_changeset(user, attrs) do
-    user |> cast(attrs, [:is_verified])
-  end
-
-  @doc """
-  A user changeset for admin updates.
-  """
-  def admin_update_changeset(user, attrs) do
-    user
-    |> cast(attrs, [:name, :username, :email, :age])
-    |> validate_required([:name, :username, :email, :age])
-    |> validate_email([])
-    |> unsafe_validate_unique(:username, KameramaniPhx.Repo)
-    |> unique_constraint(:username)
+  defp maybe_put_chat_color(changeset) do
+    if get_field(changeset, :chat_color) do
+      changeset
+    else
+      put_change(changeset, :chat_color, Enum.random(~w(#6366f1 #f97316 #22c55e #eab308 #ef4444 #ec4899 #3b82f6 #84cc16 #a855f7)))
+    end
   end
 end

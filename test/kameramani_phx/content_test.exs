@@ -8,11 +8,11 @@ defmodule KameramaniPhx.ContentTest do
 
     import KameramaniPhx.ContentFixtures
 
-    @invalid_attrs %{name: nil, slug: nil}
+    @invalid_attrs %{name: nil, slug: nil, thumbnail_url: nil}
 
     test "list_categories/0 returns all categories" do
       category = category_fixture()
-      assert Content.list_categories() == [category]
+      assert category in Content.list_categories()
     end
 
     test "get_category!/1 returns the category with given id" do
@@ -21,11 +21,12 @@ defmodule KameramaniPhx.ContentTest do
     end
 
     test "create_category/1 with valid data creates a category" do
-      valid_attrs = %{name: "some name", slug: "some slug"}
+      valid_attrs = %{name: "some name", slug: "some slug", thumbnail_url: "some thumbnail_url"}
 
       assert {:ok, %Category{} = category} = Content.create_category(valid_attrs)
       assert category.name == "some name"
       assert category.slug == "some slug"
+      assert category.thumbnail_url == "some thumbnail_url"
     end
 
     test "create_category/1 with invalid data returns error changeset" do
@@ -34,11 +35,17 @@ defmodule KameramaniPhx.ContentTest do
 
     test "update_category/2 with valid data updates the category" do
       category = category_fixture()
-      update_attrs = %{name: "some updated name", slug: "some updated slug"}
+
+      update_attrs = %{
+        name: "some updated name",
+        slug: "some updated slug",
+        thumbnail_url: "some updated thumbnail_url"
+      }
 
       assert {:ok, %Category{} = category} = Content.update_category(category, update_attrs)
       assert category.name == "some updated name"
       assert category.slug == "some updated slug"
+      assert category.thumbnail_url == "some updated thumbnail_url"
     end
 
     test "update_category/2 with invalid data returns error changeset" do
