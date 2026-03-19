@@ -33,11 +33,14 @@
   - Added verified badge next to usernames in profile headers.
   - Integrated social icons into the profile "About" section.
   - Added a library of social and utility SVG icons to `CoreComponents`.
+<<<<<<< HEAD
 - Updated auth and settings flows to match the `/auth` LiveView, fixed LiveView DOM id collisions, and aligned tests and redirects.
   - Added a missing magic-link confirmation route and corrected `/auth` redirects.
   - Added missing form ids and adjusted registration/login tests for the new UI behavior.
   - Ensured email-change errors render by setting changeset action.
   - Removed unused aliases and duplicate keys to satisfy `mix precommit`.
+=======
+>>>>>>> origin/ui-ux
 
 ## In Progress / Next Steps
 - **Distributed Storage Migration:** Resolve the issue where viewers on Machine A cannot watch streams originating from Machine B.
@@ -47,8 +50,14 @@
   - Move thumbnail storage from `priv/static/thumbnails` to centralized storage.
 
 ## Validation
+<<<<<<< HEAD
 - `mix test`
 - `mix precommit`
+=======
+- `mix compile` currently fails because Mix.PubSub cannot open a TCP socket (`:eperm`) inside the sandboxed environment. This is unrelated to the recent code changes.
+- `mix format` fails for the same reason (Mix.PubSub cannot start), so formatting could not be auto-run here.
+- `mix precommit` is still blocked by the pre-existing unrelated warnings elsewhere in the project.
+>>>>>>> origin/ui-ux
 
 ## Files Updated
 - `lib/kameramani_phx_web/live/Profile/user_profile_live.ex`
@@ -59,6 +68,7 @@
 - `lib/kameramani_phx/streaming.ex`
 - `lib/kameramani_phx_web/live/admin/admin_live.ex`
 - `lib/kameramani_phx_web/live/admin/admin_live.html.heex`
+<<<<<<< HEAD
 - `lib/kameramani_phx_web/router.ex`
 - `lib/kameramani_phx_web/live/user_live/confirmation.ex`
 - `lib/kameramani_phx_web/live/new_auth_live.ex`
@@ -76,3 +86,5 @@
 - `test/kameramani_phx_web/live/user_live/registration_test.exs`
 - `test/kameramani_phx_web/live/user_live/settings_test.exs`
 - `test/kameramani_phx_web/user_auth_test.exs`
+=======
+>>>>>>> origin/ui-ux

@@ -77,10 +77,10 @@ defmodule KameramaniPhxWeb.Layouts do
               <div class="flex items-center gap-6">
                 <div class="flex items-center gap-3">
                   <%= if @live_socket do %>
-                    {Phoenix.Component.live_render(@live_socket, KameramaniPhxWeb.NotificationsLive,
+                    <%= Phoenix.Component.live_render(@live_socket, KameramaniPhxWeb.NotificationsLive,
                       id: "admin-navbar-notifications",
                       session: %{"current_user_id" => @current_user_obj.id}
-                    )}
+                    ) %>
                   <% end %>
                   <span class="text-black">
                     Welcome,
@@ -89,15 +89,9 @@ defmodule KameramaniPhxWeb.Layouts do
                     </span>
                   </span>
                   <div class="relative group cursor-pointer">
-                    <div class="w-8 h-8 bg-blue-500 rounded-full overflow-hidden flex items-center justify-center text-white font-semibold text-sm">
-                      <%= if @current_user_obj.profile_picture && @current_user_obj.profile_picture != "" do %>
-                        <img
-                          src={@current_user_obj.profile_picture}
-                          class="w-full h-full object-cover"
-                        />
-                      <% else %>
-                        {String.first(@current_user_obj.username || "U") |> String.upcase()}
-                      <% end %>
+                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                      {String.first(@current_user_obj.username || "U")
+                      |> String.upcase()}
                     </div>
 
                     <div class="absolute right-0 top-full mt-2 w-48 glass-pane opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:rounded-3xl transition-all duration-200 z-50">
@@ -166,10 +160,10 @@ defmodule KameramaniPhxWeb.Layouts do
                   />
                   <div class="flex items-center gap-3">
                     <%= if @live_socket do %>
-                      {Phoenix.Component.live_render(@live_socket, KameramaniPhxWeb.NotificationsLive,
+                      <%= Phoenix.Component.live_render(@live_socket, KameramaniPhxWeb.NotificationsLive,
                         id: "navbar-notifications",
                         session: %{"current_user_id" => @current_user_obj.id}
-                      )}
+                      ) %>
                     <% end %>
                     <span class="text-white">
                       Welcome,
@@ -178,15 +172,9 @@ defmodule KameramaniPhxWeb.Layouts do
                       </span>
                     </span>
                     <div class="relative group cursor-pointer">
-                      <div class="w-8 h-8 bg-blue-500 rounded-full overflow-hidden flex items-center justify-center text-white font-semibold text-sm">
-                        <%= if @current_user_obj.profile_picture && @current_user_obj.profile_picture != "" do %>
-                          <img
-                            src={@current_user_obj.profile_picture}
-                            class="w-full h-full object-cover"
-                          />
-                        <% else %>
-                          {String.first(@current_user_obj.username || "U") |> String.upcase()}
-                        <% end %>
+                      <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                        {String.first(@current_user_obj.username || "U")
+                        |> String.upcase()}
                       </div>
 
                       <div class="absolute right-0 top-full mt-2 w-48 glass opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:rounded-3xl transition-all duration-200 z-50">

@@ -87,6 +87,30 @@ defmodule KameramaniPhx.Chat do
     Repo.get_by!(Message, id: id, user_id: user.user.id)
   end
 
+  # @doc """
+  # Creates a message.
+
+  # ## Examples
+
+  #     iex> create_message(user, %{field: value})
+  #     {:ok, %Message{}}
+
+  #     iex> create_message(user, %{field: bad_value})
+  #     {:error, %Ecto.Changeset{}}
+
+  # """
+  # def create_message(%Scope{} = user, attrs) do
+  #   attrs = Map.put(attrs, :user_id, user.user.id)
+
+  #   with {:ok, message = %Message{}} <-
+  #          %Message{}
+  #          |> Message.changeset(attrs)
+  #          |> Repo.insert() do
+  #     broadcast_message(user, {:created, message})
+  #     {:ok, message}
+  #   end
+  # end
+
   @doc """
   Updates a message.
 

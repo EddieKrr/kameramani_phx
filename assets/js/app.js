@@ -36,46 +36,134 @@ Hooks.ChatScroll = {
   }
 }
 Hooks.VideoPlayer = {
-  player: null, // Store Hls instance
+  player: null,
+  hls: null,
 
   mounted() {
     this.initPlayer();
   },
 
   updated() {
-    // If the HLS URL changes, re-initialize the player
     const newHlsUrl = this.el.dataset.hlsUrl;
-    if (this.player && this.player.url !== newHlsUrl) {
-      this.player.destroy(); // Clean up old Hls instance
+    if (this.hls && this.hls.url !== newHlsUrl) {
+      this.destroyPlayer();
       this.initPlayer();
     }
   },
 
   destroyed() {
-    if (this.player) {
-      this.player.destroy();
+    this.destroyPlayer();
+  },
+
+  destroyPlayer() {
+    if (this.hls) {
+      this.hls.destroy();
+      this.hls = null;
     }
+    // Remove event listeners if necessary (mostly handled by browser/DOM replacement)
   },
 
   initPlayer() {
     const video = this.el;
     const hlsUrl = video.dataset.hlsUrl;
+    const container = video.closest('[id^="player-container"]');
+    const playPauseBtn = document.getElementById(`${video.id}-play-pause`);
+    const volumeSlider = document.getElementById(`${video.id}-volume-slider`);
+    const muteBtn = document.getElementById(`${video.id}-mute`);
+    const fullscreenBtn = document.getElementById(`${video.id}-fullscreen`);
+    const loader = document.getElementById(`${video.id}-loader`);
 
     if (Hls.isSupported()) {
-      this.player = new Hls();
-      this.player.loadSource(hlsUrl);
-      this.player.attachMedia(video);
-      this.player.on(Hls.Events.MANIFEST_PARSED, () => {
-        video.play();
+      this.hls = new Hls({
+        enableWorker: true,
+        lowLatencyMode: true,
       });
+      this.hls.loadSource(hlsUrl);
+      this.hls.attachMedia(video);
+      
+      this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        video.play().catch(() => {
+          // Auto-play might be blocked, update UI to show paused state
+          container.classList.add('is-paused');
+        });
+      });
+
+      // Handle buffering states
+      this.hls.on(Hls.Events.BUFFER_APPENDING, () => loader?.classList.remove('hidden'));
+      this.hls.on(Hls.Events.BUFFER_APPENDED, () => loader?.classList.add('hidden'));
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = hlsUrl;
-      video.addEventListener('loadedmetadata', () => {
-        video.play();
-      });
-    } else {
-      console.error('This browser does not support HLS natively or via hls.js');
     }
+
+    // --- Custom Controls Logic ---
+
+    // Play/Pause
+    const togglePlay = () => {
+      if (video.paused) {
+        video.play();
+        container.classList.remove('is-paused');
+        playPauseBtn.querySelector('.player-play-icon').classList.add('hidden');
+        playPauseBtn.querySelector('.player-pause-icon').classList.remove('hidden');
+      } else {
+        video.pause();
+        container.classList.add('is-paused');
+        playPauseBtn.querySelector('.player-play-icon').classList.remove('hidden');
+        playPauseBtn.querySelector('.player-pause-icon').classList.add('hidden');
+      }
+    };
+
+    video.addEventListener('click', togglePlay);
+    playPauseBtn?.addEventListener('click', togglePlay);
+
+    // Volume
+    const updateVolumeUI = () => {
+      const isMuted = video.muted || video.volume === 0;
+      if (isMuted) {
+        muteBtn.querySelector('.player-unmuted-icon').classList.add('hidden');
+        muteBtn.querySelector('.player-muted-icon').classList.remove('hidden');
+        volumeSlider.value = 0;
+      } else {
+        muteBtn.querySelector('.player-unmuted-icon').classList.remove('hidden');
+        muteBtn.querySelector('.player-muted-icon').classList.add('hidden');
+        volumeSlider.value = video.volume * 100;
+      }
+    };
+
+    volumeSlider?.addEventListener('input', (e) => {
+      video.volume = e.target.value / 100;
+      video.muted = video.volume === 0;
+      updateVolumeUI();
+    });
+
+    muteBtn?.addEventListener('click', () => {
+      video.muted = !video.muted;
+      if (!video.muted && video.volume === 0) video.volume = 1;
+      updateVolumeUI();
+    });
+
+    // Fullscreen
+    fullscreenBtn?.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        container.requestFullscreen().catch(err => {
+          console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    });
+
+    // Sync UI with video state (e.g. if paused via other means)
+    video.addEventListener('play', () => {
+      container.classList.remove('is-paused');
+      playPauseBtn?.querySelector('.player-play-icon').classList.add('hidden');
+      playPauseBtn?.querySelector('.player-pause-icon').classList.remove('hidden');
+    });
+
+    video.addEventListener('pause', () => {
+      container.classList.add('is-paused');
+      playPauseBtn?.querySelector('.player-play-icon').classList.remove('hidden');
+      playPauseBtn?.querySelector('.player-pause-icon').classList.add('hidden');
+    });
   }
 };
 

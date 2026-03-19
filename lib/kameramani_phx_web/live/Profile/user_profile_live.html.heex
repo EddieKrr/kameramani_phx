@@ -78,14 +78,16 @@
         <%= if @current_user.user && @current_user.user.id == @user.id && !@user.is_verified do %>
           <%= if @verification_request && @verification_request.status == "pending" do %>
             <div class="flex items-center gap-2 px-4 py-1.5 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20 text-sm font-bold shadow-sm">
-              <.svg variant="clock" class="w-4 h-4" /> Verification Pending
+              <.svg variant="clock" class="w-4 h-4" />
+              Verification Pending
             </div>
           <% else %>
             <button
               phx-click="open_verification_modal"
               class="flex items-center gap-2 px-4 py-1.5 rounded bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold transition-all shadow-lg hover:shadow-blue-500/25"
             >
-              <.svg variant="check-badge" class="w-4 h-4" /> Get Verified
+              <.svg variant="check-badge" class="w-4 h-4" />
+              Get Verified
             </button>
           <% end %>
         <% end %>
@@ -162,7 +164,7 @@
         <div>
           <h3 class="text-xl font-bold text-white capitalize">Subscribe to {@user.username}</h3>
           <p class="text-sm text-[#adadb8]">
-            Choose a renewal tier.
+            Choose a renewal tier. 
           </p>
         </div>
         <button
@@ -225,7 +227,7 @@
     <div class="w-full max-w-2xl rounded-2xl border border-white/10 bg-slate-900 p-8 shadow-2xl relative overflow-hidden">
       <!-- Background glow -->
       <div class="absolute -top-24 -left-24 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl"></div>
-
+      
       <div class="relative z-10">
         <div class="flex items-start justify-between mb-8">
           <div>
@@ -247,14 +249,10 @@
         <div class="grid md:grid-cols-2 gap-8">
           <!-- Social Link Form -->
           <div class="space-y-6">
-            <h4 class="text-sm font-bold text-blue-400 uppercase tracking-widest">
-              Add Social Account
-            </h4>
+            <h4 class="text-sm font-bold text-blue-400 uppercase tracking-widest">Add Social Account</h4>
             <div class="space-y-4">
               <div>
-                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-                  Platform
-                </label>
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Platform</label>
                 <div class="grid grid-cols-3 gap-2">
                   <button
                     :for={platform <- @social_platforms}
@@ -262,24 +260,18 @@
                     phx-value-platform={platform.id}
                     class={[
                       "flex flex-col items-center gap-2 p-3 rounded-xl border transition-all",
-                      @selected_platform == platform.id &&
-                        "bg-blue-600/20 border-blue-500 text-blue-400",
-                      @selected_platform != platform.id &&
-                        "bg-white/5 border-white/5 text-slate-400 hover:bg-white/10"
+                      @selected_platform == platform.id && "bg-blue-600/20 border-blue-500 text-blue-400",
+                      @selected_platform != platform.id && "bg-white/5 border-white/5 text-slate-400 hover:bg-white/10"
                     ]}
                   >
                     <.svg variant={platform.icon} class="h-6 w-6" />
-                    <span class="text-[10px] font-bold uppercase tracking-tighter">
-                      {platform.name}
-                    </span>
+                    <span class="text-[10px] font-bold uppercase tracking-tighter">{platform.name}</span>
                   </button>
                 </div>
               </div>
 
               <div>
-                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-                  Username
-                </label>
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Username</label>
                 <div class="relative group">
                   <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-mono text-sm">
                     {Enum.find(@social_platforms, &(&1.id == @selected_platform)).prefix}
@@ -299,16 +291,15 @@
                 phx-click="add_social_account"
                 class="w-full py-3 rounded-xl bg-white text-black font-bold uppercase tracking-wider hover:bg-slate-200 transition-all flex items-center justify-center gap-2"
               >
-                <.svg variant="plus" class="h-5 w-5" /> Add Link
+                <.svg variant="plus" class="h-5 w-5" />
+                Add Link
               </button>
             </div>
           </div>
-          
-<!-- Linked Accounts List -->
+
+          <!-- Linked Accounts List -->
           <div class="flex flex-col h-full">
-            <h4 class="text-sm font-bold text-blue-400 uppercase tracking-widest mb-6">
-              Linked Accounts
-            </h4>
+            <h4 class="text-sm font-bold text-blue-400 uppercase tracking-widest mb-6">Linked Accounts</h4>
             <div class="flex-1 space-y-3 overflow-y-auto max-h-64 pr-2 custom-scrollbar">
               <%= if Enum.empty?(@social_accounts) do %>
                 <div class="h-full flex flex-col items-center justify-center text-center opacity-50 grayscale">
@@ -316,21 +307,14 @@
                   <p class="text-xs text-slate-500 uppercase font-bold">No accounts linked yet</p>
                 </div>
               <% else %>
-                <div
-                  :for={social <- @social_accounts}
-                  class="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 group"
-                >
+                <div :for={social <- @social_accounts} class="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 group">
                   <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-lg bg-black/40 flex items-center justify-center">
                       <.svg variant={social.platform} class="h-4 w-4 text-blue-400" />
                     </div>
                     <div>
-                      <p class="text-xs font-bold text-white uppercase tracking-tighter">
-                        {social.platform}
-                      </p>
-                      <p class="text-[10px] text-slate-500 truncate max-w-[120px]">
-                        @{social.username}
-                      </p>
+                      <p class="text-xs font-bold text-white uppercase tracking-tighter">{social.platform}</p>
+                      <p class="text-[10px] text-slate-500 truncate max-w-[120px]">@{social.username}</p>
                     </div>
                   </div>
                   <button
@@ -343,7 +327,7 @@
                 </div>
               <% end %>
             </div>
-
+            
             <div class="mt-8 pt-6 border-t border-white/5">
               <button
                 phx-click="request_verification"

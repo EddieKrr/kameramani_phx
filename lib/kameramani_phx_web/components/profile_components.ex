@@ -34,10 +34,7 @@ defmodule KameramaniPhxWeb.ProfileComponents do
             <h1 class="text-4xl font-bold">{@name}</h1>
             <%= if @is_verified do %>
               <div class="tooltip tooltip-right" data-tip="Verified Creator">
-                <.svg
-                  variant="check-badge"
-                  class="h-6 w-6 text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.5)]"
-                />
+                <.svg variant="check-badge" class="h-6 w-6 text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.5)]" />
               </div>
             <% end %>
             <%= if @is_live do %>
@@ -151,10 +148,7 @@ defmodule KameramaniPhxWeb.ProfileComponents do
                   rel="noopener noreferrer"
                   class="group relative flex items-center justify-center w-12 h-12 rounded-xl bg-black/40 border border-white/5 hover:border-blue-500/50 hover:bg-blue-500/10 transition-all duration-300"
                 >
-                  <.svg
-                    variant={social.platform}
-                    class="w-6 h-6 text-slate-400 group-hover:text-blue-400 group-hover:scale-110 transition-all"
-                  />
+                  <.svg variant={social.platform} class="w-6 h-6 text-slate-400 group-hover:text-blue-400 group-hover:scale-110 transition-all" />
                   <span class="absolute -top-10 scale-0 group-hover:scale-100 bg-slate-800 text-white text-[10px] px-2 py-1 rounded font-bold uppercase tracking-widest whitespace-nowrap transition-all shadow-xl">
                     {social.username}
                   </span>

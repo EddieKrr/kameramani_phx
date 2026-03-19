@@ -38,49 +38,76 @@ defmodule KameramaniPhxWeb.AdminLive do
 
     active_tab = "users"
 
+
     users_page = Accounts.get_all_users(page: 1, page_size: @users_page_size)
     live_streams_page = Streaming.list_live_streams(page: 1, page_size: @streams_page_size)
 
-    {:ok,
-     assign(socket,
-       layout_type: :admin,
-       active_tab: active_tab,
-       allowed_tabs: Enum.map(menu_items, & &1.id),
-       users_page: users_page,
-       live_streams_page: live_streams_page,
-       verification_requests: [],
-       menu_items: menu_items,
-       page_bg_class: "bg-blue-200",
-       show_add_user_modal: false,
-       add_user_form: to_form(Accounts.validate_registration(%{})),
-       show_add_category_modal: false,
-       add_category_form: to_form(Content.change_category(%KameramaniPhx.Content.Category{}))
-     )}
+    {:ok, assign(socket,
+        layout_type: :admin,
+        active_tab: active_tab,
+        allowed_tabs: Enum.map(menu_items, & &1.id),
+        users_page: users_page,
+        live_streams_page: live_streams_page,
+        verification_requests: [],
+        menu_items: menu_items,
+        page_bg_class: "bg-blue-200",
+        show_add_user_modal: false,
+        user_to_edit: nil,
+        add_user_form: to_form(Accounts.validate_registration(%{})),
+        show_add_category_modal: false,
+        add_category_form: to_form(Content.change_category(%KameramaniPhx.Content.Category{}))
+      )}
   end
 
   @impl true
   def handle_event("open_add_user_modal", _params, socket) do
     {:noreply,
      socket
-     |> assign(show_add_user_modal: true)}
+     |> assign(show_add_user_modal: true, user_to_edit: nil, add_user_form: to_form(Accounts.validate_registration(%{})))}
+  end
+
+  @impl true
+  def handle_event("edit_user", %{"id" => id}, socket) do
+    case Accounts.get_user!(id) do
+      nil ->
+        {:noreply, put_flash(socket, :error, "User not found")}
+
+      user ->
+        {:noreply,
+         socket
+         |> assign(
+           show_add_user_modal: true,
+           user_to_edit: user,
+           add_user_form: to_form(Accounts.change_user(user))
+         )}
+    end
   end
 
   @impl true
   def handle_event("close_add_user_modal", _params, socket) do
-    {:noreply, assign(socket, show_add_user_modal: false)}
+    {:noreply,
+     socket
+     |> assign(show_add_user_modal: false, user_to_edit: nil)}
   end
 
   @impl true
   def handle_event("validate_user", %{"user" => user_params}, socket) do
-    form =
-      Accounts.validate_registration(user_params)
-      |> to_form(action: :validate)
+    changeset =
+      if user = socket.assigns.user_to_edit do
+        Accounts.change_user(user, user_params)
+      else
+        Accounts.validate_registration(user_params)
+      end
 
-    {:noreply, assign(socket, add_user_form: form)}
+    {:noreply, assign(socket, add_user_form: to_form(changeset, action: :validate))}
   end
 
   @impl true
   def handle_event("save_user", %{"user" => user_params}, socket) do
+    save_user(socket, socket.assigns.user_to_edit, user_params)
+  end
+
+  defp save_user(socket, nil, user_params) do
     case Accounts.register_user(user_params) do
       {:ok, _user} ->
         users_page = Accounts.get_all_users(page: 1, page_size: @users_page_size)
@@ -95,7 +122,36 @@ defmodule KameramaniPhxWeb.AdminLive do
          )}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, add_user_form: to_form(changeset))}
+        {:noreply,
+         socket
+         |> put_flash(:error, "Could not create user")
+         |> assign(add_user_form: to_form(changeset))}
+    end
+  end
+
+  defp save_user(socket, user, user_params) do
+    case Accounts.update_user(user, user_params) do
+      {:ok, _user} ->
+        users_page =
+          Accounts.get_all_users(
+            page: socket.assigns.users_page.page_number,
+            page_size: @users_page_size
+          )
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "User updated successfully")
+         |> assign(
+           show_add_user_modal: false,
+           user_to_edit: nil,
+           users_page: users_page
+         )}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply,
+         socket
+         |> put_flash(:error, "Could not update user")
+         |> assign(add_user_form: to_form(changeset))}
     end
   end
 
@@ -211,6 +267,7 @@ defmodule KameramaniPhxWeb.AdminLive do
 
   @impl true
   def handle_params(_, _, socket) do
+
     {:noreply, assign(socket, active_tab: "users")}
   end
 
