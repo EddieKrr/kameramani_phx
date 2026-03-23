@@ -29,31 +29,29 @@ defmodule KameramaniPhxWeb.AdminComponents do
       </div>
 
     </div> --%>
-    <div class={["relative", if(@active, do: "bg-white pl-4", else: "bg-blue-200")]}>
+    <div class={["relative", if(@active, do: "bg-slate-950 pl-4", else: "bg-slate-900")]}>
       <%= cond do %>
         <% @active -> %>
           <.link
             patch={@item.path}
-            class="block bg-blue-200 pl-6 py-3 rounded-l-full text-blue-900 font-bold relative z-10"
+            class="block bg-slate-950 pl-6 py-3 rounded-l-full text-blue-400 font-bold relative z-10"
           >
             {@item.label}
           </.link>
         <% @prev_active -> %>
-          <div class="bg-white px-6 py-3 rounded-tr-3xl text-black">
+          <div class="bg-slate-900 px-6 py-3 rounded-tr-3xl text-white">
             <.link navigate={@item.path}>{@item.label}</.link>
           </div>
         <% @next_active -> %>
-          <div class="bg-white px-6 py-3 rounded-br-3xl text-black">
+          <div class="bg-slate-900 px-6 py-3 rounded-br-3xl text-white">
             <.link navigate={@item.path}>{@item.label}</.link>
           </div>
         <% true -> %>
-          <div class="bg-white px-6 py-3 text-black hover:bg-gray-50 transition-colors">
+          <div class="bg-slate-900 px-6 py-3 text-white hover:bg-slate-800 transition-colors">
             <.link navigate={@item.path}>{@item.label}</.link>
           </div>
       <% end %>
     </div>
-
-
   """
 end
 
@@ -61,12 +59,12 @@ end
   attr :live_streams_page, :map, required: true
   def user_tab(assigns) do
   ~H"""
-  <div class="bg-white rounded-3xl shadow-sm border border-white/50 pl-8 pt-8 pb-8 min-h-full col-span-5 overflow-y-auto h-screen">
+  <div class="bg-slate-950 text-white rounded-3xl shadow-sm border border-slate-700/50 pl-8 pt-8 pb-8 min-h-full col-span-5 overflow-y-auto h-screen">
 
     <div class="flex justify-between items-center mb-4">
       <div>
-        <h2 class="text-3xl font-bold text-slate-800 tracking-tight">User Management</h2>
-        <p class="text-slate-500 mt-1">View and manage Kameramani accounts.</p>
+        <h2 class="text-3xl font-bold text-slate-200 tracking-tight">User Management</h2>
+        <p class="text-slate-400 mt-1">View and manage Kameramani accounts.</p>
       </div>
       <button
           phx-click="open_add_user_modal"
@@ -83,35 +81,35 @@ end
         <input
           type="text"
           placeholder="Search by username or email..."
-          class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-700"
+          class="w-full pl-10 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-300"
         />
       </div>
     </div>
 
-    <div class="overflow-x-auto w-full rounded-xl border border-gray-200">
-      <table class="text-left border-collapse">
+    <div class="overflow-x-auto w-full rounded-xl border border-slate-700">
+      <table class="w-full text-left border-collapse">
 
-        <thead class="bg-gray-50 text-slate-500 text-sm font-semibold uppercase tracking-wider">
+        <thead class="bg-slate-900 text-slate-400 text-sm font-semibold uppercase tracking-wider">
           <tr>
-            <th class="py-4 px-6 border-b border-gray-200">User</th>
-            <th class="py-4 px-6 border-b border-gray-200">Role</th>
-            <th class="py-4 px-6 border-b border-gray-200">Status</th>
-            <th class="py-4 px-6 border-b border-gray-200">Community</th>
-            <th class="py-4 px-6 border-b border-gray-200">Joined</th>
-            <th class="py-4 px-6 border-b border-gray-200 text-right">Actions</th>
+            <th class="py-4 px-6 border-b border-slate-700">User</th>
+            <th class="py-4 px-6 border-b border-slate-700">Role</th>
+            <th class="py-4 px-6 border-b border-slate-700">Status</th>
+            <th class="py-4 px-6 border-b border-slate-700">Community</th>
+            <th class="py-4 px-6 border-b border-slate-700">Joined</th>
+            <th class="py-4 px-6 border-b border-slate-700 text-right">Actions</th>
           </tr>
         </thead>
 
-        <tbody class="divide-y divide-gray-200 text-slate-700">
+        <tbody class="divide-y divide-slate-700 text-slate-300">
           <%= for user <- @users_page.entries do %>
-          <tr class="hover:bg-blue-50/50 transition-colors group">
+          <tr class="hover:bg-slate-800/50 transition-colors group">
 
             <td class="py-4 px-6 flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold shadow-sm">
+              <div class="w-10 h-10 rounded-full bg-blue-900/50 text-blue-300 flex items-center justify-center font-bold shadow-sm">
                 {String.first(user.username) |> String.upcase()}
               </div>
               <div>
-                <div class="flex items-center gap-1.5 font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                <div class="flex items-center gap-1.5 font-bold text-slate-100 group-hover:text-blue-400 transition-colors">
                   {user.username}
                   <%= if user.is_verified do %>
                     <.svg
@@ -120,14 +118,14 @@ end
                     />
                   <% end %>
                 </div>
-                <div class="text-xs text-slate-500">
+                <div class="text-xs text-slate-400">
                   {user.email}
                 </div>
               </div>
             </td>
 
             <td class="py-4 px-6">
-              <span :for={role <- user.roles} class="bg-purple-100 text-purple-700 py-1 px-3 rounded-full text-xs font-bold border border-purple-200">
+              <span :for={role <- user.roles} class="bg-purple-900/50 text-purple-300 py-1 px-3 rounded-full text-xs font-bold border border-purple-800">
                 {role.name}
               </span>
             </td>
@@ -136,25 +134,25 @@ end
               <%= if Map.get(user, :is_live) do %>
                 <span class="rounded-full bg-green-400 border-2 border-green-200 uppercase animate-pulse px-3 py-1">live</span>
               <% else %>
-                <span class="rounded-full text-xs bg-gray-300 border-2 border-red-100 uppercase px-2 py-1">offline</span>
+                <span class="rounded-full text-xs bg-slate-700 border-2 border-slate-600 uppercase px-2 py-1">offline</span>
               <% end %>
             </td>
 
             <td class="py-4 px-6">
               <div class="flex flex-wrap gap-2 text-xs font-semibold">
-                <span class="rounded-full bg-amber-100 px-3 py-1 text-amber-700">
+                <span class="rounded-full bg-amber-900/50 px-3 py-1 text-amber-300">
                   Subs {user.subscriber_count}
                 </span>
-                <span class="rounded-full bg-sky-100 px-3 py-1 text-sky-700">
+                <span class="rounded-full bg-sky-900/50 px-3 py-1 text-sky-300">
                   Following {user.following_count}
                 </span>
-                <span class="rounded-full bg-emerald-100 px-3 py-1 text-emerald-700">
+                <span class="rounded-full bg-emerald-900/50 px-3 py-1 text-emerald-300">
                   Followers {user.follower_count}
                 </span>
               </div>
             </td>
 
-            <td class="py-4 px-6 text-sm text-slate-500">{Calendar.strftime(user.inserted_at, "%B, %d, %Y")}</td>
+            <td class="py-4 px-6 text-sm text-slate-400">{Calendar.strftime(user.inserted_at, "%B, %d, %Y")}</td>
 
             <td class="py-4 flex px-6 text-right">
               <button
@@ -177,13 +175,13 @@ end
       </table>
     </div>
 
-    <div class="mt-6 flex items-center justify-between text-sm text-slate-500">
+    <div class="mt-6 flex items-center justify-between text-sm text-slate-400">
       <p>
         Page {@users_page.page_number} of {@users_page.total_pages} · {@users_page.total_entries} users
       </p>
       <div class="flex gap-2">
         <button
-          class="px-3 py-1 rounded-xl border border-gray-200 hover:bg-blue-50 transition-colors disabled:opacity-40"
+          class="px-3 py-1 rounded-xl border border-slate-700 hover:bg-slate-800 transition-colors disabled:opacity-40"
           phx-click="paginate_users"
           phx-value-page={@users_page.page_number - 1}
           disabled={@users_page.page_number <= 1}
@@ -191,73 +189,13 @@ end
           Previous
         </button>
         <button
-          class="px-3 py-1 rounded-xl border border-gray-200 hover:bg-blue-50 transition-colors disabled:opacity-40"
+          class="px-3 py-1 rounded-xl border border-slate-700 hover:bg-slate-800 transition-colors disabled:opacity-40"
           phx-click="paginate_users"
           phx-value-page={@users_page.page_number + 1}
           disabled={@users_page.page_number >= @users_page.total_pages}
         >
           Next
         </button>
-      </div>
-    </div>
-
-    <div class="mt-10 bg-slate-50 rounded-3xl border border-slate-100 shadow-sm p-6">
-      <div class="flex items-center justify-between mb-5">
-        <div>
-          <h3 class="text-xl font-semibold text-slate-800">Live streams currently on air</h3>
-          <p class="text-sm text-slate-500">
-            Showing page {@live_streams_page.page_number} of {@live_streams_page.total_pages}
-          </p>
-        </div>
-        <div class="flex gap-2">
-          <button
-            class="px-3 py-1 rounded-xl border border-gray-200 hover:bg-slate-100 transition-colors disabled:opacity-40"
-            phx-click="paginate_streams"
-            phx-value-page={@live_streams_page.page_number - 1}
-            disabled={@live_streams_page.page_number <= 1}
-          >
-            Previous
-          </button>
-          <button
-            class="px-3 py-1 rounded-xl border border-gray-200 hover:bg-slate-100 transition-colors disabled:opacity-40"
-            phx-click="paginate_streams"
-            phx-value-page={@live_streams_page.page_number + 1}
-            disabled={@live_streams_page.page_number >= @live_streams_page.total_pages}
-          >
-            Next
-          </button>
-        </div>
-      </div>
-
-      <div class="grid gap-4 md:grid-cols-2">
-        <%= if @live_streams_page.entries == [] do %>
-          <div class="col-span-full rounded-2xl border border-dashed border-slate-200 bg-white/70 py-8 text-center text-sm text-slate-500">
-            No streams are live right now.
-          </div>
-        <% else %>
-          <%= for stream <- @live_streams_page.entries do %>
-            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-col gap-3">
-              <div class="flex items-start justify-between gap-3">
-                <div>
-                  <p class="text-xs uppercase tracking-wide text-slate-500">
-                    {stream.category || "Just Chatting"}
-                  </p>
-                  <h3 class="text-lg font-semibold text-slate-900">
-                    {stream.title || "Untitled session"}
-                  </h3>
-                  <p class="text-sm text-slate-500">by {stream.user.username}</p>
-                </div>
-                <span class="text-xs font-semibold text-emerald-600">
-                  {stream_viewer_count(stream.id)} viewers
-                </span>
-              </div>
-              <div class="flex items-center justify-between text-xs text-slate-500">
-                <span>Started {Calendar.strftime(stream.inserted_at, "%b %d, %H:%M")}</span>
-                <span class="uppercase tracking-wider text-emerald-600">Live</span>
-              </div>
-            </div>
-          <% end %>
-        <% end %>
       </div>
     </div>
 
@@ -269,42 +207,116 @@ end
     Presence.list("stream_viewers:#{stream_id}")
     |> map_size()
   end
-  def verification_tab(assigns) do
+
+  attr :live_streams_page, :map, required: true
+  def live_streaming_tab(assigns) do
     ~H"""
-    <div class="col-span-5 bg-white rounded-3xl shadow-sm border border-white/50 p-8 min-h-full overflow-y-auto h-screen">
+    <div class="col-span-5 bg-slate-950 text-white rounded-3xl shadow-sm border border-slate-800/50 p-8 min-h-full overflow-y-auto h-screen">
       <div class="flex justify-between items-center mb-8">
         <div>
-          <h2 class="text-3xl font-bold text-slate-800 tracking-tight">Verification Requests</h2>
-          <p class="text-slate-500 mt-1">Review and approve user verification requests.</p>
+          <h2 class="text-3xl font-bold text-slate-200 tracking-tight">Live Streaming</h2>
+          <p class="text-slate-400 mt-1">Monitor and manage all active streams on the platform.</p>
         </div>
       </div>
 
-      <div class="overflow-x-auto w-full rounded-xl border border-gray-200">
-        <table class="w-full text-left border-collapse bg-white">
-          <thead class="bg-gray-50 text-slate-500 text-xs font-bold uppercase tracking-wider">
+      <div class="bg-slate-900 rounded-3xl border border-slate-800 shadow-sm p-6">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h3 class="text-xl font-semibold text-slate-200">Live streams currently on air</h3>
+            <p class="text-sm text-slate-400">
+              Showing page {@live_streams_page.page_number} of {@live_streams_page.total_pages}
+            </p>
+          </div>
+          <div class="flex gap-2">
+            <button
+              class="px-3 py-1 rounded-xl border border-slate-700 hover:bg-slate-800 transition-colors disabled:opacity-40"
+              phx-click="paginate_streams"
+              phx-value-page={@live_streams_page.page_number - 1}
+              disabled={@live_streams_page.page_number <= 1}
+            >
+              Previous
+            </button>
+            <button
+              class="px-3 py-1 rounded-xl border border-slate-700 hover:bg-slate-800 transition-colors disabled:opacity-40"
+              phx-click="paginate_streams"
+              phx-value-page={@live_streams_page.page_number + 1}
+              disabled={@live_streams_page.page_number >= @live_streams_page.total_pages}
+            >
+              Next
+            </button>
+          </div>
+        </div>
+
+        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <%= if @live_streams_page.entries == [] do %>
+            <div class="col-span-full rounded-2xl border border-dashed border-slate-700 bg-slate-800/70 py-12 text-center text-sm text-slate-400">
+              No streams are live right now.
+            </div>
+          <% else %>
+            <%= for stream <- @live_streams_page.entries do %>
+              <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-sm p-4 flex flex-col gap-3">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <p class="text-xs uppercase tracking-wide text-slate-400">
+                      {stream.category || "Just Chatting"}
+                    </p>
+                    <h3 class="text-lg font-semibold text-slate-100">
+                      {stream.title || "Untitled session"}
+                    </h3>
+                    <p class="text-sm text-slate-400">by {stream.user.username}</p>
+                  </div>
+                  <span class="text-xs font-semibold text-emerald-600">
+                    {stream_viewer_count(stream.id)} viewers
+                  </span>
+                </div>
+                <div class="flex items-center justify-between text-xs text-slate-400">
+                  <span>Started {Calendar.strftime(stream.inserted_at, "%b %d, %H:%M")}</span>
+                  <span class="uppercase tracking-wider text-emerald-600">Live</span>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    """
+  end
+  def verification_tab(assigns) do
+    ~H"""
+    <div class="col-span-5 bg-slate-950 text-white rounded-3xl shadow-sm border border-slate-800/50 p-8 min-h-full overflow-y-auto h-screen">
+      <div class="flex justify-between items-center mb-8">
+        <div>
+          <h2 class="text-3xl font-bold text-slate-200 tracking-tight">Verification Requests</h2>
+          <p class="text-slate-400 mt-1">Review and approve user verification requests.</p>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto w-full rounded-xl border border-slate-700">
+        <table class="w-full text-left border-collapse bg-slate-950">
+          <thead class="bg-slate-900 text-slate-400 text-xs font-bold uppercase tracking-wider">
             <tr>
-              <th class="py-4 px-6 border-b border-gray-200">User</th>
-              <th class="py-4 px-6 border-b border-gray-200">Social Links</th>
-              <th class="py-4 px-6 border-b border-gray-200">Submitted</th>
-              <th class="py-4 px-6 border-b border-gray-200 text-right">Actions</th>
+              <th class="py-4 px-6 border-b border-slate-700">User</th>
+              <th class="py-4 px-6 border-b border-slate-700">Social Links</th>
+              <th class="py-4 px-6 border-b border-slate-700">Submitted</th>
+              <th class="py-4 px-6 border-b border-slate-700 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-100 text-slate-700">
+          <tbody class="divide-y divide-slate-800 text-slate-300">
             <%= if Enum.empty?(@requests) do %>
               <tr>
-                <td colspan="4" class="py-8 text-center text-slate-500 italic">
+                <td colspan="4" class="py-8 text-center text-slate-400 italic">
                   No pending verification requests.
                 </td>
               </tr>
             <% else %>
               <%= for request <- @requests do %>
-                <tr class="hover:bg-blue-50/50 transition-colors group">
+                <tr class="hover:bg-slate-800/50 transition-colors group">
                   <td class="py-4 px-6 flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold shadow-sm">
+                    <div class="w-10 h-10 rounded-full bg-blue-900/50 text-blue-300 flex items-center justify-center font-bold shadow-sm">
                       {String.first(request.user.username) |> String.upcase()}
                     </div>
                     <div>
-                      <div class="flex items-center gap-1.5 font-bold text-slate-900">
+                      <div class="flex items-center gap-1.5 font-bold text-slate-100">
                         {request.user.username}
                         <%= if request.user.is_verified do %>
                           <.svg
@@ -313,7 +325,7 @@ end
                           />
                         <% end %>
                       </div>
-                      <div class="text-xs text-slate-500">{request.user.email}</div>
+                      <div class="text-xs text-slate-400">{request.user.email}</div>
                     </div>
                   </td>
                   <td class="py-4 px-6">
@@ -322,7 +334,7 @@ end
                         <a
                           href={link}
                           target="_blank"
-                          class="bg-slate-100 hover:bg-slate-200 text-slate-600 py-1 px-3 rounded-full text-[10px] font-bold border border-slate-200 transition-colors flex items-center gap-1"
+                          class="bg-slate-800 hover:bg-slate-700 text-slate-300 py-1 px-3 rounded-full text-[10px] font-bold border border-slate-700 transition-colors flex items-center gap-1"
                         >
                           <.svg variant="link" class="w-3 h-3" />
                           {URI.parse(link).host || "Link"}
@@ -330,7 +342,7 @@ end
                       <% end %>
                     </div>
                   </td>
-                  <td class="py-4 px-6 text-sm text-slate-500">
+                  <td class="py-4 px-6 text-sm text-slate-400">
                     {Calendar.strftime(request.inserted_at, "%b %d, %Y at %H:%M")}
                   </td>
                   <td class="py-4 px-6 text-right">
@@ -363,12 +375,12 @@ end
 
   def category_tab(assigns) do
   ~H"""
-  <div class="col-span-5 bg-white rounded-3xl shadow-sm border border-white/50 p-8 min-h-full">
+  <div class="col-span-5 bg-slate-950 text-white rounded-3xl shadow-sm border border-slate-800/50 p-8 min-h-full">
 
     <div class="flex justify-between items-center mb-8">
       <div>
-        <h2 class="text-3xl font-bold text-slate-800 tracking-tight">Stream Categories</h2>
-        <p class="text-slate-500 mt-1">Manage and organize the content classifications for Kameramani.</p>
+        <h2 class="text-3xl font-bold text-slate-200 tracking-tight">Stream Categories</h2>
+        <p class="text-slate-400 mt-1">Manage and organize the content classifications for Kameramani.</p>
       </div>
       <button
         phx-click="open_add_category_modal"
@@ -378,126 +390,126 @@ end
       </button>
     </div>
 
-    <div class="flex gap-4 mb-8 border-b border-gray-100 pb-6">
+    <div class="flex gap-4 mb-8 border-b border-slate-800 pb-6">
       <div class="relative flex-1 max-w-md">
         <input
           type="text"
           placeholder="Search categories..."
-          class="w-full pl-4 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-700"
+          class="w-full pl-4 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-300"
         />
       </div>
-      <button class="px-4 py-2 bg-gray-50 border border-gray-200 text-slate-600 rounded-xl hover:bg-gray-100 font-medium transition-colors">
+      <button class="px-4 py-2 bg-slate-800 border border-slate-700 text-slate-300 rounded-xl hover:bg-slate-700 font-medium transition-colors">
         Filter
       </button>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-      <div class="border border-gray-200 rounded-2xl p-6 hover:shadow-lg hover:border-purple-300 transition-all group bg-white relative overflow-hidden">
+      <div class="border border-slate-700 rounded-2xl p-6 hover:shadow-lg hover:border-purple-500 transition-all group bg-slate-900 relative overflow-hidden">
         <div class="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
 
         <div class="flex justify-between items-start mb-4">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-xl">
+            <div class="w-10 h-10 rounded-xl bg-purple-900/50 text-purple-400 flex items-center justify-center font-bold text-xl">
               🎮
             </div>
-            <h3 class="font-bold text-xl text-slate-800 group-hover:text-purple-700 transition-colors">
+            <h3 class="font-bold text-xl text-slate-200 group-hover:text-purple-400 transition-colors">
               Gaming
             </h3>
           </div>
-          <button class="text-slate-400 hover:text-slate-600">•••</button>
+          <button class="text-slate-400 hover:text-slate-300">•••</button>
         </div>
 
-        <p class="text-sm text-slate-500 mb-6 line-clamp-2 h-10">
+        <p class="text-sm text-slate-400 mb-6 line-clamp-2 h-10">
           Live gameplay, esports tournaments, and gaming talk shows.
         </p>
 
-        <div class="flex items-center justify-between border-t border-gray-100 pt-4">
-          <div class="text-xs font-semibold text-slate-500">
-            <span class="text-slate-800 font-bold">1,204</span> Active Streams
+        <div class="flex items-center justify-between border-t border-slate-800 pt-4">
+          <div class="text-xs font-semibold text-slate-400">
+            <span class="text-slate-200 font-bold">1,204</span> Active Streams
           </div>
-          <div class="text-xs font-semibold text-purple-600 bg-purple-50 px-2 py-1 rounded-md">
+          <div class="text-xs font-semibold text-purple-400 bg-purple-900/50 px-2 py-1 rounded-md">
             Popular
           </div>
         </div>
       </div>
 
-      <div class="border border-gray-200 rounded-2xl p-6 hover:shadow-lg hover:border-blue-300 transition-all group bg-white relative overflow-hidden">
+      <div class="border border-slate-700 rounded-2xl p-6 hover:shadow-lg hover:border-blue-500 transition-all group bg-slate-900 relative overflow-hidden">
         <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
 
         <div class="flex justify-between items-start mb-4">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xl">
+            <div class="w-10 h-10 rounded-xl bg-blue-900/50 text-blue-400 flex items-center justify-center font-bold text-xl">
               🎵
             </div>
-            <h3 class="font-bold text-xl text-slate-800 group-hover:text-blue-700 transition-colors">
+            <h3 class="font-bold text-xl text-slate-200 group-hover:text-blue-400 transition-colors">
               Music & Audio
             </h3>
           </div>
-          <button class="text-slate-400 hover:text-slate-600">•••</button>
+          <button class="text-slate-400 hover:text-slate-300">•••</button>
         </div>
 
-        <p class="text-sm text-slate-500 mb-6 line-clamp-2 h-10">
+        <p class="text-sm text-slate-400 mb-6 line-clamp-2 h-10">
           Live DJ sets, acoustic performances, and music production.
         </p>
 
-        <div class="flex items-center justify-between border-t border-gray-100 pt-4">
-          <div class="text-xs font-semibold text-slate-500">
-            <span class="text-slate-800 font-bold">452</span> Active Streams
+        <div class="flex items-center justify-between border-t border-slate-800 pt-4">
+          <div class="text-xs font-semibold text-slate-400">
+            <span class="text-slate-200 font-bold">452</span> Active Streams
           </div>
         </div>
       </div>
 
-      <div class="border border-gray-200 rounded-2xl p-6 hover:shadow-lg hover:border-emerald-300 transition-all group bg-white relative overflow-hidden">
+      <div class="border border-slate-700 rounded-2xl p-6 hover:shadow-lg hover:border-emerald-500 transition-all group bg-slate-900 relative overflow-hidden">
         <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
 
         <div class="flex justify-between items-start mb-4">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xl">
+            <div class="w-10 h-10 rounded-xl bg-emerald-900/50 text-emerald-400 flex items-center justify-center font-bold text-xl">
               💻
             </div>
-            <h3 class="font-bold text-xl text-slate-800 group-hover:text-emerald-700 transition-colors">
+            <h3 class="font-bold text-xl text-slate-200 group-hover:text-emerald-400 transition-colors">
               Tech & Coding
             </h3>
           </div>
-          <button class="text-slate-400 hover:text-slate-600">•••</button>
+          <button class="text-slate-400 hover:text-slate-300">•••</button>
         </div>
 
-        <p class="text-sm text-slate-500 mb-6 line-clamp-2 h-10">
+        <p class="text-sm text-slate-400 mb-6 line-clamp-2 h-10">
           Software development, hardware building, and tech reviews.
         </p>
 
-        <div class="flex items-center justify-between border-t border-gray-100 pt-4">
-          <div class="text-xs font-semibold text-slate-500">
-            <span class="text-slate-800 font-bold">128</span> Active Streams
+        <div class="flex items-center justify-between border-t border-slate-800 pt-4">
+          <div class="text-xs font-semibold text-slate-400">
+            <span class="text-slate-200 font-bold">128</span> Active Streams
           </div>
         </div>
       </div>
 
-      <div class="border border-gray-200 rounded-2xl p-6 hover:shadow-lg hover:border-amber-300 transition-all group bg-white relative overflow-hidden">
+      <div class="border border-slate-700 rounded-2xl p-6 hover:shadow-lg hover:border-amber-500 transition-all group bg-slate-900 relative overflow-hidden">
         <div class="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
 
         <div class="flex justify-between items-start mb-4">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-xl">
+            <div class="w-10 h-10 rounded-xl bg-amber-900/50 text-amber-400 flex items-center justify-center font-bold text-xl">
               💬
             </div>
-            <h3 class="font-bold text-xl text-slate-800 group-hover:text-amber-700 transition-colors">
+            <h3 class="font-bold text-xl text-slate-200 group-hover:text-amber-400 transition-colors">
               Just Chatting
             </h3>
           </div>
-          <button class="text-slate-400 hover:text-slate-600">•••</button>
+          <button class="text-slate-400 hover:text-slate-300">•••</button>
         </div>
 
-        <p class="text-sm text-slate-500 mb-6 line-clamp-2 h-10">
+        <p class="text-sm text-slate-400 mb-6 line-clamp-2 h-10">
           Casual conversations, Q&A sessions, and vlogging.
         </p>
 
-        <div class="flex items-center justify-between border-t border-gray-100 pt-4">
-          <div class="text-xs font-semibold text-slate-500">
-            <span class="text-slate-800 font-bold">3,891</span> Active Streams
+        <div class="flex items-center justify-between border-t border-slate-800 pt-4">
+          <div class="text-xs font-semibold text-slate-400">
+            <span class="text-slate-200 font-bold">3,891</span> Active Streams
           </div>
-          <div class="text-xs font-semibold text-amber-600 bg-amber-50 px-2 py-1 rounded-md">
+          <div class="text-xs font-semibold text-amber-400 bg-amber-900/50 px-2 py-1 rounded-md">
             Trending
           </div>
         </div>
@@ -510,15 +522,15 @@ end
 
   def tag_tab(assigns) do
   ~H"""
-  <div class="col-span-5 bg-white rounded-3xl shadow-sm border border-white/50 p-8 min-h-full">
+  <div class="col-span-5 bg-slate-950 text-white rounded-3xl shadow-sm border border-slate-800/50 p-8 min-h-full">
 
     <div class="flex justify-between items-center mb-8">
       <div>
-        <h2 class="text-3xl font-bold text-slate-800 tracking-tight">Tag Management</h2>
-        <p class="text-slate-500 mt-1">Monitor and moderate granular stream descriptors.</p>
+        <h2 class="text-3xl font-bold text-slate-200 tracking-tight">Tag Management</h2>
+        <p class="text-slate-400 mt-1">Monitor and moderate granular stream descriptors.</p>
       </div>
       <div class="flex gap-3">
-        <button class="bg-white border border-gray-200 text-slate-700 hover:bg-gray-50 font-semibold py-2 px-6 rounded-full transition-colors shadow-sm">
+        <button class="bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700 font-semibold py-2 px-6 rounded-full transition-colors shadow-sm">
           Merge Tags
         </button>
         <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-full transition-colors shadow-sm">
@@ -532,45 +544,45 @@ end
         <input
           type="text"
           placeholder="Search by tag name..."
-          class="w-full pl-4 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-700"
+          class="w-full pl-4 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-300"
         />
       </div>
-      <select class="px-4 py-2 bg-gray-50 border border-gray-200 text-slate-600 rounded-xl hover:bg-gray-100 font-medium transition-colors outline-none focus:ring-2 focus:ring-blue-500">
+      <select class="px-4 py-2 bg-slate-800 border border-slate-700 text-slate-300 rounded-xl hover:bg-slate-700 font-medium transition-colors outline-none focus:ring-2 focus:ring-blue-500">
         <option>Sort by: Popularity</option>
         <option>Sort by: Newest</option>
         <option>Sort by: Name (A-Z)</option>
       </select>
     </div>
 
-    <div class="overflow-hidden rounded-xl border border-gray-200">
-      <table class="w-full text-left border-collapse bg-white">
+    <div class="overflow-hidden rounded-xl border border-slate-700">
+      <table class="w-full text-left border-collapse bg-slate-950">
 
-        <thead class="bg-gray-50 text-slate-500 text-xs font-bold uppercase tracking-wider">
+        <thead class="bg-slate-900 text-slate-400 text-xs font-bold uppercase tracking-wider">
           <tr>
-            <th class="py-4 px-6 border-b border-gray-200 w-1/3">Tag Name</th>
-            <th class="py-4 px-6 border-b border-gray-200">Type</th>
-            <th class="py-4 px-6 border-b border-gray-200">Current Usage</th>
-            <th class="py-4 px-6 border-b border-gray-200">7-Day Trend</th>
-            <th class="py-4 px-6 border-b border-gray-200 text-right">Actions</th>
+            <th class="py-4 px-6 border-b border-slate-700 w-1/3">Tag Name</th>
+            <th class="py-4 px-6 border-b border-slate-700">Type</th>
+            <th class="py-4 px-6 border-b border-slate-700">Current Usage</th>
+            <th class="py-4 px-6 border-b border-slate-700">7-Day Trend</th>
+            <th class="py-4 px-6 border-b border-slate-700 text-right">Actions</th>
           </tr>
         </thead>
 
-        <tbody class="divide-y divide-gray-100 text-slate-700">
+        <tbody class="divide-y divide-slate-800 text-slate-300">
 
-          <tr class="hover:bg-slate-50 transition-colors group">
+          <tr class="hover:bg-slate-800/50 transition-colors group">
             <td class="py-4 px-6">
-              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-800 font-medium group-hover:bg-blue-50 group-hover:text-blue-700 group-hover:border-blue-200 transition-colors">
-                <span class="text-slate-400 group-hover:text-blue-400">#</span>Speedrun
+              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-medium group-hover:bg-blue-900/50 group-hover:text-blue-400 group-hover:border-blue-800 transition-colors">
+                <span class="text-slate-400 group-hover:text-blue-500">#</span>Speedrun
               </div>
             </td>
             <td class="py-4 px-6">
-              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">System</span>
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">System</span>
             </td>
-            <td class="py-4 px-6 font-semibold text-slate-800">
+            <td class="py-4 px-6 font-semibold text-slate-200">
               8,492 <span class="text-slate-400 font-normal text-sm">streams</span>
             </td>
             <td class="py-4 px-6">
-              <div class="flex items-center gap-1 text-emerald-600 font-medium text-sm">
+              <div class="flex items-center gap-1 text-emerald-500 font-medium text-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                 +12%
               </div>
@@ -581,20 +593,20 @@ end
             </td>
           </tr>
 
-          <tr class="hover:bg-slate-50 transition-colors group">
+          <tr class="hover:bg-slate-800/50 transition-colors group">
             <td class="py-4 px-6">
-              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-800 font-medium group-hover:bg-blue-50 group-hover:text-blue-700 group-hover:border-blue-200 transition-colors">
-                <span class="text-slate-400 group-hover:text-blue-400">#</span>AMA
+              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-medium group-hover:bg-blue-900/50 group-hover:text-blue-400 group-hover:border-blue-800 transition-colors">
+                <span class="text-slate-400 group-hover:text-blue-500">#</span>AMA
               </div>
             </td>
             <td class="py-4 px-6">
-              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">User Created</span>
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">User Created</span>
             </td>
-            <td class="py-4 px-6 font-semibold text-slate-800">
+            <td class="py-4 px-6 font-semibold text-slate-200">
               3,104 <span class="text-slate-400 font-normal text-sm">streams</span>
             </td>
             <td class="py-4 px-6">
-              <div class="flex items-center gap-1 text-emerald-600 font-medium text-sm">
+              <div class="flex items-center gap-1 text-emerald-500 font-medium text-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                 +5%
               </div>
@@ -605,16 +617,16 @@ end
             </td>
           </tr>
 
-          <tr class="hover:bg-slate-50 transition-colors group">
+          <tr class="hover:bg-slate-800/50 transition-colors group">
             <td class="py-4 px-6">
-              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-800 font-medium group-hover:bg-blue-50 group-hover:text-blue-700 group-hover:border-blue-200 transition-colors">
-                <span class="text-slate-400 group-hover:text-blue-400">#</span>Elixir
+              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-medium group-hover:bg-blue-900/50 group-hover:text-blue-400 group-hover:border-blue-800 transition-colors">
+                <span class="text-slate-400 group-hover:text-blue-500">#</span>Elixir
               </div>
             </td>
             <td class="py-4 px-6">
-              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">User Created</span>
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">User Created</span>
             </td>
-            <td class="py-4 px-6 font-semibold text-slate-800">
+            <td class="py-4 px-6 font-semibold text-slate-200">
               412 <span class="text-slate-400 font-normal text-sm">streams</span>
             </td>
             <td class="py-4 px-6">
@@ -629,16 +641,16 @@ end
             </td>
           </tr>
 
-          <tr class="hover:bg-slate-50 transition-colors group">
+          <tr class="hover:bg-slate-800/50 transition-colors group">
             <td class="py-4 px-6">
-              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-800 font-medium group-hover:bg-blue-50 group-hover:text-blue-700 group-hover:border-blue-200 transition-colors">
-                <span class="text-slate-400 group-hover:text-blue-400">#</span>NoBackseatGaming
+              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-medium group-hover:bg-blue-900/50 group-hover:text-blue-400 group-hover:border-blue-800 transition-colors">
+                <span class="text-slate-400 group-hover:text-blue-500">#</span>NoBackseatGaming
               </div>
             </td>
             <td class="py-4 px-6">
-              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">System</span>
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">System</span>
             </td>
-            <td class="py-4 px-6 font-semibold text-slate-800">
+            <td class="py-4 px-6 font-semibold text-slate-200">
               1,844 <span class="text-slate-400 font-normal text-sm">streams</span>
             </td>
             <td class="py-4 px-6">
@@ -657,11 +669,11 @@ end
       </table>
     </div>
 
-    <div class="flex items-center justify-between mt-6 px-2 text-sm text-slate-500">
+    <div class="flex items-center justify-between mt-6 px-2 text-sm text-slate-400">
       <div>Showing 1 to 4 of 2,491 tags</div>
       <div class="flex gap-2">
-        <button class="px-3 py-1 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50" disabled>Previous</button>
-        <button class="px-3 py-1 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">Next</button>
+        <button class="px-3 py-1 border border-slate-700 rounded-lg hover:bg-slate-800 transition-colors disabled:opacity-50" disabled>Previous</button>
+        <button class="px-3 py-1 border border-slate-700 rounded-lg hover:bg-slate-800 transition-colors">Next</button>
       </div>
     </div>
 
@@ -671,12 +683,12 @@ end
 
   def access_tab(assigns) do
   ~H"""
-  <div class="col-span-5 bg-white rounded-3xl shadow-sm border border-white/50 p-8 min-h-full">
+  <div class="col-span-5 bg-slate-950 text-white rounded-3xl shadow-sm border border-slate-800/50 p-8 min-h-full">
 
     <div class="flex justify-between items-center mb-8">
       <div>
-        <h2 class="text-3xl font-bold text-slate-800 tracking-tight">Access Control</h2>
-        <p class="text-slate-500 mt-1">Manage system roles, permissions, and security policies.</p>
+        <h2 class="text-3xl font-bold text-slate-200 tracking-tight">Access Control</h2>
+        <p class="text-slate-400 mt-1">Manage system roles, permissions, and security policies.</p>
       </div>
       <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-full transition-colors shadow-sm">
         + Create Role
@@ -685,66 +697,66 @@ end
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-      <div class="border border-red-200 bg-red-50/30 rounded-2xl p-6 relative overflow-hidden">
+      <div class="border border-red-500/50 bg-red-900/10 rounded-2xl p-6 relative overflow-hidden">
         <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
 
         <div class="flex justify-between items-start mb-6">
           <div>
             <div class="flex items-center gap-2 mb-1">
-              <h3 class="font-bold text-xl text-slate-800">Super Admin</h3>
-              <span class="bg-red-100 text-red-700 py-0.5 px-2 rounded-md text-xs font-bold uppercase tracking-wider">System</span>
+              <h3 class="font-bold text-xl text-slate-200">Super Admin</h3>
+              <span class="bg-red-900/50 text-red-400 py-0.5 px-2 rounded-md text-xs font-bold uppercase tracking-wider">System</span>
             </div>
-            <p class="text-sm text-slate-500">Unrestricted access to all Kameramani features and settings.</p>
+            <p class="text-sm text-slate-400">Unrestricted access to all Kameramani features and settings.</p>
           </div>
-          <button class="text-slate-400 hover:text-red-600 font-medium text-sm transition-colors">Edit</button>
+          <button class="text-slate-400 hover:text-red-400 font-medium text-sm transition-colors">Edit</button>
         </div>
 
         <div class="space-y-3 mb-6">
-          <div class="flex items-center gap-2 text-sm text-slate-700">
+          <div class="flex items-center gap-2 text-sm text-slate-300">
             <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
             Full System Configuration
           </div>
-          <div class="flex items-center gap-2 text-sm text-slate-700">
+          <div class="flex items-center gap-2 text-sm text-slate-300">
             <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
             Manage Billing & Subscriptions
           </div>
-          <div class="flex items-center gap-2 text-sm text-slate-700">
+          <div class="flex items-center gap-2 text-sm text-slate-300">
             <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
             Assign Admin Roles
           </div>
         </div>
 
-        <div class="flex items-center justify-between border-t border-red-100 pt-4">
+        <div class="flex items-center justify-between border-t border-red-900/50 pt-4">
           <div class="flex -space-x-2">
-            <div class="w-8 h-8 rounded-full bg-slate-300 border-2 border-white flex items-center justify-center text-xs font-bold text-white">E</div>
-            <div class="w-8 h-8 rounded-full bg-slate-400 border-2 border-white flex items-center justify-center text-xs font-bold text-white">S</div>
+            <div class="w-8 h-8 rounded-full bg-slate-800 border-2 border-slate-900 flex items-center justify-center text-xs font-bold text-white">E</div>
+            <div class="w-8 h-8 rounded-full bg-slate-700 border-2 border-slate-900 flex items-center justify-center text-xs font-bold text-white">S</div>
           </div>
-          <div class="text-xs font-semibold text-slate-500">
-            <span class="text-slate-800 font-bold">2</span> Accounts
+          <div class="text-xs font-semibold text-slate-400">
+            <span class="text-slate-300 font-bold">2</span> Accounts
           </div>
         </div>
       </div>
 
-      <div class="border border-blue-200 bg-white rounded-2xl p-6 relative overflow-hidden hover:shadow-md transition-shadow">
+      <div class="border border-blue-500/50 bg-slate-900 rounded-2xl p-6 relative overflow-hidden hover:shadow-md transition-shadow">
         <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
 
         <div class="flex justify-between items-start mb-6">
           <div>
             <div class="flex items-center gap-2 mb-1">
-              <h3 class="font-bold text-xl text-slate-800">Global Moderator</h3>
-              <span class="bg-blue-100 text-blue-700 py-0.5 px-2 rounded-md text-xs font-bold uppercase tracking-wider">Custom</span>
+              <h3 class="font-bold text-xl text-slate-200">Global Moderator</h3>
+              <span class="bg-blue-900/50 text-blue-400 py-0.5 px-2 rounded-md text-xs font-bold uppercase tracking-wider">Custom</span>
             </div>
-            <p class="text-sm text-slate-500">Can moderate streams, chat, and handle user reports.</p>
+            <p class="text-sm text-slate-400">Can moderate streams, chat, and handle user reports.</p>
           </div>
-          <button class="text-slate-400 hover:text-blue-600 font-medium text-sm transition-colors">Edit</button>
+          <button class="text-slate-400 hover:text-blue-400 font-medium text-sm transition-colors">Edit</button>
         </div>
 
         <div class="space-y-3 mb-6">
-          <div class="flex items-center gap-2 text-sm text-slate-700">
+          <div class="flex items-center gap-2 text-sm text-slate-300">
             <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
             Ban / Suspend Users
           </div>
-          <div class="flex items-center gap-2 text-sm text-slate-700">
+          <div class="flex items-center gap-2 text-sm text-slate-300">
             <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
             Force-close Active Streams
           </div>
@@ -754,77 +766,77 @@ end
           </div>
         </div>
 
-        <div class="flex items-center justify-between border-t border-gray-100 pt-4">
+        <div class="flex items-center justify-between border-t border-slate-800 pt-4">
           <div class="flex -space-x-2">
-            <div class="w-8 h-8 rounded-full bg-blue-300 border-2 border-white flex items-center justify-center text-xs font-bold text-white">M</div>
-            <div class="w-8 h-8 rounded-full bg-blue-400 border-2 border-white flex items-center justify-center text-xs font-bold text-white">T</div>
-            <div class="w-8 h-8 rounded-full bg-blue-200 border-2 border-white flex items-center justify-center text-xs font-bold text-white text-slate-600">+4</div>
+            <div class="w-8 h-8 rounded-full bg-blue-800 border-2 border-slate-900 flex items-center justify-center text-xs font-bold text-white">M</div>
+            <div class="w-8 h-8 rounded-full bg-blue-700 border-2 border-slate-900 flex items-center justify-center text-xs font-bold text-white">T</div>
+            <div class="w-8 h-8 rounded-full bg-blue-900 border-2 border-slate-900 flex items-center justify-center text-xs font-bold text-blue-300">+4</div>
           </div>
-          <div class="text-xs font-semibold text-slate-500">
-            <span class="text-slate-800 font-bold">6</span> Accounts
+          <div class="text-xs font-semibold text-slate-400">
+            <span class="text-slate-300 font-bold">6</span> Accounts
           </div>
         </div>
       </div>
 
-      <div class="border border-purple-200 bg-white rounded-2xl p-6 relative overflow-hidden hover:shadow-md transition-shadow">
+      <div class="border border-purple-500/50 bg-slate-900 rounded-2xl p-6 relative overflow-hidden hover:shadow-md transition-shadow">
         <div class="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
 
         <div class="flex justify-between items-start mb-6">
           <div>
             <div class="flex items-center gap-2 mb-1">
-              <h3 class="font-bold text-xl text-slate-800">Partnered Streamer</h3>
-              <span class="bg-purple-100 text-purple-700 py-0.5 px-2 rounded-md text-xs font-bold uppercase tracking-wider">System</span>
+              <h3 class="font-bold text-xl text-slate-200">Partnered Streamer</h3>
+              <span class="bg-purple-900/50 text-purple-400 py-0.5 px-2 rounded-md text-xs font-bold uppercase tracking-wider">System</span>
             </div>
-            <p class="text-sm text-slate-500">Verified creators with monetization enabled.</p>
+            <p class="text-sm text-slate-400">Verified creators with monetization enabled.</p>
           </div>
-          <button class="text-slate-400 hover:text-blue-600 font-medium text-sm transition-colors">Edit</button>
+          <button class="text-slate-400 hover:text-blue-400 font-medium text-sm transition-colors">Edit</button>
         </div>
 
         <div class="space-y-3 mb-6">
-          <div class="flex items-center gap-2 text-sm text-slate-700">
+          <div class="flex items-center gap-2 text-sm text-slate-300">
             <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
             Broadcast Video / Audio
           </div>
-          <div class="flex items-center gap-2 text-sm text-slate-700">
+          <div class="flex items-center gap-2 text-sm text-slate-300">
             <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
             Receive Subscriptions & Tips
           </div>
-          <div class="flex items-center gap-2 text-sm text-slate-700">
+          <div class="flex items-center gap-2 text-sm text-slate-300">
             <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
             Manage Channel Moderators
           </div>
         </div>
 
-        <div class="flex items-center justify-between border-t border-gray-100 pt-4">
+        <div class="flex items-center justify-between border-t border-slate-800 pt-4">
           <div class="flex -space-x-2">
             </div>
-          <div class="text-xs font-semibold text-slate-500">
-            <span class="text-slate-800 font-bold">142</span> Accounts
+          <div class="text-xs font-semibold text-slate-400">
+            <span class="text-slate-300 font-bold">142</span> Accounts
           </div>
         </div>
       </div>
 
-      <div class="border border-gray-200 bg-white rounded-2xl p-6 relative overflow-hidden hover:shadow-md transition-shadow">
-        <div class="absolute top-0 left-0 w-1 h-full bg-gray-400"></div>
+      <div class="border border-slate-700 bg-slate-900 rounded-2xl p-6 relative overflow-hidden hover:shadow-md transition-shadow">
+        <div class="absolute top-0 left-0 w-1 h-full bg-slate-600"></div>
 
         <div class="flex justify-between items-start mb-6">
           <div>
             <div class="flex items-center gap-2 mb-1">
-              <h3 class="font-bold text-xl text-slate-800">Standard User</h3>
-              <span class="bg-gray-100 text-gray-700 py-0.5 px-2 rounded-md text-xs font-bold uppercase tracking-wider">System Default</span>
+              <h3 class="font-bold text-xl text-slate-200">Standard User</h3>
+              <span class="bg-slate-800 text-slate-400 py-0.5 px-2 rounded-md text-xs font-bold uppercase tracking-wider">System Default</span>
             </div>
-            <p class="text-sm text-slate-500">The base permissions for all newly registered accounts.</p>
+            <p class="text-sm text-slate-400">The base permissions for all newly registered accounts.</p>
           </div>
-          <button class="text-slate-400 hover:text-blue-600 font-medium text-sm transition-colors">Edit</button>
+          <button class="text-slate-400 hover:text-blue-400 font-medium text-sm transition-colors">Edit</button>
         </div>
 
         <div class="space-y-3 mb-6">
-          <div class="flex items-center gap-2 text-sm text-slate-700">
-            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+          <div class="flex items-center gap-2 text-sm text-slate-300">
+            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
             Watch Streams
           </div>
-          <div class="flex items-center gap-2 text-sm text-slate-700">
-            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+          <div class="flex items-center gap-2 text-sm text-slate-300">
+            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
             Participate in Chat
           </div>
           <div class="flex items-center gap-2 text-sm text-slate-400">
@@ -833,11 +845,11 @@ end
           </div>
         </div>
 
-        <div class="flex items-center justify-between border-t border-gray-100 pt-4">
+        <div class="flex items-center justify-between border-t border-slate-800 pt-4">
           <div class="flex -space-x-2">
             </div>
-          <div class="text-xs font-semibold text-slate-500">
-            <span class="text-slate-800 font-bold">18,492</span> Accounts
+          <div class="text-xs font-semibold text-slate-400">
+            <span class="text-slate-300 font-bold">18,492</span> Accounts
           </div>
         </div>
       </div>
@@ -849,12 +861,12 @@ end
 
   def settings_tab(assigns) do
   ~H"""
-  <div class="col-span-5 bg-white rounded-3xl shadow-sm border border-white/50 p-8 min-h-full">
+  <div class="col-span-5 bg-slate-950 text-white rounded-3xl shadow-sm border border-slate-800/50 p-8 min-h-full">
 
     <div class="flex justify-between items-center mb-8">
       <div>
-        <h2 class="text-3xl font-bold text-slate-800 tracking-tight">System Settings</h2>
-        <p class="text-slate-500 mt-1">Configure global platform parameters for Kameramani.</p>
+        <h2 class="text-3xl font-bold text-slate-200 tracking-tight">System Settings</h2>
+        <p class="text-slate-400 mt-1">Configure global platform parameters for Kameramani.</p>
       </div>
       <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-full transition-colors shadow-sm">
         Save All Changes
@@ -863,58 +875,58 @@ end
 
     <div class="max-w-4xl space-y-8">
 
-      <div class="border border-gray-200 rounded-2xl p-6 bg-slate-50/50">
-        <h3 class="font-bold text-lg text-slate-800 mb-1">General Information</h3>
-        <p class="text-sm text-slate-500 mb-6">Basic details and public-facing platform info.</p>
+      <div class="border border-slate-800 rounded-2xl p-6 bg-slate-900/50">
+        <h3 class="font-bold text-lg text-slate-200 mb-1">General Information</h3>
+        <p class="text-sm text-slate-400 mb-6">Basic details and public-facing platform info.</p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-2">Platform Name</label>
-            <input type="text" value="Kameramani" class="w-full px-4 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-700 font-medium" />
+            <label class="block text-sm font-semibold text-slate-300 mb-2">Platform Name</label>
+            <input type="text" value="Kameramani" class="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-200 font-medium" />
           </div>
           <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-2">Support Email Address</label>
-            <input type="email" value="support@kameramani.com" class="w-full px-4 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-700 font-medium" />
+            <label class="block text-sm font-semibold text-slate-300 mb-2">Support Email Address</label>
+            <input type="email" value="support@kameramani.com" class="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-200 font-medium" />
           </div>
           <div class="md:col-span-2">
-            <label class="block text-sm font-semibold text-slate-700 mb-2">Maintenance Mode</label>
-            <div class="flex items-center gap-3 bg-white border border-gray-200 p-4 rounded-xl">
-              <div class="w-11 h-6 bg-gray-200 rounded-full relative cursor-pointer">
-                <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full shadow-sm transition-transform"></div>
+            <label class="block text-sm font-semibold text-slate-300 mb-2">Maintenance Mode</label>
+            <div class="flex items-center gap-3 bg-slate-800 border border-slate-700 p-4 rounded-xl">
+              <div class="w-11 h-6 bg-slate-700 rounded-full relative cursor-pointer">
+                <div class="absolute left-1 top-1 bg-slate-200 w-4 h-4 rounded-full shadow-sm transition-transform"></div>
               </div>
-              <div class="text-sm text-slate-600">
-                <span class="font-bold text-slate-700">Offline</span> - Prevent non-admins from logging in.
+              <div class="text-sm text-slate-400">
+                <span class="font-bold text-slate-200">Offline</span> - Prevent non-admins from logging in.
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="border border-gray-200 rounded-2xl p-6 bg-slate-50/50">
-        <h3 class="font-bold text-lg text-slate-800 mb-1">Video & Streaming Defaults</h3>
-        <p class="text-sm text-slate-500 mb-6">Global limits and server configurations for broadcasts.</p>
+      <div class="border border-slate-800 rounded-2xl p-6 bg-slate-900/50">
+        <h3 class="font-bold text-lg text-slate-200 mb-1">Video & Streaming Defaults</h3>
+        <p class="text-sm text-slate-400 mb-6">Global limits and server configurations for broadcasts.</p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="md:col-span-2">
-            <label class="block text-sm font-semibold text-slate-700 mb-2">Primary Ingest Server (RTMP)</label>
+            <label class="block text-sm font-semibold text-slate-300 mb-2">Primary Ingest Server (RTMP)</label>
             <div class="flex">
-              <span class="inline-flex items-center px-4 rounded-l-xl border border-r-0 border-gray-200 bg-gray-100 text-slate-500 text-sm font-mono">
+              <span class="inline-flex items-center px-4 rounded-l-xl border border-r-0 border-slate-700 bg-slate-800 text-slate-400 text-sm font-mono">
                 rtmp://
               </span>
-              <input type="text" value="ingest.kameramani.com/live" class="flex-1 px-4 py-2 bg-white border border-gray-200 rounded-r-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-700 font-mono text-sm" />
+              <input type="text" value="ingest.kameramani.com/live" class="flex-1 px-4 py-2 bg-slate-900 border border-slate-700 rounded-r-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-300 font-mono text-sm" />
             </div>
           </div>
           <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-2">Max Bitrate (Standard Users)</label>
-            <select class="w-full px-4 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-700 font-medium appearance-none">
+            <label class="block text-sm font-semibold text-slate-300 mb-2">Max Bitrate (Standard Users)</label>
+            <select class="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-300 font-medium appearance-none">
               <option>4000 kbps (720p)</option>
               <option selected>6000 kbps (1080p)</option>
               <option>8000 kbps (1080p60)</option>
             </select>
           </div>
           <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-2">Max Bitrate (Partners)</label>
-            <select class="w-full px-4 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-700 font-medium appearance-none">
+            <label class="block text-sm font-semibold text-slate-300 mb-2">Max Bitrate (Partners)</label>
+            <select class="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-300 font-medium appearance-none">
               <option>6000 kbps (1080p)</option>
               <option selected>8000 kbps (1080p60)</option>
               <option>12000 kbps (1440p)</option>
@@ -923,16 +935,16 @@ end
         </div>
       </div>
 
-      <div class="border border-red-200 rounded-2xl p-6 bg-white relative overflow-hidden">
+      <div class="border border-red-900/50 rounded-2xl p-6 bg-slate-900/30 relative overflow-hidden">
         <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
-        <h3 class="font-bold text-lg text-red-600 mb-1">Danger Zone</h3>
-        <p class="text-sm text-slate-500 mb-6">Irreversible actions that affect the entire platform.</p>
+        <h3 class="font-bold text-lg text-red-400 mb-1">Danger Zone</h3>
+        <p class="text-sm text-slate-400 mb-6">Irreversible actions that affect the entire platform.</p>
 
         <div class="flex flex-col sm:flex-row gap-4">
-          <button class="px-4 py-2 bg-white border border-red-200 text-red-600 font-semibold rounded-xl hover:bg-red-50 transition-colors">
+          <button class="px-4 py-2 bg-slate-800 border border-red-900/50 text-red-400 font-semibold rounded-xl hover:bg-red-900/20 transition-colors">
             Clear Global Cache
           </button>
-          <button class="px-4 py-2 bg-red-500 text-white font-semibold rounded-xl hover:bg-red-600 transition-colors">
+          <button class="px-4 py-2 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition-colors">
             Force Logout All Users
           </button>
         </div>

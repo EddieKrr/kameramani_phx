@@ -57,21 +57,12 @@ defmodule KameramaniPhxWeb.Layouts do
     <div class={@page_bg_class}>
       <%= case @layout_type do %>
         <% :admin -> %>
-          <header class="bg-white flex justify-between items-center p-4 text-black mb-2">
+          <header class="bg-slate-900 flex justify-between items-center p-4 text-white mb-2">
             <div class="flex flex-col">
               <span class="text-2xl font-title font-bold tracking-tighter uppercase italic text-blue-400">
                 kameramani
               </span>
               <sub class="self-end">ADMIN</sub>
-            </div>
-            <div>
-              <.link navigate={~p"/admin/overview"}>
-                <span class="bg-blue-200 p-3 rounded-full text-blue-900 font-bold px-4">
-                  Overview
-                </span>
-              </.link>
-              <span class="p-3 bg-blue-200 rounded-full px-4">Live Streaming</span>
-              <span class="bg-blue-200 p-3 rounded-full  px-4">Analytics</span>
             </div>
             <div>
               <div class="flex items-center gap-6">
@@ -82,7 +73,7 @@ defmodule KameramaniPhxWeb.Layouts do
                       session: %{"current_user_id" => @current_user_obj.id}
                     ) %>
                   <% end %>
-                  <span class="text-black">
+                  <span class="text-white">
                     Welcome,
                     <span class="font-semibold text-blue-400 capitalize">
                       {@current_user_obj.username}
