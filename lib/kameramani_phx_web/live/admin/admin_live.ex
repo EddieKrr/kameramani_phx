@@ -20,6 +20,7 @@ defmodule KameramaniPhxWeb.AdminLive do
 
     all_menu_items = [
       %{id: "users", label: "Users", path: ~p"/admin/users"},
+      %{id: "streams", label: "Live Streams", path: ~p"/admin/streams"},
       %{id: "verification", label: "Verification", path: ~p"/admin/verification"},
       %{id: "categories", label: "Categories", path: ~p"/admin/categories"},
       %{id: "tags", label: "Tags", path: ~p"/admin/tags"},
@@ -38,19 +39,15 @@ defmodule KameramaniPhxWeb.AdminLive do
 
     active_tab = "users"
 
-
-    users_page = Accounts.get_all_users(page: 1, page_size: @users_page_size)
-    live_streams_page = Streaming.list_live_streams(page: 1, page_size: @streams_page_size)
-
     {:ok, assign(socket,
         layout_type: :admin,
         active_tab: active_tab,
         allowed_tabs: Enum.map(menu_items, & &1.id),
-        users_page: users_page,
-        live_streams_page: live_streams_page,
+        users_page: nil,
+        live_streams_page: nil,
         verification_requests: [],
         menu_items: menu_items,
-        page_bg_class: "bg-blue-200",
+        page_bg_class: "bg-slate-900",
         show_add_user_modal: false,
         user_to_edit: nil,
         add_user_form: to_form(Accounts.validate_registration(%{})),
@@ -248,10 +245,20 @@ defmodule KameramaniPhxWeb.AdminLive do
   def handle_params(%{"tab" => current_tab}, _uri, socket) do
     if current_tab in socket.assigns.allowed_tabs do
       socket =
-        if current_tab == "verification" do
-          assign(socket, verification_requests: Accounts.list_pending_verification_requests())
-        else
-          socket
+        case current_tab do
+          "users" ->
+            assign(socket, users_page: Accounts.get_all_users(page: 1, page_size: @users_page_size))
+
+          "streams" ->
+            assign(socket,
+              live_streams_page: Streaming.list_live_streams(page: 1, page_size: @streams_page_size)
+            )
+
+          "verification" ->
+            assign(socket, verification_requests: Accounts.list_pending_verification_requests())
+
+          _ ->
+            socket
         end
 
       {:noreply, assign(socket, active_tab: current_tab)}
@@ -267,7 +274,6 @@ defmodule KameramaniPhxWeb.AdminLive do
 
   @impl true
   def handle_params(_, _, socket) do
-
     {:noreply, assign(socket, active_tab: "users")}
   end
 

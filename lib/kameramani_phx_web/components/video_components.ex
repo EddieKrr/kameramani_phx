@@ -2,9 +2,6 @@ defmodule KameramaniPhxWeb.VideoComponents do
   use Phoenix.Component
   import KameramaniPhxWeb.CoreComponents
 
-  @doc """
-  Renders a professional, glassmorphism video player with custom controls.
-  """
   attr :id, :string, required: true
   attr :url, :string, required: true
   attr :stream_id, :string, required: true
@@ -20,22 +17,21 @@ defmodule KameramaniPhxWeb.VideoComponents do
         "relative aspect-video bg-black rounded-3xl overflow-hidden group shadow-2xl border border-white/5",
         @class
       ]}
-      phx-update="ignore"
     >
       <%= if @is_live do %>
-        <%!-- The Actual Video Element --%>
-        <video
-          id={@id}
-          phx-hook="VideoPlayer"
-          data-hls-url={@url}
-          class="w-full h-full object-contain cursor-pointer"
-          playsinline
-          autoplay
-          muted
-        >
-        </video>
+        <div id={"#{@id}-video-wrapper"} phx-update="ignore" class="absolute inset-0 w-full h-full">
+          <video
+            id={@id}
+            phx-hook="VideoPlayer"
+            data-hls-url={@url}
+            class="w-full h-full object-contain cursor-pointer"
+            playsinline
+            autoplay
+            muted
+          >
+          </video>
+        </div>
 
-        <%!-- Overlay: Top Info Bar --%>
         <div class="absolute top-4 left-4 right-4 flex justify-between items-start pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <div class="flex items-center gap-2">
             <span class="bg-[#eb0400] text-white text-[10px] font-black px-2 py-0.5 rounded tracking-tighter flex items-center gap-1 shadow-lg shadow-red-500/20">
@@ -44,23 +40,19 @@ defmodule KameramaniPhxWeb.VideoComponents do
           </div>
         </div>
 
-        <%!-- Overlay: Large Center Play/Pause Toggle (Visible on Hover/Pause) --%>
-        <div 
+        <div
           id={"#{@id}-center-control"}
           class="absolute inset-0 flex items-center justify-center pointer-events-none"
         >
           <div class="p-6 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 opacity-0 transition-all duration-300 scale-75 group-hover:scale-100 group-[.is-paused]:opacity-100">
-             <.svg variant="play" class="w-12 h-12 text-white" />
+            <.svg variant="play" class="w-12 h-12 text-white" />
           </div>
         </div>
 
-        <%!-- Overlay: Bottom Control Bar (Glassmorphism) --%>
         <div class="absolute bottom-0 left-0 right-0 p-4 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 z-20">
           <div class="flex items-center gap-4 px-4 py-3 rounded-2xl bg-slate-900/40 backdrop-blur-md border border-white/10 shadow-2xl">
-            
-            <%!-- Play/Pause --%>
-            <button 
-              id={"#{@id}-play-pause"} 
+            <button
+              id={"#{@id}-play-pause"}
               class="text-white hover:text-blue-400 transition-colors"
               title="Toggle Play/Pause"
             >
@@ -68,32 +60,29 @@ defmodule KameramaniPhxWeb.VideoComponents do
               <.svg variant="pause" class="w-6 h-6 player-pause-icon hidden" />
             </button>
 
-            <%!-- Volume Control --%>
             <div class="flex items-center gap-2 group/volume w-32">
               <button id={"#{@id}-mute"} class="text-white hover:text-blue-400 transition-colors">
                 <.svg variant="speaker-wave" class="w-5 h-5 player-unmuted-icon" />
                 <.svg variant="speaker-x-mark" class="w-5 h-5 player-muted-icon hidden" />
               </button>
-              <input 
-                id={"#{@id}-volume-slider"} 
-                type="range" 
-                min="0" 
-                max="100" 
-                value="100" 
-                class="range range-xs range-primary bg-white/10" 
+              <input
+                id={"#{@id}-volume-slider"}
+                type="range"
+                min="0"
+                max="100"
+                value="100"
+                class="range range-xs range-primary bg-white/10"
               />
             </div>
 
             <div class="flex-1"></div>
 
-            <%!-- Settings / Quality (Placeholder) --%>
             <button class="text-white/60 hover:text-white transition-colors">
-               <.svg variant="gear" class="w-5 h-5" />
+              <.svg variant="gear" class="w-5 h-5" />
             </button>
 
-            <%!-- Fullscreen --%>
-            <button 
-              id={"#{@id}-fullscreen"} 
+            <button
+              id={"#{@id}-fullscreen"}
               class="text-white hover:text-blue-400 transition-colors"
               title="Toggle Fullscreen"
             >
@@ -102,21 +91,24 @@ defmodule KameramaniPhxWeb.VideoComponents do
           </div>
         </div>
 
-        <%!-- Loading Spinner Overlay --%>
-        <div id={"#{@id}-loader"} class="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm hidden z-30">
+        <div
+          id={"#{@id}-loader"}
+          class="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm hidden z-30"
+        >
           <span class="loading loading-spinner loading-lg text-blue-400"></span>
         </div>
-
       <% else %>
-        <%!-- Offline State --%>
         <div class="absolute inset-0 flex items-center justify-center bg-slate-900/80 backdrop-blur-xl">
-           <div class="text-center space-y-4">
-              <div class="relative inline-block">
-                <div class="w-20 h-20 bg-blue-500/20 blur-2xl rounded-full absolute -inset-2 animate-pulse"></div>
-                <.icon name="hero-video-camera-slash" class="w-12 h-12 text-slate-500 relative z-10" />
+          <div class="text-center space-y-4">
+            <div class="relative inline-block">
+              <div class="w-20 h-20 bg-blue-500/20 blur-2xl rounded-full absolute -inset-2 animate-pulse">
               </div>
-              <p class="text-slate-400 font-medium tracking-tight uppercase text-xs">Streamer is Offline</p>
-           </div>
+              <.icon name="hero-video-camera-slash" class="w-12 h-12 text-slate-500 relative z-10" />
+            </div>
+            <p class="text-slate-400 font-medium tracking-tight uppercase text-xs">
+              Streamer is Offline
+            </p>
+          </div>
         </div>
       <% end %>
     </div>

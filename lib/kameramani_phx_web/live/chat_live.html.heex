@@ -1,7 +1,7 @@
 <div class="flex gap-4 overflow-hidden h-[calc(100vh-100px)] text-[#efeff1] font-sans">
   <aside class={[
     "glass-pane sticky top-0 h-[calc(100vh-115px)] shrink-0 border-r border-white/5 transition-all duration-300 ease-in-out overflow-y-auto",
-    if(@left_sidebar_open, do: "w-64", else: "w-[50px]")
+    if(@left_sidebar_open, do: "w-64", else: "w-20")
   ]}>
     <div class="flex items-center justify-between p-3 border-b border-white/5">
       <span class={"text-[11px] font-bold text-[#adadb8] uppercase tracking-widest whitespace-nowrap " <> if(@left_sidebar_open, do: "block", else: "hidden")}>
@@ -33,18 +33,18 @@
   </aside>
 
   <main class="flex-1 overflow-y-auto overflow-x-hidden flex flex-col gap-2 relative">
-    <%= if !@chat_open do %>
-      <div class="absolute top-4 right-4 z-50">
-        <button
-          phx-click="toggle_chat"
-          class="p-2 bg-[#18181b]/80 backdrop-blur rounded hover:bg-[#18181b] border border-white/5 text-[#efeff1] shadow-lg flex items-center gap-2 group transition-all"
-        >
-          <.svg variant="chat-bubble-left" class="w-5 h-5 text-[#adadb8] group-hover:text-white" />
-        </button>
-      </div>
-    <% end %>
+    <div class={[
+      "absolute top-4 right-4 z-50 transition-all duration-300 ease-in-out",
+      if(@chat_open, do: "opacity-0 pointer-events-none scale-90", else: "opacity-100 pointer-events-auto scale-100")
+    ]}>
+      <button
+        phx-click="toggle_chat"
+        class="p-2 bg-[#18181b]/80 backdrop-blur rounded hover:bg-[#18181b] border border-white/5 text-[#efeff1] shadow-lg flex items-center gap-2 group transition-all"
+      >
+        <.svg variant="chat-bubble-left" class="w-5 h-5 text-[#adadb8] group-hover:text-white" />
+      </button>
+    </div>
 
-    <%!-- Professional Video Player --%>
     <KameramaniPhxWeb.VideoComponents.video_player
       id="main-stream-player"
       is_live={@is_live}
@@ -179,10 +179,13 @@
     </div>
   </main>
 
-  <%= if @chat_open do %>
-    <div class="sticky top-0 h-screen shrink-0 w-[340px]">
+  <div class={[
+    "sticky top-0 h-screen shrink-0 transition-all duration-300 ease-in-out overflow-hidden relative glass-pane]",
+    if(@chat_open, do: "w-[340px] opacity-100 rounded-3xl ", else: "w-0 opacity-0 border-none pointer-events-none")
+  ]}>
+    <div class="w-[340px] h-[calc(100vh - 115px)] absolute top-0 right-0">
       <button
-        class="absolute z-50 left-1 top-2"
+        class="absolute z-50 left-1 top-2 p-1 rounded hover:bg-white/10 text-[#adadb8] transition-colors"
         phx-click="toggle_chat"
       >
         <.svg variant="chevron-right" class="h-4 w-4" />
@@ -197,7 +200,7 @@
         show_button={true}
       />
     </div>
-  <% end %>
+  </div>
 </div>
 
 <%= if @show_subscribe_modal do %>
