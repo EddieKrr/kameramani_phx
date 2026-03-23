@@ -6048,10 +6048,6 @@ select {
   background-color: rgb(255 255 255 / 0.7);
 }
 
-.bg-slate-800\/90 {
-  background-color: rgb(30 41 59 / 0.9);
-}
-
 .bg-gradient-to-b {
   background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
 }
