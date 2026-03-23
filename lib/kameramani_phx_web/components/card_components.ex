@@ -68,9 +68,12 @@ defmodule KameramaniPhxWeb.CardComponents do
 
           <div class="flex flex-wrap items-center gap-1.5 mt-2">
             <%= for tag <- @tags do %>
-              <span class="bg-[#26262c] hover:bg-[#323239] transition-colors cursor-pointer text-[#adadb8] font-semibold text-[12px] px-3 py-0.5 rounded-full">
+              <.link
+                navigate={~p"/directory?query=#{tag}"}
+                class="bg-[#26262c] hover:bg-[#323239] transition-colors cursor-pointer text-[#adadb8] font-semibold text-[12px] px-3 py-0.5 rounded-full"
+              >
                 {tag}
-              </span>
+              </.link>
             <% end %>
           </div>
         </div>

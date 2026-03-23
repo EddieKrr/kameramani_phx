@@ -111,13 +111,16 @@ defmodule KameramaniPhxWeb.ChatLive do
                     else: user.profile_picture
 
                 # Assign all the data to the socket
+                category_name = stream.category || "Just Chatting"
+
                 assigns_to_socket = %{
                   stream_id: stream.id,
                   streamer_id: user.id,
                   viewer_count: initial_count,
                   streamer_name: user.username,
                   streamer_profile_picture: avatar_url,
-                  category_name: stream.category || "Just Chatting",
+                  category_name: category_name,
+                  category_slug: slugify(category_name),
                   stream_name: stream.title,
                   tags: stream.tags || [],
                   is_live: stream.is_live,
@@ -309,5 +312,12 @@ defmodule KameramaniPhxWeb.ChatLive do
       nil -> nil
       address -> :inet_parse.ntoa(address) |> to_string()
     end
+  end
+
+  defp slugify(name) when is_binary(name) do
+    name
+    |> String.downcase()
+    |> String.replace(~r/[^a-z0-9\\s-]/u, "")
+    |> String.replace(~r/\\s+/, "-")
   end
 end

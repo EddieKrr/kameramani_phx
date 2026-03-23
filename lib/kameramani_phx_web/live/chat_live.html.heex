@@ -85,9 +85,12 @@
             </h2>
 
             <div class="flex items-center gap-2 mb-3">
-              <span class="text-[#bf94ff] hover:underline cursor-pointer font-semibold text-sm">
+              <.link
+                navigate={~p"/directory/#{@category_slug}"}
+                class="text-[#bf94ff] hover:underline cursor-pointer font-semibold text-sm"
+              >
                 {@category_name}
-              </span>
+              </.link>
             </div>
 
             <div class="flex flex-wrap items-center gap-1.5">

@@ -160,7 +160,7 @@ defmodule KameramaniPhxWeb.DirectoryLive do
         if is_map(game["cover"]) and is_binary(game["cover"]["url"]) do
           "https:#{game["cover"]["url"]}" |> String.replace("t_thumb", "t_cover_big")
         else
-          "https://placehold.co/400x533/4c1d95/ffffff?text=No+Cover"
+          "https://placehold.co/400x533/5468FF/ffffff?text=No+Cover"
         end
 
       %{
