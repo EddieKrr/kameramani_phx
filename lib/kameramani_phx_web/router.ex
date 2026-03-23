@@ -47,6 +47,7 @@ defmodule KameramaniPhxWeb.Router do
       live "/watch/:username", ChatLive, :show
       live "/register", AuthLive
       # live "/categories", DirectoryLive, :index
+      live "/users/log-in/:token", UserLive.Confirmation
       live "/directory", DirectoryLive, :index
       live "/directory/:slug", CategoryLive, :show
     end
@@ -114,7 +115,6 @@ defmodule KameramaniPhxWeb.Router do
       live "/admin", KameramaniPhxWeb.AdminLive
       live "/admin/:tab", KameramaniPhxWeb.AdminLive
     end
-
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

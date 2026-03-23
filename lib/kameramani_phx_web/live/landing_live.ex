@@ -14,7 +14,7 @@ defmodule KameramaniPhxWeb.LandingLive do
       KameramaniPhx.Repo.all(
         from s in Streaming.Stream,
           where: s.is_live == true,
-          preload: [:user], 
+          preload: [:user],
           limit: 5
       )
 

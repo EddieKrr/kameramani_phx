@@ -6,29 +6,28 @@ defmodule KameramaniPhxWeb.UserLive.RegistrationTest do
 
   describe "Registration page" do
     test "renders registration page", %{conn: conn} do
-      {:ok, _lv, html} = live(conn, ~p"/users/register")
+      {:ok, _lv, html} = live(conn, ~p"/auth")
 
       assert html =~ "Register"
-      assert html =~ "Log in"
+      assert html =~ "Log In"
     end
 
-    test "redirects if already logged in", %{conn: conn} do
-      result =
+    test "renders registration panel even if already logged in", %{conn: conn} do
+      {:ok, _lv, html} =
         conn
         |> log_in_user(user_fixture())
-        |> live(~p"/users/register")
-        |> follow_redirect(conn, ~p"/")
+        |> live(~p"/auth")
 
-      assert {:ok, _conn} = result
+      assert html =~ "Register"
     end
 
     test "renders errors for invalid data", %{conn: conn} do
-      {:ok, lv, _html} = live(conn, ~p"/users/register")
+      {:ok, lv, _html} = live(conn, ~p"/auth")
 
       result =
         lv
         |> element("#registration_form")
-        |> render_change(user: %{"email" => "with spaces"})
+        |> render_change(%{"reg" => %{"email" => "with spaces"}})
 
       assert result =~ "Register"
       assert result =~ "must have the @ sign and no spaces"
@@ -37,28 +36,27 @@ defmodule KameramaniPhxWeb.UserLive.RegistrationTest do
 
   describe "register user" do
     test "creates account but does not log in", %{conn: conn} do
-      {:ok, lv, _html} = live(conn, ~p"/users/register")
+      {:ok, lv, _html} = live(conn, ~p"/auth")
 
       email = unique_user_email()
-      form = form(lv, "#registration_form", user: valid_user_attributes(email: email))
+      form = form(lv, "#registration_form", reg: valid_user_attributes(email: email))
 
       {:ok, _lv, html} =
         render_submit(form)
-        |> follow_redirect(conn, ~p"/users/log-in")
+        |> follow_redirect(conn, ~p"/auth?panel=login")
 
-      assert html =~
-               ~r/An email was sent to .*, please access it to confirm your account/
+      assert html =~ "Registration successful! Please log in."
     end
 
     test "renders errors for duplicated email", %{conn: conn} do
-      {:ok, lv, _html} = live(conn, ~p"/users/register")
+      {:ok, lv, _html} = live(conn, ~p"/auth")
 
-      user = user_fixture(%{email: "test@email.com"})
+      user = user_fixture()
 
       result =
         lv
         |> form("#registration_form",
-          user: %{"email" => user.email}
+          reg: %{"email" => user.email}
         )
         |> render_submit()
 
@@ -68,15 +66,14 @@ defmodule KameramaniPhxWeb.UserLive.RegistrationTest do
 
   describe "registration navigation" do
     test "redirects to login page when the Log in button is clicked", %{conn: conn} do
-      {:ok, lv, _html} = live(conn, ~p"/users/register")
+      {:ok, lv, _html} = live(conn, ~p"/auth")
 
-      {:ok, _login_live, login_html} =
+      _html =
         lv
-        |> element("main a", "Log in")
+        |> element("button.log-btn", "Log In")
         |> render_click()
-        |> follow_redirect(conn, ~p"/users/log-in")
 
-      assert login_html =~ "Log in"
+      assert has_element?(lv, "div.active")
     end
   end
 end

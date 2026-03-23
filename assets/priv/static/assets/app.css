@@ -6104,6 +6104,12 @@ select {
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
+.from-\[\#111827\] {
+  --tw-gradient-from: #111827 var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(17 24 39 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
 .via-\[\#39d0ff\]\/0 {
   --tw-gradient-to: rgb(57 208 255 / 0)  var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), rgb(57 208 255 / 0) var(--tw-gradient-via-position), var(--tw-gradient-to);
@@ -6127,6 +6133,11 @@ select {
 .via-transparent {
   --tw-gradient-to: rgb(0 0 0 / 0)  var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), transparent var(--tw-gradient-via-position), var(--tw-gradient-to);
+}
+
+.via-\[\#0f1724\] {
+  --tw-gradient-to: rgb(15 23 36 / 0)  var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), #0f1724 var(--tw-gradient-via-position), var(--tw-gradient-to);
 }
 
 .to-\[\#022c22\] {
@@ -6187,6 +6198,10 @@ select {
 
 .to-transparent {
   --tw-gradient-to: transparent var(--tw-gradient-to-position);
+}
+
+.to-\[\#14121d\] {
+  --tw-gradient-to: #14121d var(--tw-gradient-to-position);
 }
 
 .bg-cover {

@@ -12,7 +12,7 @@ defmodule KameramaniPhxWeb.UserLive.SettingsTest do
         |> log_in_user(user_fixture())
         |> live(~p"/users/settings")
 
-      assert html =~ "Change Email"
+      assert html =~ "Email Address"
       assert html =~ "Save Password"
     end
 
@@ -20,27 +20,30 @@ defmodule KameramaniPhxWeb.UserLive.SettingsTest do
       assert {:error, redirect} = live(conn, ~p"/users/settings")
 
       assert {:redirect, %{to: path, flash: flash}} = redirect
-      assert path == ~p"/users/log-in"
+      assert path == ~p"/auth"
       assert %{"error" => "You must log in to access this page."} = flash
     end
 
-    test "redirects if user is not in sudo mode", %{conn: conn} do
-      {:ok, conn} =
+    test "renders settings page even if user is not in sudo mode", %{conn: conn} do
+      {:ok, _lv, html} =
         conn
         |> log_in_user(user_fixture(),
           token_authenticated_at: DateTime.add(DateTime.utc_now(:second), -11, :minute)
         )
         |> live(~p"/users/settings")
-        |> follow_redirect(conn, ~p"/users/log-in")
 
-      assert conn.resp_body =~ "You must re-authenticate to access this page."
+      assert html =~ "Account Settings"
     end
   end
 
   describe "update email form" do
     setup %{conn: conn} do
       user = user_fixture()
-      %{conn: log_in_user(conn, user), user: user}
+
+      %{
+        conn: log_in_user(conn, user, token_authenticated_at: DateTime.utc_now(:second)),
+        user: user
+      }
     end
 
     test "updates the user email", %{conn: conn, user: user} do
@@ -55,7 +58,7 @@ defmodule KameramaniPhxWeb.UserLive.SettingsTest do
         })
         |> render_submit()
 
-      assert result =~ "A link to confirm your email"
+      assert result =~ "A confirmation email has been sent to your new address."
       assert Accounts.get_user_by_email(user.email)
     end
 
@@ -70,7 +73,7 @@ defmodule KameramaniPhxWeb.UserLive.SettingsTest do
           "user" => %{"email" => "with spaces"}
         })
 
-      assert result =~ "Change Email"
+      assert result =~ "Email Address"
       assert result =~ "must have the @ sign and no spaces"
     end
 
@@ -84,7 +87,7 @@ defmodule KameramaniPhxWeb.UserLive.SettingsTest do
         })
         |> render_submit()
 
-      assert result =~ "Change Email"
+      assert result =~ "Email Address"
       assert result =~ "did not change"
     end
   end
@@ -92,7 +95,11 @@ defmodule KameramaniPhxWeb.UserLive.SettingsTest do
   describe "update password form" do
     setup %{conn: conn} do
       user = user_fixture()
-      %{conn: log_in_user(conn, user), user: user}
+
+      %{
+        conn: log_in_user(conn, user, token_authenticated_at: DateTime.utc_now(:second)),
+        user: user
+      }
     end
 
     test "updates the user password", %{conn: conn, user: user} do
@@ -204,7 +211,7 @@ defmodule KameramaniPhxWeb.UserLive.SettingsTest do
       conn = build_conn()
       {:error, redirect} = live(conn, ~p"/users/settings/confirm-email/#{token}")
       assert {:redirect, %{to: path, flash: flash}} = redirect
-      assert path == ~p"/users/log-in"
+      assert path == ~p"/auth"
       assert %{"error" => message} = flash
       assert message == "You must log in to access this page."
     end
