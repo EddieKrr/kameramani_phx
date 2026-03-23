@@ -169316,3 +169316,193 @@ PATH=/home/eddie/.local/share/mise/installs/elixir/1.19.5-otp-28/bin:/home/eddie
 09:37:17.618 id=220 [debug] handled request client -> server textDocument/codeAction in 575µs
 
 09:37:17.767 id=221 [debug] handled request client -> server textDocument/codeAction in 867µs
+
+09:48:19.514 [debug] handled notification client -> server textDocument/didOpen in 531µs
+
+09:48:19.517 id=222 [debug] handled request client -> server textDocument/codeAction in 572µs
+
+09:48:19.577 id=223 [debug] handled request client -> server textDocument/documentSymbol in 6ms
+
+09:48:19.601 id=224 [debug] handled request client -> server textDocument/codeAction in 623µs
+
+09:48:19.820 id=225 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+09:48:21.007 [debug] handled notification client -> server $/cancelRequest in 669µs
+
+09:50:03.136 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 573µs
+
+09:50:05.546 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 817µs
+
+09:50:08.004 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 2ms
+
+09:51:04.581 [debug] handled notification client -> server textDocument/didOpen in 2ms
+
+09:51:04.582 id=227 [debug] handled request client -> server textDocument/codeAction in 682µs
+
+09:51:04.582 [debug] handled notification client -> server $/cancelRequest in 361µs
+
+09:51:04.582 id=229 [debug] handled request client -> server textDocument/codeAction in 341µs
+
+09:51:04.588 id=228 [debug] handled request client -> server textDocument/documentSymbol in 7ms
+
+09:51:04.708 id=230 [debug] handled request client -> server textDocument/codeAction in 572µs
+
+09:51:04.755 id=231 [debug] handled request client -> server textDocument/documentSymbol in 4ms
+
+09:51:14.351 [debug] handled notification client -> server textDocument/didClose in 312µs
+
+09:51:14.377 [debug] handled notification client -> server textDocument/didOpen in 1ms
+
+09:51:14.381 id=232 [debug] handled request client -> server textDocument/codeAction in 456µs
+
+09:51:14.429 id=233 [debug] handled request client -> server textDocument/documentSymbol in 10ms
+
+09:51:14.452 id=234 [debug] handled request client -> server textDocument/codeAction in 426µs
+
+09:51:14.646 id=235 [debug] handled request client -> server textDocument/codeAction in 500µs
+
+09:51:14.698 id=236 [debug] handled request client -> server textDocument/documentSymbol in 7ms
+
+09:51:16.500 id=237 [debug] handled request client -> server textDocument/hover in 1003ms
+
+09:51:21.112 [debug] handled notification client -> server $/cancelRequest in 445µs
+
+09:51:25.496 [debug] handled notification client -> server textDocument/didClose in 270µs
+
+09:51:25.509 [debug] handled notification client -> server textDocument/didOpen in 1ms
+
+09:51:25.510 id=239 [debug] handled request client -> server textDocument/codeAction in 384µs
+
+09:51:25.591 id=240 [debug] handled request client -> server textDocument/documentSymbol in 11ms
+
+09:51:25.623 id=241 [debug] handled request client -> server textDocument/codeAction in 424µs
+
+09:51:25.772 id=242 [debug] handled request client -> server textDocument/codeAction in 602µs
+
+09:51:25.813 id=243 [debug] handled request client -> server textDocument/documentSymbol in 4ms
+
+09:51:26.456 id=244 [debug] handled request client -> server textDocument/codeAction in 485µs
+
+09:51:47.890 [debug] handled notification client -> server textDocument/didClose in 615µs
+
+09:52:16.065 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 778µs
+
+09:52:17.163 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 582µs
+
+09:52:20.863 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+09:55:33.662 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 771µs
+
+09:55:38.166 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 981µs
+
+09:56:21.371 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 700µs
+
+09:56:25.777 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:04:34.976 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 717µs
+
+10:04:39.730 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:06:31.242 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 10ms
+
+10:06:36.989 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 28ms
+
+10:06:52.548 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 8ms
+
+10:06:59.716 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:07:17.103 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 8ms
+
+10:07:23.189 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:07:50.310 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 858µs
+
+10:07:55.814 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:07:59.595 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 8ms
+
+10:08:00.310 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 10ms
+
+10:08:16.702 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:08:29.165 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:08:37.353 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:09:12.413 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 2ms
+
+10:09:14.051 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 941µs
+
+10:09:16.167 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 932µs
+
+10:09:17.274 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 855µs
+
+10:09:18.760 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 3ms
+
+10:10:10.603 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:10:15.433 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 701µs
+
+10:10:17.016 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 60ms
+
+10:10:17.248 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 887µs
+
+10:10:33.407 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 714µs
+
+10:10:42.515 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 914µs
+
+10:14:50.137 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:14:54.316 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:15:36.931 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 788µs
+
+10:15:37.961 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:15:42.047 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:15:44.679 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:15:45.947 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 741µs
+
+10:15:46.877 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 612µs
+
+10:15:47.359 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 490µs
+
+10:15:48.017 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 459µs
+
+10:16:10.792 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 677µs
+
+10:16:11.355 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 876µs
+
+10:16:15.616 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 801µs
+
+10:16:16.409 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:16:16.969 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 558µs
+
+10:16:17.798 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:16:19.469 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 712µs
+
+10:16:20.055 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:16:21.656 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 734µs
+
+10:16:22.334 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 4ms
+
+10:16:23.000 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 12ms
+
+10:16:23.298 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 582µs
+
+10:16:24.518 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:16:25.097 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 415µs
+
+10:16:27.944 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 970µs
+
+10:16:28.728 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 817µs
+
+10:16:29.210 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 514µs
+
+10:16:33.606 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
