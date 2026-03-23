@@ -168704,3 +168704,7 @@ PATH=/home/eddie/.local/share/mise/installs/elixir/1.19.5-otp-28/bin:/home/eddie
 08:58:30.654 [debug] handled notification client -> server $/cancelRequest in 596µs
 
 08:59:37.293 [debug] handled notification client -> server $/cancelRequest in 307µs
+
+09:00:05.333 id=27 [debug] handled request client -> server textDocument/codeAction in 605µs
+
+09:00:15.224 [debug] handled notification client -> server $/setTrace in 276µs
