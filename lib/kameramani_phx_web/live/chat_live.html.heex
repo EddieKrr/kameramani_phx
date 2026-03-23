@@ -180,7 +180,7 @@
   </main>
 
   <div class={[
-    "sticky top-0 h-screen shrink-0 transition-all duration-300 ease-in-out overflow-hidden relative glass-pane]",
+    "sticky top-0 h-screen shrink-0 transition-all duration-300 ease-in-out overflow-hidden glass-pane]",
     if(@chat_open, do: "w-[340px] opacity-100 rounded-3xl ", else: "w-0 opacity-0 border-none pointer-events-none")
   ]}>
     <div class="w-[340px] h-[calc(100vh - 115px)] absolute top-0 right-0">
@@ -204,7 +204,7 @@
 </div>
 
 <%= if @show_subscribe_modal do %>
-  <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4">
+  <div class="fixed inset-0 z-100 flex items-center justify-center bg-black/70 p-4">
     <div class="w-full max-w-xl rounded-2xl border border-white/10 glass-pane p-6 shadow-2xl">
       <div class="mb-5 flex items-start justify-between">
         <div>

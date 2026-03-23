@@ -169506,3 +169506,322 @@ PATH=/home/eddie/.local/share/mise/installs/elixir/1.19.5-otp-28/bin:/home/eddie
 10:16:29.210 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 514µs
 
 10:16:33.606 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:20:12.526 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 461µs
+
+10:20:13.352 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:20:13.832 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 814µs
+
+10:20:17.573 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 976µs
+
+10:20:25.644 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 3ms
+
+10:20:25.978 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 501µs
+
+10:20:38.105 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 864µs
+
+10:22:42.746 [debug] handled notification client -> server textDocument/didOpen in 1ms
+
+10:22:42.813 id=245 [debug] handled request client -> server textDocument/documentSymbol in 10ms
+
+10:22:43.051 id=246 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+10:22:58.951 id=247 [debug] handled request client -> server textDocument/documentSymbol in 4ms
+
+10:26:55.549 [debug] handled notification client -> server textDocument/didChange in 4ms
+
+10:26:55.550 id=248 [debug] handled request client -> server textDocument/codeAction in 1ms
+
+10:26:55.638 id=249 [debug] handled request client -> server textDocument/documentSymbol in 16ms
+
+10:26:55.826 id=250 [debug] handled request client -> server textDocument/documentSymbol in 7ms
+
+10:26:56.288 [debug] handled notification client -> server textDocument/didChange in 1ms
+
+10:26:56.292 [debug] handled notification client -> server textDocument/didSave in 3ms
+
+10:26:56.637 id=251 [debug] handled request client -> server textDocument/documentSymbol in 9ms
+
+10:26:56.638 id=252 [debug] handled request client -> server textDocument/documentSymbol in 10ms
+
+10:26:56.657 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 559µs
+
+10:28:45.328 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 2ms
+
+10:28:47.489 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 942µs
+
+10:28:48.210 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:28:50.626 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:30:06.843 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 2ms
+
+10:30:08.821 [debug] handled notification client -> server workspace/didChangeWatchedFiles in 1ms
+
+10:30:15.246 id=253 [debug] handled request client -> server textDocument/codeAction in 4ms
+
+10:30:15.251 [debug] handled notification client -> server $/cancelRequest in 947µs
+
+10:30:15.469 id=254 [debug] handled request client -> server textDocument/documentSymbol in 25ms
+
+10:31:30.642 [debug] handled notification client -> server $/cancelRequest in 476µs
+
+10:31:37.453 [debug] handled notification client -> server $/cancelRequest in 483µs
+
+10:31:38.609 id=257 [debug] handled request client -> server textDocument/hover in 1005ms
+
+10:31:40.167 [debug] handled notification client -> server $/cancelRequest in 619µs
+
+10:31:40.402 id=262 [debug] handled request client -> server textDocument/codeAction in 585µs
+
+10:31:40.913 [error] ** (Protocol.UndefinedError) protocol Enumerable not implemented for %GenLSP.ErrorResponse{message: "Timeout", code: -32603, data: nil} of type GenLSP.ErrorResponse (a struct). This protocol is implemented for the following type(s): DBConnection.PrepareStream, DBConnection.Stream, Date.Range, Exqlite.Stream, File.Stream, Function, GenEvent.Stream, HashDict, HashSet, IO.Stream, Jason.OrderedObject, List, Map, MapSet, Range, Stream
+    (elixir 1.17.3) lib/enum.ex:1: Enumerable.impl_for!/1
+    (elixir 1.17.3) lib/enum.ex:166: Enumerable.reduce/3
+    (elixir 1.17.3) lib/enum.ex:4423: Enum.reject/2
+    (next_ls 0.23.4) lib/next_ls.ex:241: NextLS.handle_request/2
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:372: anonymous fn/2 in GenLSP.loop/3
+    (telemetry 1.3.0) /Users/runner/work/next-ls/next-ls/deps/telemetry/src/telemetry.erl:324: :telemetry.span/3
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:371: anonymous fn/5 in GenLSP.loop/3
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:601: anonymous fn/4 in GenLSP.attempt/4
+
+
+10:31:40.913 [debug] sent notification server -> client window/logMessage
+
+10:31:41.229 [error] ** (Protocol.UndefinedError) protocol Enumerable not implemented for %GenLSP.ErrorResponse{message: "Timeout", code: -32603, data: nil} of type GenLSP.ErrorResponse (a struct). This protocol is implemented for the following type(s): DBConnection.PrepareStream, DBConnection.Stream, Date.Range, Exqlite.Stream, File.Stream, Function, GenEvent.Stream, HashDict, HashSet, IO.Stream, Jason.OrderedObject, List, Map, MapSet, Range, Stream
+    (elixir 1.17.3) lib/enum.ex:1: Enumerable.impl_for!/1
+    (elixir 1.17.3) lib/enum.ex:166: Enumerable.reduce/3
+    (elixir 1.17.3) lib/enum.ex:4423: Enum.reject/2
+    (next_ls 0.23.4) lib/next_ls.ex:241: NextLS.handle_request/2
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:372: anonymous fn/2 in GenLSP.loop/3
+    (telemetry 1.3.0) /Users/runner/work/next-ls/next-ls/deps/telemetry/src/telemetry.erl:324: :telemetry.span/3
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:371: anonymous fn/5 in GenLSP.loop/3
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:601: anonymous fn/4 in GenLSP.attempt/4
+
+
+10:31:41.229 [debug] sent notification server -> client window/logMessage
+
+10:31:41.239 [debug] handled notification client -> server $/cancelRequest in 412µs
+
+10:31:41.493 id=263 [debug] handled request client -> server textDocument/codeAction in 599µs
+
+10:31:44.857 id=264 [debug] handled request client -> server textDocument/hover in 1002ms
+
+10:31:52.757 id=265 [debug] handled request client -> server textDocument/hover in 1003ms
+
+10:31:56.762 [debug] handled notification client -> server $/cancelRequest in 356µs
+
+10:31:57.078 [debug] handled notification client -> server $/cancelRequest in 434µs
+
+10:31:58.231 id=268 [debug] handled request client -> server textDocument/hover in 1002ms
+
+10:32:00.625 id=269 [debug] handled request client -> server textDocument/hover in 1004ms
+
+10:32:02.420 [debug] handled notification client -> server $/cancelRequest in 363µs
+
+10:32:03.757 id=271 [debug] handled request client -> server textDocument/hover in 1003ms
+
+10:32:07.641 id=272 [debug] handled request client -> server textDocument/hover in 1003ms
+
+10:32:14.955 [debug] handled notification client -> server $/cancelRequest in 461µs
+
+10:32:16.273 id=274 [debug] handled request client -> server textDocument/hover in 1002ms
+
+10:32:17.236 [debug] handled notification client -> server $/cancelRequest in 449µs
+
+11:19:47.019 [debug] handled notification client -> server $/cancelRequest in 561µs
+
+11:31:17.562 id=277 [debug] handled request client -> server textDocument/codeAction in 3ms
+
+11:31:17.562 [debug] handled notification client -> server textDocument/didOpen in 6ms
+
+11:31:17.563 [debug] handled notification client -> server $/cancelRequest in 1ms
+
+11:31:17.564 id=279 [debug] handled request client -> server textDocument/codeAction in 965µs
+
+11:31:17.577 id=278 [debug] handled request client -> server textDocument/documentSymbol in 17ms
+
+11:31:17.725 id=280 [debug] handled request client -> server textDocument/codeAction in 1ms
+
+11:31:17.769 id=281 [debug] handled request client -> server textDocument/documentSymbol in 3ms
+
+11:31:21.683 [debug] handled notification client -> server $/cancelRequest in 330µs
+
+11:31:22.908 id=283 [debug] handled request client -> server textDocument/hover in 1007ms
+
+11:31:23.668 [debug] handled notification client -> server $/cancelRequest in 630µs
+
+11:31:32.599 [debug] handled notification client -> server $/cancelRequest in 475µs
+
+11:31:32.798 [debug] handled notification client -> server $/cancelRequest in 424µs
+
+11:31:32.982 [debug] handled notification client -> server $/cancelRequest in 369µs
+
+11:31:34.136 id=288 [debug] handled request client -> server textDocument/hover in 1003ms
+
+11:33:33.449 [debug] handled notification client -> server $/cancelRequest in 444µs
+
+11:33:34.290 [error] ** (Protocol.UndefinedError) protocol Enumerable not implemented for %GenLSP.ErrorResponse{message: "Timeout", code: -32603, data: nil} of type GenLSP.ErrorResponse (a struct). This protocol is implemented for the following type(s): DBConnection.PrepareStream, DBConnection.Stream, Date.Range, Exqlite.Stream, File.Stream, Function, GenEvent.Stream, HashDict, HashSet, IO.Stream, Jason.OrderedObject, List, Map, MapSet, Range, Stream
+    (elixir 1.17.3) lib/enum.ex:1: Enumerable.impl_for!/1
+    (elixir 1.17.3) lib/enum.ex:166: Enumerable.reduce/3
+    (elixir 1.17.3) lib/enum.ex:4423: Enum.reject/2
+    (next_ls 0.23.4) lib/next_ls.ex:241: NextLS.handle_request/2
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:372: anonymous fn/2 in GenLSP.loop/3
+    (telemetry 1.3.0) /Users/runner/work/next-ls/next-ls/deps/telemetry/src/telemetry.erl:324: :telemetry.span/3
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:371: anonymous fn/5 in GenLSP.loop/3
+    (gen_lsp 0.11.0) lib/gen_lsp.ex:601: anonymous fn/4 in GenLSP.attempt/4
+
+
+11:33:34.290 [debug] sent notification server -> client window/logMessage
+
+11:35:55.008 id=291 [debug] handled request client -> server textDocument/codeAction in 784µs
+
+11:35:55.009 id=292 [debug] handled request client -> server textDocument/codeAction in 480µs
+
+11:35:55.009 [debug] handled notification client -> server $/cancelRequest in 454µs
+
+11:35:55.119 id=293 [debug] handled request client -> server textDocument/codeAction in 1ms
+
+11:35:55.156 id=294 [debug] handled request client -> server textDocument/documentSymbol in 6ms
+
+11:35:56.522 [debug] handled notification client -> server $/cancelRequest in 599µs
+
+11:35:59.045 [debug] handled notification client -> server $/cancelRequest in 397µs
+
+11:35:59.495 [debug] handled notification client -> server $/cancelRequest in 575µs
+
+11:36:00.832 id=298 [debug] handled request client -> server textDocument/codeAction in 1ms
+
+11:36:01.582 id=299 [debug] handled request client -> server textDocument/codeAction in 676µs
+
+11:36:02.166 id=300 [debug] handled request client -> server textDocument/codeAction in 2ms
+
+11:36:04.070 id=301 [debug] handled request client -> server textDocument/codeAction in 1ms
+
+11:36:04.349 id=302 [debug] handled request client -> server textDocument/codeAction in 3ms
+
+11:36:04.749 id=303 [debug] handled request client -> server textDocument/codeAction in 3ms
+
+11:36:05.280 id=304 [debug] handled request client -> server textDocument/codeAction in 943µs
+
+11:38:14.762 [debug] handled notification client -> server $/cancelRequest in 486µs
+
+11:41:25.476 [debug] handled notification client -> server $/cancelRequest in 467µs
+
+11:41:29.774 [debug] handled notification client -> server $/cancelRequest in 494µs
+
+12:06:59.710 [debug] handled notification client -> server $/cancelRequest in 968µs
+
+12:07:08.517 [debug] handled notification client -> server $/cancelRequest in 698µs
+
+12:19:05.566 [debug] handled notification client -> server $/cancelRequest in 474µs
+
+12:40:04.164 [info] Loading 146 CA(s) from :otp store
+
+12:40:04.238 [notice] Application next_ls exited: NextLS.Application.start(:normal, []) returned an error: shutdown: failed to start child: NextLS.LSPSupervisor
+    ** (EXIT) shutdown: failed to start child: NextLS
+        ** (EXIT) an exception was raised:
+            ** (ErlangError) Erlang error: :enoent
+                (elixir 1.17.3) lib/system.ex:1114: System.cmd("elixir", ["--short-version"], [])
+                (next_ls 0.23.4) lib/next_ls.ex:45: NextLS.init/2
+                (gen_lsp 0.11.0) lib/gen_lsp.ex:220: GenLSP.init/1
+                (stdlib 6.2) proc_lib.erl:329: :proc_lib.init_p_do_apply/3
+
+12:40:06.457 [info] Loading 146 CA(s) from :otp store
+
+12:40:06.501 [notice] Application next_ls exited: NextLS.Application.start(:normal, []) returned an error: shutdown: failed to start child: NextLS.LSPSupervisor
+    ** (EXIT) shutdown: failed to start child: NextLS
+        ** (EXIT) an exception was raised:
+            ** (ErlangError) Erlang error: :enoent
+                (elixir 1.17.3) lib/system.ex:1114: System.cmd("elixir", ["--short-version"], [])
+                (next_ls 0.23.4) lib/next_ls.ex:45: NextLS.init/2
+                (gen_lsp 0.11.0) lib/gen_lsp.ex:220: GenLSP.init/1
+                (stdlib 6.2) proc_lib.erl:329: :proc_lib.init_p_do_apply/3
+
+12:40:08.497 [info] Loading 146 CA(s) from :otp store
+
+12:40:08.518 [notice] Application next_ls exited: NextLS.Application.start(:normal, []) returned an error: shutdown: failed to start child: NextLS.LSPSupervisor
+    ** (EXIT) shutdown: failed to start child: NextLS
+        ** (EXIT) an exception was raised:
+            ** (ErlangError) Erlang error: :enoent
+                (elixir 1.17.3) lib/system.ex:1114: System.cmd("elixir", ["--short-version"], [])
+                (next_ls 0.23.4) lib/next_ls.ex:45: NextLS.init/2
+                (gen_lsp 0.11.0) lib/gen_lsp.ex:220: GenLSP.init/1
+                (stdlib 6.2) proc_lib.erl:329: :proc_lib.init_p_do_apply/3
+
+12:40:10.594 [info] Loading 146 CA(s) from :otp store
+
+12:40:10.642 [notice] Application next_ls exited: NextLS.Application.start(:normal, []) returned an error: shutdown: failed to start child: NextLS.LSPSupervisor
+    ** (EXIT) shutdown: failed to start child: NextLS
+        ** (EXIT) an exception was raised:
+            ** (ErlangError) Erlang error: :enoent
+                (elixir 1.17.3) lib/system.ex:1114: System.cmd("elixir", ["--short-version"], [])
+                (next_ls 0.23.4) lib/next_ls.ex:45: NextLS.init/2
+                (gen_lsp 0.11.0) lib/gen_lsp.ex:220: GenLSP.init/1
+                (stdlib 6.2) proc_lib.erl:329: :proc_lib.init_p_do_apply/3
+
+12:40:12.633 [info] Loading 146 CA(s) from :otp store
+
+12:40:12.663 [notice] Application next_ls exited: NextLS.Application.start(:normal, []) returned an error: shutdown: failed to start child: NextLS.LSPSupervisor
+    ** (EXIT) shutdown: failed to start child: NextLS
+        ** (EXIT) an exception was raised:
+            ** (ErlangError) Erlang error: :enoent
+                (elixir 1.17.3) lib/system.ex:1114: System.cmd("elixir", ["--short-version"], [])
+                (next_ls 0.23.4) lib/next_ls.ex:45: NextLS.init/2
+                (gen_lsp 0.11.0) lib/gen_lsp.ex:220: GenLSP.init/1
+                (stdlib 6.2) proc_lib.erl:329: :proc_lib.init_p_do_apply/3
+
+14:07:11.642 [info] Loading 146 CA(s) from :otp store
+
+14:07:11.686 [notice] Application next_ls exited: NextLS.Application.start(:normal, []) returned an error: shutdown: failed to start child: NextLS.LSPSupervisor
+    ** (EXIT) shutdown: failed to start child: NextLS
+        ** (EXIT) an exception was raised:
+            ** (ErlangError) Erlang error: :enoent
+                (elixir 1.17.3) lib/system.ex:1114: System.cmd("elixir", ["--short-version"], [])
+                (next_ls 0.23.4) lib/next_ls.ex:45: NextLS.init/2
+                (gen_lsp 0.11.0) lib/gen_lsp.ex:220: GenLSP.init/1
+                (stdlib 6.2) proc_lib.erl:329: :proc_lib.init_p_do_apply/3
+
+14:07:14.400 [info] Loading 146 CA(s) from :otp store
+
+14:07:14.488 [notice] Application next_ls exited: NextLS.Application.start(:normal, []) returned an error: shutdown: failed to start child: NextLS.LSPSupervisor
+    ** (EXIT) shutdown: failed to start child: NextLS
+        ** (EXIT) an exception was raised:
+            ** (ErlangError) Erlang error: :enoent
+                (elixir 1.17.3) lib/system.ex:1114: System.cmd("elixir", ["--short-version"], [])
+                (next_ls 0.23.4) lib/next_ls.ex:45: NextLS.init/2
+                (gen_lsp 0.11.0) lib/gen_lsp.ex:220: GenLSP.init/1
+                (stdlib 6.2) proc_lib.erl:329: :proc_lib.init_p_do_apply/3
+
+14:07:16.489 [info] Loading 146 CA(s) from :otp store
+
+14:07:16.513 [notice] Application next_ls exited: NextLS.Application.start(:normal, []) returned an error: shutdown: failed to start child: NextLS.LSPSupervisor
+    ** (EXIT) shutdown: failed to start child: NextLS
+        ** (EXIT) an exception was raised:
+            ** (ErlangError) Erlang error: :enoent
+                (elixir 1.17.3) lib/system.ex:1114: System.cmd("elixir", ["--short-version"], [])
+                (next_ls 0.23.4) lib/next_ls.ex:45: NextLS.init/2
+                (gen_lsp 0.11.0) lib/gen_lsp.ex:220: GenLSP.init/1
+                (stdlib 6.2) proc_lib.erl:329: :proc_lib.init_p_do_apply/3
+
+14:07:18.460 [info] Loading 146 CA(s) from :otp store
+
+14:07:18.482 [notice] Application next_ls exited: NextLS.Application.start(:normal, []) returned an error: shutdown: failed to start child: NextLS.LSPSupervisor
+    ** (EXIT) shutdown: failed to start child: NextLS
+        ** (EXIT) an exception was raised:
+            ** (ErlangError) Erlang error: :enoent
+                (elixir 1.17.3) lib/system.ex:1114: System.cmd("elixir", ["--short-version"], [])
+                (next_ls 0.23.4) lib/next_ls.ex:45: NextLS.init/2
+                (gen_lsp 0.11.0) lib/gen_lsp.ex:220: GenLSP.init/1
+                (stdlib 6.2) proc_lib.erl:329: :proc_lib.init_p_do_apply/3
+
+14:07:20.779 [info] Loading 146 CA(s) from :otp store
+
+14:07:20.803 [notice] Application next_ls exited: NextLS.Application.start(:normal, []) returned an error: shutdown: failed to start child: NextLS.LSPSupervisor
+    ** (EXIT) shutdown: failed to start child: NextLS
+        ** (EXIT) an exception was raised:
+            ** (ErlangError) Erlang error: :enoent
+                (elixir 1.17.3) lib/system.ex:1114: System.cmd("elixir", ["--short-version"], [])
+                (next_ls 0.23.4) lib/next_ls.ex:45: NextLS.init/2
+                (gen_lsp 0.11.0) lib/gen_lsp.ex:220: GenLSP.init/1
+                (stdlib 6.2) proc_lib.erl:329: :proc_lib.init_p_do_apply/3
