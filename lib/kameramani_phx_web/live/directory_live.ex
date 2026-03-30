@@ -16,11 +16,15 @@ defmodule KameramaniPhxWeb.DirectoryLive do
   #   ]
   # end
 
-  def mount(params, _session, socket) do
+  def fetch_categories do
     db_categories = list_db_categories()
     raw_games = KameramaniPhxWeb.Igdb.get_games()
     igdb_categories = format_igdb_games(raw_games)
-    categories = merge_categories(db_categories, igdb_categories)
+    merge_categories(db_categories, igdb_categories)
+  end
+
+  def mount(params, _session, socket) do
+    categories = fetch_categories()
     query = search_query_from_params(params)
     {categories, stream_results} = search_results_for_query(categories, query)
     active_tab = if query == "", do: "categories", else: "live"

@@ -39,6 +39,10 @@ if database_url do
     ]
 end
 
+config :kameramani_phx, :igdb,
+  client_id: System.get_env("IGDB_CLIENT_ID"),
+  access_token: System.get_env("IGDB_ACCESS_TOKEN")
+
 if config_env() == :prod do
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you

@@ -7,7 +7,6 @@ categories = [
   %{name: "Just Chatting", slug: "just-chatting", thumbnail_url: "https://shorturl.at/cU8up"},
   %{name: "Software Development", slug: "software-dev", thumbnail_url: "https://bit.ly/40czhEW"},
   %{name: "Cybersecurity", slug: "cybersecurity", thumbnail_url: "https://bit.ly/4rzmZCs"},
-  %{name: "Gaming", slug: "gaming", thumbnail_url: "https://shorturl.at/Ijyox"},
   %{name: "Music", slug: "music", thumbnail_url: "https://shorturl.at/Lsyvs"},
   %{name: "Art", slug: "art", thumbnail_url: "https://shorturl.at/SLycL"},
   %{name: "Talk Shows & Podcasts", slug: "talk-shows", thumbnail_url: "https://bit.ly/4aAUywS"},

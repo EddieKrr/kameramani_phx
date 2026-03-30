@@ -135,21 +135,50 @@
           thumbnail_url={card.thumbnail_url}
         />
       </div>
-      <h1 class="font-title">Recommended For You</h1>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-        <.card
-          :for={card <- @streams_data}
-          id={card.id}
-          stream_name={card.stream_name}
-          streamer={card.streamer}
-          category={card.category}
-          tags={card.tags}
-          viewer_count={card.viewer_count}
-          avatar={card.avatar}
-          is_live={card.is_live}
-          is_verified={card.is_verified}
-          thumbnail_url={card.thumbnail_url}
-        />
+      <h1 class="font-title mt-10 mb-4 text-xl">Categories</h1>
+      <div class="relative group/cat px-4">
+        <div 
+          id="categories-scroll"
+          class="flex gap-4 overflow-x-auto scroll-smooth no-scrollbar pb-4"
+        >
+          <%= for category <- @categories do %>
+            <.link 
+              navigate={~p"/directory/#{category.slug}"}
+              class="flex-shrink-0 w-[180px] group/item"
+            >
+              <div class="relative aspect-[3/4] rounded-xl overflow-hidden mb-2 shadow-lg border border-white/5 transition-transform duration-300 group-hover/item:-translate-y-1">
+                <img 
+                  src={category.thumbnail_url} 
+                  class="w-full h-full object-cover transition-transform duration-500 group-hover/item:scale-110" 
+                  loading="lazy"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover/item:opacity-100 transition-opacity"></div>
+              </div>
+              <h3 class="font-bold text-sm text-[#efeff1] truncate group-hover/item:text-blue-400 transition-colors">
+                {category.name}
+              </h3>
+            </.link>
+          <% end %>
+        </div>
+
+        <%!-- Scroll Buttons --%>
+        <div class="absolute inset-y-0 left-0 flex items-center">
+          <button 
+            onclick="document.getElementById('categories-scroll').scrollBy({left: -400, behavior: 'smooth'})"
+            class="p-2 rounded-full bg-slate-900/90 border border-white/10 text-white opacity-0 group-hover/cat:opacity-100 transition-opacity shadow-xl hover:scale-110 -ml-4 z-10"
+          >
+            <.svg variant="chevron-left" class="w-5 h-5" />
+          </button>
+        </div>
+        
+        <div class="absolute inset-y-0 right-0 flex items-center">
+          <button 
+            onclick="document.getElementById('categories-scroll').scrollBy({left: 400, behavior: 'smooth'})"
+            class="p-2 rounded-full bg-slate-900/90 border border-white/10 text-white opacity-0 group-hover/cat:opacity-100 transition-opacity shadow-xl hover:scale-110 -mr-4 z-10"
+          >
+            <.svg variant="chevron-right" class="w-5 h-5" />
+          </button>
+        </div>
       </div>
     </div>
   </div>

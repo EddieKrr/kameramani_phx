@@ -58,6 +58,9 @@ defmodule KameramaniPhxWeb.LandingLive do
         }
       end)
 
+    # Fetch categories and merge with IGDB games
+    categories = KameramaniPhxWeb.DirectoryLive.fetch_categories()
+
     {:ok,
      socket
      |> assign(
@@ -65,6 +68,7 @@ defmodule KameramaniPhxWeb.LandingLive do
        streams_data: streams_data,
        all_streams_data: streams_data,
        recommended_streams: recommended_streams,
+       categories: categories,
        carousel_index: 0
      )}
   end

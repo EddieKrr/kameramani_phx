@@ -32,8 +32,9 @@ defmodule KameramaniPhxWeb.Igdb do
   end
 
   defp build_headers do
-    client_id = System.get_env("IGDB_CLIENT_ID")
-    access_token = System.get_env("IGDB_ACCESS_TOKEN")
+    config = Application.get_env(:kameramani_phx, :igdb)
+    client_id = config[:client_id]
+    access_token = config[:access_token]
 
     cond do
       client_id in [nil, ""] -> {:error, "missing IGDB_CLIENT_ID"}
