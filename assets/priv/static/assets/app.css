@@ -4664,6 +4664,10 @@ select {
   height: 100%;
 }
 
+.h-\[600px\] {
+  height: 600px;
+}
+
 .h-\[calc\(100vh-100px\)\] {
   height: calc(100vh - 100px);
 }
