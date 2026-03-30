@@ -3,6 +3,7 @@ defmodule KameramaniPhxWeb.LandingLive do
   import Ecto.Query
   import KameramaniPhxWeb.SidebarComponents
   import KameramaniPhxWeb.CardComponents
+  import KameramaniPhxWeb.VideoComponents
   alias KameramaniPhxWeb.Presence
   alias KameramaniPhx.Streaming
 
@@ -63,8 +64,25 @@ defmodule KameramaniPhxWeb.LandingLive do
        search_form: to_form(%{"query" => ""}, as: :search),
        streams_data: streams_data,
        all_streams_data: streams_data,
-       recommended_streams: recommended_streams
+       recommended_streams: recommended_streams,
+       carousel_index: 0
      )}
+  end
+
+  def handle_event("next_slide", _, socket) do
+    total = length(socket.assigns.streams_data)
+    next_idx = if total > 0, do: rem(socket.assigns.carousel_index + 1, total), else: 0
+    {:noreply, assign(socket, carousel_index: next_idx)}
+  end
+
+  def handle_event("prev_slide", _, socket) do
+    total = length(socket.assigns.streams_data)
+    prev_idx = if total > 0, do: rem(socket.assigns.carousel_index - 1 + total, total), else: 0
+    {:noreply, assign(socket, carousel_index: prev_idx)}
+  end
+
+  def handle_event("set_slide", %{"index" => index}, socket) do
+    {:noreply, assign(socket, carousel_index: String.to_integer(index))}
   end
 
   def handle_event("search_username", %{"search" => %{"query" => query}}, socket) do
@@ -153,7 +171,8 @@ defmodule KameramaniPhxWeb.LandingLive do
       avatar: avatar_url,
       is_live: s.is_live,
       is_verified: s.user.is_verified,
-      thumbnail_url: "/thumbnails/#{s.id}.jpg"
+      thumbnail_url: "/thumbnails/#{s.id}.jpg",
+      hls_url: "/live/#{s.id}/index.m3u8"
     }
   end
 

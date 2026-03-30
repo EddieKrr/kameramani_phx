@@ -19,26 +19,106 @@
     </div>
   </div>
   
-  <div class="flex-1 glass-pane overflow-y-auto">
-    <div class="relative w-full aspect-video max-h-[500px] glass-pane shadow-xl mb-6 ">
-      <div class="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-b from-transparent to-black pointer-events-none rounded-3xl">
-        <div class="flex absolute bottom-4 left-4">
-          <.sidebar_item
-            name="Jleel"
-            game="Sims 4"
-            viewer_count="5000"
-            src="https://ui-avatars.com/api/?background=random"
-            navigate={~p"/watch/Jleel"}
-          />
-        </div>
-      </div>
+  <div class="flex-1 glass-pane overflow-y-auto overflow-x-hidden">
+    <!-- Hero Carousel Section -->
+    <section class="w-full bg-black/20 border-b border-white/5 overflow-hidden rounded-3xl">
+      <div class="relative w-full h-[300px] sm:h-[400px] lg:h-[550px] flex items-center justify-center">
+        <%= if length(@streams_data) > 0 do %>
+          <!-- Carousel Container -->
+          <div class="relative w-full h-full flex items-center justify-center">
+            <%= for {stream, index} <- Enum.with_index(@streams_data) do %>
+              <%
+                # Calculate position relative to carousel_index
+                total = length(@streams_data)
+                diff = index - @carousel_index
+                
+                # Handle wrapping for 3D effect (showing prev and next)
+                diff = cond do
+                  diff > total / 2 -> diff - total
+                  diff < -total / 2 -> diff + total
+                  true -> diff
+                end
 
-      <div class="lv-ind absolute top-4 left-4 z-10 bg-red-950 rounded-full px-2 animate-pulse uppercase text-amber-50">
-        Live
-      </div>
-    </div>
+                # Determine classes based on position
+                {pos_classes, is_active} = case diff do
+                  0 -> 
+                    {"z-30 scale-100 opacity-100 translate-x-0 shadow-[0_20px_50px_rgba(0,0,0,0.8)]", true}
+                  -1 -> 
+                    {"z-10 scale-[0.85] opacity-50 -translate-x-[45%] blur-[2px] brightness-50 cursor-pointer hover:opacity-70 hover:brightness-75", false}
+                  1 -> 
+                    {"z-10 scale-[0.85] opacity-50 translate-x-[45%] blur-[2px] brightness-50 cursor-pointer hover:opacity-70 hover:brightness-75", false}
+                  _ -> 
+                    {"z-0 scale-[0.7] opacity-0 pointer-events-none translate-x-0", false}
+                end
+              %>
 
-    <div class="px-6 pb-6">
+              <div 
+                class={[
+                  "absolute transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] w-[90%] max-w-[900px] aspect-video rounded-2xl overflow-hidden bg-black",
+                  pos_classes
+                ]}
+                phx-click={!is_active && "set_slide"}
+                phx-value-index={!is_active && index}
+              >
+                <%= if is_active do %>
+                  <%!-- Active Player --%>
+                  <div class="relative w-full h-full">
+                    <.video_player
+                      id={"hero-player-#{stream.id}"}
+                      url={stream.hls_url}
+                      stream_id={stream.id}
+                      is_live={true}
+                      class="w-full h-full"
+                    />
+                    <%!-- Permanent LIVE Badge --%>
+                    <div class="absolute top-4 left-4 z-40 pointer-events-none">
+                      <span class="bg-[#eb0400] text-white text-[11px] font-bold px-2 py-0.5 rounded uppercase tracking-wider shadow-lg flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
+                        LIVE
+                      </span>
+                    </div>
+                  </div>
+                <% else %>
+                  <%!-- Side Thumbnails --%>
+                  <div class="w-full h-full relative">
+                    <img src={stream.thumbnail_url} class="w-full h-full object-cover" />
+                    <div class="absolute inset-0 bg-black/20"></div>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+
+          <!-- Navigation Arrows -->
+          <%= if length(@streams_data) > 1 do %>
+            <button 
+              phx-click="prev_slide"
+              class="absolute left-8 z-50 p-4 rounded-full bg-black/40 hover:bg-black/60 border border-white/10 backdrop-blur-md text-white transition-all hover:scale-110 active:scale-95"
+            >
+              <.svg variant="chevron-left" class="w-8 h-8" />
+            </button>
+            <button 
+              phx-click="next_slide"
+              class="absolute right-8 z-50 p-4 rounded-full bg-black/40 hover:bg-black/60 border border-white/10 backdrop-blur-md text-white transition-all hover:scale-110 active:scale-95"
+            >
+              <.svg variant="chevron-right" class="w-8 h-8" />
+            </button>
+          <% end %>
+
+        <% else %>
+          <!-- Fallback for no live streams -->
+          <div class="w-full h-full flex flex-col items-center justify-center glass-pane rounded-3xl mx-6 border-dashed border-2 border-white/10">
+            <div class="p-6 rounded-full bg-white/5 mb-4">
+              <.svg variant="video-camera-slash" class="w-12 h-12 text-slate-500" />
+            </div>
+            <h2 class="text-xl font-bold text-white uppercase tracking-tight italic">No one is live right now</h2>
+            <p class="text-slate-400 text-sm mt-1">Check back later or explore other categories</p>
+          </div>
+        <% end %>
+      </div>
+    </section>
+
+    <div class="px-6 py-8">
       <h1 class="font-title" >Live Now</h1>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
         <.card

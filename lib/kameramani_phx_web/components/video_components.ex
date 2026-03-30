@@ -32,14 +32,6 @@ defmodule KameramaniPhxWeb.VideoComponents do
           </video>
         </div>
 
-        <div class="absolute top-4 left-4 right-4 flex justify-between items-start pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div class="flex items-center gap-2">
-            <span class="bg-[#eb0400] text-white text-[10px] font-black px-2 py-0.5 rounded tracking-tighter flex items-center gap-1 shadow-lg shadow-red-500/20">
-              <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span> LIVE
-            </span>
-          </div>
-        </div>
-
         <div
           id={"#{@id}-center-control"}
           class="absolute inset-0 flex items-center justify-center pointer-events-none"
