@@ -201,7 +201,7 @@ defmodule KameramaniPhxWeb.DirectoryLive do
   defp slugify(name) when is_binary(name) do
     name
     |> String.downcase()
-    |> String.replace(~r/[^a-z0-9\\s-]/u, "")
-    |> String.replace(~r/\\s+/, "-")
+    |> String.replace(~r/[^a-z0-9\s-]/u, "")
+    |> String.replace(~r/\s+/, "-")
   end
 end

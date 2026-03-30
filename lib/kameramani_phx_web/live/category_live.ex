@@ -12,7 +12,18 @@ defmodule KameramaniPhxWeb.CategoryLive do
   end
 
   def handle_params(%{"slug" => slug}, _uri, socket) do
-    case Content.get_category_by_slug(slug) do
+    category =
+      case Content.get_category_by_slug(slug) do
+        nil ->
+          # If not in DB, search the full list (including IGDB)
+          KameramaniPhxWeb.DirectoryLive.fetch_categories()
+          |> Enum.find(fn c -> c.slug == slug end)
+
+        category ->
+          category
+      end
+
+    case category do
       nil ->
         {:noreply,
          socket
