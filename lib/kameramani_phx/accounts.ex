@@ -203,8 +203,7 @@ defmodule KameramaniPhx.Accounts do
           case Repo.one(query) do
             %{sent_to: email} = _user_token ->
               with {:ok, user} <- Repo.update(User.email_changeset(user, %{email: email})),
-                   {_count, _} <-
-                     Repo.delete_all(UserToken.user_and_contexts_query(user, [context])) do
+                   {_count, _} <- Repo.delete_all(UserToken.user_and_contexts_query(user, [context])) do
                 {:ok, user}
               end
 
@@ -330,6 +329,22 @@ defmodule KameramaniPhx.Accounts do
       |> Ecto.Changeset.cast(extra_attrs, :map, [])
 
     Repo.update(changeset)
+  end
+
+  @doc """
+  Updates a user.
+  """
+  def update_user(%User{} = user, attrs) do
+    user
+    |> User.admin_update_changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Returns a changeset for changing a user.
+  """
+  def change_user(%User{} = user, attrs \\ %{}) do
+    User.admin_update_changeset(user, attrs)
   end
 
   def delete_user_session_token(token) do

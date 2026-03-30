@@ -1,12 +1,11 @@
+# Direct SQL update to avoid application dependency issues
+KameramaniPhx.Repo.start_link()
+
 alias KameramaniPhx.Repo
-alias KameramaniPhx.Streaming
-alias KameramaniPhx.Streaming.Stream
 
-IO.puts("🧹 Cleaning up all live streams...")
+IO.puts("🧹 Forcing all streams offline (Direct SQL)...")
 
-Repo.all(Stream)
-|> Enum.each(fn stream ->
-  Streaming.update_stream(stream, %{is_live: false})
-end)
+# This is the most reliable way to clear the 'is_live' flags
+Ecto.Adapters.SQL.query!(Repo, "UPDATE streams SET is_live = false", [])
 
-IO.puts("✅ All streams are now offline.")
+IO.puts("✅ Database updated successfully.")

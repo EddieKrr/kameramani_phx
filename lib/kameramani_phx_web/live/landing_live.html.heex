@@ -62,7 +62,7 @@
               >
                 <%= if is_active do %>
                   <%!-- Active Player --%>
-                  <div class="relative w-full h-full">
+                  <.link navigate={~p"/watch/#{stream.streamer}"} class="relative block w-full h-full group/player">
                     <.video_player
                       id={"hero-player-#{stream.id}"}
                       url={stream.hls_url}
@@ -77,7 +77,14 @@
                         LIVE
                       </span>
                     </div>
-                  </div>
+                    
+                    <%!-- Click to Watch Overlay (Visible on Hover) --%>
+                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover/player:opacity-100 transition-opacity flex items-center justify-center pointer-events-none z-10">
+                       <div class="bg-slate-900/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-white text-sm font-bold flex items-center gap-2 shadow-2xl scale-90 group-hover/player:scale-100 transition-transform">
+                         <.svg variant="play" class="w-4 h-4" /> Watch Now
+                       </div>
+                    </div>
+                  </.link>
                 <% else %>
                   <%!-- Side Thumbnails --%>
                   <div class="w-full h-full relative">

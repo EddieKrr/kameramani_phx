@@ -104,54 +104,6 @@ defmodule KameramaniPhxWeb.AdminLive do
     save_user(socket, socket.assigns.user_to_edit, user_params)
   end
 
-  defp save_user(socket, nil, user_params) do
-    case Accounts.register_user(user_params) do
-      {:ok, _user} ->
-        users_page = Accounts.get_all_users(page: 1, page_size: @users_page_size)
-
-        {:noreply,
-         socket
-         |> put_flash(:info, "User created successfully")
-         |> assign(
-           show_add_user_modal: false,
-           add_user_form: to_form(Accounts.validate_registration(%{})),
-           users_page: users_page
-         )}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply,
-         socket
-         |> put_flash(:error, "Could not create user")
-         |> assign(add_user_form: to_form(changeset))}
-    end
-  end
-
-  defp save_user(socket, user, user_params) do
-    case Accounts.update_user(user, user_params) do
-      {:ok, _user} ->
-        users_page =
-          Accounts.get_all_users(
-            page: socket.assigns.users_page.page_number,
-            page_size: @users_page_size
-          )
-
-        {:noreply,
-         socket
-         |> put_flash(:info, "User updated successfully")
-         |> assign(
-           show_add_user_modal: false,
-           user_to_edit: nil,
-           users_page: users_page
-         )}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply,
-         socket
-         |> put_flash(:error, "Could not update user")
-         |> assign(add_user_form: to_form(changeset))}
-    end
-  end
-
   @impl true
   def handle_event("open_add_category_modal", _params, socket) do
     {:noreply, assign(socket, show_add_category_modal: true)}
@@ -242,7 +194,9 @@ defmodule KameramaniPhxWeb.AdminLive do
   end
 
   @impl true
-  def handle_params(%{"tab" => current_tab}, _uri, socket) do
+  def handle_params(params, _uri, socket) do
+    current_tab = Map.get(params, "tab", "users")
+
     if current_tab in socket.assigns.allowed_tabs do
       socket =
         case current_tab do
@@ -263,18 +217,13 @@ defmodule KameramaniPhxWeb.AdminLive do
 
       {:noreply, assign(socket, active_tab: current_tab)}
     else
-      fallback_tab = hd(socket.assigns.allowed_tabs)
+      fallback_tab = "users"
 
       {:noreply,
        socket
        |> put_flash(:error, "You do not have access to that admin section.")
        |> push_patch(to: ~p"/admin/#{fallback_tab}")}
     end
-  end
-
-  @impl true
-  def handle_params(_, _, socket) do
-    {:noreply, assign(socket, active_tab: "users")}
   end
 
   @impl true
@@ -291,27 +240,36 @@ defmodule KameramaniPhxWeb.AdminLive do
 
   @impl true
   def handle_info({:stream_status_updated, updated_stream}, socket) do
-    entries =
-      Enum.map(socket.assigns.users_page.entries, fn user ->
-        if user.id == updated_stream.user_id do
-          %{user | is_live: updated_stream.is_live}
-        else
-          user
-        end
-      end)
+    socket =
+      if socket.assigns.users_page do
+        entries =
+          Enum.map(socket.assigns.users_page.entries, fn user ->
+            if user.id == updated_stream.user_id do
+              %{user | is_live: updated_stream.is_live}
+            else
+              user
+            end
+          end)
 
-    live_streams_page =
-      Streaming.list_live_streams(
-        page: socket.assigns.live_streams_page.page_number,
-        page_size: @streams_page_size
-      )
+        assign(socket, users_page: %{socket.assigns.users_page | entries: entries})
+      else
+        socket
+      end
 
-    {:noreply,
-     socket
-     |> assign(
-       users_page: %{socket.assigns.users_page | entries: entries},
-       live_streams_page: live_streams_page
-     )}
+    socket =
+      if socket.assigns.live_streams_page do
+        live_streams_page =
+          Streaming.list_live_streams(
+            page: socket.assigns.live_streams_page.page_number,
+            page_size: @streams_page_size
+          )
+
+        assign(socket, live_streams_page: live_streams_page)
+      else
+        socket
+      end
+
+    {:noreply, socket}
   end
 
   defp page_param(value, default) do
@@ -321,6 +279,54 @@ defmodule KameramaniPhxWeb.AdminLive do
 
       _ ->
         default || 1
+    end
+  end
+
+  defp save_user(socket, nil, user_params) do
+    case Accounts.register_user(user_params) do
+      {:ok, _user} ->
+        users_page = Accounts.get_all_users(page: 1, page_size: @users_page_size)
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "User created successfully")
+         |> assign(
+           show_add_user_modal: false,
+           add_user_form: to_form(Accounts.validate_registration(%{})),
+           users_page: users_page
+         )}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply,
+         socket
+         |> put_flash(:error, "Could not create user")
+         |> assign(add_user_form: to_form(changeset))}
+    end
+  end
+
+  defp save_user(socket, user, user_params) do
+    case Accounts.update_user(user, user_params) do
+      {:ok, _user} ->
+        users_page =
+          Accounts.get_all_users(
+            page: socket.assigns.users_page.page_number,
+            page_size: @users_page_size
+          )
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "User updated successfully")
+         |> assign(
+           show_add_user_modal: false,
+           user_to_edit: nil,
+           users_page: users_page
+         )}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply,
+         socket
+         |> put_flash(:error, "Could not update user")
+         |> assign(add_user_form: to_form(changeset))}
     end
   end
 end

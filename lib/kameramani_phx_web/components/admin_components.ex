@@ -56,7 +56,6 @@ defmodule KameramaniPhxWeb.AdminComponents do
 end
 
   attr :users_page, :map, required: true
-  attr :live_streams_page, :map, required: true
   def user_tab(assigns) do
   ~H"""
   <div class="bg-slate-950 text-white rounded-3xl shadow-sm border border-slate-700/50 pl-8 pt-8 pb-8 min-h-full col-span-5 overflow-y-auto h-screen">

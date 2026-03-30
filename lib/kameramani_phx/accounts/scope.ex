@@ -16,18 +16,12 @@ defmodule KameramaniPhx.Accounts.Scope do
   growing application requirements.
   """
 
-  alias KameramaniPhx.Accounts.User
-
   defstruct user: nil
 
   @doc """
   Creates a scope for the given user.
-
-  Returns nil if no user is given.
   """
-  def for_user(%User{} = user) do
+  def for_user(user) do
     %__MODULE__{user: user}
   end
-
-  def for_user(nil), do: nil
 end
