@@ -1,29 +1,53 @@
 defmodule KameramaniPhxWeb.SidebarComponents do
   use Phoenix.Component
+  import KameramaniPhxWeb.CoreComponents
 
   attr :name, :string, required: true
   attr :game, :string
   attr :viewer_count, :string
-  attr :src, :string, default: "https://ui-avatars.com/api/?background=random"
+  attr :src, :string, default: "https://i.pravatar.cc/150?img=1"
   attr :active, :boolean, default: false
+  attr :is_verified, :boolean, default: false
+  attr :show_details, :boolean, default: true
+  attr :navigate, :string, required: true
 
   def sidebar_item(assigns) do
     ~H"""
-    <div class="flex flex-row items-center mb-1 transition-all ease-in-out duration-300 hover:backdrop-blur hover:rounded-2xl hover:scale-105 hover:z-10 hover:border hover:border-indigo-300/90">
-      <img src={@src} class="rounded-full h-12 w-12 object-contain" />
-      <div class="flex-col flex-1 p-1 mx-3">
-        <div class="flex-col">
-          <div class="text-base font-bold">{@name}</div>
-
-          <div class="text-sm  truncate">{@game}</div>
+    <.link navigate={@navigate} class="block">
+      <div class={[
+        "flex flex-row items-center mb-1 transition-all ease-in-out duration-300 p-1 cursor-pointer",
+        "hover:bg-white/10 hover:rounded-lg",
+        @active && "bg-white/5 border-l-2 border-indigo-500 rounded-r-lg"
+      ]}>
+        <div class="relative shrink-0">
+          <img src={@src} class="rounded-full h-8 w-8 object-cover" />
+          <%= if !@show_details do %>
+            <div class="absolute -top-1 -right-1 w-2 h-2 bg-red-600 rounded-full border border-[#18181b]">
+            </div>
+          <% end %>
         </div>
-      </div>
 
-      <div class="justify-end">
-        <!--<.icon class="h-2 w-3" name="hero-eye"/>-->
-        {@viewer_count}
+        <%= if @show_details do %>
+          <div class="flex flex-col flex-1 min-w-0 mx-3">
+            <div class="flex items-center gap-1.5 min-w-0">
+              <div class="text-sm font-bold text-[#efeff1] truncate">{@name}</div>
+              <%= if @is_verified do %>
+                <.svg
+                  variant="check-badge"
+                  class="h-3 w-3 text-blue-400 drop-shadow-[0_0_4px_rgba(96,165,250,0.3)] shrink-0"
+                />
+              <% end %>
+            </div>
+            <div class="text-[11px] text-[#adadb8] truncate">{@game}</div>
+          </div>
+
+          <div class="flex items-center gap-1 text-[#efeff1] text-xs">
+            <div class="w-1.5 h-1.5 bg-red-600 rounded-full"></div>
+            {@viewer_count}
+          </div>
+        <% end %>
       </div>
-    </div>
+    </.link>
     """
   end
 end

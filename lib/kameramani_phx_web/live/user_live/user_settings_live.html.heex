@@ -1,0 +1,209 @@
+<div class="max-w-4xl mx-auto text-white p-4">
+  <div class="text-center mb-12">
+    <.header>
+      <h1 class="uppercase text-3xl font-title font-extrabold tracking-tight italic">
+        Account Settings
+      </h1>
+      <p class="mt-2 text-slate-400">Manage your profile, email, and security settings</p>
+    </.header>
+  </div>
+
+  <div class="grid grid-cols-1 gap-8">
+    <%!-- PROFILE SECTION --%>
+    <section class="glass-pane">
+      <h2 class="text-2xl font-title text-blue-400 font-bold mb-8 flex items-center gap-2">
+        <.svg variant="user" class="h-6 w-6" />Profile Information
+      </h2>
+
+      <.form
+        for={@profile_form}
+        id="profile_form"
+        phx-submit="update_profile"
+        phx-change="validate_profile"
+        class="space-y-6"
+      >
+        <div class="flex flex-col md:flex-row gap-10 items-center md:items-start">
+          <%!-- Avatar Upload UI --%>
+          <div class="flex flex-col items-center gap-4">
+            <div class="relative group">
+              <div class="h-32 w-32 bg-slate-900 border-4 border-slate-700 rounded-full flex items-center justify-center group-hover:border-blue-500 transition-all overflow-hidden shadow-inner">
+                <%= if entry = List.first(@uploads.profile_picture.entries) do %>
+                  <.live_img_preview
+                    entry={entry}
+                    class="w-full h-full rounded-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    phx-click="cancel-upload"
+                    phx-value-ref={entry.ref}
+                    class="absolute -top-1 -right-1 bg-red-500 rounded-full p-1 text-white hover:bg-red-600 shadow-md"
+                  >
+                    <span class="sr-only">Cancel</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                <% else %>
+                  <%= if @current_user.user.profile_picture do %>
+                    <img
+                      src={@current_user.user.profile_picture}
+                      class="w-full h-full rounded-full object-cover"
+                    />
+                  <% else %>
+                    <span class="text-4xl font-bold text-slate-600">
+                      {String.first(@current_user.user.username || @current_email)
+                      |> String.upcase()}
+                    </span>
+                  <% end %>
+                <% end %>
+              </div>
+
+              <label
+                for={@uploads.profile_picture.ref}
+                class="absolute inset-0 flex items-center justify-center opacity-0 bg-black/60 rounded-full group-hover:opacity-100 transition-opacity duration-300 cursor-pointer"
+              >
+                <.svg variant="digicam" class="h-8 w-8 text-white" />
+              </label>
+              <.live_file_input upload={@uploads.profile_picture} class="hidden" />
+            </div>
+            <span class="text-slate-500 uppercase font-bold text-[10px] tracking-widest">
+              Change Avatar
+            </span>
+          </div>
+
+          <%!-- Profile Details Form --%>
+          <div class="w-full space-y-6">
+            <.input
+              field={@profile_form[:username]}
+              label="Username"
+              class="bg-slate-900/50 border-2 border-slate-700 text-white rounded-2xl focus:border-blue-500"
+            />
+
+            <div class="w-full space-y-6">
+              <.input
+                field={@profile_form[:bio]}
+                type="textarea"
+                label="Biography"
+                placeholder="Let your fans know who you are..."
+                class="bg-slate-900/50 border-2 border-slate-700 text-white rounded-2xl min-h-[120px] focus:border-blue-500 focus:outline-none w-full"
+              />
+
+              <div class="flex justify-end">
+                <.button
+                  phx-disable-with="Saving..."
+                  class="glass-button"
+                >
+                  Update Profile
+                </.button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </.form>
+    </section>
+
+    <%!-- EMAIL SECTION --%>
+    <section class="glass-pane">
+      <h2 class="spicy-head">
+        <.svg variant="envelope" class="h-6 w-6" />Email Address
+      </h2>
+
+      <.form
+        for={@email_form}
+        id="email_form"
+        phx-submit="update_email"
+        phx-change="validate_email"
+      >
+        <.input
+          field={@email_form[:email]}
+          type="email"
+          label="New Email"
+          autocomplete="username"
+          required
+          class="bg-slate-900/50 border-2 border-slate-700 focus:outline-none rounded-2xl"
+        />
+        <.input
+          field={@email_form[:current_password]}
+          type="password"
+          label="Current Password"
+          class="bg-slate-900/50 border-2 border-slate-700 focus:outline-none rounded-2xl"
+        />
+        <div class="flex justify-end">
+          <.button
+            phx-disable-with="Sending Link..."
+            class="glass-button"
+          >
+            Update Email
+          </.button>
+        </div>
+      </.form>
+    </section>
+
+    <%!-- PASSWORD SECTION --%>
+    <section class="glass-pane">
+      <h2 class="text-2xl font-title font-bold text-blue-400 mb-6 flex items-center gap-2">
+        <.svg variant="key" class="h-6 w-6" />Update Password
+      </h2>
+
+      <.form
+        for={@password_form}
+        id="password_form"
+        action={~p"/users/update-password"}
+        method="post"
+        phx-change="validate_password"
+        phx-submit="update_password"
+        phx-trigger-action={@trigger_submit}
+      >
+        <input
+          name={@password_form[:email].name}
+          type="hidden"
+          id="hidden_user_email"
+          autocomplete="username"
+          value={@current_email}
+        />
+        <.input
+          field={@password_form[:current_password]}
+          type="password"
+          label="Current Password"
+          value={@password_form[:current_password].value}
+          class="bg-slate-900/50 border-2 border-slate-700 rounded-2xl"
+          required
+        />
+        <.input
+          field={@password_form[:password]}
+          type="password"
+          label="New password"
+          autocomplete="new-password"
+          value={@password_form[:password].value}
+          required
+          class="bg-slate-900/50 border-2 border-slate-700 rounded-2xl"
+        />
+        <.input
+          field={@password_form[:password_confirmation]}
+          type="password"
+          label="Confirm new password"
+          autocomplete="new-password"
+          value={@password_form[:password_confirmation].value}
+          class="bg-slate-900/50 border-2 border-slate-700 rounded-2xl focus:outline-none"
+        />
+        <div class="flex justify-end">
+          <.button
+            phx-disable-with="Saving..."
+            class="glass-button"
+          >
+            Save Password
+          </.button>
+        </div>
+      </.form>
+    </section>
+  </div>
+</div>

@@ -23,24 +23,27 @@ end
 config :kameramani_phx, KameramaniPhxWeb.Endpoint,
   http: [port: String.to_integer(System.get_env("PORT", "4000"))]
 
-if config_env() == :prod do
-  database_url =
-    System.get_env("DATABASE_URL") ||
-      raise """
-      environment variable DATABASE_URL is missing.
-      For example: ecto://USER:PASS@HOST/DATABASE
-      """
+database_url = System.get_env("DATABASE_URL")
 
+if database_url do
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
   config :kameramani_phx, KameramaniPhx.Repo,
-    # ssl: true,
+    ssl: true,
     url: database_url,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
-    # For machines with several cores, consider starting multiple pools of `pool_size`
-    # pool_count: 4,
-    socket_options: maybe_ipv6
+    socket_options: maybe_ipv6,
+    ssl_options: [
+      verify: :verify_none,
+      versions: [:"tlsv1.2", :"tlsv1.3"]
+    ]
+end
 
+config :kameramani_phx, :igdb,
+  client_id: System.get_env("IGDB_CLIENT_ID"),
+  access_token: System.get_env("IGDB_ACCESS_TOKEN")
+
+if config_env() == :prod do
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you
   # want to use a different value for prod and you most likely don't want
@@ -103,13 +106,18 @@ if config_env() == :prod do
   # ## Configuring the mailer
   #
   # In production you need to configure the mailer to use a different adapter.
-  # Here is an example configuration for Mailgun:
+  # Here is an example configuration for Resend:
   #
   #     config :kameramani_phx, KameramaniPhx.Mailer,
-  #       adapter: Swoosh.Adapters.Mailgun,
-  #       api_key: System.get_env("MAILGUN_API_KEY"),
-  #       domain: System.get_env("MAILGUN_DOMAIN")
+  #       adapter: Swoosh.Adapters.Resend,
+  #       api_key: System.get_env("RESEND_API_KEY")
   #
+  if resend_api_key = System.get_env("RESEND_API_KEY") do
+    config :kameramani_phx, KameramaniPhx.Mailer,
+      adapter: Swoosh.Adapters.Resend,
+      api_key: resend_api_key
+  end
+
   # Most non-SMTP adapters require an API client. Swoosh supports Req, Hackney,
   # and Finch out-of-the-box. This configuration is typically done at
   # compile-time in your config/prod.exs:

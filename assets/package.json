@@ -1,0 +1,18 @@
+{
+    "name": "t_vault_assets",
+    "version": "1.0.0",
+    "description": "",
+    "main": "tailwind.config.js",
+    "scripts": {},
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "alpinejs": "^3.15.4",
+        "highcharts": "^11.4.0",
+        "hls.js": "^1.6.15"
+    },
+    "devDependencies": {
+        "@tailwindcss/forms": "^0.5.11",
+        "daisyui": "^5.5.18"
+    }
+}

@@ -9,20 +9,30 @@ defmodule KameramaniPhx.AccountsFixtures do
   alias KameramaniPhx.Accounts
   alias KameramaniPhx.Accounts.Scope
 
-  def unique_user_email, do: "user#{System.unique_integer()}@example.com"
+  def unique_user_email, do: "user#{System.unique_integer()}@gmail.com"
   def valid_user_password, do: "hello world!"
 
   def valid_user_attributes(attrs \\ %{}) do
-    Enum.into(attrs, %{
-      email: unique_user_email()
-    })
+    attrs = if is_list(attrs), do: Map.new(attrs), else: attrs
+
+    %{
+      name: "Kameramani User",
+      username: "user#{System.unique_integer()}",
+      email: unique_user_email(),
+      age: 25,
+      password: valid_user_password()
+    }
+    |> Map.merge(attrs)
   end
 
   def unconfirmed_user_fixture(attrs \\ %{}) do
-    {:ok, user} =
+    attrs =
       attrs
       |> valid_user_attributes()
-      |> Accounts.register_user()
+      |> Map.delete(:password)
+      |> Map.delete("password")
+
+    {:ok, user} = Accounts.register_user(attrs)
 
     user
   end
@@ -41,12 +51,12 @@ defmodule KameramaniPhx.AccountsFixtures do
     user
   end
 
-  def user_scope_fixture do
+  def user_user_fixture do
     user = user_fixture()
-    user_scope_fixture(user)
+    user_user_fixture(user)
   end
 
-  def user_scope_fixture(user) do
+  def user_user_fixture(user) do
     Scope.for_user(user)
   end
 

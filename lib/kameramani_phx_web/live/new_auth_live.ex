@@ -1,7 +1,7 @@
 defmodule KameramaniPhxWeb.NewAuthLive do
   use KameramaniPhxWeb, :live_view
 
-  on_mount {KameramaniPhxWeb.UserAuth, :mount_current_scope}
+  on_mount {KameramaniPhxWeb.UserAuth, :mount_current_user}
 
   import Phoenix.LiveView
 
@@ -45,8 +45,17 @@ defmodule KameramaniPhxWeb.NewAuthLive do
   end
 
   def handle_event("validate_reg", %{"reg" => user_params}, socket) do
-    changeset = Accounts.validate_registration(user_params)
+    changeset =
+      user_params
+      |> Accounts.validate_registration()
+      |> Map.put(:action, :validate)
+
     {:noreply, assign(socket, reg_form: to_form(changeset, as: "reg"))}
+  end
+
+  def handle_event("validate_log", %{"user" => params}, socket) do
+    form = to_form(params, as: "user")
+    {:noreply, assign(socket, log_form: form)}
   end
 
   def handle_event("register", %{"reg" => user_params}, socket) do
@@ -64,7 +73,7 @@ defmodule KameramaniPhxWeb.NewAuthLive do
 
   def handle_params(_params, _url, socket) do
     {:noreply,
-      socket
-      |> assign(page_title: "Authentication")}
+     socket
+     |> assign(page_title: "Authentication")}
   end
 end

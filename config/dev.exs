@@ -26,7 +26,12 @@ config :kameramani_phx, KameramaniPhxWeb.Endpoint,
   secret_key_base: "iBuhry8qaobpmK6IoRQxsT4Mo0ysmbQ57PoAgZnuUooHwElqYbCLZqR+Z5U4mNIi",
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:kameramani_phx, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:kameramani_phx, ~w(--watch)]}
+    tailwind: {Tailwind, :install_and_run, [:kameramani_phx, ~w(
+      --config=tailwind.config.js
+      --input=css/app.css
+      --output=priv/static/assets/app.css
+      --watch
+    )]}
   ]
 
 # ## SSL Support
@@ -58,18 +63,21 @@ config :kameramani_phx, KameramaniPhxWeb.Endpoint,
     web_console_logger: true,
     patterns: [
       # Static assets, except user uploads
-      ~r"priv/static/(?!uploads/).*\.(js|css|png|jpeg|jpg|gif|svg)$",
+      ~r"priv/static/(?!uploads/|thumbnails/).*\.(js|css|png|jpeg|jpg|gif|svg)$",
       # Gettext translations
       ~r"priv/gettext/.*\.po$",
       # Router, Controllers, LiveViews and LiveComponents
 
       ~r"lib/kameramani_phx_web/router\.ex$",
-      ~r"lib/kameramani_phx_web/(controllers|live|components)/.*\.(ex|heex)$"
+      ~r"lib/kameramani_phx_web/(controllers|live|components|Profile)/.*\.(ex|heex)$"
     ]
   ]
 
 # Enable dev routes for dashboard and mailbox
 config :kameramani_phx, dev_routes: true
+
+# RTMP listener configuration
+config :kameramani_phx, :start_rtmp_listener, true
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :default_formatter, format: "[$level] $message\n"
@@ -84,14 +92,20 @@ config :phoenix, :plug_init_mode, :runtime
 config :phoenix_live_view,
   # Include debug annotations and locations in rendered markup.
   # Changing this configuration will require mix clean and a full recompile.
-  debug_heex_annotations: true,
-  debug_attributes: true,
+  debug_heex_annotations: false,
+  debug_attributes: false,
   # Enable helpful, but potentially expensive runtime checks
-  enable_expensive_runtime_checks: true
+  enable_expensive_runtime_checks: false
 
-# Disable swoosh api client as it is only required for production adapters.
-config :swoosh, :api_client, false
+# Enable swoosh api client for Resend or other production adapters.
+config :swoosh, :api_client, Swoosh.ApiClient.Req
 
+# Configure Resend adapter if API key is present
+if resend_api_key = System.get_env("RESEND_API_KEY") do
+  config :kameramani_phx, KameramaniPhx.Mailer,
+    adapter: Swoosh.Adapters.Resend,
+    api_key: resend_api_key
+end
 
 # Import local overrides
 if File.exists?("config/dev.local.exs") do

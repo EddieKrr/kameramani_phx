@@ -7,11 +7,11 @@
 # General application configuration
 import Config
 
-config :kameramani_phx, :scopes,
+config :kameramani_phx, :users,
   user: [
     default: true,
     module: KameramaniPhx.Accounts.Scope,
-    assign_key: :current_scope,
+    assign_key: :current_user,
     access_path: [:user, :id],
     schema_key: :user_id,
     schema_type: :id,
@@ -23,6 +23,11 @@ config :kameramani_phx, :scopes,
 config :kameramani_phx,
   ecto_repos: [KameramaniPhx.Repo],
   generators: [timestamp_type: :utc_datetime]
+
+config :kameramani_phx, :fx,
+  provider_url: "https://open.er-api.com/v6/latest/USD",
+  usd_kes_fallback_rate: "130.0",
+  timeout_ms: 4_000
 
 # Configure the endpoint
 config :kameramani_phx, KameramaniPhxWeb.Endpoint,
@@ -49,20 +54,21 @@ config :esbuild,
   version: "0.25.4",
   kameramani_phx: [
     args:
-      ~w(js/app.js --bundle --target=es2022 --outdir=../priv/static/assets/js --external:/fonts/* --external:/images/* --alias:@=.),
+      ~w(js/app.js --bundle --target=es2022 --outdir=../priv/static/assets --external:/fonts/* --external:/images/* --alias:@=.),
     cd: Path.expand("../assets", __DIR__),
     env: %{"NODE_PATH" => [Path.expand("../deps", __DIR__), Mix.Project.build_path()]}
   ]
 
 # Configure tailwind (the version is required)
 config :tailwind,
-  version: "4.1.12",
+  version: "3.4.3",
   kameramani_phx: [
     args: ~w(
-      --input=assets/css/app.css
-      --output=priv/static/assets/css/app.css
+      --config=tailwind.config.js
+      --input=css/app.css
+      --output=../priv/static/assets/app.css
     ),
-    cd: Path.expand("..", __DIR__)
+    cd: Path.expand("../assets", __DIR__)
   ]
 
 # Configure Elixir's Logger

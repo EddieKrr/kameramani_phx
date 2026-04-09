@@ -31,6 +31,8 @@ defmodule KameramaniPhxWeb.CoreComponents do
 
   alias Phoenix.LiveView.JS
 
+  embed_templates("core_components/*")
+
   @doc """
   Renders flash notices.
 
@@ -43,6 +45,7 @@ defmodule KameramaniPhxWeb.CoreComponents do
   attr :flash, :map, default: %{}, doc: "the map of flash messages to display"
   attr :title, :string, default: nil
   attr :kind, :atom, values: [:info, :error], doc: "used for styling and flash lookup"
+  attr :class, :any, default: nil
   attr :rest, :global, doc: "the arbitrary HTML attributes to add to the flash container"
 
   slot :inner_block, doc: "the optional inner block that renders the flash message"
@@ -56,28 +59,58 @@ defmodule KameramaniPhxWeb.CoreComponents do
       id={@id}
       phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
       role="alert"
-      class="toast toast-top toast-end z-50"
+      class={["group pointer-events-auto", @class]}
       {@rest}
     >
       <div class={[
-        "alert w-80 sm:w-96 max-w-80 sm:max-w-96 text-wrap",
-        @kind == :info && "alert-info",
-        @kind == :error && "alert-error"
+        "relative overflow-hidden rounded-2xl p-4 shadow-2xl transition-all duration-300 hover:scale-[1.02]",
+        "border backdrop-blur-md flex items-start gap-4 min-w-[320px] max-w-md",
+        @kind == :info && "bg-indigo-500/10 border-indigo-500/20 text-indigo-100",
+        @kind == :error && "bg-rose-500/10 border-rose-500/20 text-rose-100"
       ]}>
-        <.icon :if={@kind == :info} name="hero-information-circle" class="size-5 shrink-0" />
-        <.icon :if={@kind == :error} name="hero-exclamation-circle" class="size-5 shrink-0" />
-        <div>
-          <p :if={@title} class="font-semibold">{@title}</p>
-          <p>{msg}</p>
+        <%!-- Decorative background glow --%>
+        <div class={[
+          "absolute -right-4 -top-4 size-24 blur-3xl opacity-20 transition-opacity group-hover:opacity-40",
+          @kind == :info && "bg-indigo-400",
+          @kind == :error && "bg-rose-400"
+        ]} />
+
+        <div class={[
+          "flex size-10 shrink-0 items-center justify-center rounded-xl",
+          @kind == :info && "bg-indigo-500/20 text-indigo-400",
+          @kind == :error && "bg-rose-500/20 text-rose-400"
+        ]}>
+          <.svg :if={@kind == :info} variant="info" class="size-6" />
+          <.svg :if={@kind == :error} variant="exclamation" class="size-6" />
         </div>
-        <div class="flex-1" />
-        <button type="button" class="group self-start cursor-pointer" aria-label={gettext("close")}>
-          <.icon name="hero-x-mark" class="size-5 opacity-40 group-hover:opacity-70" />
+
+        <div class="flex-1 pt-0.5">
+          <p :if={@title} class="text-sm font-bold tracking-tight mb-0.5">{@title}</p>
+          <p class="text-[13px] leading-relaxed opacity-90 font-medium">{msg}</p>
+        </div>
+
+        <button
+          type="button"
+          class="shrink-0 rounded-lg p-1 transition-colors hover:bg-white/5 opacity-40 hover:opacity-100"
+          aria-label={gettext("close")}
+        >
+          <.svg variant="x" class="size-4" />
         </button>
       </div>
     </div>
     """
   end
+
+  # @doc """
+  # Renders a group of flash messages for different kinds.
+  # """
+  # attr :flash, :map, required: true
+
+  # def flash_group(assigns) do
+  #   ~H"""
+
+  #   """
+  # end
 
   @doc """
   Renders a button with navigation support.
@@ -276,20 +309,18 @@ defmodule KameramaniPhxWeb.CoreComponents do
   def input(assigns) do
     ~H"""
     <div class="fieldset mb-2">
-      <label>
-        <span :if={@label} class="label mb-1">{@label}</span>
-        <input
-          type={@type}
-          name={@name}
-          id={@id}
-          value={Phoenix.HTML.Form.normalize_value(@type, @value)}
-          class={[
-            @class || "w-full input",
-            @errors != [] && (@error_class || "input-error")
-          ]}
-          {@rest}
-        />
-      </label>
+      <label :if={@label} for={@id} class="label mb-1">{@label}</label>
+      <input
+        type={@type}
+        name={@name}
+        id={@id}
+        value={Phoenix.HTML.Form.normalize_value(@type, @value)}
+        class={[
+          @class || "w-full input",
+          @errors != [] && (@error_class || "input-error")
+        ]}
+        {@rest}
+      />
       <.error :for={msg <- @errors}>{msg}</.error>
     </div>
     """
@@ -299,7 +330,7 @@ defmodule KameramaniPhxWeb.CoreComponents do
   defp error(assigns) do
     ~H"""
     <p class="mt-1.5 flex gap-2 items-center text-sm text-error">
-      <.icon name="hero-exclamation-circle" class="size-5" />
+      <.svg variant="exclamation" class="size-5" />
       {render_slot(@inner_block)}
     </p>
     """
@@ -468,6 +499,7 @@ defmodule KameramaniPhxWeb.CoreComponents do
     )
   end
 
+  @spec translate_error({binary(), keyword() | map()}) :: binary()
   @doc """
   Translates an error message using gettext.
   """
@@ -494,5 +526,104 @@ defmodule KameramaniPhxWeb.CoreComponents do
   """
   def translate_errors(errors, field) when is_list(errors) do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
+  end
+
+  # Custom Kameramani components
+  @doc """
+  Renders an svg icon using the variant prop; infinitely customisable
+  """
+
+  attr(:variant, :string, required: true, doc: "The variant/type of svg")
+  attr(:class, :string, default: nil)
+
+  def svg(assigns)
+
+  @doc """
+  Renders a modal.
+
+  ## Examples
+
+      <.modal id="confirm-modal">
+        This is a modal!
+      </.modal>
+
+  JS commands may be passed to the `:on_cancel` to customize
+  the closing experience, for example to push an event or return to a URL.
+  """
+  attr :id, :string, required: true
+  attr :show, :boolean, default: false
+  attr :on_cancel, JS, default: %JS{}
+  slot :inner_block, required: true
+
+  def modal(assigns) do
+    ~H"""
+    <div
+      id={@id}
+      phx-mounted={@show && show_modal(@id)}
+      phx-remove={hide_modal(@id)}
+      data-cancel={JS.exec(@on_cancel, "phx-remove")}
+      class="relative z-50 hidden"
+    >
+      <div id={"#{@id}-bg"} class="bg-slate-900/60 backdrop-blur-sm fixed inset-0 transition-opacity" aria-hidden="true" />
+      <div
+        class="fixed inset-0 overflow-y-auto"
+        aria-labelledby={"#{@id}-title"}
+        aria-describedby={"#{@id}-description"}
+        role="dialog"
+        aria-modal="true"
+        tabindex="-1"
+      >
+        <div class="flex min-h-full items-center justify-center p-4 text-white w-full">
+          <div
+            id={"#{@id}-container"}
+            phx-click-away={JS.exec("data-cancel", to: "##{@id}")}
+            phx-window-keydown={JS.exec("data-cancel", to: "##{@id}")}
+            phx-key="escape"
+            class="hidden relative w-full max-w-lg transition-all transform"
+          >
+            <div class="glass-pane w-full mx-auto border-2 border-slate-700/50 rounded-3xl shadow-2xl overflow-hidden">
+              <div class="absolute top-4 right-4">
+                <button
+                  phx-click={JS.exec("data-cancel", to: "##{@id}")}
+                  type="button"
+                  class="p-2 text-slate-400 hover:text-white transition-colors"
+                  aria-label={gettext("close")}
+                >
+                  <.svg variant="x" class="size-5" />
+                </button>
+              </div>
+              <div id={"#{@id}-content"} class="p-8">
+                {render_slot(@inner_block)}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    """
+  end
+
+  def show_modal(js \\ %JS{}, id) when is_binary(id) do
+    js
+    |> JS.show(to: "##{id}")
+    |> JS.show(
+      to: "##{id}-bg",
+      transition: {"transition-all transform ease-out duration-300", "opacity-0", "opacity-100"}
+    )
+    |> show("##{id}-container")
+    |> JS.add_class("overflow-hidden", to: "body")
+    |> JS.focus_first(to: "##{id}-content")
+  end
+
+  def hide_modal(js \\ %JS{}, id) do
+    js
+    |> JS.hide(
+      to: "##{id}-bg",
+      transition: {"transition-all transform ease-in duration-200", "opacity-100", "opacity-0"}
+    )
+    |> hide("##{id}-container")
+    |> JS.hide(to: "##{id}", transition: {"block", "block", "hidden"})
+    |> JS.remove_class("overflow-hidden", to: "body")
+    |> JS.pop_focus()
   end
 end

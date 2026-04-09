@@ -12,8 +12,8 @@ defmodule KameramaniPhxWeb.Endpoint do
   ]
 
   socket "/live", Phoenix.LiveView.Socket,
-    websocket: [connect_info: [session: @session_options]],
-    longpoll: [connect_info: [session: @session_options]]
+    websocket: [connect_info: [:peer_data, :x_headers, session: @session_options]],
+    longpoll: [connect_info: [:peer_data, :x_headers, session: @session_options]]
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -24,7 +24,7 @@ defmodule KameramaniPhxWeb.Endpoint do
     at: "/",
     from: :kameramani_phx,
     gzip: not code_reloading?,
-    only: KameramaniPhxWeb.static_paths(),
+    only: KameramaniPhxWeb.static_paths() ++ ["live", "uploads", "thumbnails"],
     raise_on_missing_only: code_reloading?
 
   # Code reloading can be explicitly enabled under the

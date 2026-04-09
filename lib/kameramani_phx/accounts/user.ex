@@ -1,5 +1,6 @@
 defmodule KameramaniPhx.Accounts.User do
   use Ecto.Schema
+  @primary_key {:id, :binary_id, autogenerate: true}
   import Ecto.Changeset
   alias KameramaniPhx.Repo
 
@@ -14,10 +15,21 @@ defmodule KameramaniPhx.Accounts.User do
 
     field :bio, :string
     field :profile_picture, :string
-
+    field :chat_color, :string
+    field :mobile_number, :string
     field :hashed_password, :string, redact: true
     field :confirmed_at, :utc_datetime
     field :authenticated_at, :utc_datetime, virtual: true
+    field :is_live, :boolean, virtual: true, default: false
+    field :is_verified, :boolean, default: false
+    field :subscriber_count, :integer, virtual: true, default: 0
+    field :following_count, :integer, virtual: true, default: 0
+    field :follower_count, :integer, virtual: true, default: 0
+    has_many :social_accounts, KameramaniPhx.Socials.SocialAccount
+    has_many :verification_requests, KameramaniPhx.Accounts.VerificationRequest
+    many_to_many :roles, KameramaniPhx.Accounts.Role,
+      join_through: "user_roles",
+      on_replace: :delete
 
     # People THIS user is following
     many_to_many :following, KameramaniPhx.Accounts.User,
@@ -25,27 +37,48 @@ defmodule KameramaniPhx.Accounts.User do
       join_keys: [follower_id: :id, followed_id: :id]
 
     # People FOLLOWING this user
-    many_to_many :followers, Kameramani.Accounts.User,
+    many_to_many :followers, KameramaniPhx.Accounts.User,
       join_through: "follows",
       join_keys: [followed_id: :id, follower_id: :id]
 
+    many_to_many :subscribers, KameramaniPhx.Accounts.User,
+      join_through: "subscriptions",
+      join_keys: [streamer_id: :id, subscriber_id: :id]
+
     timestamps(type: :utc_datetime)
   end
+
+  @chat_colors ~w(#3b82f6 #ef4444 #f97316 #eab308 #ec4899 #a855f7 #22c55e #84cc16)
 
   @doc """
   A user changeset for registration.
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:name, :username, :email, :age, :password, :bio, :profile_picture])
-    |> validate_required([:name, :username, :email, :age, :password, :bio, :profile_picture])
+    |> cast(attrs, [:name, :username, :email, :age, :password, :chat_color])
+    |> validate_required([:name, :username, :email, :age])
     |> validate_email(opts)
-    |> validate_password(opts)
+    |> validate_password_if_present(opts)
+    |> maybe_put_chat_color()
   end
 
+  defp validate_password_if_present(changeset, opts) do
+    if get_field(changeset, :password) do
+      validate_password(changeset, opts)
+    else
+      changeset
+    end
+  end
 
+  defp maybe_put_chat_color(changeset) do
+    if get_field(changeset, :chat_color) do
+      changeset
+    else
+      put_change(changeset, :chat_color, Enum.random(@chat_colors))
+    end
+  end
 
-
+  @allowed_domains ~w(gmail.com yahoo.com outlook.com hotmail.com icloud.com protonmail.com aol.com mail.com)
 
   defp validate_email(changeset, opts) do
     changeset =
@@ -56,12 +89,36 @@ defmodule KameramaniPhx.Accounts.User do
       )
       |> validate_length(:email, max: 160)
 
+    # Only validate domain if format is valid so far
+    changeset =
+      if changeset.valid? do
+        validate_allowed_domain(changeset)
+      else
+        changeset
+      end
+
     if Keyword.get(opts, :validate_unique, true) do
       changeset
       |> unsafe_validate_unique(:email, KameramaniPhx.Repo)
       |> unique_constraint(:email)
     else
       changeset
+    end
+  end
+
+  defp validate_allowed_domain(changeset) do
+    case get_field(changeset, :email) do
+      nil ->
+        changeset
+
+      email ->
+        domain = email |> String.split("@") |> List.last() |> String.downcase()
+
+        if domain in @allowed_domains do
+          changeset
+        else
+          add_error(changeset, :email, "must be from a supported provider (Gmail, Yahoo, etc.)")
+        end
     end
   end
 
@@ -88,21 +145,11 @@ defmodule KameramaniPhx.Accounts.User do
         else
           changeset
         end
-      %{} = changeset -> changeset
+
+      %{} = changeset ->
+        changeset
     end
   end
-
-
-
-  defp maybe_validate_unique_email(changeset, opts) do
-    if Keyword.get(opts, :validate_unique, true) do
-      unsafe_validate_unique(changeset, :email, KameramaniPhx.Repo)
-      |> unique_constraint(:email)
-    else
-      changeset
-    end
-  end
-
 
   defp validate_password(changeset, opts) do
     changeset =
@@ -131,15 +178,31 @@ defmodule KameramaniPhx.Accounts.User do
   end
 
   def update_user_password(user, new_password) do
-    changeset = change(user, password: new_password)
-    |> validate_password([])
+    changeset =
+      change(user, password: new_password)
+      |> validate_password([])
+
     case Repo.update(changeset) do
       {:ok, updated_user} ->
         {:noreply, updated_user}
+
       {:error, changeset} ->
         {:error, changeset}
     end
   end
+
+  # update user stream profile
+  def profile_changeset(user, attr) do
+    user
+    |> cast(attr, [:username, :bio, :profile_picture, :mobile_number ])
+    |> validate_required([:username])
+    |> validate_length(:username, min: 3, max: 20)
+    |> validate_length(:bio, max: 160)
+    |> unsafe_validate_unique(:username, KameramaniPhx.Repo)
+    |> unique_constraint(:username)
+    |> unique_constraint(:mobile_number)
+  end
+
   @doc """
   Verifies the password.
   """
@@ -157,24 +220,24 @@ defmodule KameramaniPhx.Accounts.User do
   Confirms the account by setting `confirmed_at`.
   """
   def confirm_changeset(user) do
-    now = DateTime.utc_now(:second)
+    now = DateTime.utc_now() |> DateTime.truncate(:second)
     change(user, confirmed_at: now)
   end
 
-
-  #lets make the user followable by adding a followers and following association
-  def follow_user(follower, following_id) do
-      Repo.insert_all("follows", [[
-        follower_id: follower.id,
-        following_id: String.to_integer(following_id),
-        inserted_at: DateTime.utc_now(),
-        updated_at: DateTime.utc_now()
-      ]])
+  #admin verification changeset
+  def admin_changeset(user, attrs) do
+    user |> cast(attrs, [:is_verified])
   end
 
-  #unfollow a user
-  def unfollow_user(follower, follower) do
-
+  @doc """
+  A user changeset for admin updates.
+  """
+  def admin_update_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:name, :username, :email, :age])
+    |> validate_required([:name, :username, :email, :age])
+    |> validate_email([])
+    |> unsafe_validate_unique(:username, KameramaniPhx.Repo)
+    |> unique_constraint(:username)
   end
-
 end

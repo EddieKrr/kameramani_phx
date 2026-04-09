@@ -6,7 +6,7 @@
 
 # The directory Mix downloads your dependencies sources to.
 /deps/
-
+/.env
 # Where 3rd-party dependencies like ExDoc output generated docs.
 /doc/
 
@@ -37,3 +37,10 @@ npm-debug.log
 
 #storing personal credentials for development
 /config/*.local.exs
+
+/config/dev.local.exs
+
+/priv/static/live/
+/priv/static/live/cube.2
+
+GEMINI.md

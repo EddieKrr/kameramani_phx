@@ -1,0 +1,132 @@
+<% active_index = Enum.find_index(@menu_items, fn i -> i.id == @active_tab end) %>
+<div class="h-screen grid grid-cols-6 gap-2 bg-slate-950 overflow-hidden relative">
+  <div class="bg-slate-900 col-start-1 col-span-1 text-white flex flex-col font-medium sticky top-0 left-0">
+    <div class="flex items-center justify-center py-6 border-b-2 border-slate-700 mb-4 ">
+      <span class="font-bold">Admin Tools</span>
+    </div>
+    <%= for {item, index} <- Enum.with_index(@menu_items) do %>
+      <.sidebar_link
+        item={item}
+        active={index == active_index}
+        prev_active={index == active_index + 1}
+        next_active={index == active_index - 1}
+      />
+    <% end %>
+  </div>
+  <%= case @active_tab do %>
+    <% "overview" -> %>
+      <.overview />
+    <% "users" -> %>
+      <.user_tab users_page={@users_page} />
+    <% "streams" -> %>
+      <.live_streaming_tab live_streams_page={@live_streams_page} />
+    <% "verification" -> %>
+      <.verification_tab requests={@verification_requests} />
+    <% "categories" -> %>
+      <.category_tab></.category_tab>
+    <% "tags" -> %>
+      <.tag_tab></.tag_tab>
+    <% "access" -> %>
+      <.access_tab></.access_tab>
+    <% "settings" -> %>
+      <.settings_tab></.settings_tab>
+  <% end %>
+</div>
+
+<.modal
+  :if={@show_add_user_modal}
+  id="add-user-modal"
+  show={true}
+  on_cancel={JS.push("close_add_user_modal")}
+>
+  <div class="mb-6">
+    <h3 class="text-2xl font-bold uppercase tracking-tight italic font-title">
+      {if @user_to_edit, do: "Update User", else: "Create New User"}
+    </h3>
+    <p class="text-slate-400 text-sm">
+      {if @user_to_edit, do: "Modify account details.", else: "Register a new account manually."}
+    </p>
+  </div>
+
+  <.form
+    for={@add_user_form}
+    id="add-user-form"
+    phx-submit="save_user"
+    phx-change="validate_user"
+    class="space-y-4"
+  >
+    <div class="grid grid-cols-2 gap-4">
+      <.input field={@add_user_form[:name]} type="text" label="Full Name" placeholder="e.g. John Doe" required />
+      <.input field={@add_user_form[:username]} type="text" label="Username" placeholder="johndoe" required />
+    </div>
+
+    <.input field={@add_user_form[:email]} type="email" label="Email Address" placeholder="john@example.com" required />
+    
+    <div class="grid grid-cols-2 gap-4">
+      <.input field={@add_user_form[:age]} type="number" label="Age" placeholder="18" required />
+      <%= if is_nil(@user_to_edit) do %>
+        <.input field={@add_user_form[:password]} type="password" label="Password" required />
+      <% end %>
+    </div>
+
+    <div class="pt-4 flex justify-end gap-3 border-t border-slate-700/50 mt-6">
+      <button
+        type="button"
+        phx-click="close_add_user_modal"
+        class="px-6 py-2 rounded-full text-slate-300 hover:text-red-400 transition-colors font-semibold"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        phx-disable-with="Saving..."
+        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-8 rounded-full transition-all shadow-lg shadow-blue-500/20"
+      >
+        {if @user_to_edit, do: "Update User", else: "Create User"}
+      </button>
+    </div>
+  </.form>
+</.modal>
+
+<.modal
+  :if={@show_add_category_modal}
+  id="add-category-modal"
+  show={true}
+  on_cancel={JS.push("close_add_category_modal")}
+>
+  <div class="mb-6">
+    <h3 class="text-2xl font-bold text-white uppercase tracking-tight italic font-title">
+      Create New Category
+    </h3>
+    <p class="text-slate-400 text-sm">Add a new stream category to Kameramani.</p>
+  </div>
+
+  <.form
+    for={@add_category_form}
+    id="add-category-form"
+    phx-submit="save_category"
+    phx-change="validate_category"
+    class="space-y-4"
+  >
+    <.input field={@add_category_form[:name]} type="text" label="Category Name" placeholder="e.g. Just Chatting" required />
+    <.input field={@add_category_form[:slug]} type="text" label="Slug" placeholder="just-chatting" required />
+    <.input field={@add_category_form[:thumbnail_url]} type="text" label="Thumbnail URL" placeholder="https://example.com/image.jpg" required />
+
+    <div class="pt-4 flex justify-end gap-3 border-t border-slate-700/50 mt-6">
+      <button
+        type="button"
+        phx-click="close_add_category_modal"
+        class="px-6 py-2 rounded-full text-slate-300 hover:bg-white/5 transition-colors font-semibold"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        phx-disable-with="Creating..."
+        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-8 rounded-full transition-all shadow-lg shadow-blue-500/20"
+      >
+        Create Category
+      </button>
+    </div>
+  </.form>
+</.modal>
